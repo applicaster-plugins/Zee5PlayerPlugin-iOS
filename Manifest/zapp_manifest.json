@@ -1,0 +1,530 @@
+{
+  "api": {
+    "class_name": "Zee5PluggablePlayer",
+    "modules": [
+      "Zee5PlayerPlugin"
+    ],
+    "require_startup_execution": false
+  },
+  "assets": {
+    "fields": []
+  },
+  "author_email": "m.vecselboim@applicaster.com",
+  "author_name": "Miri Vecselboim",
+  "custom_configuration_fields": [
+    {
+      "type": "text",
+      "key": "show_screen_id"
+    },
+    {
+      "type": "text",
+      "key": "sleep_mode_title"
+    },
+    {
+      "type": "text",
+      "key": "sleep_mode_interval"
+    },
+    {
+      "type": "text",
+      "key": "sleep_mode_close_title"
+    },
+    {
+      "type": "text",
+      "key": "recommendations_limit"
+    },
+    {
+      "type": "text",
+      "key": "next_program_title"
+    },
+    {
+      "type": "text",
+      "key": "skip_interval",
+      "tooltip_text": "seconds"
+    },
+    {
+      "type": "uploader",
+      "key": "ios_assets_bundle",
+      "tooltip_text": "Upload Assets Folder Zip File",
+      "default": "https://assets-production.applicaster.com/applicaster-employees/israel_team/Dan/Kannewapp/IOSassets.zip"
+    },
+    {
+      "type": "checkbox",
+      "key": "supports_audio"
+    }
+  ],
+  "dependency_name": "Zee5PlayerPlugin",
+  "dependency_repository_url": [
+    "https://github.com/applicaster/Zee5PlayerPlugin-iOS.git"
+  ],
+  "dependency_version": "1.4.0",
+  "deprecated_since_zapp_sdk": "",
+  "description": "Zee5 Player Plugin",
+  "extra_dependencies": [],
+  "identifier": "zee_player",
+  "manifest_version": "1.4.0",
+  "min_zapp_sdk": "13.0.0-Dev",
+  "name": "Zee5 Player Plugin",
+  "npm_dependencies": [],
+  "platform": "ios",
+  "project_dependencies": [],
+  "react_native": false,
+  "rules": {
+    "fields": []
+  },
+  "type": "player",
+  "unsupported_since_zapp_sdk": "",
+  "whitelisted_account_ids": [
+    "5cb825e102507200087bbdcc",
+    "5c3b12762756be0008779106"
+  ],
+  "ui_builder_support": true,
+  "general": {},
+  "styles": {
+    "fields": [
+      {
+        "key": "player_screen_bg_color",
+        "label": "Player screen bg color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "station_name_live_player_color",
+        "label": "Station name live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "station_name_live_player_font_name",
+        "label": "Station name live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "station_name_live_player_font_size",
+        "label": "Station name live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "brand_line_live_player_color",
+        "label": "Brand line live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "indicator_live_player_color",
+        "label": "Indicator live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "indicator_live_player_font_name",
+        "label": "Indicator live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "ndicator_live_player_font_size",
+        "label": "Indicator live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "show_name_live_player_color",
+        "label": "Show name live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_name_live_player_font_name",
+        "label": "Show name live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "show_name_live_player_font_size",
+        "label": "Show name live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "next_text_live_player_color",
+        "label": "Next text live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "next_text_live_player_font_name",
+        "label": "Next text live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "next_text_live_player_font_size",
+        "label": "Next text live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "show_name_next_live_player_color",
+        "label": "Show name next live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_name_next_live_player_font_name",
+        "label": "Show name next live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "show_name_next_live_player_font_size",
+        "label": "Show name next live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "hour_next_live_player_color",
+        "label": "Hour next live player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "hour_next_live_player_font_name",
+        "label": "Hour next live player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "hour_next_live_player_font_size",
+        "label": "Hour next live player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "show_name_vod_player_color",
+        "label": "Show name vod player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_name_vod_player_font_name",
+        "label": "Show name vod player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "show_name_vod_player_font_size",
+        "label": "Show name vod player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "chapter_name_vod_player_color",
+        "label": "Chapter name vod player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "chapter_name_vod_player_font_name",
+        "label": "Chapter name vod player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "chapter_name_vod_player_font_size",
+        "label": "Chapter name vod player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "chapter_description_vod_player_color",
+        "label": "Chapter description vod player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "chapter_description_vod_player_font_name",
+        "label": "Chapter description vod player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "chapter_description_vod_player_font_size",
+        "label": "Chapter description vod player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "date_vod_player_color",
+        "label": "Date vod player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "date_vod_player_font_name",
+        "label": "Date vod player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "date_vod_player_font_size",
+        "label": "Date vod player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "more_shows_player_color",
+        "label": "More shows player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "more_shows_player_font_name",
+        "label": "More shows player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "more_shows_player_font_size",
+        "label": "More shows player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "divider_player_color",
+        "label": "Divider player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_name_related_player_color",
+        "label": "Show name related player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_name_related_player_font_name",
+        "label": "Show name related player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "show_name_related_player_font_size",
+        "label": "Show name related player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "show_description_related_player_color",
+        "label": "Show description related player color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "show_description_related_player_font_name",
+        "label": "Show description related player font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "show_description_related_player_font_size",
+        "label": "Show description related player font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "footer_text_color",
+        "label": "Footer text color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "footer_text_font_name",
+        "label": "Footer text font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "footer_text_font_size",
+        "label": "Footer text font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "video_name_full_screen_color",
+        "label": "Video name full screen color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "video_name_full_screen_font_name",
+        "label": "Video name full screen font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "video_name_full_screen_font_size",
+        "label": "Video name full screen font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "video_name_sticky_color",
+        "label": "Video name sticky color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "video_name_sticky_font_name",
+        "label": "Video name sticky font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "video_name_sticky_font_size",
+        "label": "Video name sticky font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "sleep_mode_bg_color",
+        "label": "Sleep mode bg color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "sleep_mode_bottom_divider_color",
+        "label": "Sleep mode bottom divider color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "action_text_sleep_mode_color",
+        "label": "Action text sleep mode color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "action_text_sleep_mode_font_name",
+        "label": "Action text sleep mode font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "action_text_sleep_mode_font_size",
+        "label": "Action text sleep mode font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "button_color_sleep_mode_color",
+        "label": "Button color sleep mode color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "time_sleep_mode_color",
+        "label": "Time sleep mode color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "time_sleep_mode_font_name",
+        "label": "Time sleep mode font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "time_sleep_mode_font_size",
+        "label": "Time sleep mode font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      },
+      {
+        "key": "close_text_sleep_mode_color",
+        "label": "Close text sleep mode color",
+        "type": "color_picker",
+        "initial_value": "#27DA86",
+        "placeholder": "Pick Color"
+      },
+      {
+        "key": "close_text_sleep_mode_font_name",
+        "label": "Close text sleep mode font name",
+        "initial_value": "HelveticaNeue-Bold",
+        "type": "ios_font_selector",
+        "placeholder": "Select Font"
+      },
+      {
+        "key": "close_text_sleep_mode_font_size",
+        "label": "Close text sleep mode font size",
+        "type": "number_input",
+        "placeholder": "Enter Font Size",
+        "initial_value": "13"
+      }
+    ]
+  },
+  "targets": [
+    "mobile"
+  ]
+}
