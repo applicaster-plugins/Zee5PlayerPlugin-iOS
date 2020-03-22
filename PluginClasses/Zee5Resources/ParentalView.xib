@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="NotoSans-Regular.ttf">
+            <string>NotoSans-Regular</string>
+        </array>
+        <array key="NotoSans-SemiBold.ttf">
+            <string>NotoSans-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ParentalView"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" restorationIdentifier="ParentalView" id="i5M-Pr-FkT" customClass="ParentalView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="772"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dJR-IO-Knz">
+                    <rect key="frame" x="1" y="1" width="412" height="770"/>
+                    <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="closeBtnAction:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="xqF-tn-gU3"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fkB-hP-fzm">
+                    <rect key="frame" x="0.0" y="345" width="414" height="427"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdH-lH-mxR">
+                            <rect key="frame" x="192" y="15" width="30" height="3"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="Xvj-cy-gGf"/>
+                                <constraint firstAttribute="height" constant="3" id="kn6-Gd-6RV"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your 4-digit PIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IA3-dZ-Dfz">
+                            <rect key="frame" x="122.5" y="48" width="169" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="b2N-ud-j0J"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="16"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="PI1-MB-Ncv">
+                            <rect key="frame" x="61" y="168" width="292" height="50"/>
+                            <subviews>
+                                <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bcV-0M-S7Z">
+                                    <rect key="frame" x="0.0" y="0.0" width="58" height="50"/>
+                                    <color key="backgroundColor" red="0.61176470588235299" green="0.61176470588235299" blue="0.61176470588235299" alpha="0.17000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="7mz-ek-84T"/>
+                                        <constraint firstAttribute="width" constant="58" id="qvP-FX-C5J"/>
+                                    </constraints>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" secureTextEntry="YES"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="i5M-Pr-FkT" id="17T-rO-K1e"/>
+                                    </connections>
+                                </textField>
+                                <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K5C-VA-OZf">
+                                    <rect key="frame" x="78" y="0.0" width="58" height="50"/>
+                                    <color key="backgroundColor" red="0.61176470589999998" green="0.61176470589999998" blue="0.61176470589999998" alpha="0.17000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" secureTextEntry="YES"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="i5M-Pr-FkT" id="RWO-dQ-iWz"/>
+                                    </connections>
+                                </textField>
+                                <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Lpf-po-urE">
+                                    <rect key="frame" x="156" y="0.0" width="58" height="50"/>
+                                    <color key="backgroundColor" red="0.61176470589999998" green="0.61176470589999998" blue="0.61176470589999998" alpha="0.17000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" secureTextEntry="YES"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="i5M-Pr-FkT" id="zzc-fC-egv"/>
+                                    </connections>
+                                </textField>
+                                <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rD5-XY-9r9">
+                                    <rect key="frame" x="234" y="0.0" width="58" height="50"/>
+                                    <color key="backgroundColor" red="0.61176470589999998" green="0.61176470589999998" blue="0.61176470589999998" alpha="0.17000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" secureTextEntry="YES"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="i5M-Pr-FkT" id="psf-wv-DBE"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="K5C-VA-OZf" firstAttribute="width" secondItem="bcV-0M-S7Z" secondAttribute="width" id="EuA-po-LGB"/>
+                                <constraint firstItem="Lpf-po-urE" firstAttribute="width" secondItem="bcV-0M-S7Z" secondAttribute="width" id="Jbe-6y-2Nb"/>
+                                <constraint firstItem="K5C-VA-OZf" firstAttribute="height" secondItem="bcV-0M-S7Z" secondAttribute="height" id="LDF-nn-wWv"/>
+                                <constraint firstItem="rD5-XY-9r9" firstAttribute="height" secondItem="bcV-0M-S7Z" secondAttribute="height" id="XTq-dg-40T"/>
+                                <constraint firstItem="rD5-XY-9r9" firstAttribute="width" secondItem="bcV-0M-S7Z" secondAttribute="width" id="jwn-XE-iDq"/>
+                                <constraint firstItem="Lpf-po-urE" firstAttribute="height" secondItem="bcV-0M-S7Z" secondAttribute="height" id="sUG-gj-qSy"/>
+                            </constraints>
+                        </stackView>
+                        <button opaque="NO" alpha="0.34999999999999998" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z7k-7E-Yj2">
+                            <rect key="frame" x="129" y="351" width="156" height="36"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="156" id="FJZ-yN-hNm"/>
+                                <constraint firstAttribute="height" constant="36" id="Jau-jv-pep"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="14"/>
+                            <state key="normal" title="Continue">
+                                <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="NextAction:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="42Y-YX-Jb7"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eYs-g4-h65">
+                            <rect key="frame" x="273" y="243" width="80" height="18"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="80" id="ZOB-qs-T3N"/>
+                                <constraint firstAttribute="height" constant="18" id="ycL-BJ-NDM"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="12"/>
+                            <state key="normal" title="Show PIN">
+                                <color key="titleColor" red="1" green="0.0" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="showHideAction:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="xE9-id-d0s"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c2r-Wx-jOQ">
+                            <rect key="frame" x="171" y="296" width="72" height="18"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="18" id="0zf-5H-5ly"/>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="adS-ty-uOc"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
+                            <state key="normal" title="Forgot PIN ?">
+                                <color key="titleColor" red="1" green="0.0" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="ForgotPinoutlet:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="nVh-I9-iHk"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.1803921568627451" green="0.0039215686274509803" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="Z7k-7E-Yj2" firstAttribute="top" secondItem="c2r-Wx-jOQ" secondAttribute="bottom" constant="37" id="0LN-Gj-54B"/>
+                        <constraint firstItem="Z7k-7E-Yj2" firstAttribute="centerX" secondItem="fkB-hP-fzm" secondAttribute="centerX" id="Ayb-BY-DV0"/>
+                        <constraint firstItem="IA3-dZ-Dfz" firstAttribute="top" secondItem="jdH-lH-mxR" secondAttribute="bottom" constant="30" id="EOP-wc-KWg"/>
+                        <constraint firstItem="eYs-g4-h65" firstAttribute="trailing" secondItem="PI1-MB-Ncv" secondAttribute="trailing" id="L9f-lV-zRU"/>
+                        <constraint firstItem="eYs-g4-h65" firstAttribute="top" secondItem="PI1-MB-Ncv" secondAttribute="bottom" constant="25" id="N0c-ov-pPx"/>
+                        <constraint firstAttribute="bottom" secondItem="Z7k-7E-Yj2" secondAttribute="bottom" constant="40" id="TyP-Vy-oaX"/>
+                        <constraint firstItem="PI1-MB-Ncv" firstAttribute="top" secondItem="IA3-dZ-Dfz" secondAttribute="bottom" constant="90" id="caJ-Ce-H3M"/>
+                        <constraint firstItem="jdH-lH-mxR" firstAttribute="top" secondItem="fkB-hP-fzm" secondAttribute="top" constant="15" id="ctb-gd-pcB"/>
+                        <constraint firstItem="IA3-dZ-Dfz" firstAttribute="centerX" secondItem="fkB-hP-fzm" secondAttribute="centerX" id="fBi-FQ-CBz"/>
+                        <constraint firstItem="PI1-MB-Ncv" firstAttribute="centerX" secondItem="fkB-hP-fzm" secondAttribute="centerX" id="rTY-nL-GS1"/>
+                        <constraint firstItem="c2r-Wx-jOQ" firstAttribute="centerX" secondItem="fkB-hP-fzm" secondAttribute="centerX" id="rhM-Ga-wVy"/>
+                        <constraint firstItem="jdH-lH-mxR" firstAttribute="centerX" secondItem="fkB-hP-fzm" secondAttribute="centerX" id="u8F-Al-fPP"/>
+                        <constraint firstItem="c2r-Wx-jOQ" firstAttribute="top" secondItem="eYs-g4-h65" secondAttribute="bottom" constant="35" id="x8r-Yq-aOW"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="dJR-IO-Knz" secondAttribute="bottom" constant="1" id="1TG-2P-B5B"/>
+                <constraint firstItem="fkB-hP-fzm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="DWs-EZ-pqY"/>
+                <constraint firstAttribute="bottom" secondItem="fkB-hP-fzm" secondAttribute="bottom" id="Ieg-nu-dfg"/>
+                <constraint firstItem="dJR-IO-Knz" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="1" id="dep-V8-Szk"/>
+                <constraint firstItem="dJR-IO-Knz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="1" id="fx4-2K-YIF"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="dJR-IO-Knz" secondAttribute="trailing" constant="1" id="kb8-c2-fVT"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="fkB-hP-fzm" secondAttribute="trailing" id="qp3-qU-qSj"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <connections>
+                <outlet property="OuterView" destination="fkB-hP-fzm" id="I54-BJ-YCa"/>
+                <outlet property="closeBtnOutlet" destination="dJR-IO-Knz" id="2ri-cp-7gs"/>
+                <outlet property="confirmOutlet" destination="Z7k-7E-Yj2" id="n25-z4-Ee7"/>
+                <outlet property="showhideOutlet" destination="eYs-g4-h65" id="ugk-Sf-FJI"/>
+                <outlet property="textPin" destination="bcV-0M-S7Z" id="Co5-gj-ZJb"/>
+                <outlet property="textPin2" destination="K5C-VA-OZf" id="gUm-Uw-rw7"/>
+                <outlet property="textPin3" destination="Lpf-po-urE" id="WUE-f6-RNL"/>
+                <outlet property="textPin4" destination="rD5-XY-9r9" id="i16-IM-rWr"/>
+                <outlet property="top_parentalView" destination="Ieg-nu-dfg" id="tLc-ca-A6w"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="35.491071428571423"/>
+        </view>
+    </objects>
+</document>

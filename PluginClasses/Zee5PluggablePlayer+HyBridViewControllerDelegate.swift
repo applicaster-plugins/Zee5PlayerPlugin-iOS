@@ -10,16 +10,7 @@ import Foundation
 extension Zee5PluggablePlayer {
 
     @objc public func openHyBridViewController() {
-        self.hybridViewController?.playerViewController?.changePlayerDisplayMode(.inline)
-    }
-
-    public func hyBridPlayerControlsView() -> (UIView & APPlayerControls)? {
-        var controlsView: (UIView & APPlayerControls)?
-
-        if let playerControlsView = (Bundle(for: Zee5PluggablePlayer.self).loadNibNamed("HybridPlayerControlsView", owner: self, options: nil)?.first) {
-            controlsView = playerControlsView as? UIView & APPlayerControls
-        }
-        return controlsView
+//        self.hybridViewController?.playerViewController?.changePlayerDisplayMode(.inline)
     }
 
     public func hyBridPlayerContainerView() -> UIView? {

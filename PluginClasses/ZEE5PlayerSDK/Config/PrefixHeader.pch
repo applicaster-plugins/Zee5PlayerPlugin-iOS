@@ -1,0 +1,39 @@
+//
+//  PrefixHeader.pch
+//  ZEE5PlayerSDK
+//
+//  Created by admin on 04/12/18.
+//  Copyright © 2018 ZEE5. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+// #define NSLog(...)
+
+#import "ZEE5UserDefaults.h"
+#import "BaseUrls.h"
+#import "Utility.h"
+#import "ZEE5SdkError.h"
+#import "NetworkManager.h"
+#import "AppConfigManager.h"
+#import "ReportingManager.h"
+#import "NSDictionary+Extra.h"
+#import "Genres.h"
+
+//#define kLiveContentBaseUrl @"https://catalogapi.zee5.com/v1/channel/"
+//#define kLiveTokenBaseUrl @"https://useraction.zee5.com/token/live.php"
+//#define kCatalogDetailsBaseUrl @"https://gwapi.zee5.com/content/details/"
+#define kCDN_URL @"https://zee5vod.akamaized.net"
+//#define kDRMLicenceUrl @"https://fp-keyos-aps1.licensekeyserver.com/getkey/"
+//#define kDRMCetificateURL @"https://fp-keyos-aps1.licensekeyserver.com/cert/b19d422d890644d5112d08469c2e5946.der"
+//#define kEntitlementV4 @"https://subscriptionapi.zee5.com/v4/entitlement"
+
+
+#define LiveShareUrl @"https://www.zee5.com/channels/details/"
+#define VodShareUrl @"https://www.zee5.com/"
+#endif /* PrefixHeader_pch */

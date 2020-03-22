@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="ZEE5_Player.ttf">
+            <string>ZEE5_Player</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Zee5MuteView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="229"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mij-Ei-nCL">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="229"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Label " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="93F-7K-hbG">
+                    <rect key="frame" x="10" y="204.5" width="284" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Label " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Glo-4o-3bO">
+                    <rect key="frame" x="304" y="204.5" width="100" height="14.5"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="Fyn-5j-or1"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LA8-11-cqB">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="229"/>
+                    <connections>
+                        <action selector="btnTapOnPlayer:" destination="iN0-l3-epB" eventType="touchUpInside" id="pYP-sC-EUe"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hq1-AN-Hni">
+                    <rect key="frame" x="374" y="10" width="30" height="32"/>
+                    <fontDescription key="fontDescription" name="ZEE5_Player" family="ZEE5_Player" pointSize="20"/>
+                    <state key="normal" title="O">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="btnMuteClicked:" destination="iN0-l3-epB" eventType="touchUpInside" id="htS-j4-P3u"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="93F-7K-hbG" secondAttribute="bottom" constant="10" id="2Af-ak-OkA"/>
+                <constraint firstAttribute="bottom" secondItem="LA8-11-cqB" secondAttribute="bottom" id="5Jh-Eo-xVC"/>
+                <constraint firstItem="LA8-11-cqB" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="8Vy-0i-PLH"/>
+                <constraint firstItem="mij-Ei-nCL" firstAttribute="bottom" secondItem="LA8-11-cqB" secondAttribute="bottom" id="8my-61-PmC"/>
+                <constraint firstItem="LA8-11-cqB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="DZu-nP-hcp"/>
+                <constraint firstAttribute="bottom" secondItem="Glo-4o-3bO" secondAttribute="bottom" constant="10" id="FfD-GT-xn0"/>
+                <constraint firstItem="93F-7K-hbG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="GW4-4y-wix"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="hq1-AN-Hni" secondAttribute="trailing" constant="10" id="OBy-H7-FdW"/>
+                <constraint firstItem="mij-Ei-nCL" firstAttribute="top" secondItem="LA8-11-cqB" secondAttribute="top" id="QcK-MA-dP8"/>
+                <constraint firstItem="hq1-AN-Hni" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="bff-dp-kiH"/>
+                <constraint firstItem="Glo-4o-3bO" firstAttribute="leading" secondItem="93F-7K-hbG" secondAttribute="trailing" constant="10" id="dVs-Mp-dhv"/>
+                <constraint firstItem="mij-Ei-nCL" firstAttribute="trailing" secondItem="LA8-11-cqB" secondAttribute="trailing" id="fdh-ra-JZA"/>
+                <constraint firstAttribute="trailing" secondItem="Glo-4o-3bO" secondAttribute="trailing" constant="10" id="hXz-MA-Yz5"/>
+                <constraint firstItem="LA8-11-cqB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="iXH-5H-7fU"/>
+                <constraint firstItem="mij-Ei-nCL" firstAttribute="leading" secondItem="LA8-11-cqB" secondAttribute="leading" id="mQX-tV-qfe"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="btnMute" destination="hq1-AN-Hni" id="hrI-ne-aR1"/>
+                <outlet property="lblEpisode" destination="Glo-4o-3bO" id="SNq-EO-kqe"/>
+                <outlet property="lblTitle" destination="93F-7K-hbG" id="cTC-F6-CT9"/>
+                <outlet property="shadowView" destination="mij-Ei-nCL" id="dJG-5M-3cy"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="154.35267857142856"/>
+        </view>
+    </objects>
+</document>

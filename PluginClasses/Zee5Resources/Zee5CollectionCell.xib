@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="Zee5CollectionCell">
+            <rect key="frame" x="0.0" y="0.0" width="216" height="129"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="216" height="129"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="izn-2g-SFN">
+                        <rect key="frame" x="3" y="0.0" width="210" height="129"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manmohini - Episode New - December 1st edition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aHO-7p-0Nx">
+                        <rect key="frame" x="6" y="104.5" width="204" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Net-wj-fOK">
+                        <rect key="frame" x="64.5" y="21" width="87" height="87"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="87" id="o8Y-lM-fKJ"/>
+                            <constraint firstAttribute="height" constant="87" id="oDc-eb-I66"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="izn-2g-SFN" secondAttribute="trailing" constant="3" id="0rd-8S-w7I"/>
+                <constraint firstItem="Net-wj-fOK" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="2Rt-TH-jEz"/>
+                <constraint firstAttribute="trailing" secondItem="aHO-7p-0Nx" secondAttribute="trailing" constant="6" id="AEK-JA-FPc"/>
+                <constraint firstAttribute="trailing" secondItem="izn-2g-SFN" secondAttribute="trailing" constant="3" id="EyE-G2-lOG"/>
+                <constraint firstItem="izn-2g-SFN" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Ly4-JS-K79"/>
+                <constraint firstItem="Net-wj-fOK" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="PC6-mK-idW"/>
+                <constraint firstAttribute="bottom" secondItem="aHO-7p-0Nx" secondAttribute="bottom" constant="10" id="TeJ-e4-d62"/>
+                <constraint firstItem="aHO-7p-0Nx" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="6" id="V79-V1-CYC"/>
+                <constraint firstItem="izn-2g-SFN" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="gIK-JM-Fu4"/>
+                <constraint firstAttribute="bottom" secondItem="izn-2g-SFN" secondAttribute="bottom" id="k3V-Ma-GbU"/>
+                <constraint firstItem="izn-2g-SFN" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="3" id="mKc-9i-jHD"/>
+                <constraint firstAttribute="bottom" secondItem="izn-2g-SFN" secondAttribute="bottom" id="r1x-ci-p2n"/>
+                <constraint firstItem="izn-2g-SFN" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="3" id="xrw-Q9-pg9"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="SEy-5g-ep8"/>
+            <size key="customSize" width="216" height="129"/>
+            <connections>
+                <outlet property="counterView" destination="Net-wj-fOK" id="x1y-7L-eJW"/>
+                <outlet property="imageView" destination="izn-2g-SFN" id="ao1-Lw-FZ7"/>
+                <outlet property="labelTitle" destination="aHO-7p-0Nx" id="hTn-hT-4TY"/>
+            </connections>
+            <point key="canvasLocation" x="244.80000000000001" y="119.1904047976012"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="placeholder" width="143.5" height="143.5"/>
+    </resources>
+</document>

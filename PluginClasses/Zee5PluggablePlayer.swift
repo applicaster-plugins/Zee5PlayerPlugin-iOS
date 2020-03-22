@@ -7,145 +7,206 @@
 import ApplicasterSDK
 import ZappPlugins
 import UIKit
+import Zee5CoreSDK
 
-public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol, miniPlayerProtocol, hyBridViewControllerProtocol, pluggablePlayerDelegate, sleepModeProtocol {
-
+public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
+    
     public var pluginStyles: [String : Any]?
-
+    
     //MARK: Class Variables
     var hybridViewController: HybridViewController?
-    var miniPlayerView: MiniPlayerContainerView?
     var currentPlayableItem: ZPPlayable?
     var rootViewController: UIViewController?
     var shouldDissmis: Bool = true
-    // Sleep Mode
-    var sleepModeCountDown: NSNumber?
-
-    public static func pluggablePlayerInit(playableItem item: ZPPlayable?) -> ZPPlayerProtocol?{
-        if let item = item {
-            return self.pluggablePlayerInit(playableItems: [item])
-        }
-        return nil
+    
+    // MARK: -
+    
+    var kalturaPlayerController: KalturaPlayerController?
+    private var pluginModel: ZPPluginModel?
+    private var screenModel: ZLScreenModel?
+    private var dataSourceModel: NSObject?
+    
+    // MARK: - Lifecycle
+    
+    public required init?(pluginModel: ZPPluginModel, screenModel: ZLScreenModel, dataSourceModel: NSObject?) {
+        self.pluginModel = pluginModel
+        self.screenModel = screenModel
+        self.dataSourceModel = dataSourceModel
+        
+        super.init()
     }
-
-    public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary? = nil) -> ZPPlayerProtocol?{
-
+    
+    
+    public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary?) -> ZPPlayerProtocol?
+    {
+        print("pluggablePlayerRemoveInline:: item: \(String(describing: items))")
+        guard let videos = items else
+        {
+            return nil
+        }
+        print("pluggablePlayerRemoveInline::Videos : \(videos)")
+        //  print("Zpplayble Object : \)")
+        
+        Zee5DownloadManager.shared.initializeDownloadManger()
+        
+        var errorViewConfig: ErrorViewConfiguration?
+        if let configuration = configurationJSON
+            
+        {
+            errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
+        }
+        
+        let playerViewController = ViewControllerFactory.createPlayerViewController(videoItems: videos, errorViewConfig: errorViewConfig)
+        
         let instance: Zee5PluggablePlayer
+        
         // Hybrid presented
         if let lastActiveInstance = Zee5PluggablePlayer.lastActiveInstance() {
             instance = lastActiveInstance
         }
-        // No Player Presented
+            // No Player Presented
         else {
             instance = Zee5PluggablePlayer()
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
         }
-
-
+        
+        
         // Configuration
         instance.configurationJSON = configurationJSON
         instance.currentPlayableItem = items?.first
-        instance.hybridViewController?.playerViewController = Zee5PlayerViewController(playableItem: items?.first)
-        instance.hybridViewController?.playerViewController?.delegate = instance
+        instance.hybridViewController?.kalturaPlayerController = playerViewController
         instance.hybridViewController?.currentPlayableItem = items?.first
-        instance.hybridViewController?.delegate = instance
         instance.hybridViewController?.configurationJSON = configurationJSON
-
+        
         if let screenModel = ZAAppConnector.sharedInstance().layoutComponentsDelegate.componentsManagerGetScreenComponentforPluginID(pluginID: "zee_player"),
             screenModel.isPluginScreen(),
             let style = screenModel.style {
             instance.hybridViewController?.pluginStyles = style.object
             instance.pluginStyles = instance.hybridViewController?.pluginStyles
         }
+        
+        instance.kalturaPlayerController = playerViewController
+        
+        let Dict = items!.first!.extensionsDictionary
+        print(Dict!)
+        
+        if items != nil, items!.count > 0,let contentId = items!.first!.identifier as String?
+        {
+            ZEE5PlayerSDK.initialize(withContentID: contentId, and: Zee5UserDefaultsManager.shared.getUserAccessToken())
+            instance.kalturaPlayerController?.contentId = contentId
+            
+            ZEE5UserDefaults .setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
+            
+            ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
+            ZEE5UserDefaults .settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
+            
+            let Country =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
+            
+            ZEE5UserDefaults.setCountry(Country.country, andState: Country.state)
+            
+            
+            if let SubscribeData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData()
+            {
+                let dataString = String(data: SubscribeData, encoding: String.Encoding.utf8)
+                print("dataString == \(String(describing: dataString))")
+                ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+            }
+            ///// ****GET User Seting Data******
+            
+            if let UserSetting = Zee5UserDefaultsManager.shared.getUsersSettings()
+            {
+                let userSettingString = String(data: UserSetting, encoding: String.Encoding.utf8)
+                print("dataString == \(String(describing: userSettingString))")
+                ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
+            }
+            
+        }
+        
         return instance
     }
-
+    
     public override func pluggablePlayerViewController() -> UIViewController? {
         return self.hybridViewController
     }
-
+    
     public func pluggablePlayerCurrentPlayableItem() -> ZPPlayable? {
-        return currentPlayableItem
+        print("\n|*** pluggablePlayerCurrentPlayableItem : implementation ***| \n")
+        return self.kalturaPlayerController?.playerAdapter?.currentItem
     }
-
-    // MARK: - Available only in Full screen mode
-
+    
+    public override func pluggablePlayerFirstPlayableItem() -> ZPPlayable? {
+        print("\n|*** pluggablePlayerFirstPlayableItem : suggestion ***| \n")
+        return self.kalturaPlayerController?.playerAdapter?.currentItem
+    }
+    
+    public func pluggablePlayerCurrentUrl() -> NSURL? {
+        let item = self.kalturaPlayerController?.playerAdapter?.currentItem
+        let urlString = item?.contentVideoURLPath() ?? ""
+        return NSURL(string: urlString)
+    }
+    
+    
+    // MARK: - Inline playback
+    
+    public override func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
+        guard let kalturaPlayerController = self.kalturaPlayerController else {
+            return
+        }
+        kalturaPlayerController.builder.mode = .inline
+        rootViewController.addChildViewController(kalturaPlayerController, to: container)
+        kalturaPlayerController.view.matchParent()
+    }
+    
+    public override func pluggablePlayerRemoveInline() {
+        if let item = self.kalturaPlayerController?.playerAdapter?.currentItem,
+            let progress = self.kalturaPlayerController?.playerAdapter?.playbackState {
+            print("pluggablePlayerRemoveInline:: item: \(item) *** progress ** \(progress)")
+        }
+        let container = self.kalturaPlayerController?.view.superview
+        container?.removeFromSuperview()
+    }
+    
+    
+    // MARK: - Fullscreen playback
+    
     public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
         self.rootViewController = rootViewController
-
+        
         self.shouldDissmis = true
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "APPlayerControllerReachedEndNotification"), object:nil)
-
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "APPlayerDidStopNotification"), object:nil)
-
-        NotificationCenter.default.removeObserver(
-            self,
-            name: NSNotification.Name(rawValue: "APApplicasterPlayerStartSleepModeNotification"),
-            object: nil)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(showSleepModeView),
-            name: NSNotification.Name(rawValue: "APApplicasterPlayerStartSleepModeNotification"),
-            object: nil)
-
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(stop),
-            name: NSNotification.Name(rawValue: "APPlayerControllerReachedEndNotification"),
-            object: nil)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(stop),
-            name: NSNotification.Name(rawValue: "APPlayerDidStopNotification"),
-            object: nil)
-
-        NotificationCenter.default.removeObserver(
-            self,
-            name: NSNotification.Name(rawValue: "APApplicasterPlayerMiniCloseNotification"),
-            object: nil)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(stopSleepMode),
-            name: NSNotification.Name(rawValue: "APApplicasterPlayerMiniCloseNotification"),
-            object: nil)
-
+        
         let animated : Bool = configuration?.animated ?? true;
-
+        
         let rootVC : UIViewController = rootViewController.topmostModal()
         if let playerVC = self.pluggablePlayerViewController() as? HybridViewController{
             if rootVC is HybridViewController {
                 playerVC.updatePlayerConfiguration()
+                self.kalturaPlayerController?.playerAdapter?.play()
+                
             } else {
                 playerVC.modalPresentationStyle = .fullScreen
                 rootVC.present(playerVC, animated:animated, completion: {
-                    if let sleepModeCountDown = self.sleepModeCountDown {
-                        self.sleepModeConfiguration(minutes: sleepModeCountDown.intValue)
-                    }
+                    self.kalturaPlayerController?.playerAdapter?.play()
                 })
             }
         } else {
             APLoggerError("Failed creating player view controller for Kaltura player")
         }
     }
-
+    
     open override func pluggablePlayerType() -> ZPPlayerType {
         return Zee5PluggablePlayer.pluggablePlayerType()
     }
-
+    
     public static func pluggablePlayerType() -> ZPPlayerType {
         return .undefined
     }
-
+    
     // MARK: - ZPAdapterProtocol
-
+    
     public required override init() { }
-
+    
     public required init(configurationJSON: NSDictionary?) { }
-
+    
     @objc public func handleUrlScheme(_ params: NSDictionary) {
         print("params \(params)")
         if let stringURL = params["ds"] as? String {
@@ -169,7 +230,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol, miniP
                                     }
                                 }
                             }
-                            // present the first item
+                                // present the first item
                             else if let atomEntry = entries.first as? APAtomEntry,
                                 let playable = atomEntry.playable() {
                                 if let p = atomEntry.parentFeed,
@@ -185,15 +246,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol, miniP
             }
         }
     }
-
+    
     // MARK: - private
-
+    
     static func lastActiveInstance() -> Zee5PluggablePlayer? {
         // No player present
         guard let lastActiveInstance = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
             return nil
         }
-
+        
         guard let topModal = ZAAppConnector.sharedInstance().navigationDelegate.topmostModal() else {
             return nil
         }
@@ -201,40 +262,32 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol, miniP
         guard topModal is HybridViewController else {
             let instance = Zee5PluggablePlayer()
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
-            instance.sleepModeCountDown = lastActiveInstance.sleepModeCountDown
             Zee5PluggablePlayer.clear(instans: lastActiveInstance)
             return instance
         }
-
+        
         // Hybrid Player Present and user click on related content
         Zee5PluggablePlayer.clear(instans: lastActiveInstance)
         return lastActiveInstance
     }
-
+    
     static func clear(instans: Zee5PluggablePlayer) {
         instans.shouldDissmis = false
-        instans.hybridViewController?.playerViewController?.delegate = nil
-        instans.hybridViewController?.playerViewController?.stop()
-        instans.hybridViewController?.playerViewController = nil
+        //        instans.hybridViewController?.playerViewController?.delegate = nil
+        //        instans.hybridViewController?.playerViewController?.stop()
+        //        instans.hybridViewController?.playerViewController = nil
         instans.hybridViewController?.currentPlayableItem = nil
         instans.currentPlayableItem = nil
-        instans.hybridViewController?.delegate = nil
-        instans.closeMiniPlayer()
     }
-
+    
     @objc func stop() {
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "APPlayerControllerReachedEndNotification"), object:nil)
-
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "APPlayerDidStopNotification"), object:nil)
-
         if self.shouldDissmis == true,
             let playerVC = self.pluggablePlayerViewController() {
-            Zee5AnalyticsManager.shared.playerExit()
+            //            Zee5AnalyticsManager.shared.playerExit()
             playerVC.dismiss(animated: true, completion: nil)
             self.currentPlayableItem = nil
-            self.hybridViewController?.playerViewController = nil
+            //            self.hybridViewController?.playerViewController = nil
             self.hybridViewController = nil
-            self.closeMiniPlayer()
         }
     }
 }
