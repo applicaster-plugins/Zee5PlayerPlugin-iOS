@@ -45,39 +45,35 @@ class HybridViewController: UIViewController {
     }
 
     @objc func rotated() {
-//        if self.currentPlayableItem?.isAudioOnly == false && !ZAAppConnector.sharedInstance().chromecastDelegate.isSynced() && self.playerViewController?.playerController.isLoading == false {
-//            if UIDevice.current.orientation == UIDeviceOrientation.portraitUpsideDown {
-//                self.isPortraitUpsideDownOrientation = true
-//            }
-//            else {
-//                self.isPortraitUpsideDownOrientation = false
-//            }
-//            if !UIDevice.current.orientation.isFlat {
-//             if UIDevice.current.orientation.isLandscape {
-//                 if self.isPortraitUpsideDownOrientation == false,
-//                    let mode = self.playerViewController?.currentDisplayMode,
-//                    mode != .mini {
-//                     self.delegate.dismissSleepModeViewIfNeeded()
-//                     self.playerViewController?.changePlayerDisplayMode(.fullScreen)
-//                 }
-//             } else {
-//                 if let mode = self.playerViewController?.currentDisplayMode,
-//                     mode != .mini,
-//                      self.isPortraitUpsideDownOrientation == false {
-//                     self.delegate.dismissSleepModeViewIfNeeded()
-//                     self.playerViewController?.changePlayerDisplayMode(.inline)
-//                 }
-//             }
-//            }
-//        }
+        if UIDevice.current.orientation == UIDeviceOrientation.portraitUpsideDown {
+            self.isPortraitUpsideDownOrientation = true
+        }
+        else {
+            self.isPortraitUpsideDownOrientation = false
+        }
+        if !UIDevice.current.orientation.isFlat {
+            if UIDevice.current.orientation.isLandscape {
+                if self.isPortraitUpsideDownOrientation == false,
+                    let mode = self.kalturaPlayerController?.currentDisplayMode,
+                    mode != .mini {
+                    self.kalturaPlayerController?.changePlayer(displayMode: .fullScreen)
+                }
+            } else {
+                if let mode = self.kalturaPlayerController?.currentDisplayMode,
+                    mode != .mini,
+                    self.isPortraitUpsideDownOrientation == false {
+                    self.kalturaPlayerController?.changePlayer(displayMode: .inline)
+                }
+            }
+        }
     }
-
+    
     // MARK:
-
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: Bundle(for: type(of: self)))
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -159,6 +155,9 @@ class HybridViewController: UIViewController {
         }
         self.addChildViewController(playerVC , to: playerView)
         playerVC.loadViewIfNeeded()
+        self.kalturaPlayerController?.changePlayer(displayMode: .inline)
+        self.kalturaPlayerController?.currentDisplayMode = .inline
+
     }
     
     public func updatePlayerConfiguration() {
@@ -180,5 +179,6 @@ class HybridViewController: UIViewController {
         }
         return loadingView
     }
+    
     
 }

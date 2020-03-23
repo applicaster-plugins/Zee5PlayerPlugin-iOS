@@ -11,6 +11,13 @@ import ZappPlugins
 import ApplicasterSDK
 import Zee5CoreSDK
 
+internal enum PlayerViewDisplayMode : Int {
+    case unknown = 0
+    case fullScreen = 1
+    case inline = 2
+    case mini = 3
+}
+
  class KalturaPlayerController: UIViewController {
 
     // MARK: - Properties
@@ -22,6 +29,10 @@ import Zee5CoreSDK
     var country = "IN"
     var translation = "en"
     
+    // Current player display mode
+    var currentDisplayMode: PlayerViewDisplayMode?
+    var previousParentViewController: UIViewController?
+    var previousContainerView: UIView?
     
     // MARK: - Lifecycle
     
@@ -43,8 +54,7 @@ import Zee5CoreSDK
         self.playerView = UIView()
         self.view.addSubview(self.playerView)
         self.playerView.matchParent()  // Applicaster
-        
-        
+                
         // Initialize Zee5Player
         let config = ZEE5PlayerConfig()
         country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
