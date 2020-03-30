@@ -169,24 +169,30 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     // MARK: - Fullscreen playback
     
-    public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
-        self.rootViewController = rootViewController
-        
-        self.shouldDissmis = true
-        
-        let animated : Bool = configuration?.animated ?? true;
-        
-        let rootVC : UIViewController = rootViewController.topmostModal()
+    public override func presentPlayerFullScreen(_ rootViewController:    UIViewController, configuration: ZPPlayerConfiguration?) {
+        self.presentPlayerFullScreen(rootViewController, configuration: configuration) {
+            self.kalturaPlayerController?.playerAdapter?.play()
+        }
+    }
+    
+    public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?, completion: (() -> Void)?) {
+        guard let kalturaPlayerController = self.kalturaPlayerController,
+            let topmostViewController = rootViewController.topmostModal(),
+            let currentItem = kalturaPlayerController.playerAdapter?.currentItem  else {
+                return
+        }
+        print("Current Item From zapp\(currentItem)")
+        let animated: Bool = configuration?.animated ?? true
+        kalturaPlayerController.builder.mode = .fullscreen
+
         if let playerVC = self.pluggablePlayerViewController() as? HybridViewController{
-            if rootVC is HybridViewController {
+            if topmostViewController is HybridViewController {
                 playerVC.updatePlayerConfiguration()
                 self.kalturaPlayerController?.playerAdapter?.play()
                 
             } else {
                 playerVC.modalPresentationStyle = .fullScreen
-                rootVC.present(playerVC, animated:animated, completion: {
-                    self.kalturaPlayerController?.playerAdapter?.play()
-                })
+                topmostViewController.present(playerVC, animated:animated, completion: completion)
             }
         } else {
             APLoggerError("Failed creating player view controller for Kaltura player")
