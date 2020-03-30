@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.libraries = 'z'
 
   s.frameworks = 'UIKit','AVFoundation'
-  s.source_files  = 'PluginClasses/**/*.{h,m,swift}'
+  s.source_files  = 'PluginClasses/**/*.{h,m,swift,pch}'
   s.resources = [ 'PluginClasses/**/*.{xib,storyboard,png,ttf,xcassets,json}']
 
   s.xcconfig =  {
