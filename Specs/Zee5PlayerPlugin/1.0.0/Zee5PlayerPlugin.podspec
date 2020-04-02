@@ -30,6 +30,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'ZappPlugins'
   s.dependency 'ApplicasterSDK'
+  s.dependency 'ZappSDK'
   s.dependency 'FBAudienceNetwork'
   s.dependency 'PlayKit'
   s.dependency 'PlayKit_IMA', '1.7.1'
