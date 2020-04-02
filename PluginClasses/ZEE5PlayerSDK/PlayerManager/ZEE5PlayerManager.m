@@ -37,7 +37,6 @@
 #import "LiveContentDetails.h"
 #import "AddToWatchlist.h"
 #import "tvShowModel.h"
-#import "PrefixHeader.pch"
 #import "CdnHandler.h"
 
 
@@ -52,6 +51,12 @@
 #define WATCHLIST @"Add to watch List"
 #define POSTTIME @"post"
 #define Conviva_Application_Name @"Kaltura-iOS App"
+
+ /****************************************
+     On Clck Of Share Button Use this url (For Live and VOD)
+  *****************************************/
+#define LiveShareUrl @"https://www.zee5.com/channels/details/"
+#define VodShareUrl @"https://www.zee5.com/"
 
 
 
@@ -440,13 +445,17 @@ static ContentBuisnessType buisnessType;
 -(void)hideUnHidetrailerEndView:(BOOL )isHidden
 {
     _customControlView.trailerEndView.hidden = isHidden;
+    _customControlView.stackLoginView.hidden = isHidden;
+    if ([ZEE5UserDefaults.getUserType isEqualToString:@"guest"]) {
+        _customControlView.stackLoginView.hidden = true;
+    }
     
 }
 #pragma mark: Player Events
 
 -(void)playSimilarEvent:(NSString *)content_id
 {
-    NSLog(@"|*** Play Similar Event");
+    NSLog(@"|*** Play Similar Event"); 
 }
 
 -(void)onPlaying
@@ -675,6 +684,8 @@ static ContentBuisnessType buisnessType;
 
 -(void)handleHLSError
 {
+    NSLog(@"********* PlayBAck Error Hls Method *************");
+    
     [self getTokenND:^(NSString *token)
     {
         NSArray *aryStrings = [self.currentItem.hls_Url componentsSeparatedByString:@".m3u8"];

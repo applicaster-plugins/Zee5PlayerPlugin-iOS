@@ -74,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *trailerEndView;
 - (IBAction)subscribeNow:(UIButton *)sender;
 - (IBAction)loginNow:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet UIStackView *stackLoginView;
 
 @end
 

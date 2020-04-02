@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -433,28 +433,33 @@ watch this video</string>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a Premium member? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQN-Ss-Uo3">
-                            <rect key="frame" x="166" y="127" width="167.5" height="15"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="15" id="NIY-oj-YjN"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="12"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uI-wW-vOh">
-                            <rect key="frame" x="233" y="143" width="33" height="25"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="25" id="8yN-qf-eRd"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
-                            <state key="normal" title="Login">
-                                <color key="titleColor" red="1" green="0.0" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="loginNow:" destination="iN0-l3-epB" eventType="touchUpInside" id="I89-qG-M5T"/>
-                            </connections>
-                        </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Csr-5M-reu">
+                            <rect key="frame" x="166" y="127" width="167.5" height="45"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a Premium member? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQN-Ss-Uo3">
+                                    <rect key="frame" x="0.0" y="0.0" width="167.5" height="15"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="15" id="NIY-oj-YjN"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uI-wW-vOh">
+                                    <rect key="frame" x="0.0" y="20" width="167.5" height="25"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="25" id="8yN-qf-eRd"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
+                                    <state key="normal" title="Login">
+                                        <color key="titleColor" red="1" green="0.0" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="loginNow:" destination="iN0-l3-epB" eventType="touchUpInside" id="I89-qG-M5T"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
@@ -462,11 +467,9 @@ watch this video</string>
                         <constraint firstItem="bnk-yP-IpZ" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="6W1-9b-DFc"/>
                         <constraint firstItem="bnk-yP-IpZ" firstAttribute="top" secondItem="TCR-ep-QzZ" secondAttribute="bottom" id="822-Am-Qrx"/>
                         <constraint firstItem="FEd-Ab-oWE" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="R22-i2-je5"/>
-                        <constraint firstItem="bQN-Ss-Uo3" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="Spu-Kt-2k2"/>
-                        <constraint firstItem="2uI-wW-vOh" firstAttribute="top" secondItem="bQN-Ss-Uo3" secondAttribute="bottom" constant="1" id="WPu-ak-G9e"/>
+                        <constraint firstItem="Csr-5M-reu" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="XFC-hT-eWX"/>
+                        <constraint firstItem="Csr-5M-reu" firstAttribute="top" secondItem="FEd-Ab-oWE" secondAttribute="bottom" constant="5" id="cFx-96-5OL"/>
                         <constraint firstItem="TCR-ep-QzZ" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="gq7-Lz-cfF"/>
-                        <constraint firstItem="bQN-Ss-Uo3" firstAttribute="top" secondItem="FEd-Ab-oWE" secondAttribute="bottom" constant="5" id="tlM-XN-1fS"/>
-                        <constraint firstItem="2uI-wW-vOh" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="uor-dC-ogZ"/>
                         <constraint firstItem="FEd-Ab-oWE" firstAttribute="top" secondItem="bnk-yP-IpZ" secondAttribute="bottom" constant="5" id="voC-OC-XvD"/>
                     </constraints>
                 </view>
@@ -559,6 +562,7 @@ watch this video</string>
                 <outlet property="skipIntro" destination="p4i-9L-w3V" id="ylZ-tL-Ywg"/>
                 <outlet property="sliderDuration" destination="rig-fB-bhM" id="TBr-GG-P1Z"/>
                 <outlet property="sliderLive" destination="C0U-X6-laQ" id="uMq-0o-1cN"/>
+                <outlet property="stackLoginView" destination="Csr-5M-reu" id="zat-8a-qfL"/>
                 <outlet property="topView" destination="Ih4-4v-ast" id="pjM-Cu-bRh"/>
                 <outlet property="trailerEndView" destination="Zfz-bG-2t7" id="7n1-fF-jhp"/>
                 <outlet property="viewLive" destination="Rhx-bt-hUm" id="FaS-i5-hRh"/>
