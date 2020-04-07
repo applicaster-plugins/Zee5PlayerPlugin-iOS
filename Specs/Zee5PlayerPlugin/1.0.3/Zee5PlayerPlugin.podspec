@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Zee5PlayerPlugin"
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = "Zee5PlayerPlugin"
   s.description      = <<-DESC
                         Zee5PlayerPlugin.
@@ -49,4 +49,5 @@ Pod::Spec.new do |s|
   s.dependency 'SQLite.swift'
   s.dependency 'React', '~> 0.59.10'
   s.dependency 'ZeeHomeScreen'
+
 end

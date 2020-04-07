@@ -56,6 +56,7 @@ struct ExtensionsKey {
     static let isReminder = "is_reminder"
     static let releaseDate = "release_date"
     static let screenName = "screen_name"
+    static let itemDetailsUrl = "item_details_url"
 }
 
 public struct ItemTag {
@@ -95,6 +96,8 @@ public struct ItemTag {
         
         static let consumptionContentView = 870
         static let consumptionButtonsView = 871
+        static let consumptionRelatedVideosView = 872
+
     }
     struct Label {
         
