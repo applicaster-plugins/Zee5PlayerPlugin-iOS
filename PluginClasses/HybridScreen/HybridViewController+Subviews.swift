@@ -334,7 +334,14 @@
                 //                   let attributesDict: [String: Any]? = componentModel.value(forAttributeKey: "view_\(index!)", withModel: componentDataSourceModel) as? [String : Any]
                 
                 switch (view as! UIView).tag {
+                case ItemTag.View.adsBanner:
+                    guard let bannerView = view as? BannerView else {
+                        return
+                    }
                     
+                    bannerView.backgroundColor = .clear
+                    bannerView.setupAds(playable: self.currentPlayableItem)
+
                 case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection, ItemTag.View.consumptionLanguagesSubtitlesCollection:
                     if let tmpView = view as? UICollectionView {
                         

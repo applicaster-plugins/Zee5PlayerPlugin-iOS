@@ -474,6 +474,7 @@
 		4D9F33322436352200C30A5A /* makanbig@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F315C2436352100C30A5A /* makanbig@3x.png */; };
 		4D9F33332436352200C30A5A /* share_more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F315D2436352100C30A5A /* share_more@2x.png */; };
 		4D9F33352436352200C30A5A /* Zee5ResourceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F31602436352100C30A5A /* Zee5ResourceHelper.m */; };
+		716ECD1B24409BA000917E13 /* AdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716ECD1A24409BA000917E13 /* AdHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1003,6 +1004,7 @@
 		4D9F315D2436352100C30A5A /* share_more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_more@2x.png"; sourceTree = "<group>"; };
 		4D9F31602436352100C30A5A /* Zee5ResourceHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Zee5ResourceHelper.m; sourceTree = "<group>"; };
 		4D9F31612436352100C30A5A /* Zee5ResourceHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zee5ResourceHelper.h; sourceTree = "<group>"; };
+		716ECD1A24409BA000917E13 /* AdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdHelper.swift; path = VideoLoading/AdHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1054,6 +1056,7 @@
 				4D9F30392436352100C30A5A /* Zee5PluggablePlayer.swift */,
 				4D9F303A2436352100C30A5A /* assets */,
 				4D9F315F2436352100C30A5A /* ResourceHelper */,
+				716ECD1A24409BA000917E13 /* AdHelper.swift */,
 			);
 			path = PluginClasses;
 			sourceTree = SOURCE_ROOT;
@@ -2498,6 +2501,7 @@
 				4D9F31932436352200C30A5A /* OfflinePlayerController.swift in Sources */,
 				4D9F31A72436352200C30A5A /* ZEE5PlayerConfig.m in Sources */,
 				4D9F31832436352200C30A5A /* KalturaPlayerController.swift in Sources */,
+				716ECD1B24409BA000917E13 /* AdHelper.swift in Sources */,
 				4D9F31942436352200C30A5A /* ShowsDownloadController.swift in Sources */,
 				4D9F31962436352200C30A5A /* EmptyView.swift in Sources */,
 				4D9F31B62436352200C30A5A /* ChromeMiniControllerView.swift in Sources */,

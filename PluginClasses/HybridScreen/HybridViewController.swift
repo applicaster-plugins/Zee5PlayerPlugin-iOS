@@ -98,6 +98,7 @@ public struct ItemTag {
         static let consumptionButtonsView = 871
         static let consumptionRelatedVideosView = 872
 
+        static let adsBanner = 880
     }
     struct Label {
         
