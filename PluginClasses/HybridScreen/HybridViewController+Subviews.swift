@@ -29,7 +29,6 @@
                     
                     tmpButton.removeTarget(tmpButton, action: #selector(CAButton.handleElementAction(_:)), for: .touchUpInside)
                     switch tmpButton.tag {
-                        
                     case ItemTag.Button.shareButton:
                         
                         let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_Share_Link".localized(hashMap: [:]))
@@ -334,8 +333,16 @@
                 //                   let attributesDict: [String: Any]? = componentModel.value(forAttributeKey: "view_\(index!)", withModel: componentDataSourceModel) as? [String : Any]
                 
                 switch (view as! UIView).tag {
+                case ItemTag.View.premiumBanner:
+                    guard let bannerView = view as? PremiumBanner else {
+                        return
+                    }
+                    
+                    bannerView.backgroundColor = .clear
+                    bannerView.setupBanner(playable: self.currentPlayableItem)
+
                 case ItemTag.View.adsBanner:
-                    guard let bannerView = view as? BannerView else {
+                    guard let bannerView = view as? AdBanner else {
                         return
                     }
                     

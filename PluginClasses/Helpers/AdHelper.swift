@@ -11,7 +11,7 @@ import Foundation
 import ZappPlugins
 import Zee5CoreSDK
 
-class BannerView: UIView {
+class AdBanner: UIView {
     @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint?
     fileprivate let adHelper = AdHelper()
     
@@ -20,7 +20,7 @@ class BannerView: UIView {
     }
 }
 
-extension BannerView: ZPAdViewProtocol {
+extension AdBanner: ZPAdViewProtocol {
     func adLoaded(view: UIView?) {
         guard let view = view else {
             return
@@ -48,7 +48,7 @@ class AdHelper {
 
     typealias JSON = [String: Any]
     
-    fileprivate func setupAdsBanner(_ banner: BannerView, playable: ZPPlayable?) {
+    fileprivate func setupAdsBanner(_ banner: AdBanner, playable: ZPPlayable?) {
         banner.isHidden = true
         banner.removeAllSubviews()
         
