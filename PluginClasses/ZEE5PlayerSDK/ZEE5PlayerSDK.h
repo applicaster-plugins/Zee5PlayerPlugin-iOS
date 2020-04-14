@@ -44,7 +44,7 @@ typedef enum userType
     Guest,
     Registered,
     Premium
-} UserType;
+} Usertype;
 
 ///
 typedef NS_ENUM(NSUInteger, ConvivaPlayerState) {
@@ -100,7 +100,7 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 + (void)initializeWithContentID:(NSString*)content_id and:(NSString *)token;
 + (NSString *)getUserId;
 + (DevelopmentEnvironment)getDevEnvironment;
-+ (UserType)getUserTypeEnum;
++ (Usertype)getUserTypeEnum;
 + (NSString *)getSDKVersion;
 + (NSString *)getPlayerSDKVersion;
 

@@ -335,7 +335,8 @@ static ContentBuisnessType buisnessType;
     [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
     
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest)
+    {
               _customControlView.adultView.hidden = NO;
               [self stop];
 
