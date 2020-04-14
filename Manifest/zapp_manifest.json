@@ -6,11 +6,34 @@
     ],
     "require_startup_execution": false
   },
-  "assets": {
+  "author_email": "s.borkin@applicaster.com",
+  "author_name": "S. Borkin",
+  "dependency_name": "Zee5PlayerPlugin",
+  "dependency_repository_url": [
+    "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
+  ],
+  "dependency_version": "1.0.6",
+  "deprecated_since_zapp_sdk": "",
+  "description": "Zee5 Player Plugin",
+  "extra_dependencies": [],
+  "identifier": "zee_player",
+  "manifest_version": "1.0.1",
+  "min_zapp_sdk": "13.0.0-Dev",
+  "name": "Zee5 Player Plugin",
+  "npm_dependencies": [],
+  "platform": "ios",
+  "project_dependencies": [],
+  "react_native": false,
+  "rules": {
     "fields": []
   },
-  "author_email": "m.vecselboim@applicaster.com",
-  "author_name": "Miri Vecselboim",
+  "type": "player",
+  "unsupported_since_zapp_sdk": "",
+  "whitelisted_account_ids": [
+    "5cb825e102507200087bbdcc",
+    "5c3b12762756be0008779106"
+  ],
+  "ui_builder_support": true,
   "custom_configuration_fields": [
     {
       "type": "text",
@@ -52,32 +75,9 @@
       "key": "supports_audio"
     }
   ],
-  "dependency_name": "Zee5PlayerPlugin",
-  "dependency_repository_url": [
-    "https://github.com/applicaster/Zee5PlayerPlugin-iOS.git"
-  ],
-  "dependency_version": "1.4.0",
-  "deprecated_since_zapp_sdk": "",
-  "description": "Zee5 Player Plugin",
-  "extra_dependencies": [],
-  "identifier": "zee_player",
-  "manifest_version": "1.4.0",
-  "min_zapp_sdk": "13.0.0-Dev",
-  "name": "Zee5 Player Plugin",
-  "npm_dependencies": [],
-  "platform": "ios",
-  "project_dependencies": [],
-  "react_native": false,
-  "rules": {
+  "assets": {
     "fields": []
   },
-  "type": "player",
-  "unsupported_since_zapp_sdk": "",
-  "whitelisted_account_ids": [
-    "5cb825e102507200087bbdcc",
-    "5c3b12762756be0008779106"
-  ],
-  "ui_builder_support": true,
   "general": {},
   "styles": {
     "fields": [

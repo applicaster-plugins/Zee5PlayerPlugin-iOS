@@ -209,7 +209,19 @@ class HybridViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.commonInit()
+        
+        guard let dsUrl = self.currentPlayableItem?.extensionsDictionary?["item_details_url"] as? String else {
+            return
+        }
+        
+        guard let atomFeed = APAtomFeed(url: dsUrl) else {
+            return
+        }
+            
+        APAtomFeedLoader.loadPipes(model: atomFeed) { [weak self] (success, atomFeed) in
+            self?.currentPlayableItem?.extensionsDictionary = atomFeed?.extensions as NSDictionary?
+            self?.commonInit()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
