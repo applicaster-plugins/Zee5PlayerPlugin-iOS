@@ -21,7 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *con_height_topBar;
 
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *con_top_collectionView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *Stackview_top;
+
 @property (weak, nonatomic) IBOutlet UIButton *buttonReplay;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonPlay;
@@ -75,7 +79,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)subscribeNow:(UIButton *)sender;
 - (IBAction)loginNow:(UIButton *)sender;
 @property (weak, nonatomic) IBOutlet UIStackView *stackLoginView;
+@property (weak, nonatomic) IBOutlet UIStackView *watchcretidStackview;
+@property (weak, nonatomic) IBOutlet UIView *watchCreditBtnView;
+@property (weak, nonatomic) IBOutlet UIView *watchcreditShowView;
+@property (weak, nonatomic) IBOutlet UIImageView *nextEpisodeImg;
+@property (weak, nonatomic) IBOutlet UILabel *nextEpisodename;
+@property (weak, nonatomic) IBOutlet UILabel *showcreditTimelbl;
+@property (weak, nonatomic) IBOutlet UIView *getPremiumStackview;
+@property (weak, nonatomic) IBOutlet UIView *backtoPartnerView;
+- (IBAction)PremiumBtnAction:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet UILabel *premiumLbltext;
+@property (weak, nonatomic) IBOutlet UILabel *partnerLblTxt;
+- (IBAction)bactoPartnetAppAction:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIView *adultView;
 @end
 
 NS_ASSUME_NONNULL_END

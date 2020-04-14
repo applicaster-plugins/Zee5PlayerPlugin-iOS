@@ -23,7 +23,7 @@
     
     [self.subscribeBtnOutlet setTitle:@"Subscribe Now" forState:UIControlStateNormal];
     
-    if ([[ZEE5UserDefaults getUserType]isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         _subscribeView.hidden =YES;
         _outerView.hidden =NO;

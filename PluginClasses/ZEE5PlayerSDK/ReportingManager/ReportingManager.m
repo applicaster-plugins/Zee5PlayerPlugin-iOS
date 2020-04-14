@@ -72,7 +72,7 @@ static ReportingManager *sharedManager = nil;
     {
         return;
     }
-    if([ZEE5PlayerManager sharedInstance].currentItem == nil || [[ZEE5UserDefaults getUserType]isEqualToString:@"guest"])
+    if([ZEE5PlayerManager sharedInstance].currentItem == nil || ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         return;
     }
@@ -157,7 +157,7 @@ static ReportingManager *sharedManager = nil;
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     
     NSDictionary *requestheaders;
-   if ([ZEE5UserDefaults.getUserType isEqualToString:@"guest"])
+   if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         requestheaders = @{@"Content-Type":@"application/json",@"X-Z5-Guest-Token": userToken,@"Accept":@"application/json"};
     }
@@ -257,7 +257,7 @@ static ReportingManager *sharedManager = nil;
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
 
     NSDictionary *requestheaders;
-    if ([ZEE5UserDefaults.getUserType isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         requestheaders = @{@"Content-Type":@"application/json",@"X-Z5-Guest-Token": userToken,@"Accept":@"application/json"};
     }

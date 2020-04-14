@@ -104,6 +104,15 @@
         
         self.contentDescription = [dict ValueForKeyWithNullChecking:@"description"];
         
+        
+        if ([[dict ValueForKeyWithNullChecking:@"season_details"] isKindOfClass: NSDictionary.class]){
+            NSDictionary *SeasonDetail = [dict ValueForKeyWithNullChecking:@"season_details"];
+            
+            self.SeasonId = [SeasonDetail ValueForKeyWithNullChecking:@"id"];
+            
+        }
+        
+        
         if ([[dict ValueForKeyWithNullChecking:@"tvshow_details"] isKindOfClass: NSDictionary.class]) {
             NSDictionary * showDetail = [dict ValueForKeyWithNullChecking:@"tvshow_details"];
             NSString *str = [showDetail ValueForKeyWithNullChecking: @"original_title"];

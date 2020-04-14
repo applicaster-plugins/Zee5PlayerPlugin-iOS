@@ -39,6 +39,13 @@ typedef enum buisnessType
     advertisement,
 } ContentBuisnessType;
 
+typedef enum userType
+{
+    Guest,
+    Registered,
+    Premium
+} UserType;
+
 ///
 typedef NS_ENUM(NSUInteger, ConvivaPlayerState) {
     ConvivaPlayerStateSTOPPED = 1,
@@ -91,9 +98,9 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 
 
 + (void)initializeWithContentID:(NSString*)content_id and:(NSString *)token;
-
 + (NSString *)getUserId;
 + (DevelopmentEnvironment)getDevEnvironment;
++ (UserType)getUserTypeEnum;
 + (NSString *)getSDKVersion;
 + (NSString *)getPlayerSDKVersion;
 
