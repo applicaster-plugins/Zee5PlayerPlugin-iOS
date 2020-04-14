@@ -53,7 +53,7 @@ static ContentClickApi *sharedManager = nil;
     
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     NSString *GuestToken=@"";
-    if ([[ZEE5UserDefaults getUserType]isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         GuestToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     }
@@ -97,7 +97,7 @@ failureBlock:^(ZEE5SdkError * _Nullable error)
     
     NSString *userID = @"a027e306-1707-48af-991d-4597a91e0a92";       // Get userId of User
     
-    if ([[ZEE5UserDefaults getUserType]isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         userID = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     }

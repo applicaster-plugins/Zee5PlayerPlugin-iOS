@@ -17,7 +17,7 @@
     [super awakeFromNib];
     [self makeDragable];
     
-    if ([[ZEE5UserDefaults getUserType]isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         self.guestView.hidden =NO;
     }

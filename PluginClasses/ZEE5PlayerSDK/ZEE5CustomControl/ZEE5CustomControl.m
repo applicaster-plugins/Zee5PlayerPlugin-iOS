@@ -47,8 +47,14 @@
     
     _skipIntro.layer.cornerRadius = _buttonLive.frame.size.height/2;
     _skipIntro.clipsToBounds = YES;
-    _watchcreditsOutlet.hidden=YES;
+    _watchcretidStackview.hidden=YES;
     _watchcreditsTimeLbl.hidden=YES;
+    
+    _watchcreditShowView.layer.borderColor = [[UIColor whiteColor]CGColor];
+    _watchcreditShowView.layer.borderWidth = 1.0f;
+    _watchcreditShowView.layer.cornerRadius = 4.0f;
+    [_watchcreditShowView.layer setMasksToBounds:YES];
+    _adultView.hidden = YES;
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRelatedList) name:@"kRefreshRelatedVideoList" object:nil];
@@ -234,42 +240,42 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-
     Zee5CollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     RelatedVideos *model = self.related[indexPath.row];
     [cell configureCellWith:model];
-    if (indexPath.row ==0)
-    {
-        if (self.watchcreditsTimeLbl.hidden == NO)
-        {
-            int radius = 30;
-            CAShapeLayer *circle = [CAShapeLayer layer];
-            circle.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 2.0*radius, 2.0*radius)
-                                                     cornerRadius:radius].CGPath;
-
-            circle.fillColor = [[UIColor.blackColor colorWithAlphaComponent:(0.40)]CGColor];
-            circle.strokeColor = [[UIColor.whiteColor colorWithAlphaComponent:(0.60)]CGColor];
-            circle.lineWidth =50;
-            [cell.counterView.layer addSublayer:circle];
-            CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-            drawAnimation.duration            = 10.0; // "animate over 10 seconds or so.."
-            drawAnimation.repeatCount         = 1.0;  // Animate only once..
-            drawAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
-            drawAnimation.toValue   = [NSNumber numberWithFloat:1.0f];
-            drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
-            cell.counterView.hidden =NO;
-        }
-        else
-        {
-            cell.counterView.hidden =YES;
-        }
-    }
-    else
-    {
-       cell.counterView.hidden =YES;
-    }
+    
+    
+//    if (indexPath.row ==0)
+//    {
+//        if (self.watchcreditsTimeLbl.hidden == NO)
+//        {
+//            int radius = 30;
+//            CAShapeLayer *circle = [CAShapeLayer layer];
+//            circle.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 2.0*radius, 2.0*radius)
+//                                                     cornerRadius:radius].CGPath;
+//
+//            circle.fillColor = [[UIColor.blackColor colorWithAlphaComponent:(0.40)]CGColor];
+//            circle.strokeColor = [[UIColor.whiteColor colorWithAlphaComponent:(0.60)]CGColor];
+//            circle.lineWidth =50;
+//            [cell.counterView.layer addSublayer:circle];
+//            CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+//            drawAnimation.duration            = 10.0; // "animate over 10 seconds or so.."
+//            drawAnimation.repeatCount         = 1.0;  // Animate only once..
+//            drawAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
+//            drawAnimation.toValue   = [NSNumber numberWithFloat:1.0f];
+//            drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+//            [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
+//            cell.counterView.hidden =NO;
+//        }
+//        else
+//        {
+//            cell.counterView.hidden =YES;
+//        }
+//    }
+//    else
+//    {
+//       cell.counterView.hidden =YES;
+//    }
     
     return cell;
 }
@@ -306,5 +312,9 @@
 
 - (IBAction)loginNow:(UIButton *)sender {
     [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
+}
+- (IBAction)PremiumBtnAction:(UIButton *)sender {
+}
+- (IBAction)bactoPartnetAppAction:(id)sender {
 }
 @end

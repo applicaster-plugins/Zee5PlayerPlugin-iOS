@@ -124,7 +124,7 @@
             break;
     }
 }
-+ (NSString*)vodSimilarContent
+ + (NSString*)vodSimilarContent
 {
     switch (ZEE5PlayerSDK.getDevEnvironment) {
         case development:

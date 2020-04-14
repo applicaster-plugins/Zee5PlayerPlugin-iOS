@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class RelatedVideos;
 
 @interface Zee5CollectionCell : UICollectionViewCell
+ 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *labelTitle;
 @property (weak, nonatomic) IBOutlet UIView *counterView;
