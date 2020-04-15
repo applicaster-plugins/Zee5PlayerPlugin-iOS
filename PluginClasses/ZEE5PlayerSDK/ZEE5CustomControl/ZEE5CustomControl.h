@@ -93,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)bactoPartnetAppAction:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIView *adultView;
+@property (weak, nonatomic) IBOutlet UIView *watchCreditVodView;
 @end
 
 NS_ASSUME_NONNULL_END
