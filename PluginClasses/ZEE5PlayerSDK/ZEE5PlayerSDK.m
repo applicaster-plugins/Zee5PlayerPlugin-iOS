@@ -29,7 +29,6 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 {
     id Dict;
     
-    [ZEE5UserDefaults setUserToken: token];
     [[AppConfigManager sharedInstance] setConfig:[ZEE5ConfigDataModel initFromJSONDictionary:Dict]];
     
     [self setupConvivaAnalytics];

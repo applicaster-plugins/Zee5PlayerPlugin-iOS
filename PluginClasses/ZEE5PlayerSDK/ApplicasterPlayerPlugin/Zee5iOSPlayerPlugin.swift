@@ -71,7 +71,9 @@ public class Zee5iOSPlayerPlugin: NSObject, ZPPlayerProtocol, ZPPluggableScreenP
         
         if items != nil, items!.count > 0,let contentId = items!.first!.identifier as String?
         {
+            
             ZEE5PlayerSDK.initialize(withContentID: contentId, and: Zee5UserDefaultsManager.shared.getUserAccessToken())
+            
             instance.kalturaPlayerController?.contentId = contentId
             
             ZEE5UserDefaults .setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
