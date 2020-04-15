@@ -400,30 +400,14 @@
                     (view as! UIStackView).addBackground(color: color)
                                         
                 case ItemTag.View.consumptionRelatedVideosView:
-                    if let atom = self.currentPlayableItem,
-                        let extensions = atom.extensionsDictionary,
-                        let itemDetailsUrl = extensions[ExtensionsKey.itemDetailsUrl] as? String,
-                        let atomFeed = APAtomFeed.init(url: itemDetailsUrl) {
-                    
-                        APAtomFeedLoader.loadPipes(model: atomFeed) { [weak self] (success, atomFeed) in
-                            if success {
-                                if let atomFeed = atomFeed ,
-                                    let entries = atomFeed.entries{
-                                    
-                                    for entry in entries {
-                                        if let entry = entry as? APAtomFeed,
-                                            entry.identifier == "relatedContent",
-                                            let url = entry.content.src ,
-                                            let atomFeed = APAtomFeed.init(url: url) {
-                                            let vc = Zee5dsAdapter.createScreen(for: atomFeed)
-                                            self!.addChildViewController(vc, to:view)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    guard
+                        let url = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.relatedContent] as? String,
+                        let atomFeed = APAtomFeed.init(url: url) else {
+                            return
                     }
                     
+                    let vc = Zee5dsAdapter.createScreen(for: atomFeed)
+                    self.addChildViewController(vc, to:view)
                     
                 default:
                     break
@@ -525,32 +509,30 @@
                 UIApplication.shared.openURL(url)
             }
         }
-        @objc func shareButtonAction(_ sender: CAButton){
-            
-            var newAtomEntry: APAtomEntry!
-            var atom: APAtomEntryProtocol?
-            
-            if let currentPlayableItem = self.currentPlayableItem as? APAtomEntryPlayable,
-                let atomEntry = currentPlayableItem.atomEntry {
-                atom = atomEntry
-                if let link = atomEntry.link {
-                    newAtomEntry = APAtomEntry.linkEntry(withURLString: link)
-                }
+        
+        @objc func shareButtonAction(_ sender: CAButton) {
+            guard
+                let playable = self.currentPlayableItem as? APAtomEntryPlayable,
+                let extensions = playable.extensionsDictionary as? [String: Any],
+                let shareLink = extensions[ExtensionsKey.shareLink] as? String else {
+                    return
             }
             
-            guard newAtomEntry != nil else {
+            guard
+                let originalAtomEntry = playable.atomEntry,
+                let linkAtomEntry = APAtomEntry.linkEntry(withURLString: shareLink) else {
                 return
             }
             
-            guard let urlComponents = URLComponents(string: newAtomEntry.link) else {
+            guard let urlComponents = URLComponents(string: shareLink) else {
                 return
             }
             
-            newAtomEntry.link = urlComponents.string
-            newAtomEntry.title = atom!.title
-            newAtomEntry.entryType = atom!.entryType
+            linkAtomEntry.link = urlComponents.string
+            linkAtomEntry.title = originalAtomEntry.title
+            linkAtomEntry.entryType = originalAtomEntry.entryType
             
-            APSocialSharingManager.sharedInstance().shareWithDefaultText(withModel: newAtomEntry, andSharingType: APSharingViaNativeType)
+            APSocialSharingManager.sharedInstance().shareWithDefaultText(withModel: linkAtomEntry, andSharingType: APSharingViaNativeType)
             
             // Send analytics:
             let parameters = [
@@ -558,7 +540,7 @@
                 "location"    : "iOS Unknown"
             ]
             
-            NotificationCenter.default.post(name: NSNotification.Name.caCellTappedShareButton, object: newAtomEntry, userInfo: parameters as [AnyHashable : Any])
+            NotificationCenter.default.post(name: NSNotification.Name.caCellTappedShareButton, object: linkAtomEntry, userInfo: parameters as [AnyHashable : Any])
             
         }
         
@@ -724,10 +706,10 @@
             switch collectionView.tag {
             case ItemTag.View.consumptionCastCollection:
                 dataSource = castDataSource
-                textAlignment = .center
+                textAlignment = .left
             case ItemTag.View.consumptionCreatorCollection:
                 dataSource = creatorsDataSource
-                textAlignment = .center
+                textAlignment = .left
                 
             case ItemTag.View.consumptionLanguagesSubtitlesCollection:
                 dataSource = languagesSubtitlesDataSource
@@ -746,15 +728,14 @@
                 let descriptionStyle = stylesFor(key: "consumption_text_description")
                 let indicatorStyle = stylesFor(key: "consumption_text_indicator")
                 let visibilityStyle = stylesFor(key: "consumption_visibility_text")
-                
                 switch collectionView.tag {
                 case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection:
-                    
                     cell.titleLabel.textColor = descriptionStyle.color
                     cell.titleLabel.font = descriptionStyle.font
                     cell.subtitleLabel.textColor = indicatorStyle.color
                     cell.subtitleLabel.font = indicatorStyle.font
-                    
+                    cell.titleLabel.text = model.title
+                    cell.subtitleLabel.text = model.description
                 case ItemTag.View.consumptionLanguagesSubtitlesCollection:
                     
                     let title = NSMutableAttributedString(string: model.title ?? String(), attributes: [NSAttributedString.Key.foregroundColor: descriptionStyle.color, NSAttributedString.Key.font: descriptionStyle.font])

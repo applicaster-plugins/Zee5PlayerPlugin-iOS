@@ -1152,7 +1152,7 @@ static ContentBuisnessType buisnessType;
         }
     }];
 
-    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.presentedViewController;
+    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.topmostModalViewController;
     [VC presentViewController:activityVC animated:YES completion: nil];
 }
 
