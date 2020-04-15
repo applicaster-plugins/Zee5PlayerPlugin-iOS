@@ -341,7 +341,7 @@ static ContentBuisnessType buisnessType;
               [self stop];
 
         }
-    
+
     if (_currentItem.related.count == 1)
     {
          RelatedVideos *model = self.currentItem.related[0];
@@ -602,7 +602,7 @@ static ContentBuisnessType buisnessType;
             if (_currentItem.related.count == 1 && _customControlView.watchcretidStackview.hidden == true)
             {
                  self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
-                
+        
                 _customControlView.watchcretidStackview.hidden = NO;
                 _customControlView.watchcreditShowView.hidden = NO;
                 _customControlView.watchCreditVodView.hidden =NO;
@@ -656,6 +656,7 @@ static ContentBuisnessType buisnessType;
                  [self handleDownwardsGesture:nil];
                  [self onComplete];
             }
+            self.currentItem.WatchCredit = YES;
         }
 }
 
@@ -2117,8 +2118,7 @@ static ContentBuisnessType buisnessType;
     
     [self registerNotifications];
     self.playerConfig = playerConfig;
-    self.isLive = NO;
-    _watchCtreditSeconds = 10;
+ 
     
     NSArray *array = [content_id componentsSeparatedByString:@"-"];
     NSString *contentType = array[1];
@@ -2148,6 +2148,8 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock
 {
     NSLog(@"|*** Play VOD Content ***|");
+    
+       _watchCtreditSeconds = 10;
     
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
@@ -2751,7 +2753,7 @@ static ContentBuisnessType buisnessType;
                            };
     NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"Cache-Control":@"no-cache"};
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls. getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
+    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls.getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
      {
          
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];

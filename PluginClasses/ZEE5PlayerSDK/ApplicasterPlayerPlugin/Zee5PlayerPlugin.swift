@@ -9,10 +9,20 @@
 import Foundation
 import ZappPlugins
 import ApplicasterSDK
+import Zee5CoreSDK
 
-class ZappPlayerAdapter: NSObject {
-    
+public class ZappPlayerAdapter: NSObject {
+   
+    var userAccessToken = ""
     static let shared = ZappPlayerAdapter()
     
+    @objc public func getUserAccessToken()->String
+       {
+           User.shared.getAccessToken { (Token, error) in
+                         print(Token)
+               self.userAccessToken = Token
+                     }
+           return userAccessToken
+       }
     
 }
