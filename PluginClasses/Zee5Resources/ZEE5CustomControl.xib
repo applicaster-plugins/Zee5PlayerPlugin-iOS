@@ -380,7 +380,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="pfO-AE-4HQ">
-                    <rect key="frame" x="231" y="62" width="259" height="154"/>
+                    <rect key="frame" x="231" y="57" width="259" height="159"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LBs-9d-auO">
                             <rect key="frame" x="0.0" y="0.0" width="259" height="33"/>
@@ -410,7 +410,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ine-f7-VsB">
-                            <rect key="frame" x="0.0" y="38" width="259" height="116"/>
+                            <rect key="frame" x="0.0" y="38" width="259" height="81"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Jv0-Zl-75u">
                                     <rect key="frame" x="8" y="8" width="115" height="65"/>
@@ -456,11 +456,18 @@
                                 <constraint firstAttribute="trailing" secondItem="Vcy-gP-1Ex" secondAttribute="trailing" constant="5" id="LcB-x9-ywG"/>
                                 <constraint firstAttribute="trailing" secondItem="qvX-6L-cZA" secondAttribute="trailing" constant="1" id="SNT-Ju-F76"/>
                                 <constraint firstItem="Vcy-gP-1Ex" firstAttribute="top" secondItem="qvX-6L-cZA" secondAttribute="bottom" constant="4" id="Xe4-YC-REs"/>
-                                <constraint firstAttribute="height" constant="116" id="aDy-dD-fgs"/>
+                                <constraint firstAttribute="height" constant="81" id="aDy-dD-fgs"/>
                                 <constraint firstItem="qvX-6L-cZA" firstAttribute="top" secondItem="lof-fF-7cJ" secondAttribute="bottom" constant="4" id="eYJ-xg-Y3Y"/>
                                 <constraint firstAttribute="width" constant="259" id="ks8-4Q-Ope"/>
                                 <constraint firstItem="lof-fF-7cJ" firstAttribute="leading" secondItem="Jv0-Zl-75u" secondAttribute="trailing" constant="8" id="s4T-0D-uhf"/>
                                 <constraint firstItem="qvX-6L-cZA" firstAttribute="leading" secondItem="Jv0-Zl-75u" secondAttribute="trailing" constant="8" id="wAd-pr-7Kr"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SQs-IK-VON">
+                            <rect key="frame" x="0.0" y="124" width="259" height="35"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="35" id="efT-38-eH9"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -548,7 +555,7 @@ watch this video</string>
                     <rect key="frame" x="0.0" y="1" width="500" height="243"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This Content is for Adult viewing only. Please login to Continue." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="grw-mV-yQs">
-                            <rect key="frame" x="140" y="69" width="220" height="50"/>
+                            <rect key="frame" x="140" y="64" width="220" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="c0W-7G-4jA"/>
                                 <constraint firstAttribute="width" constant="220" id="rb6-MW-ieZ"/>
@@ -558,11 +565,10 @@ watch this video</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CpA-LS-wPV">
-                            <rect key="frame" x="175" y="124" width="150" height="25"/>
+                            <rect key="frame" x="175" y="119" width="150" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="150" id="JoD-uz-htF"/>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="f7P-EN-GWY"/>
-                                <constraint firstAttribute="height" constant="25" id="qdy-pH-Hou"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
                             <state key="normal" title="Login">
@@ -763,6 +769,7 @@ watch this video</string>
                 <outlet property="viewTop" destination="7CG-57-Izx" id="Ia0-0L-35J"/>
                 <outlet property="viewVod" destination="XXD-zP-Fnc" id="BZc-T6-8c7"/>
                 <outlet property="watchCreditBtnView" destination="LBs-9d-auO" id="7qB-To-DR2"/>
+                <outlet property="watchCreditVodView" destination="SQs-IK-VON" id="G2d-7g-PXk"/>
                 <outlet property="watchcreditShowView" destination="Ine-f7-VsB" id="B5T-zU-UMe"/>
                 <outlet property="watchcreditsOutlet" destination="pYN-fc-tSK" id="TRb-X8-jBG"/>
                 <outlet property="watchcreditsTimeLbl" destination="XW3-Dd-FYa" id="uvh-rq-8er"/>

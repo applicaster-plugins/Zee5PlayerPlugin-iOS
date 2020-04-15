@@ -603,7 +603,9 @@ static ContentBuisnessType buisnessType;
             {
                  self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
                 
-                _customControlView.watchcretidStackview.hidden = false;
+                _customControlView.watchcretidStackview.hidden = NO;
+                _customControlView.watchcreditShowView.hidden = NO;
+                _customControlView.watchCreditVodView.hidden =NO;
             }
             else
             {
@@ -613,9 +615,10 @@ static ContentBuisnessType buisnessType;
                     
                      [self handleUpwardsGesture:nil];
                     _customControlView.watchcreditsTimeLbl.hidden = NO;
-                    _customControlView.watchcretidStackview.hidden = false;
-                    _customControlView.watchCreditBtnView.hidden = NO;
+                    _customControlView.watchcretidStackview.hidden = NO;
+                    _customControlView.watchCreditBtnView.hidden = YES;
                     _customControlView.watchcreditShowView.hidden = YES;
+                    _customControlView.watchCreditVodView.hidden =YES;
                 }
             }
             
@@ -1009,7 +1012,9 @@ static ContentBuisnessType buisnessType;
 {
     [self handleDownwardsGesture:nil];
     self.currentItem.WatchCredit =YES;
+    _customControlView.watchcretidStackview.hidden = true;
     [_CreditTimer invalidate];
+    _CreditTimer = nil;
     
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
     [engine watchCreditsAnalyticsWith:self.ModelValues.watchCreditTime];
