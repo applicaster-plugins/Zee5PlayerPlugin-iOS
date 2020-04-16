@@ -73,6 +73,10 @@ internal enum PlayerViewDisplayMode : Int {
         self.playerAdapter?.registerPlayerEvents()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        print("****** View will Appear.")
+    }
+    
     private func addNotifiactonObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)
         
@@ -96,6 +100,8 @@ internal enum PlayerViewDisplayMode : Int {
     }
     
 }
+
+
 
 // MARK: - ZEE5PlayerDelegate Method
 
