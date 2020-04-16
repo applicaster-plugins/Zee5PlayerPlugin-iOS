@@ -14,6 +14,7 @@
 
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
+static Usertype usertype = Guest;
 
 static comScoreAnalytics *comAnalytics;
 
@@ -28,7 +29,6 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 {
     id Dict;
     
-    [ZEE5UserDefaults setUserToken: token];
     [[AppConfigManager sharedInstance] setConfig:[ZEE5ConfigDataModel initFromJSONDictionary:Dict]];
     
     [self setupConvivaAnalytics];
@@ -65,6 +65,19 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 + (DevelopmentEnvironment)getDevEnvironment
 {
     return dev_environment;
+}
++ (Usertype)getUserTypeEnum{
+    NSString *Usertype = [ZEE5UserDefaults getUserType];
+    if ([Usertype isEqualToString:@"guest"]){
+        usertype = Guest;
+    }else if ([Usertype isEqualToString:@"registered"]){
+        usertype = Registered;
+    }else if ([Usertype isEqualToString:@"premium"]){
+        usertype = Premium;
+    }else{
+        usertype = Guest;
+    }
+    return usertype;
 }
 
 + (NSString *)getSDKVersion

@@ -72,6 +72,32 @@ public class AnalyticEngine: NSObject {
         ConvivaAnalytics.shared.updateContentMetadata(with: data)
     }
     
+    @objc public func setupConvivaAdSession(with data: NSDictionary, customTags: NSDictionary)
+    {
+        ConvivaAnalytics.shared.createConvivaAdSession(with: data, tags: customTags)
+        ConvivaAnalytics.shared.setupAdPlayerInterface()
+    }
+    
+    @objc public func updateAdPlayerState(state: PlayerState)
+    {
+        ConvivaAnalytics.shared.reportAdPlayerState(currentState: state)
+    }
+    
+    @objc public func attachVideoPlayer()
+    {
+        ConvivaAnalytics.shared.attachMainVideoPlayer()
+    }
+    
+    @objc public func detachVideoPlayer() {
+        ConvivaAnalytics.shared.detachMainVideoPlayer()
+    }
+    
+    @objc public func cleanupAdSession() {
+        ConvivaAnalytics.shared.cleanupAdSession()
+    }
+    
+    
+    
     
     // MARK:- Mixpanel Player Events
     
@@ -184,36 +210,11 @@ public class AnalyticEngine: NSObject {
            AllAnalyticsClass.shared.DownloadDelete(with: item)
        }
     
-     public func downloadClick (with item:DownloadItem)
+    public func downloadClick (with item:DownloadItem)
     {
         AllAnalyticsClass.shared.DownloadPlayClick(with: item)
     }
 
-    // MARK:- For Ad Events
-    
-    @objc public func setupConvivaAdSession(with data: NSDictionary, customTags: NSDictionary)
-    {
-        ConvivaAnalytics.shared.createConvivaAdSession(with: data, tags: customTags)
-        ConvivaAnalytics.shared.setupAdPlayerInterface()
-    }
-    
-    @objc public func updateAdPlayerState(state: PlayerState)
-    {
-        ConvivaAnalytics.shared.reportAdPlayerState(currentState: state)
-    }
-    
-    @objc public func attachVideoPlayer()
-    {
-        ConvivaAnalytics.shared.attachMainVideoPlayer()
-    }
-    
-    @objc public func detachVideoPlayer() {
-        ConvivaAnalytics.shared.detachMainVideoPlayer()
-    }
-    
-    @objc public func cleanupAdSession() {
-        ConvivaAnalytics.shared.cleanupAdSession()
-    }
     
     
      // MARK:- Mixpanel Ad Events
@@ -245,8 +246,5 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.ADView(with: data, CustomTags: tags)
     }
    
-    
-    
-    
     
 }

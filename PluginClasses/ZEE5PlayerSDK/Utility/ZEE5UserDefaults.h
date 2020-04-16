@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ZEE5UserDefaults : NSObject
-+ (void)setUserToken:(NSString*)token;
+
 + (NSString *)getUserToken;
 + (void)setUserType:(NSString *)UserType;
 + (NSString *)getUserType;

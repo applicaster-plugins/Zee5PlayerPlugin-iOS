@@ -59,6 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *showOriginalTitle;
 @property (nonatomic, copy)   NSString *tvShowBuisnessType;
 
+// Season Details If Available
+@property (nonatomic, copy)   NSString *SeasonId;
+
+
 
 + (instancetype)initFromJSONDictionary:(NSDictionary *)dict;
 

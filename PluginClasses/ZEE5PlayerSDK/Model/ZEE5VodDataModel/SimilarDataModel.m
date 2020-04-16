@@ -26,7 +26,7 @@
         NSMutableArray <RelatedVideos*>*relatedVideosArray = [[NSMutableArray alloc] init];
         
         if ([[dict ValueForKeyWithNullChecking:@"items"] isKindOfClass:NSArray.class]) {
-            
+           
             for (NSDictionary *relatedDict in [dict ValueForKeyWithNullChecking:@"items"])
             {
                 RelatedVideos *related = [[RelatedVideos alloc] init];
@@ -38,10 +38,6 @@
                 related.isAppSwitch = [[relatedDict valueForKey:@"is_app_switch"] boolValue];
                 related.assetSubtype = [relatedDict valueForKey:@"asset_subtype"];
                 [relatedVideosArray addObject:related];
-            if (related.assetType == 1)///This Has to be Done For TV Shows Content only one Next Episode Shows in Bottom View
-                {
-                    break;
-                }
             }
             self.relatedVideos = relatedVideosArray;
         }

@@ -7,20 +7,18 @@
 //
 
 #import "ZEE5UserDefaults.h"
+#import <Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h>
 
 @implementation ZEE5UserDefaults
 
+
 //MARK:- TT  ALL Data Set From ZEE5CoreSDK Plugin
 
-+ (void)setUserToken:(NSString*)token
-{
-    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"userToken"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (NSString *)getUserToken
 {
-    NSString *userToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"userToken"];
+    NSString *userToken = [[ZappPlayerAdapter new]getUserAccessToken];
+    NSLog( @"user token From Core SDK%@",userToken);
     if (userToken)
     {
         return userToken;

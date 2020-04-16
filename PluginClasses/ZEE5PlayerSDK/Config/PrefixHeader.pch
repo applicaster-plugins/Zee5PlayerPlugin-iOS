@@ -33,7 +33,4 @@
 //#define kDRMCetificateURL @"https://fp-keyos-aps1.licensekeyserver.com/cert/b19d422d890644d5112d08469c2e5946.der"
 //#define kEntitlementV4 @"https://subscriptionapi.zee5.com/v4/entitlement"
 
-
-#define LiveShareUrl @"https://www.zee5.com/channels/details/"
-#define VodShareUrl @"https://www.zee5.com/"
 #endif /* PrefixHeader_pch */

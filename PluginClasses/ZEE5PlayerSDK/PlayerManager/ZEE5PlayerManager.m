@@ -98,6 +98,8 @@
 @property(nonatomic) BOOL isLive;
 @property(nonatomic) BOOL videoCompleted;
 
+@property(nonatomic) BOOL isTelco;     //// Come From Partner App.
+
 @property(nonatomic) CGFloat previousDuration;
 
 @property(nonatomic) NSTimeInterval startTime;
@@ -171,7 +173,6 @@ static ContentBuisnessType buisnessType;
     return sharedManager;
 }
 
-
 //MARK:- VideoPlayMethod
 
 - (void)playWithCurrentItem {
@@ -183,6 +184,7 @@ static ContentBuisnessType buisnessType;
     }
     else
     {
+      
         if (self.parentalControl ==YES)
         {
             [self parentalControlshow];
@@ -313,6 +315,7 @@ static ContentBuisnessType buisnessType;
 -(void)addCustomControls
 {
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
+    
     if(_customControlView != nil )
     {
         [_customControlView.sliderLive animateToolTipFading:NO];
@@ -325,18 +328,43 @@ static ContentBuisnessType buisnessType;
     _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _customControlView.buttonPlay.hidden = YES;
     _customControlView.activityView.hidden = NO;
-//    _customControlView.con_width_more.constant = 0;
     _customControlView.viewLive.hidden = !self.isLive;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
     _customControlView.related = self.currentItem.related;
+    [self hideUnHidetrailerEndView:true];
+    _customControlView.adultView.hidden = YES;
+    
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest)
+    {
+              _customControlView.adultView.hidden = NO;
+              [self stop];
+
+        }
+
+    if (_currentItem.related.count == 1)
+    {
+         RelatedVideos *model = self.currentItem.related[0];
+        _customControlView.nextEpisodename.text = model.title;
+    
+        [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
+        
+           dispatch_async(dispatch_get_global_queue(0,0), ^{
+               NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];
+               if ( data == nil )
+                   return;
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
+               });
+           });
+        
+    }
     
 
 
     if (self.isLive) {
         _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];
-        
-       // _customControlView.lableSubTitle.attributedText = [Utility addAttribuedFont:_startTime :_endTime];
+
 
         _customControlView.sliderLive.userInteractionEnabled = NO;
         //_customControlView.sliderLive.defaultValue = _startTime;
@@ -378,15 +406,8 @@ static ContentBuisnessType buisnessType;
     
     _customControlView.collectionView.hidden = YES;
     
-    if ([_currentItem.asset_type isEqualToString:@"1"]) /// This Condition Changes Bottom View Appearance
-     {
-         _customControlView.collectionView.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-    }else{
-        _customControlView.collectionView.semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
-    }
-    
     [_customControlView forwardAndRewindActions];
-    [self hideUnHidetrailerEndView:true];
+  
     [self showAllControls];
     
 }
@@ -446,7 +467,7 @@ static ContentBuisnessType buisnessType;
 {
     _customControlView.trailerEndView.hidden = isHidden;
     _customControlView.stackLoginView.hidden = isHidden;
-    if ([ZEE5UserDefaults.getUserType isEqualToString:@"guest"]) {
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest== false) {
         _customControlView.stackLoginView.hidden = true;
     }
     
@@ -536,25 +557,17 @@ static ContentBuisnessType buisnessType;
             _watchHistorySecond = totalSeconds;
             [[ReportingManager sharedInstance]startReportingWatchHistory];
         }
-        
-        //MARK:- Watchcredit Click Logic
-        
-        if (totalSeconds>=_watchCreditsTime && self.customControlView.buttonFullScreen.selected == YES && ![self.ModelValues.watchCreditTime isEqualToString:@"NULL"])
-        {
-            if (self.currentItem.WatchCredit == NO && _customControlView.watchcreditsTimeLbl.hidden==YES)
-            {
-                [self handleUpwardsGesture:nil];
-                [_customControlView.collectionView reloadData];
-                self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-                _customControlView.watchcreditsTimeLbl.hidden = NO;
-                _customControlView.watchcreditsOutlet.hidden = NO;
-            }
-    
+       /***********************************************/
+             // Watchcredit
+       /*********************************************/
+        if (totalSeconds>=_watchCreditsTime){
+            
+            [self WatchcreditControls:totalSeconds];
         }
       
         //MARK:- SkipIntro Click Logic
         
-        if (totalSeconds>=self.startIntroTime && totalSeconds<=self.endIntroTime && self.customControlView.buttonFullScreen.selected == YES && _endIntroTime!=0)
+        if (totalSeconds>=self.startIntroTime && totalSeconds<=self.endIntroTime && _endIntroTime!=0)
         {
             _customControlView.skipIntro.hidden = NO;
         }
@@ -579,27 +592,71 @@ static ContentBuisnessType buisnessType;
 }
 
 
+//MARK:- Watch Credit Logic
+
+-(void)WatchcreditControls:(NSInteger)CreditTime
+{
+    if ([self.ModelValues.watchCreditTime isEqualToString:@"NULL"]==false && self.currentItem.WatchCredit == NO && _CreditTimer == nil )
+        {
+        
+            if (_currentItem.related.count == 1 && _customControlView.watchcretidStackview.hidden == true)
+            {
+                 self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
+        
+                _customControlView.watchcretidStackview.hidden = NO;
+                _customControlView.watchcreditShowView.hidden = NO;
+                _customControlView.watchCreditVodView.hidden =NO;
+            }
+            else
+            {
+                if ( _customControlView.watchcreditsTimeLbl.hidden==YES && self.customControlView.buttonFullScreen.selected == YES )
+                {
+                     self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];///********* Timer Fired******
+                    
+                     [self handleUpwardsGesture:nil];
+                    _customControlView.watchcreditsTimeLbl.hidden = NO;
+                    _customControlView.watchcretidStackview.hidden = NO;
+                    _customControlView.watchCreditBtnView.hidden = YES;
+                    _customControlView.watchcreditShowView.hidden = YES;
+                    _customControlView.watchCreditVodView.hidden =YES;
+                }
+            }
+            
+            
+        }
+}
+
 -(void)timerFired
 {
     if(_watchCtreditSeconds>0)
         {
             _watchCtreditSeconds-=1;
             [_customControlView.watchcreditsTimeLbl setText:[NSString stringWithFormat:@"%@%02d",@"Starts In : ",_watchCtreditSeconds]];
-            _customControlView.collectionView.hidden =NO;
+            
+           [_customControlView.showcreditTimelbl setText:[NSString stringWithFormat:@"%@%02d",@"Starts In : ",_watchCtreditSeconds]];
+            
+            if (_currentItem.related.count > 1){
+                _customControlView.collectionView.hidden = false;
+                return;
+            }
+            _customControlView.watchcretidStackview.hidden = false;
+            
         }
          else
         {
             
             [self.CreditTimer invalidate];
-            _customControlView.watchcreditsOutlet.hidden=YES;
+            _CreditTimer = nil;
             _customControlView.watchcreditsTimeLbl.hidden=YES;
              _customControlView.collectionView.hidden =YES;
+            _customControlView.watchcretidStackview.hidden = YES;
             
             if (self.currentItem.WatchCredit==NO)
             {
                  [self handleDownwardsGesture:nil];
                  [self onComplete];
             }
+            self.currentItem.WatchCredit = YES;
         }
 }
 
@@ -740,7 +797,6 @@ static ContentBuisnessType buisnessType;
     if (_playerConfig.shouldStartPlayerInLandScape)
     {
         [self showFullScreen];
-        
     }
     else
     {
@@ -957,8 +1013,9 @@ static ContentBuisnessType buisnessType;
 {
     [self handleDownwardsGesture:nil];
     self.currentItem.WatchCredit =YES;
-    [_customControlView.collectionView reloadData];
+    _customControlView.watchcretidStackview.hidden = true;
     [_CreditTimer invalidate];
+    _CreditTimer = nil;
     
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
     [engine watchCreditsAnalyticsWith:self.ModelValues.watchCreditTime];
@@ -969,7 +1026,7 @@ static ContentBuisnessType buisnessType;
 -(void)setSeekTime:(NSInteger)value
 {
     __weak __typeof(self) weakSelf = self;
-
+    
     int rounded = roundf([[Zee5PlayerPlugin sharedInstance] getDuration]);
     if(value == 0)
     {
@@ -1173,6 +1230,7 @@ static ContentBuisnessType buisnessType;
     
     self.customControlView.buttonFullScreen.selected = YES;
     self.customControlView.buttonLiveFull.selected = YES;
+    
     if(!_videoCompleted)
     {
         _customControlView.btnSkipNext.hidden = NO;
@@ -1186,15 +1244,18 @@ static ContentBuisnessType buisnessType;
     self.panGesture.enabled = (self.customControlView.buttonLiveFull.selected && !_customControlView.topView.hidden && [AppConfigManager sharedInstance].config.isSimilarVideos);
     self.customControlView.collectionView.hidden = ![AppConfigManager sharedInstance].config.isSimilarVideos;
     _customControlView.con_top_collectionView.constant = 10;
-    
-
+   
+    _customControlView.Stackview_top.constant = 0;
     
     _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 200, 0, 200, self.playbackView.frame.size.height);
     _customControlView.rewindButton.frame = CGRectMake(0, 0, 200, self.playbackView.frame.size.height);
     
+    
+    _customControlView.backtoPartnerView.hidden = YES;
+    _customControlView.getPremiumStackview.hidden = YES;
+    
     if (self.subscribeView !=nil || self.devicePopView!=nil ||self.parentalView!=nil)
     {
-        
         self.subscribeView.hidden =YES;
         self.devicePopView.hidden =YES;
         self.parentalView.hidden =YES;
@@ -1229,6 +1290,16 @@ static ContentBuisnessType buisnessType;
 
     _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 150, 0, 150, self.playbackView.frame.size.height);
     _customControlView.rewindButton.frame = CGRectMake(0, 0, 150, self.playbackView.frame.size.height);
+    
+    
+    if (_isTelco == true)
+    {
+        _customControlView.backtoPartnerView.hidden = false;
+    }
+    if ([_ModelValues.assetSubtype isEqualToString:@"trailer"]) {
+        _customControlView.getPremiumStackview.hidden = false;
+        _customControlView.Stackview_top.constant = 35;
+    }
     
     ////
     NSDictionary *dict = @{@"viewingMode" : @"Portrait"};
@@ -2032,7 +2103,7 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
-    
+
     _isStop = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
@@ -2040,15 +2111,14 @@ static ContentBuisnessType buisnessType;
     self.playbackView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     [self.viewPlayer addSubview:self.playbackView];
-    
+     
     [ZEE5UserDefaults settranslationLanguage:laguage];
     [ZEE5UserDefaults setContentId:content_id];
     
     
     [self registerNotifications];
     self.playerConfig = playerConfig;
-    self.isLive = NO;
-    _watchCtreditSeconds = 10;
+ 
     
     NSArray *array = [content_id componentsSeparatedByString:@"-"];
     NSString *contentType = array[1];
@@ -2079,6 +2149,8 @@ static ContentBuisnessType buisnessType;
 {
     NSLog(@"|*** Play VOD Content ***|");
     
+       _watchCtreditSeconds = 10;
+    
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
     if (self.previousDuration != 0)
@@ -2100,6 +2172,7 @@ static ContentBuisnessType buisnessType;
         if ([self.ModelValues.watchCreditTime containsString:@"NULL"]== false)
         {
              self.watchCreditsTime = [[Utility secondsForTimeString:self.ModelValues.watchCreditTime]integerValue];
+            NSLog(@"From Response %ld",(long)self.watchCreditsTime);
         }
     
         self.buisnessType = self.ModelValues.buisnessType;
@@ -2291,8 +2364,8 @@ static ContentBuisnessType buisnessType;
 -(void)getskipandWatchcredit
 {
     self.watchCreditsTime = _ModelValues.duration - self.watchCreditsTime;
-    self.currentItem.WatchCredit =NO;
     
+    self.currentItem.WatchCredit =NO;
     
     self.startIntroTime = [[Utility secondsForTimeString:self.ModelValues.introStarttime]integerValue];
     self.endIntroTime =  [[Utility secondsForTimeString:self.ModelValues.introEndTime]integerValue];
@@ -2407,15 +2480,13 @@ static ContentBuisnessType buisnessType;
     if (_playerConfig.playerType == normalPlayer)
     {
         [self downLoadAddConfig:^(id result) {
-            
-            if ([model.assetType isEqualToString:@"1"])
-                   {
-                       [self getNextEpisode];
-                   }else
-                   {
-                    [self getVodSimilarContent];
-                   }
-            
+
+            if ([model.assetType isEqualToString:@"1"]){
+                [self getNextEpisode];
+            }else
+            {
+              [self getVodSimilarContent];
+            }
             if ([model.assetSubtype isEqualToString:@"trailer"])
                {
                    self.allowVideoContent = YES;
@@ -2423,7 +2494,6 @@ static ContentBuisnessType buisnessType;
                }else{
                      [self getSubscrptionList];
                }
-            
             
         } failureBlock:^(ZEE5SdkError *error) {
             NSLog(@"%ld",(long)error.zeeErrorCode);
@@ -2664,7 +2734,6 @@ static ContentBuisnessType buisnessType;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kRefreshRelatedVideoList" object:nil];
         
-        
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
         
     }];
@@ -2677,14 +2746,14 @@ static ContentBuisnessType buisnessType;
 {
     NSDictionary *param =@{@"episode_id": _currentItem.content_id,
                            @"page":@"1",
-                           @"limit":@"10",
+                           @"limit":@"1",
                            @"translation":ZEE5UserDefaults.gettranslation,
                            @"country":ZEE5UserDefaults.getCountry,
                            @"type":@"next"
                            };
     NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"Cache-Control":@"no-cache"};
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls. getNextContent,self.TvShowModel.LatestSeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
+    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls.getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
      {
          
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
@@ -2718,7 +2787,7 @@ static ContentBuisnessType buisnessType;
             {
                  SubscriptionModel *model = [[SubscriptionModel alloc] initWithDictionary:dict];
           
-                    if (model.subscriptionPlan.channelAudioLanguages.count!=0 && ([self.buisnessType isEqualToString:@"premium_downloadable"] ||[self.buisnessType isEqualToString:@"premium"]))
+                    if (model.subscriptionPlan.channelAudioLanguages.count!=0 && (buisnessType == premium_downloadable || buisnessType == premium) )
                     {
                         id commonObject = [model.subscriptionPlan.channelAudioLanguages firstObjectCommonWithArray:self.audioLanguageArr];
                         
@@ -2736,14 +2805,14 @@ static ContentBuisnessType buisnessType;
                         }
                     }else
                     {
-                        if (model.isSubscriptionActive && ([self.buisnessType isEqualToString:@"premium_downloadable"] ||[self.buisnessType isEqualToString:@"premium"]))
+                        if (model.isSubscriptionActive && (buisnessType == premium_downloadable || buisnessType == premium))
                         {
                                 self.allowVideoContent =YES;
                                 break;
                         }
-                         else if ([self.buisnessType isEqualToString:@"premium_downloadable"] ||[self.buisnessType isEqualToString:@"premium"])
+                         else if (buisnessType == premium_downloadable || buisnessType == premium)
                         {
-                                [self playTrailer];   // Trailer Play Here.
+                           [self playTrailer];   // Trailer Play Here.
                         }
                         else
                         {
@@ -2759,7 +2828,7 @@ static ContentBuisnessType buisnessType;
 -(void)playTrailer
 {
     
-    if (!_isLive && self.ModelValues.trailerIdentifier!=nil)
+    if (_isLive == false && self.ModelValues.trailerIdentifier!=nil)
     {
         self.allowVideoContent = YES;
           [self playVODContent:self.ModelValues.trailerIdentifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
@@ -2784,6 +2853,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)getUserSettings{
     
+
    NSString *result = [ZEE5UserDefaults getUserSetting];
       if ([result isKindOfClass:[NSNull class]] || result.length ==0)
       {
@@ -2793,7 +2863,7 @@ static ContentBuisnessType buisnessType;
     
     NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
    id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSLog(@" user Setting%@",result);
+    NSLog(@"user Setting%@",result);
     
         userSettingDataModel *settingModel = [userSettingDataModel initFromJSONDictionary:resultData];
         self.ageRating =settingModel.ageRating;

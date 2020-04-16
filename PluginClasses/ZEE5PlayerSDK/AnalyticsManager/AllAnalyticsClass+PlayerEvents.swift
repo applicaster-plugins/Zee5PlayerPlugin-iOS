@@ -911,7 +911,7 @@ public func VideoPlay(with data: NSDictionary)
           {
               
              let parameter : Set = [
-                Keys.DOWNLOAD_CLICK.TITLE ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
+              Keys.DOWNLOAD_CLICK.TITLE ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
               Keys.DOWNLOAD_CLICK.SOURCE ~>> notAppplicable,
               Keys.DOWNLOAD_CLICK.ELEMENT ~>> "Download Play",
               Keys.DOWNLOAD_CLICK.BUTTON_TYPE ~>> "Download Play Button",

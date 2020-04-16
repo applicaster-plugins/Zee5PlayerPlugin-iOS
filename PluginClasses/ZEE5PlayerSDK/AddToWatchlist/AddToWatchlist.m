@@ -39,7 +39,7 @@ static AddToWatchlist *SharedInstance = nil;
 
 -(void)AddToWatchlist:(CurrentItem *)currentItem
 {
-    if ([ZEE5UserDefaults.getUserType isEqualToString:@"guest"])
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         return;
         // Send Guest User to Login Screen Here
