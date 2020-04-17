@@ -30,13 +30,16 @@ public class AllAnalyticsClass: NSObject {
     var notAppplicable = "N/A"
     var genereString = ""
     var assetSubtype = ""
+    var Buisnesstype = ""
     
     let Gender = analytics.getGender()   /// From Core SDK
     let Age = getAge()
     let displaylanguage = Zee5UserDefaultsManager .shared.getSelectedDisplayLanguage() ?? ""
+    var consumptionFeedType: ConsumptionFeedType?
+    
 
     public override init(){}
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String) {
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String) {
         
         self.contentId = contentId
         self.contentName = contentName
@@ -54,6 +57,7 @@ public class AllAnalyticsClass: NSObject {
         self.genereString = generestring
         self.cast = Cast
         self.assetSubtype = assetsubtype
+        self.Buisnesstype = buisnessType
         
     }
     
@@ -70,8 +74,8 @@ public class AllAnalyticsClass: NSObject {
                    Subtitles = DataModel.subTitles
                    realeseDate = DataModel.release_date
                    assetSubtype = DataModel.asset_subtype
+                   Buisnesstype = DataModel.business_type
                    
-
                  let value = genre.map{$0.value}
                 genereString = value.joined(separator: ",")
                print("** Genre **\(genereString)")

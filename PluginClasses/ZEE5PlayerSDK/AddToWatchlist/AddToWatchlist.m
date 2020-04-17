@@ -65,6 +65,8 @@ static AddToWatchlist *SharedInstance = nil;
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchList requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
         NSLog(@"**WatchList Result** %@", result);
+        
+        
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {

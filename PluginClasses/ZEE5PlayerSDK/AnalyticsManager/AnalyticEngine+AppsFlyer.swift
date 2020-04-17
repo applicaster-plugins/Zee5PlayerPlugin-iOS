@@ -9,10 +9,33 @@ import Foundation
 
 extension AnalyticEngine
 {
-    //MARK:- AppsFlyer Events
+    //MARK:- AppsFlyer And Qgraph Events
     
+    @objc public func AddtoWatchlistAnlytics()
+    {
+        AllAnalyticsClass.shared.addtoWatchlistEvent()
+    }
     
-    //MARK:- Qgraph Events.
+    @objc public func SubscribeCTAClicked()
+    {
+        AllAnalyticsClass.shared.subscribeBtnClicked()
+    }
+
+    @objc public func VideoWatch20Percent()
+    {
+        AllAnalyticsClass.shared.VideoWatch20()
+    }
+    
+    @objc public func VideoWatch50Percent()
+    {
+         AllAnalyticsClass.shared.VideoWatch50()
+    }
+    
+    @objc public func VideoWatch85Percent()
+     {
+          AllAnalyticsClass.shared.VideoWatch85()
+     }
+
     
     
     
