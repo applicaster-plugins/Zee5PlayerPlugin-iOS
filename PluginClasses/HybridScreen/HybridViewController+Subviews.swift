@@ -98,15 +98,16 @@
                             })
                         }
                     case ItemTag.Button.castButton:
-                        let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_Cast_Link".localized(hashMap: [:]))
-                        tmpButton.setAttributedTitle(attr, for: .normal)
-                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-                        let castImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_cast")
-                        tmpButton.setImage(castImage, for: .normal)
-                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
-                        tmpButton.titleLabel?.font = buttonStyle.font
-                        tmpButton.addTarget(self, action: #selector(consumptionCastButtonAction(_:)), for: .touchUpInside)
+                        ZAAppConnector.sharedInstance().chromecastDelegate.addButton(tmpButton, topOffset: 0, width: tmpButton.bounds.size.width, buttonKey: "consumption_cast", color: nil, useConstrains: true)
+//                        let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_Cast_Link".localized(hashMap: [:]))
+//                        tmpButton.setAttributedTitle(attr, for: .normal)
+//                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
+//                        let castImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_cast")
+//                        tmpButton.setImage(castImage, for: .normal)
+//                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
+//                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
+//                        tmpButton.titleLabel?.font = buttonStyle.font
+//                        tmpButton.addTarget(self, action: #selector(consumptionCastButtonAction(_:)), for: .touchUpInside)
                     case ItemTag.Button.downloadButton:
                         
                         var translatedString: String = String()
