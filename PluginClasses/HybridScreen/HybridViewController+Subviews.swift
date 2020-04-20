@@ -784,10 +784,10 @@
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             switch collectionView.tag {
             case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                if languagesSubtitlesDataSource![indexPath.row] == languagesSubtitlesDataSource!.first! { //languages button action
-                    //TODO: show langiages sheet
-                } else { // subtitles button action
-                    //TODO: show subtitles sheet
+                if languagesSubtitlesDataSource![indexPath.row] == languagesSubtitlesDataSource!.first! {
+                    ZEE5PlayerManager.sharedInstance().getAudioLanguage()
+                } else {
+                    ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
                 }
                 break
             default: break
