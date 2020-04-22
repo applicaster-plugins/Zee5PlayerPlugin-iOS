@@ -632,11 +632,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
                            NSTimeInterval playerTime = [weakSelf getCurrentTime];
                            weakSelf.PlayerEndTime = playerTime;
                            NSLog(@"|*** SEEKED SeekEvents: Int- %d",weakSelf.PlayerEndTime);
-                           if(weakSelf.PlayerEndTime < weakSelf.PlayerStartTime){
+                          
+                       if(weakSelf.PlayerEndTime < weakSelf.PlayerStartTime){
                                weakSelf.Direction = @"Reverse";}else{
                                   weakSelf.Direction = @"Forward";
                                }
         [engine setSeekEndTimeWithDuration: weakSelf.PlayerEndTime];
+        [engine VideoWatchPercentCalc];
         [engine seekValueChangeAnalyticsWith:weakSelf.Direction Starttime:weakSelf.PlayerStartTime EndTime:weakSelf.PlayerEndTime];
                        }];
 }

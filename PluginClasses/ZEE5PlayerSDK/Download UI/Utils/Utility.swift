@@ -143,8 +143,8 @@ extension CALayer {
 extension UITableView {
     
     func setEmptyStateView(over controller: UIViewController) {
-        let bundle = Bundle(identifier: "org.cocoapods.Zee5PlayerPlugin")
-        guard let emptyView = bundle?.loadNibNamed(EmptyView.identifier, owner: self, options: nil)?.first as? EmptyView else { return }
+        let bundle = Bundle(for: DownloadRootController.self)
+        guard let emptyView = bundle.loadNibNamed(EmptyView.identifier, owner: self, options: nil)?.first as? EmptyView else { return }
         emptyView.frame = self.frame
         emptyView.currentView = controller
         self.backgroundView = emptyView

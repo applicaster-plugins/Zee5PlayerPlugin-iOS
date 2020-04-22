@@ -23,8 +23,7 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
     }
-    
-    
+
    //MARK:- Conviva Player analytics
     
     @objc public func initializeConvivaAnalytics(customerKey: String, gatewayUrl: String) {

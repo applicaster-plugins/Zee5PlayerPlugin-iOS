@@ -25,7 +25,7 @@ class DownloadQualityMenu: UIView {
         self.viewBackground.roundCorners(corners: [.topLeft, .topRight], radius: 25.0)
         self.btnDownload.applyGradient(withColors: AppColor.gradient)
         
-        let bundle = Bundle(identifier: "org.cocoapods.Zee5PlayerPlugin")
+        let bundle = Bundle(for: DownloadRootController.self)
         self.tableView.register(UINib(nibName: VideoQualityCell.identifer, bundle: bundle), forCellReuseIdentifier: VideoQualityCell.identifer)
         
         self.setupDragable()

@@ -90,7 +90,7 @@ public class DownloadHelper: NSObject {
         
         UIDevice.current.setValue(NSNumber(value: UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
         let controller = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController
-        let bundle = Bundle(identifier: "org.cocoapods.Zee5PlayerPlugin")
+        let bundle = Bundle(for: DownloadRootController.self)
         let storyboard = UIStoryboard(name: "Download", bundle: bundle)
         guard let downloadVC = storyboard.instantiateViewController(withIdentifier: "DownloadRootController") as? DownloadRootController else { return }
         let navControl = UINavigationController(rootViewController: downloadVC)
