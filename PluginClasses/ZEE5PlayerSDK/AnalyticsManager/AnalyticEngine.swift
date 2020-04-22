@@ -10,13 +10,15 @@ import Foundation
 import ConvivaSDK
 import LotameDMP
 
+
+
+var VideWatchInt = 0
+
 public class AnalyticEngine: NSObject {
     
    public static let shared = AnalyticEngine()
-    
-    
-    //MARK:- Lotame Anlytics
-    
+   
+   
     @objc public func startLotameAnalytics(with duration: String, quartileValue: String)
     {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
@@ -65,6 +67,8 @@ public class AnalyticEngine: NSObject {
     @objc public func cleanupVideoSesssion()
     {
         ConvivaAnalytics.shared.cleanupSession()
+        VideWatchInt = 0
+        
     }
     
     @objc public func updateMetadata(with data: NSDictionary)

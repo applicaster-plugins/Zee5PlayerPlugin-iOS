@@ -21,6 +21,7 @@ public class AllAnalyticsClass: NSObject {
     var series = ""
     var Subtitles = [Any]()
     var audiolanguage = [Any]()
+    var Charecters = [Any]()
     var cast = [Any]()
     var genre = [Genres]()
     var duration: TimeInterval = 0
@@ -31,6 +32,7 @@ public class AllAnalyticsClass: NSObject {
     var genereString = ""
     var assetSubtype = ""
     var Buisnesstype = ""
+    var skipIntroTime = ""
     
     let Gender = analytics.getGender()   /// From Core SDK
     let Age = getAge()
@@ -39,7 +41,7 @@ public class AllAnalyticsClass: NSObject {
     
 
     public override init(){}
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String) {
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String) {
         
         self.contentId = contentId
         self.contentName = contentName
@@ -58,6 +60,8 @@ public class AllAnalyticsClass: NSObject {
         self.cast = Cast
         self.assetSubtype = assetsubtype
         self.Buisnesstype = buisnessType
+        self.Charecters = actors
+        self.skipIntroTime = skiptime
         
     }
     
@@ -75,10 +79,15 @@ public class AllAnalyticsClass: NSObject {
                    realeseDate = DataModel.release_date
                    assetSubtype = DataModel.asset_subtype
                    Buisnesstype = DataModel.business_type
+                   skipIntroTime = DataModel.skipintrotime
+        
+                   if DataModel.charecters.count>0{
+                       Charecters  = DataModel.charecters
+                    }
                    
-                 let value = genre.map{$0.value}
-                genereString = value.joined(separator: ",")
-               print("** Genre **\(genereString)")
+                  let value = genre.map{$0.value}
+                  genereString = value.joined(separator: ",")
+                  print("** Genre **\(genereString)")
         
                if DataModel.audioLanguages.count>0{
                 audiolanguage = DataModel.audioLanguages
@@ -108,7 +117,7 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
             Keys.AD_INITIALIZED.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.AD_INITIALIZED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-            Keys.AD_INITIALIZED.CHARACTERS ~>> "",                                                           // TT
+            Keys.AD_INITIALIZED.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
             Keys.AD_INITIALIZED.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
             Keys.AD_INITIALIZED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
             Keys.AD_INITIALIZED.SERIES ~>> series == "" ? notAppplicable:series,
@@ -157,7 +166,7 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
                Keys.AD_VIEW.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
-               Keys.AD_VIEW.CHARACTERS ~>> "",                                                           // TT
+               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,                                                           // TT
                Keys.AD_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                Keys.AD_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
@@ -252,7 +261,7 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_FORCED_EXIT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_FORCED_EXIT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-                  Keys.AD_FORCED_EXIT.CHARACTERS ~>> "",
+                  Keys.AD_FORCED_EXIT.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
                   Keys.AD_FORCED_EXIT.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                   Keys.AD_FORCED_EXIT.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_FORCED_EXIT.SERIES ~>> series == "" ? notAppplicable:series,
@@ -301,7 +310,7 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                Keys.AD_CLICK.GENRE ~>> genre.count>0 ? genre.description:notAppplicable,
-               Keys.AD_CLICK.CHARACTERS ~>> "",
+               Keys.AD_CLICK.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
                Keys.AD_CLICK.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                Keys.AD_CLICK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_CLICK.SERIES ~>> series == "" ? notAppplicable:series,
@@ -352,7 +361,7 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_WATCH_DURATION.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_WATCH_DURATION.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-                  Keys.AD_WATCH_DURATION.CHARACTERS ~>> "",
+                  Keys.AD_WATCH_DURATION.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
                   Keys.AD_WATCH_DURATION.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                   Keys.AD_WATCH_DURATION.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_WATCH_DURATION.SERIES ~>> series == "" ? notAppplicable:series,

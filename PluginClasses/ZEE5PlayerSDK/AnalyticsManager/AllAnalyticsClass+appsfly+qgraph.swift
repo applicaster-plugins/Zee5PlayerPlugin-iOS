@@ -21,13 +21,13 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.ELEMENT ~>> "Add to watch List",
         Keys.ADD_TO_WATCHLIST.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
         Keys.ADD_TO_WATCHLIST.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-        Keys.ADD_TO_WATCHLIST.CHARACTERS ~>> "",
+        Keys.ADD_TO_WATCHLIST.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
         Keys.ADD_TO_WATCHLIST.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
         Keys.ADD_TO_WATCHLIST.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
         Keys.ADD_TO_WATCHLIST.SERIES ~>> series == "" ? notAppplicable:series,
         Keys.ADD_TO_WATCHLIST.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.ADD_TO_WATCHLIST.CAST_TO ~>> notAppplicable,
-        Keys.ADD_TO_WATCHLIST.INTRO_PRESENT ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
         Keys.ADD_TO_WATCHLIST.PAGE_NAME ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.DRM_VIDEO ~>> DrmVideo,
         Keys.ADD_TO_WATCHLIST.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -41,7 +41,6 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
         Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
-        Keys.ADD_TO_WATCHLIST.UPTIME ~>> notAppplicable,
         ]
          analytics.track(Events.ADD_TO_WATCHLIST, trackedProperties: parameter)
     }
@@ -66,21 +65,12 @@ extension AllAnalyticsClass{
     
     
     //MARK:- Qgraph Events
-    
-    //MARK:- liveTv Channel played
-    
-    public func liveContenPlay(){
-        let parameter : Set = [
-              Keys.LIVE_CHANNEL_PLAYED.UPTIME ~>> "",
-              ]
-        analytics.track(Events.LIVE_CHANNEL_PLAYED, trackedProperties: parameter)
-          }
+
     
     //MARK:- 20% video Play Event
     @objc public func VideoWatch20(){
         
         let parameter : Set = [
-            Keys.VIDEO_VIEW_20_PERCENT.UPTIME ~>> "",
             Keys.VIDEO_VIEW_20_PERCENT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.VIDEO_VIEW_20_PERCENT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
             Keys.VIDEO_VIEW_20_PERCENT.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -99,7 +89,6 @@ extension AllAnalyticsClass{
     @objc public func VideoWatch50(){
     
         let parameter : Set = [
-            Keys.VIDEO_VIEW_50_PERCENT.UPTIME ~>> "",
             Keys.VIDEO_VIEW_50_PERCENT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.VIDEO_VIEW_50_PERCENT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
             Keys.VIDEO_VIEW_50_PERCENT.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -113,10 +102,10 @@ extension AllAnalyticsClass{
             analytics.track(Events.VIDEO_VIEW_50_PERCENT, trackedProperties: parameter)
           }
     //MARK:- 85% video Play Event
+    
     @objc public func VideoWatch85(){
         
       let parameter : Set = [
-            Keys.VIDEO_VIEW_85_PERCENT.UPTIME ~>> "",
             Keys.VIDEO_VIEW_85_PERCENT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.VIDEO_VIEW_85_PERCENT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
             Keys.VIDEO_VIEW_85_PERCENT.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -129,6 +118,84 @@ extension AllAnalyticsClass{
         analytics.track(Events.VIDEO_VIEW_85_PERCENT, trackedProperties: parameter)
     
         }
+    
+  // MARK:- Live Section Played
+    
+    @objc public func livePlayed(){
+        
+        analytics.track(Events.LIVE_CHANNEL_PLAYED, trackedProperties: Set<TrackedProperty>())
+    
+        }
+    
+    //MARK:- MusicVideo played Event
+    @objc public func Musicplayed(){
+        
+      let parameter : Set = [
+            Keys.MUSICVIDEO_CONTENT_PLAY.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.MUSICVIDEO_CONTENT_PLAY.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+            Keys.MUSICVIDEO_CONTENT_PLAY.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.MUSICVIDEO_CONTENT_PLAY.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.MUSICVIDEO_CONTENT_PLAY.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+            Keys.MUSICVIDEO_CONTENT_PLAY.SEASON_ID ~>> notAppplicable,
+            Keys.MUSICVIDEO_CONTENT_PLAY.SHOW_ID ~>> notAppplicable,
+            Keys.MUSICVIDEO_CONTENT_PLAY.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+                ]
+        analytics.track(Events.MUSICVIDEO_CONTENT_PLAY, trackedProperties: parameter)
+    
+        }
+    
+    //MARK:- Movie played Event
+    @objc public func MoviesPlayed(){
+        
+      let parameter : Set = [
+            Keys.MOVIES_CONTENT_PLAY.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.MOVIES_CONTENT_PLAY.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+            Keys.MOVIES_CONTENT_PLAY.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.MOVIES_CONTENT_PLAY.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.MOVIES_CONTENT_PLAY.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+            Keys.MOVIES_CONTENT_PLAY.SEASON_ID ~>> notAppplicable,
+            Keys.MOVIES_CONTENT_PLAY.SHOW_ID ~>> notAppplicable,
+            Keys.MOVIES_CONTENT_PLAY.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+                ]
+        analytics.track(Events.MOVIES_CONTENT_PLAY, trackedProperties: parameter)
+    
+        }
+    
+    
+    //MARK:- TV Show played Event
+    @objc public func TvShowplayed(){
+        
+      let parameter : Set = [
+            Keys.TVSHOWS_CONTENT_PLAY.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.TVSHOWS_CONTENT_PLAY.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+            Keys.TVSHOWS_CONTENT_PLAY.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.TVSHOWS_CONTENT_PLAY.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.TVSHOWS_CONTENT_PLAY.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+            Keys.TVSHOWS_CONTENT_PLAY.SEASON_ID ~>> notAppplicable,
+            Keys.TVSHOWS_CONTENT_PLAY.SHOW_ID ~>> notAppplicable,
+            Keys.TVSHOWS_CONTENT_PLAY.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+                ]
+        analytics.track(Events.TVSHOWS_CONTENT_PLAY, trackedProperties: parameter)
+    
+        }
+    
+    //MARK:- Video Content played Event
+       @objc public func videoContentplayed(){
+           
+         let parameter : Set = [
+               Keys.VIDEOS_CONTENT_PLAY.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+               Keys.VIDEOS_CONTENT_PLAY.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+               Keys.VIDEOS_CONTENT_PLAY.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+               Keys.VIDEOS_CONTENT_PLAY.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+               Keys.VIDEOS_CONTENT_PLAY.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+               Keys.VIDEOS_CONTENT_PLAY.SEASON_ID ~>> notAppplicable,
+               Keys.VIDEOS_CONTENT_PLAY.SHOW_ID ~>> notAppplicable,
+               Keys.VIDEOS_CONTENT_PLAY.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+                   ]
+           analytics.track(Events.VIDEOS_CONTENT_PLAY, trackedProperties: parameter)
+       
+           }
+    
     
     
 }

@@ -210,6 +210,10 @@ static ContentBuisnessType buisnessType;
         [self handleOrientations];
         [self handleTracks];
         
+        
+        [AnalyticEngine new].ConsumptionAnalyticEvents;
+    
+        
         if (![self.currentItem.asset_type isEqualToString:@"9"])
         {
              [[ReportingManager sharedInstance] getWatchHistory];
@@ -517,6 +521,9 @@ static ContentBuisnessType buisnessType;
     CGFloat floored = floor([event.currentTime doubleValue]);
     NSInteger totalSeconds = (NSInteger) floored;
     
+  
+    [[AnalyticEngine new]VideoWatchPercentCalc];
+    
  
     [[Zee5FanAdManager sharedInstance] loadfanAds:totalSeconds];
     if (self.isLive)
@@ -606,6 +613,7 @@ static ContentBuisnessType buisnessType;
                 _customControlView.watchcretidStackview.hidden = NO;
                 _customControlView.watchcreditShowView.hidden = NO;
                 _customControlView.watchCreditVodView.hidden =NO;
+                _customControlView.collectionView.hidden =YES;
             }
             else
             {
@@ -621,8 +629,6 @@ static ContentBuisnessType buisnessType;
                     _customControlView.watchCreditVodView.hidden =YES;
                 }
             }
-            
-            
         }
 }
 
@@ -699,7 +705,7 @@ static ContentBuisnessType buisnessType;
 - (void)onComplete
 {
     NSLog(@"On Complete");
-    if ([self.ModelValues.assetSubtype isEqualToString:@"trailer"])
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
     {
         _videoCompleted = YES;
         [self pause];
@@ -1083,6 +1089,17 @@ static ContentBuisnessType buisnessType;
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponNextButton)]) {
         [self.delegate didTaponNextButton];
+        if (_currentItem.related.count>0)
+        {
+            [self pause];
+            RelatedVideos *model = self.currentItem.related[0];
+            [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
+            
+            
+            [[ZEE5PlayerManager sharedInstance]playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
+                
+            }];
+        }
     }
 }
 -(void)tapOnPrevButton
@@ -1296,7 +1313,7 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView.backtoPartnerView.hidden = false;
     }
-    if ([_ModelValues.assetSubtype isEqualToString:@"trailer"]) {
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
         _customControlView.getPremiumStackview.hidden = false;
         _customControlView.Stackview_top.constant = 35;
     }
@@ -2105,6 +2122,7 @@ static ContentBuisnessType buisnessType;
 {
 
     _isStop = false;
+    
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
     
@@ -2476,18 +2494,20 @@ static ContentBuisnessType buisnessType;
     self.currentItem.geners = model.geners;
     self.currentItem.isDRM = model.isDRM;
     self.currentItem.audioLanguages =model.audioLanguages;
+    self.currentItem.charecters = model.charecters;
+    self.currentItem.skipintrotime = model.introStarttime;
     
     if (_playerConfig.playerType == normalPlayer)
     {
         [self downLoadAddConfig:^(id result) {
 
-            if ([model.assetType isEqualToString:@"1"]){
+            if (ZEE5PlayerSDK.getConsumpruionType == Episode){
                 [self getNextEpisode];
             }else
             {
               [self getVodSimilarContent];
             }
-            if ([model.assetSubtype isEqualToString:@"trailer"])
+            if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
                {
                    self.allowVideoContent = YES;
                    [self playWithCurrentItem];
@@ -2836,7 +2856,7 @@ static ContentBuisnessType buisnessType;
           }];
         return;
     }
-    else if (self.TvShowModel.TrailersContentid != nil && [_ModelValues.assetType isEqualToString:@"1"] && _ModelValues.isBeforeTv == false)
+    else if (self.TvShowModel.TrailersContentid != nil && ZEE5PlayerSDK.getConsumpruionType == Episode && _ModelValues.isBeforeTv == false)
     {
         self.allowVideoContent = YES;
           [self playVODContent:self.TvShowModel.TrailersContentid country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
