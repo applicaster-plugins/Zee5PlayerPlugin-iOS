@@ -613,7 +613,10 @@ static ContentBuisnessType buisnessType;
                 _customControlView.watchcretidStackview.hidden = NO;
                 _customControlView.watchcreditShowView.hidden = NO;
                 _customControlView.watchCreditVodView.hidden =NO;
+<<<<<<< HEAD
                 _customControlView.collectionView.hidden =YES;
+=======
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
             }
             else
             {
@@ -629,6 +632,11 @@ static ContentBuisnessType buisnessType;
                     _customControlView.watchCreditVodView.hidden =YES;
                 }
             }
+<<<<<<< HEAD
+=======
+            
+            
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
         }
 }
 
@@ -1313,7 +1321,11 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView.backtoPartnerView.hidden = false;
     }
+<<<<<<< HEAD
     if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
+=======
+    if ([_ModelValues.assetSubtype isEqualToString:@"trailer"]) {
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
         _customControlView.getPremiumStackview.hidden = false;
         _customControlView.Stackview_top.constant = 35;
     }
@@ -2501,13 +2513,21 @@ static ContentBuisnessType buisnessType;
     {
         [self downLoadAddConfig:^(id result) {
 
+<<<<<<< HEAD
             if (ZEE5PlayerSDK.getConsumpruionType == Episode){
+=======
+            if ([model.assetType isEqualToString:@"1"]){
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
                 [self getNextEpisode];
             }else
             {
               [self getVodSimilarContent];
             }
+<<<<<<< HEAD
             if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
+=======
+            if ([model.assetSubtype isEqualToString:@"trailer"])
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
                {
                    self.allowVideoContent = YES;
                    [self playWithCurrentItem];

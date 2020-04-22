@@ -14,7 +14,6 @@
                 <outlet property="playerView" destination="YWE-fi-K7N" id="7tk-hi-ban"/>
                 <outlet property="view" destination="iN0-l3-epB" id="o1d-Gp-gHL"/>
                 <outletCollection property="buttonsViewCollection" destination="1RJ-94-jKa" collectionClass="NSMutableArray" id="Csx-vc-FZp"/>
-                <outletCollection property="buttonsViewCollection" destination="ERx-Sg-sEk" collectionClass="NSMutableArray" id="FFm-ia-KpU"/>
                 <outletCollection property="buttonsViewCollection" destination="5mf-Hw-9mi" collectionClass="NSMutableArray" id="43B-Hd-0eq"/>
                 <outletCollection property="buttonsViewCollection" destination="1xG-Oc-wWP" collectionClass="NSMutableArray" id="G5a-18-4Dy"/>
                 <outletCollection property="buttonsViewCollection" destination="oyf-e6-1bV" collectionClass="NSMutableArray" id="4Go-1Q-wdo"/>
@@ -40,6 +39,7 @@
                 <outletCollection property="viewCollection" destination="u5v-LO-op9" collectionClass="NSMutableArray" id="Oit-8N-XWu"/>
                 <outletCollection property="viewCollection" destination="Nd1-en-ZoC" collectionClass="NSMutableArray" id="Fmj-LU-khU"/>
                 <outletCollection property="viewCollection" destination="fgH-rX-aeW" collectionClass="NSMutableArray" id="7Xd-b3-7VJ"/>
+                <outletCollection property="buttonsViewCollection" destination="ERx-Sg-sEk" collectionClass="NSMutableArray" id="Ue1-0m-evi"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -444,7 +444,7 @@
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6Y6-7u-bxm" secondAttribute="bottom" id="neB-c8-8Mr"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="139.13043478260872" y="130.58035714285714"/>
+            <point key="canvasLocation" x="-1109" y="351"/>
         </view>
     </objects>
 </document>
