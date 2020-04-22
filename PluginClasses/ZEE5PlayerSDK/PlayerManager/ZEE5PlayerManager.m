@@ -1705,8 +1705,7 @@ static ContentBuisnessType buisnessType;
         model2.isSelected = false;
         [models addObject:model2];
     }
-
-
+    
     Zee5MenuModel *model3 = [[Zee5MenuModel alloc] init];
     model3.imageName = @"2";
     model3.title = AUTOPLAY;

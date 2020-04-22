@@ -20,7 +20,7 @@ class ShowsDownloadController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    private let bundle = Bundle(identifier: "org.cocoapods.Zee5PlayerPlugin")
+    private let bundle = Bundle(for: DownloadRootController.self)
     private var showArr = [DownloadItem]() {
         didSet {
             if self.showArr.isEmpty {

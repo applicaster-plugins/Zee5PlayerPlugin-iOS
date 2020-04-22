@@ -22,6 +22,7 @@ class EmptyView: UIView {
     }
     
     @IBAction func actionBrowseDownload(_ sender: Any) {
-        self.currentView?.dismiss(animated: true, completion: nil)
+        
+        ZEE5PlayerDeeplinkManager.sharedMethod.NavigatetoHomeScreen()
     }
 }

@@ -39,5 +39,9 @@ import ZappPlugins
      {
         Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.myDownload.url)
      }
+    
+    @objc public func NavigatetoHomeScreen()
+    {
+       ZAAppConnector.sharedInstance().navigationDelegate.navigateToHomeScreen()
+    }
 }
-
