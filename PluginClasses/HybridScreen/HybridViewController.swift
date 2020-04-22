@@ -20,7 +20,6 @@ class HybridViewController: UIViewController {
     var configurationJSON: NSDictionary?
     public var pluginStyles: [String : Any]?
     
-    var currentPlayableItem: ZPPlayable?
     var kalturaPlayerController: KalturaPlayerController?
     
     var isPortraitUpsideDownOrientation: Bool?
@@ -44,6 +43,14 @@ class HybridViewController: UIViewController {
     var creatorsDataSource: [(title: String?, subtitle: String?, description: String?)]?
     var languagesSubtitlesDataSource: [(title: String?, subtitle: String?, description: String?)]?
      
+    var currentPlayableItem: ZPPlayable? {
+        didSet {
+            if self.currentPlayableItem != nil {
+                self.view.isHidden = false
+                self.commonInit()
+            }
+        }
+    }
     
     // MARK: Orientation
     
@@ -99,48 +106,9 @@ class HybridViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadExtendedData()
-    }
-    
-    func loadExtendedData() {
-        self.view.isHidden = true
         
-        guard let playable = self.currentPlayableItem, let dsUrl = playable.extensionsDictionary?["item_details_url"] as? String else {
-            return
-        }
-        
-        guard let atomFeed = APAtomFeed(url: dsUrl) else {
-            return
-        }
-        
-        func handleLoadedItem(_ extendedAtomFeed: APAtomFeed) {
-            guard
-                var extensions = extendedAtomFeed.extensions,
-                let entry = extendedAtomFeed.entries?.first as? APAtomFeed,
-                let pipes = entry.pipesObject as? [String: Any],
-                let content = pipes["content"] as? [String: Any],
-                let relatedContentUrl = content["src"] else {
-                    return
-            }
-            
-            extensions[ExtensionsKey.relatedContent] = relatedContentUrl
-            
-            playable.extensionsDictionary = extensions as NSDictionary
-            
-        }
-        
-        func finishLoading() {
-            self.commonInit()
-            self.view.isHidden = false
-        }
-        
-        APAtomFeedLoader.loadPipes(model: atomFeed) { (success, atomFeed) in
-            guard let atomFeed = atomFeed else {
-                return
-            }
-            
-            handleLoadedItem(atomFeed)
-            finishLoading()
+        if self.currentPlayableItem == nil {
+            self.view.isHidden = true
         }
     }
 
@@ -312,15 +280,13 @@ class HybridViewController: UIViewController {
             let playerVC = self.kalturaPlayerController else {
                 return
         }
+        
         self.addChildViewController(playerVC , to: playerView)
-        //        playerVC.loadViewIfNeeded()
         self.kalturaPlayerController?.changePlayer(displayMode: .inline)
         self.kalturaPlayerController?.currentDisplayMode = .inline
-        
     }
     
     public func updatePlayerConfiguration() {
-        //        self.extensionConfiguration()
         self.kalturaPlayerConfiguration()
     }
     

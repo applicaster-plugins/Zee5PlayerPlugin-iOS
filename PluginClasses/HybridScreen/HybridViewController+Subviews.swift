@@ -418,11 +418,6 @@
         
         //MARK:
         
-        func ggggg() {
-            
-        }
-        
-        
         private func secondsToHoursMinutesSeconds (seconds : Int) -> (Int?, Int?, Int?) {
             return ((seconds / 3600) > 1 ? (seconds / 3600) : nil, ((seconds % 3600) / 60) > 1 ? ((seconds % 3600) / 60) : nil, ((seconds % 3600) % 60) > 1 ? ((seconds % 3600) % 60) : nil)
         }
