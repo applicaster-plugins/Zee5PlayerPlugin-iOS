@@ -9,6 +9,7 @@ import Foundation
 
 extension AnalyticEngine
 {
+<<<<<<< HEAD
     //MARK:- AppsFlyer And Qgraph Events
     
     @objc public func AddtoWatchlistAnlytics()
@@ -89,6 +90,12 @@ extension AnalyticEngine
         }else{}
     }
 
+=======
+    //MARK:- AppsFlyer Events
+    
+    
+    //MARK:- Qgraph Events.
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
     
     
     

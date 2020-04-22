@@ -15,7 +15,10 @@
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
 static Usertype usertype = Guest;
+<<<<<<< HEAD
 static ConsumptionType consumprionType = Movie;
+=======
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
 
 static comScoreAnalytics *comAnalytics;
 
@@ -80,6 +83,7 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
     }
     return usertype;
 }
+<<<<<<< HEAD
 
 +(ConsumptionType)getConsumpruionType{
     
@@ -104,6 +108,8 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
     }
     return consumprionType;
 }
+=======
+>>>>>>> bade8c18844a1809621519cea8862f6b07152537
 
 + (NSString *)getSDKVersion
 {
