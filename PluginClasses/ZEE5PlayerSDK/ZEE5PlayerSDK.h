@@ -46,7 +46,6 @@ typedef enum userType
     Premium
 } Usertype;
 
-<<<<<<< HEAD
 typedef enum consumptiontype
 {
     Movie,
@@ -59,9 +58,6 @@ typedef enum consumptiontype
     Video
 } ConsumptionType;
 
-
-=======
->>>>>>> bade8c18844a1809621519cea8862f6b07152537
 ///
 typedef NS_ENUM(NSUInteger, ConvivaPlayerState) {
     ConvivaPlayerStateSTOPPED = 1,
@@ -117,10 +113,7 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 + (NSString *)getUserId;
 + (DevelopmentEnvironment)getDevEnvironment;
 + (Usertype)getUserTypeEnum;
-<<<<<<< HEAD
 + (ConsumptionType)getConsumpruionType;
-=======
->>>>>>> bade8c18844a1809621519cea8862f6b07152537
 + (NSString *)getSDKVersion;
 + (NSString *)getPlayerSDKVersion;
 
