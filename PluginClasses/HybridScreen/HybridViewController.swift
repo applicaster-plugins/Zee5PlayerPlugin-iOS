@@ -303,7 +303,12 @@ class HybridViewController: UIViewController {
     
     
     func stylesConfiguration() {
-        StylesHelper.setColorforView(view: self.view, key: "player_screen_bg_color", from: pluginStyles)
+        
+        guard let buttonsBackgroundStyle = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: "LayoutGenericListItemBGColor"),
+             let color = buttonsBackgroundStyle["color"] as? UIColor else {
+                 return
+         }
+        self.view.backgroundColor = color
     }
     
     
