@@ -480,7 +480,7 @@
         }
         
         @objc func consumptionDownloadButtonAction(_ sender: CAButton) {
-            
+            ZEE5PlayerManager.sharedInstance().startDownload()
         }
         
         @objc func consumptionMoreLessDescriptionButtonAction(_ sender: CAButton) {
