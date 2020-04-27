@@ -63,9 +63,6 @@ internal enum PlayerViewDisplayMode : Int {
         country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
         translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
         
-        ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: playerView) { (data,token) in
-            print(data?.title ?? nil ?? "Welcome")
-        }
         ZEE5PlayerManager.sharedInstance().delegate = self
         
         // Add appication observer
@@ -75,8 +72,14 @@ internal enum PlayerViewDisplayMode : Int {
         self.playerAdapter?.registerPlayerEvents()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("****** View will Appear.")
+    public func play() {
+        // Initialize Zee5Player
+        let config = ZEE5PlayerConfig()
+        country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
+        translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
+        
+        ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: playerView) { (data,token) in
+        }
     }
     
     

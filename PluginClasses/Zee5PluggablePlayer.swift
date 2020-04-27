@@ -38,11 +38,8 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     
-    public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary?) -> ZPPlayerProtocol?
-    {
-        print("pluggablePlayerRemoveInline:: item: \(String(describing: items))")
-        guard let videos = items else
-        {
+    public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary?) -> ZPPlayerProtocol? {
+        guard let videos = items, let playable = videos.first else {
             return nil
         }
         
@@ -52,13 +49,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         Zee5DownloadManager.shared.initializeDownloadManger()
    
-        
-        
-        
+    
         var errorViewConfig: ErrorViewConfiguration?
-        if let configuration = configurationJSON
-            
-        {
+        if let configuration = configurationJSON {
             errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
         }
         
@@ -70,18 +63,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         if let lastActiveInstance = Zee5PluggablePlayer.lastActiveInstance() {
             instance = lastActiveInstance
         }
-            // No Player Presented
         else {
             instance = Zee5PluggablePlayer()
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
         }
         
-        
-        // Configuration
         instance.configurationJSON = configurationJSON
-        instance.currentPlayableItem = items?.first
+        instance.currentPlayableItem = playable
         instance.hybridViewController?.kalturaPlayerController = playerViewController
-        instance.hybridViewController?.currentPlayableItem = items?.first
         instance.hybridViewController?.configurationJSON = configurationJSON
         
         if let screenModel = ZAAppConnector.sharedInstance().layoutComponentsDelegate.componentsManagerGetScreenComponentforPluginID(pluginID: "zee_player"),
@@ -129,7 +118,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             }
             
         }
-        
         return instance
     }
     
@@ -138,12 +126,10 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     public func pluggablePlayerCurrentPlayableItem() -> ZPPlayable? {
-        print("\n|*** pluggablePlayerCurrentPlayableItem : implementation ***| \n")
         return self.kalturaPlayerController?.playerAdapter?.currentItem
     }
     
     public override func pluggablePlayerFirstPlayableItem() -> ZPPlayable? {
-        print("\n|*** pluggablePlayerFirstPlayableItem : suggestion ***| \n")
         return self.kalturaPlayerController?.playerAdapter?.currentItem
     }
     
@@ -179,7 +165,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     public override func presentPlayerFullScreen(_ rootViewController:    UIViewController, configuration: ZPPlayerConfiguration?) {
         self.presentPlayerFullScreen(rootViewController, configuration: configuration) {
-            self.kalturaPlayerController?.playerAdapter?.play()
+            self.playContent()
         }
     }
     
@@ -189,15 +175,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             let currentItem = kalturaPlayerController.playerAdapter?.currentItem  else {
                 return
         }
-        print("Current Item From zapp\(currentItem)")
+
         let animated: Bool = configuration?.animated ?? true
         kalturaPlayerController.builder.mode = .fullscreen
 
         if let playerVC = self.pluggablePlayerViewController() as? HybridViewController{
             if topmostViewController is HybridViewController {
                 playerVC.updatePlayerConfiguration()
-                self.kalturaPlayerController?.playerAdapter?.play()
-                
+                self.playContent()
             } else {
                 playerVC.modalPresentationStyle = .fullScreen
                 topmostViewController.present(playerVC, animated:animated, completion: completion)
@@ -222,43 +207,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     public required init(configurationJSON: NSDictionary?) { }
     
     @objc public func handleUrlScheme(_ params: NSDictionary) {
-        print("params \(params)")
-        if let stringURL = params["ds"] as? String {
-            if let atomFeed = APAtomFeed.init(url: stringURL) {
-                APAtomFeedLoader.loadPipes(model: atomFeed) { [weak self] (success, atomFeed) in
-                    if success,
-                        let atomFeed = atomFeed {
-                        if let entries = atomFeed.entries,
-                            entries.count > 0 {
-                            if let itemId = params["id"] as? String {
-                                for entry in entries {
-                                    if let atomEntry = entry as? APAtomEntry,
-                                        atomEntry.identifier == itemId {
-                                        if let playable = atomEntry.playable() {
-                                            if let p = atomEntry.parentFeed,
-                                                let pipesObject = p.pipesObject {
-                                                playable.pipesObject = pipesObject as NSDictionary
-                                            }
-                                            playable.play()
-                                        }
-                                    }
-                                }
-                            }
-                                // present the first item
-                            else if let atomEntry = entries.first as? APAtomEntry,
-                                let playable = atomEntry.playable() {
-                                if let p = atomEntry.parentFeed,
-                                    let pipesObject = p.pipesObject {
-                                    playable.pipesObject = pipesObject as NSDictionary
-                                }
-                                playable.play()
-                            }
-                            print("entries \(entries)")
-                        }
-                    }
-                }
-            }
+        guard let dsUrl = params["data_source"] as? String else {
+            return
         }
+        
+        let link = APAtomEntryPlayable()
+        link.extensionsDictionary = [AnyHashable: String]()
+        link.extensionsDictionary["item_details_url"] = dsUrl
+        link.play()
     }
     
     // MARK: - private
@@ -287,9 +243,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     static func clear(instans: Zee5PluggablePlayer) {
         instans.shouldDissmis = false
-        //        instans.hybridViewController?.playerViewController?.delegate = nil
-        //        instans.hybridViewController?.playerViewController?.stop()
-        //        instans.hybridViewController?.playerViewController = nil
         instans.hybridViewController?.currentPlayableItem = nil
         instans.currentPlayableItem = nil
     }
@@ -297,11 +250,108 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     @objc func stop() {
         if self.shouldDissmis == true,
             let playerVC = self.pluggablePlayerViewController() {
-            //            Zee5AnalyticsManager.shared.playerExit()
             playerVC.dismiss(animated: true, completion: nil)
             self.currentPlayableItem = nil
-            //            self.hybridViewController?.playerViewController = nil
             self.hybridViewController = nil
+        }
+    }
+    
+    func playContent() {
+        func initContent(_ contentId: String) {
+            guard
+                let hybridViewController = self.hybridViewController,
+                let kalturaPlayerController = self.kalturaPlayerController else {
+                return
+            }
+                        
+            ZEE5PlayerSDK.initialize(withContentID: contentId, and: Zee5UserDefaultsManager.shared.getUserAccessToken())
+            kalturaPlayerController.contentId = contentId
+            
+            ZEE5UserDefaults.setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
+            
+            ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
+            ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
+            
+            let Country =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
+            
+            ZEE5UserDefaults.setCountry(Country.country, andState: Country.state)
+            
+            if let SubscribeData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
+                let dataString = String(data: SubscribeData, encoding: String.Encoding.utf8)
+                ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+            }
+            
+            if let UserSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
+                let userSettingString = String(data: UserSetting, encoding: String.Encoding.utf8)
+                ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
+            }
+            
+            hybridViewController.currentPlayableItem = self.currentPlayableItem
+            kalturaPlayerController.play()
+        }
+        
+        guard let playable = self.currentPlayableItem else {
+            return
+        }
+        
+        if let contentId = playable.identifier as String?, playable.extensionsDictionary?[ExtensionsKey.relatedContent] != nil {
+            initContent(contentId)
+        }
+        else {
+            self.loadExtendedData() {
+                guard let contentId = self.currentPlayableItem?.identifier as String? else {
+                    return
+                }
+                
+                initContent(contentId)
+            }
+        }
+    }
+    
+    func loadExtendedData(completion: @escaping () -> Void) {
+        guard let originalPlayable = self.currentPlayableItem, let dsUrl = originalPlayable.extensionsDictionary?["item_details_url"] as? String else {
+            return
+        }
+        
+        guard let atomFeed = APAtomFeed(url: dsUrl) else {
+            return
+        }
+        
+        func handleLoadedItem(_ extendedAtomFeed: APAtomFeed) {
+            guard
+                let entry = extendedAtomFeed.entries?.first as? APAtomFeed,
+                let pipes = entry.pipesObject as? [String: Any] else {
+                    return
+            }
+            
+            atomFeed.pipesObject["type"] = ["value": "video"]
+            let atomEntry = APAtomEntry(pipesObject: atomFeed.pipesObject)
+            
+            guard let loadedPlayable = atomEntry?.playable() else {
+                return
+            }
+            
+            self.currentPlayableItem = loadedPlayable
+            
+            guard
+                var extensions = loadedPlayable.extensionsDictionary,
+                let content = pipes["content"] as? [String: Any],
+                let relatedContentUrl = content["src"] else {
+                    return
+            }
+            
+            extensions[ExtensionsKey.relatedContent] = relatedContentUrl
+            loadedPlayable.extensionsDictionary = extensions
+            
+            completion()
+        }
+        
+        APAtomFeedLoader.loadPipes(model: atomFeed) { (success, atomFeed) in
+            guard let atomFeed = atomFeed else {
+                return
+            }
+            
+            handleLoadedItem(atomFeed)
         }
     }
 }

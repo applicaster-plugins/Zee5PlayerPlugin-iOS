@@ -418,11 +418,6 @@
         
         //MARK:
         
-        func ggggg() {
-            
-        }
-        
-        
         private func secondsToHoursMinutesSeconds (seconds : Int) -> (Int?, Int?, Int?) {
             return ((seconds / 3600) > 1 ? (seconds / 3600) : nil, ((seconds % 3600) / 60) > 1 ? ((seconds % 3600) / 60) : nil, ((seconds % 3600) % 60) > 1 ? ((seconds % 3600) % 60) : nil)
         }
@@ -485,7 +480,7 @@
         }
         
         @objc func consumptionDownloadButtonAction(_ sender: CAButton) {
-            
+            ZEE5PlayerManager.sharedInstance().startDownload()
         }
         
         @objc func consumptionMoreLessDescriptionButtonAction(_ sender: CAButton) {

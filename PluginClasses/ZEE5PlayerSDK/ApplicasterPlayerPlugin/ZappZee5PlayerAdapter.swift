@@ -43,8 +43,6 @@ class ZappZee5PlayerAdapter: NSObject, PlayerAdapterProtocol, ZEE5PlayerDelegate
     var didSwitchToItem: ((ZPPlayable) -> Void)?
     var didEndPlayback: (() -> Void)?
     
-    private var items: [ZPPlayable]
-    
     private(set) var currentItem: ZPPlayable? {
         didSet {
             currentItem.flatMap { didSwitchToItem?($0) }
@@ -55,7 +53,6 @@ class ZappZee5PlayerAdapter: NSObject, PlayerAdapterProtocol, ZEE5PlayerDelegate
     
     init(items: [ZPPlayable]) {
         self.currentItem = items.first
-        self.items = items
         
         super.init()
     }
@@ -69,7 +66,6 @@ class ZappZee5PlayerAdapter: NSObject, PlayerAdapterProtocol, ZEE5PlayerDelegate
     }
     
     func play() {
-        self.currentItem = self.items.first
         self.player?.play()
     }
     

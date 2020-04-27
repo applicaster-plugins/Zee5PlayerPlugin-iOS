@@ -212,7 +212,7 @@ static ContentBuisnessType buisnessType;
         
         [[AnalyticEngine new]ConsumptionAnalyticEvents];
 
-        if (![self.currentItem.asset_type isEqualToString:@"9"])
+        if (![self.currentItem.asset_type isEqualToString:@"9"] && ![self.currentItem.asset_subtype isEqualToString:@"trailer"])
         {
              [[ReportingManager sharedInstance] getWatchHistory];
              [[ContentClickApi sharedInstance]ContentConsumption];
@@ -2152,10 +2152,8 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock
 {
-    NSLog(@"|*** Play VOD Content ***|");
-    
-       _watchCtreditSeconds = 10;
-    
+    _watchCtreditSeconds = 10;
+
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
     if (self.previousDuration != 0)
@@ -2168,8 +2166,7 @@ static ContentBuisnessType buisnessType;
     NSDictionary *param =@{@"country":country, @"translation":laguage};
     
     NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
-    
-    
+
     [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
     {
         self.ModelValues = [VODContentDetailsDataModel initFromJSONDictionary:result];
@@ -2200,11 +2197,13 @@ static ContentBuisnessType buisnessType;
                     [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
                     
                     // Update video end point
-                    NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
-                    NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
-                   
-                    NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
-                    [self updateConvivaSessionWithMetadata: dict];
+                    if (![self.ModelValues.assetSubtype isEqualToString:@"trailer"]) {
+                        NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
+                        NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
+                       
+                        NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
+                        [self updateConvivaSessionWithMetadata: dict];
+                    }
                     
                     [[Zee5PlayerPlugin sharedInstance].player stop];
                     
