@@ -64,10 +64,18 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 {
     return user_id;
 }
+
+
++ (void)setDevEnvirnoment:(DevelopmentEnvironment)Servertype{
+    dev_environment = Servertype ;
+}
+
 + (DevelopmentEnvironment)getDevEnvironment
 {
     return dev_environment;
 }
+
+
 + (Usertype)getUserTypeEnum{
     NSString *Usertype = [ZEE5UserDefaults getUserType];
     if ([Usertype isEqualToString:@"guest"]){

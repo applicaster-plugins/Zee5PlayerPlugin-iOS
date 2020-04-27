@@ -55,6 +55,8 @@ internal enum PlayerViewDisplayMode : Int {
         self.playerView = UIView()
         self.view.addSubview(self.playerView)
         self.playerView.matchParent()  // Applicaster
+        self.playerAdapter?.serverType()
+    
                 
         // Initialize Zee5Player
         let config = ZEE5PlayerConfig()
@@ -76,6 +78,8 @@ internal enum PlayerViewDisplayMode : Int {
     override func viewWillAppear(_ animated: Bool) {
         print("****** View will Appear.")
     }
+    
+    
     
     private func addNotifiactonObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)

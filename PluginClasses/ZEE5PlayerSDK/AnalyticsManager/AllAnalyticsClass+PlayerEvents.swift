@@ -14,43 +14,43 @@ extension AllAnalyticsClass
     
     
     
-      // MARK:- Video_Play
+      // MARK:- VIDEO_VIEW
        
-public func VideoPlay(with data: NSDictionary)
+public func VideoViewEvent()
 {
            
     let parameter : Set = [
-        Keys.VIDEO_PLAY.SOURCE ~>> notAppplicable,      // TT
-        Keys.VIDEO_PLAY.VIDEO_INITIATION_METHOD ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
-        Keys.VIDEO_PLAY.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-        Keys.VIDEO_PLAY.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
-        Keys.VIDEO_PLAY.PREVIEW_STATUS ~>> "",
-        Keys.VIDEO_PLAY.PAGE_NAME ~>> notAppplicable,
-        Keys.VIDEO_PLAY.DRM_VIDEO ~>> DrmVideo,
-        Keys.VIDEO_PLAY.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-        Keys.VIDEO_PLAY.CONTENT_ORIGINAL_LANGUAGE ~>> "",
-        Keys.VIDEO_PLAY.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-        Keys.VIDEO_PLAY.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
-        Keys.VIDEO_PLAY.TAB_NAME ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CAST_TO ~>> notAppplicable,
-        Keys.VIDEO_PLAY.TV_CATEGORY ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CHANNEL_NAME ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
-        Keys.VIDEO_PLAY.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
-        Keys.VIDEO_PLAY.SERIES ~>> series == "" ? notAppplicable:series,
-        Keys.VIDEO_PLAY.TITLE ~>> contentName == "" ? notAppplicable:contentName,
-        Keys.VIDEO_PLAY.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-        Keys.VIDEO_PLAY.PLAYER_HEAD ~>> currentDuration == 0 ? 0:currentDuration,
-        Keys.VIDEO_PLAY.PLAYER_NAME ~>> "Kaltura",
-        Keys.VIDEO_PLAY.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-        Keys.VIDEO_PLAY.CDN ~>> "",
-        Keys.VIDEO_PLAY.DNS ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CAROUSAL_NAME ~>> notAppplicable,
-        Keys.VIDEO_PLAY.CAROUSAL_ID ~>> notAppplicable,
+        Keys.VIDEO_VIEW.SOURCE ~>> notAppplicable,      // TT
+        Keys.VIDEO_VIEW.VIDEO_INITIATION_METHOD ~>> notAppplicable,
+        Keys.VIDEO_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.VIDEO_VIEW.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.VIDEO_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+        Keys.VIDEO_VIEW.PREVIEW_STATUS ~>> "",
+        Keys.VIDEO_VIEW.PAGE_NAME ~>> notAppplicable,
+        Keys.VIDEO_VIEW.DRM_VIDEO ~>> DrmVideo,
+        Keys.VIDEO_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+        Keys.VIDEO_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.VIDEO_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.VIDEO_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+        Keys.VIDEO_VIEW.TAB_NAME ~>> notAppplicable,
+        Keys.VIDEO_VIEW.CAST_TO ~>> notAppplicable,
+        Keys.VIDEO_VIEW.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+        Keys.VIDEO_VIEW.CHANNEL_NAME ~>> notAppplicable,
+        Keys.VIDEO_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+        Keys.VIDEO_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+        Keys.VIDEO_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
+        Keys.VIDEO_VIEW.TITLE ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.VIDEO_VIEW.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+        Keys.VIDEO_VIEW.PLAYER_HEAD ~>> currentDuration == 0 ? 0:currentDuration,
+        Keys.VIDEO_VIEW.PLAYER_NAME ~>> "Kaltura",
+        Keys.VIDEO_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
+        Keys.VIDEO_VIEW.CDN ~>> notAppplicable,
+        Keys.VIDEO_VIEW.DNS ~>> notAppplicable,
+        Keys.VIDEO_VIEW.CAROUSAL_NAME ~>> notAppplicable,
+        Keys.VIDEO_VIEW.CAROUSAL_ID ~>> notAppplicable,
 
     ]
-      analytics.track(Events.VIDEO_PLAY, trackedProperties: parameter)
+      analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
            
     }
     
@@ -60,7 +60,7 @@ public func VideoPlay(with data: NSDictionary)
     {
         print("direction  \(Direction)")
         print("value \(Value)")
-       // let scrubDuration = currentDuration - Double(Value)
+        let scrubDuration = currentDuration - Double(Value)
         
         let parameter : Set = [
             Keys.AUTO_SEEK.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
@@ -81,20 +81,20 @@ public func VideoPlay(with data: NSDictionary)
             Keys.AUTO_SEEK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
             Keys.AUTO_SEEK.TAB_NAME ~>> notAppplicable,
             Keys.AUTO_SEEK.CAST_TO ~>> notAppplicable,
-            Keys.AUTO_SEEK.TV_CATEGORY ~>> notAppplicable,
+            Keys.AUTO_SEEK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
             Keys.AUTO_SEEK.PROVIDER_ID ~>> notAppplicable,
             Keys.AUTO_SEEK.PROVIDER_NAME ~>> notAppplicable,
             Keys.AUTO_SEEK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
             Keys.AUTO_SEEK.PLAYER_HEAD_START_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
             Keys.AUTO_SEEK.PLAYER_HEAD_END_POSITION ~>> Value == 0 ? 0:Value,
-          //  Keys.AUTO_SEEK.DIRECTION ~>> Direction == "" ? notAppplicable: Direction as String,
-          //  Keys.AUTO_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? 0:scrubDuration,
+            Keys.AUTO_SEEK.DIRECTION ~>> Direction == "" ? notAppplicable: Direction as String,
+            Keys.AUTO_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? 0:scrubDuration,
             Keys.AUTO_SEEK.PLAYER_NAME ~>> "Kaltura",
             Keys.AUTO_SEEK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-            Keys.AUTO_SEEK.CDN ~>> "",
+            Keys.AUTO_SEEK.CDN ~>> notAppplicable,
             Keys.AUTO_SEEK.DNS ~>> notAppplicable,
-            //Keys.AUTO_SEEK.CAROUSAL_NAME ~>> notAppplicable,
-           // Keys.AUTO_SEEK.CAROUSAL_ID ~>> notAppplicable,
+            Keys.AUTO_SEEK.CAROUSAL_NAME ~>> notAppplicable,
+            Keys.AUTO_SEEK.CAROUSAL_ID ~>> notAppplicable,
 
         ]
         analytics.track(Events.AUTO_SEEK, trackedProperties: parameter)
@@ -127,13 +127,13 @@ public func VideoPlay(with data: NSDictionary)
                Keys.REPLAY.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.REPLAY.TAB_NAME ~>> notAppplicable,
                Keys.REPLAY.CAST_TO ~>> notAppplicable,
-               Keys.REPLAY.TV_CATEGORY ~>> notAppplicable,
+               Keys.REPLAY.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.REPLAY.PROVIDER_ID ~>> notAppplicable,
                Keys.REPLAY.PROVIDER_NAME ~>> notAppplicable,
                Keys.REPLAY.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                Keys.REPLAY.PLAYER_NAME ~>> "Kaltura",
                Keys.REPLAY.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.REPLAY.CDN ~>> "",
+               Keys.REPLAY.CDN ~>> notAppplicable,
                Keys.REPLAY.DNS ~>> notAppplicable,
                Keys.REPLAY.CAROUSAL_NAME ~>> notAppplicable,
                Keys.REPLAY.CAROUSAL_ID ~>> notAppplicable,
@@ -168,7 +168,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.SKIP_INTRO.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.SKIP_INTRO.TAB_NAME ~>> notAppplicable,
            Keys.SKIP_INTRO.CAST_TO ~>> notAppplicable,
-           Keys.SKIP_INTRO.TV_CATEGORY ~>> notAppplicable,
+           Keys.SKIP_INTRO.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.SKIP_INTRO.PROVIDER_ID ~>> notAppplicable,
            Keys.SKIP_INTRO.PROVIDER_NAME ~>> notAppplicable,
            Keys.SKIP_INTRO.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -212,17 +212,17 @@ public func VideoPlay(with data: NSDictionary)
               Keys.SKIP_RECAP.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
               Keys.SKIP_RECAP.TAB_NAME ~>> notAppplicable,
               Keys.SKIP_RECAP.CAST_TO ~>> notAppplicable,
-              Keys.SKIP_RECAP.TV_CATEGORY ~>> notAppplicable,
+              Keys.SKIP_RECAP.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.SKIP_RECAP.PROVIDER_ID ~>> notAppplicable,
               Keys.SKIP_RECAP.PROVIDER_NAME ~>> notAppplicable,
-             // Keys.SKIP_RECAP.PLAYER_HEAD_START_POSITION ~>> SkipstartTime == "" ? notAppplicable:SkipstartTime as String,
+              Keys.SKIP_RECAP.PLAYER_HEAD_START_POSITION ~>> SkipstartTime == "" ? notAppplicable:SkipstartTime as String,
               Keys.SKIP_RECAP.PLAYER_HEAD_END_POSITION ~>> SkipendTime == "" ? notAppplicable:SkipendTime as String,
               Keys.SKIP_RECAP.PLAYER_NAME ~>> "Kaltura",
-              //Keys.SKIP_RECAP.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
+              Keys.SKIP_RECAP.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
               Keys.SKIP_RECAP.CDN ~>> "",
               Keys.SKIP_RECAP.DNS ~>> notAppplicable,
-             // Keys.SKIP_RECAP.CAROUSAL_NAME ~>> notAppplicable,
-              //Keys.SKIP_RECAP.CAROUSAL_ID ~>> notAppplicable,
+              Keys.SKIP_RECAP.CAROUSAL_NAME ~>> notAppplicable,
+              Keys.SKIP_RECAP.CAROUSAL_ID ~>> notAppplicable,
 
               ]
               analytics.track(Events.SKIP_RECAP, trackedProperties: parameter)
@@ -256,7 +256,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.WATCH_CREDITS.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.WATCH_CREDITS.TAB_NAME ~>> notAppplicable,
            Keys.WATCH_CREDITS.CAST_TO ~>> notAppplicable,
-           Keys.WATCH_CREDITS.TV_CATEGORY ~>> notAppplicable,
+           Keys.WATCH_CREDITS.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.WATCH_CREDITS.PROVIDER_ID ~>> notAppplicable,
            Keys.WATCH_CREDITS.PROVIDER_NAME ~>> notAppplicable,
            Keys.WATCH_CREDITS.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -300,7 +300,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.PAUSE.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.PAUSE.TAB_NAME ~>> notAppplicable,
            Keys.PAUSE.CAST_TO ~>> notAppplicable,
-           Keys.PAUSE.TV_CATEGORY ~>> notAppplicable,
+           Keys.PAUSE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.PAUSE.PROVIDER_ID ~>> notAppplicable,
            Keys.PAUSE.PROVIDER_NAME ~>> notAppplicable,
            Keys.PAUSE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -344,7 +344,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.RESUME.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.RESUME.TAB_NAME ~>> notAppplicable,
            Keys.RESUME.CAST_TO ~>> notAppplicable,
-           Keys.RESUME.TV_CATEGORY ~>> notAppplicable,
+           Keys.RESUME.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.RESUME.PROVIDER_ID ~>> notAppplicable,
            Keys.RESUME.PROVIDER_NAME ~>> notAppplicable,
            Keys.RESUME.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -390,7 +390,7 @@ public func VideoPlay(with data: NSDictionary)
                Keys.SCRUB_SLASH_SEEK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.SCRUB_SLASH_SEEK.TAB_NAME ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.CAST_TO ~>> notAppplicable,
-               Keys.SCRUB_SLASH_SEEK.TV_CATEGORY ~>> notAppplicable,
+               Keys.SCRUB_SLASH_SEEK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.SCRUB_SLASH_SEEK.PROVIDER_ID ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.PROVIDER_NAME ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -439,7 +439,7 @@ public func VideoPlay(with data: NSDictionary)
                Keys.LANGUAGE_AUDIO_CHANGE.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.TAB_NAME ~>> notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.CAST_TO ~>> notAppplicable,
-               Keys.LANGUAGE_AUDIO_CHANGE.TV_CATEGORY ~>> notAppplicable,
+               Keys.LANGUAGE_AUDIO_CHANGE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.LANGUAGE_AUDIO_CHANGE.PROVIDER_ID ~>> notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.PROVIDER_NAME ~>> notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -487,7 +487,7 @@ public func VideoPlay(with data: NSDictionary)
                Keys.SUBTITLE_LANGUAGE_CHANGE.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.TAB_NAME ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.CAST_TO ~>> notAppplicable,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.TV_CATEGORY ~>> notAppplicable,
+               Keys.SUBTITLE_LANGUAGE_CHANGE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PROVIDER_ID ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PROVIDER_NAME ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -532,7 +532,7 @@ public func VideoPlay(with data: NSDictionary)
               Keys.BUFFER_START.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
               Keys.BUFFER_START.TAB_NAME ~>> notAppplicable,
               Keys.BUFFER_START.CAST_TO ~>> notAppplicable,
-              Keys.BUFFER_START.TV_CATEGORY ~>> notAppplicable,
+              Keys.BUFFER_START.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.BUFFER_START.PROVIDER_ID ~>> notAppplicable,
               Keys.BUFFER_START.PROVIDER_NAME ~>> notAppplicable,
               Keys.BUFFER_START.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -572,7 +572,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.BUFFER_END.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.BUFFER_END.TAB_NAME ~>> notAppplicable,
            Keys.BUFFER_END.CAST_TO ~>> notAppplicable,
-           Keys.BUFFER_END.TV_CATEGORY ~>> notAppplicable,
+           Keys.BUFFER_END.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.BUFFER_END.PROVIDER_ID ~>> notAppplicable,
            Keys.BUFFER_END.PROVIDER_NAME ~>> notAppplicable,
            Keys.BUFFER_END.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -614,7 +614,7 @@ public func VideoPlay(with data: NSDictionary)
               Keys.PLAYER_VIEW_CHANGED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
               Keys.PLAYER_VIEW_CHANGED.TAB_NAME ~>> notAppplicable,
               Keys.PLAYER_VIEW_CHANGED.CAST_TO ~>> notAppplicable,
-              Keys.PLAYER_VIEW_CHANGED.TV_CATEGORY ~>> notAppplicable,
+              Keys.PLAYER_VIEW_CHANGED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.PLAYER_VIEW_CHANGED.PROVIDER_ID ~>> notAppplicable,
               Keys.PLAYER_VIEW_CHANGED.PROVIDER_NAME ~>> notAppplicable,
               Keys.PLAYER_VIEW_CHANGED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -657,7 +657,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.VIDEO_EXIT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.VIDEO_EXIT.TAB_NAME ~>> notAppplicable,
            Keys.VIDEO_EXIT.CAST_TO ~>> notAppplicable,
-           Keys.VIDEO_EXIT.TV_CATEGORY ~>> notAppplicable,
+           Keys.VIDEO_EXIT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.VIDEO_EXIT.PROVIDER_ID ~>> notAppplicable,
            Keys.VIDEO_EXIT.PROVIDER_NAME ~>> notAppplicable,
            Keys.VIDEO_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -674,9 +674,48 @@ public func VideoPlay(with data: NSDictionary)
            
        }
     
+    
+    //MARK:-  VideoWatchDuration Event
+    
+    public func VideoWatchDuration()
+       {
+          let parameter : Set = [
+           Keys.VIDEO_WATCH_DURATON.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
+           Keys.VIDEO_WATCH_DURATON.SOURCE ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+           Keys.VIDEO_WATCH_DURATON.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+           Keys.VIDEO_WATCH_DURATON.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+           Keys.VIDEO_WATCH_DURATON.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+           Keys.VIDEO_WATCH_DURATON.SERIES ~>> series == "" ? notAppplicable:series,
+           Keys.VIDEO_WATCH_DURATON.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+           Keys.VIDEO_WATCH_DURATON.PREVIEW_STATUS ~>> "",
+           Keys.VIDEO_WATCH_DURATON.PAGE_NAME ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.DRM_VIDEO ~>> DrmVideo,
+           Keys.VIDEO_WATCH_DURATON.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+           Keys.VIDEO_WATCH_DURATON.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+           Keys.VIDEO_WATCH_DURATON.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.TAB_NAME ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.CAST_TO ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+           Keys.VIDEO_WATCH_DURATON.PROVIDER_ID ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.PROVIDER_NAME ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.VIDEO_WATCH_DURATON.PLAYER_NAME ~>> "Kaltura",
+           Keys.VIDEO_WATCH_DURATON.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion,
+           Keys.VIDEO_WATCH_DURATON.CDN ~>> "",
+           Keys.VIDEO_WATCH_DURATON.DNS ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.CAROUSAL_NAME ~>> notAppplicable,
+           Keys.VIDEO_WATCH_DURATON.CAROUSAL_ID ~>> notAppplicable,
+
+           ]
+           analytics.track(Events.VIDEO_WATCH_DURATON, trackedProperties: parameter)
+           
+       }
     //MARK:-  PlayBackError Event
        
-       public func PlayBackError()
+    public func PlayBackError(with ErrorMessage : String)
           {
               
              let parameter : Set = [
@@ -713,7 +752,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.CASTING_STARTED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.CASTING_STARTED.TAB_NAME ~>> notAppplicable,
            Keys.CASTING_STARTED.CAST_TO ~>> CastTo == "" ? notAppplicable:CastTo,
-           Keys.CASTING_STARTED.TV_CATEGORY ~>> notAppplicable,
+           Keys.CASTING_STARTED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.CASTING_STARTED.PROVIDER_ID ~>> notAppplicable,
            Keys.CASTING_STARTED.PROVIDER_NAME ~>> notAppplicable,
            Keys.CASTING_STARTED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -754,7 +793,7 @@ public func VideoPlay(with data: NSDictionary)
            Keys.CASTING_ENDED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.CASTING_ENDED.TAB_NAME ~>> notAppplicable,
            Keys.CASTING_ENDED.CAST_TO ~>> CastTo == "" ? notAppplicable:CastTo,
-           Keys.CASTING_ENDED.TV_CATEGORY ~>> notAppplicable,
+           Keys.CASTING_ENDED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.CASTING_ENDED.PROVIDER_ID ~>> notAppplicable,
            Keys.CASTING_ENDED.PROVIDER_NAME ~>> notAppplicable,
            Keys.CASTING_ENDED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
@@ -799,8 +838,8 @@ public func VideoPlay(with data: NSDictionary)
            Keys.DOWNLOAD_START.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.DOWNLOAD_START.TAB_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_START.CAST_TO ~>> notAppplicable,
-           Keys.DOWNLOAD_START.INTRO_PRESENT ~>> "",   // TT
-           Keys.DOWNLOAD_START.TV_CATEGORY ~>> notAppplicable,
+           Keys.DOWNLOAD_START.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+           Keys.DOWNLOAD_START.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.DOWNLOAD_START.CHANNEL_NAME ~>> "",  // TT
            Keys.DOWNLOAD_START.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_START.PROVIDER_NAME ~>> notAppplicable,
@@ -843,8 +882,8 @@ public func VideoPlay(with data: NSDictionary)
            Keys.DOWNLOAD_RESULT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
            Keys.DOWNLOAD_RESULT.TAB_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_RESULT.CAST_TO ~>> notAppplicable,
-           Keys.DOWNLOAD_RESULT.INTRO_PRESENT ~>> "",
-           Keys.DOWNLOAD_RESULT.TV_CATEGORY ~>> notAppplicable,
+           Keys.DOWNLOAD_RESULT.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+           Keys.DOWNLOAD_RESULT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.DOWNLOAD_RESULT.CHANNEL_NAME ~>> "",
            Keys.DOWNLOAD_RESULT.INTERACTION_LABEL ~>> "",
            Keys.DOWNLOAD_RESULT.PROVIDER_ID ~>> notAppplicable,
@@ -887,8 +926,8 @@ public func VideoPlay(with data: NSDictionary)
            Keys.DOWNLOAD_DELETE.SUBTITLE_LANGUAGE ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.TAB_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.CAST_TO ~>> notAppplicable,
-           Keys.DOWNLOAD_DELETE.INTRO_PRESENT ~>> "",
-           Keys.DOWNLOAD_DELETE.TV_CATEGORY ~>> notAppplicable,
+           Keys.DOWNLOAD_DELETE.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+           Keys.DOWNLOAD_DELETE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.DOWNLOAD_DELETE.CHANNEL_NAME ~>> "",
            Keys.DOWNLOAD_DELETE.INTERACTION_LABEL ~>> "",
            Keys.DOWNLOAD_DELETE.PROVIDER_ID ~>> notAppplicable,
@@ -933,8 +972,8 @@ public func VideoPlay(with data: NSDictionary)
               Keys.DOWNLOAD_CLICK.SUBTITLE_LANGUAGE ~>> notAppplicable,
               Keys.DOWNLOAD_CLICK.TAB_NAME ~>> notAppplicable,
               Keys.DOWNLOAD_CLICK.CAST_TO ~>> notAppplicable,
-              Keys.DOWNLOAD_CLICK.INTRO_PRESENT ~>> "",
-              Keys.DOWNLOAD_CLICK.TV_CATEGORY ~>> notAppplicable,
+              Keys.DOWNLOAD_CLICK.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+              Keys.DOWNLOAD_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.DOWNLOAD_CLICK.CHANNEL_NAME ~>> "",
               Keys.DOWNLOAD_CLICK.INTERACTION_LABEL ~>> "",
               Keys.DOWNLOAD_CLICK.PROVIDER_ID ~>> notAppplicable,

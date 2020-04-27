@@ -111,6 +111,7 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 
 + (void)initializeWithContentID:(NSString*)content_id and:(NSString *)token;
 + (NSString *)getUserId;
++ (void)setDevEnvirnoment:(DevelopmentEnvironment)Servertype;
 + (DevelopmentEnvironment)getDevEnvironment;
 + (Usertype)getUserTypeEnum;
 + (ConsumptionType)getConsumpruionType;

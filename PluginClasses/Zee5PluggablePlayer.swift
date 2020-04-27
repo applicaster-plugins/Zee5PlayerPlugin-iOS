@@ -33,6 +33,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         self.screenModel = screenModel
         self.dataSourceModel = dataSourceModel
         
+        
         super.init()
     }
     
@@ -44,10 +45,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         {
             return nil
         }
+        
+
         print("pluggablePlayerRemoveInline::Videos : \(videos)")
         //  print("Zpplayble Object : \)")
         
         Zee5DownloadManager.shared.initializeDownloadManger()
+   
+        
+        
         
         var errorViewConfig: ErrorViewConfiguration?
         if let configuration = configurationJSON
@@ -93,7 +99,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         if items != nil, items!.count > 0,let contentId = items!.first!.identifier as String?
         {
             ZEE5PlayerSDK.initialize(withContentID: contentId, and: Zee5UserDefaultsManager.shared.getUserAccessToken())
+            
             instance.kalturaPlayerController?.contentId = contentId
+
             
             ZEE5UserDefaults .setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
             

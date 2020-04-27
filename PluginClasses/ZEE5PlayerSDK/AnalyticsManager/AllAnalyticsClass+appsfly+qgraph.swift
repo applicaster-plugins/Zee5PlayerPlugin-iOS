@@ -197,5 +197,16 @@ extension AllAnalyticsClass{
            }
     
     
+    @objc public func PlayerBtnPressed(with Element : String){
+        
+      let parameter : Set = [
+            Keys.PLAYER_CTAS.SOURCE ~>> notAppplicable,
+            Keys.PLAYER_CTAS.ELEMENT ~>> Element  == "" ? notAppplicable : Element,
+            Keys.PLAYER_CTAS.BUTTON_TYPE ~>> "Player More Button",
+                ]
+        analytics.track(Events.PLAYER_CTAS, trackedProperties: parameter)
+    
+        }
+    
     
 }

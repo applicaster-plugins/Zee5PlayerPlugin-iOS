@@ -43,6 +43,9 @@ class DownloadQualityMenu: UIView {
             let option = self.downloadOption[idx.row]
             if let bitrate = option.bitrate {
                 DownloadHelper.shared.selectedVideoResolution(videoBitrate: bitrate, data: self.currentDownloadItem)
+                
+                AnalyticEngine.shared.downloadStart(with: option.resolution!)
+                
             }
         }
     }

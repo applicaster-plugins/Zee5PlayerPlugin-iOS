@@ -723,6 +723,7 @@ static ContentBuisnessType buisnessType;
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
             [self.delegate didFinishPlaying];
+            
         }
         
     }
@@ -1110,10 +1111,11 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnMinimizeButton
 {
-     [self pause];
+     [self stop];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
+        [[AnalyticEngine new]VideoExitAnalytics];
        
     }
     
@@ -1268,7 +1270,7 @@ static ContentBuisnessType buisnessType;
     
     
     _customControlView.backtoPartnerView.hidden = YES;
-    _customControlView.getPremiumStackview.hidden = YES;
+
     
     if (self.subscribeView !=nil || self.devicePopView!=nil ||self.parentalView!=nil)
     {
@@ -1311,12 +1313,7 @@ static ContentBuisnessType buisnessType;
     if (_isTelco == true)
     {
         _customControlView.backtoPartnerView.hidden = false;
-    }
-
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
-
-        _customControlView.getPremiumStackview.hidden = false;
-        _customControlView.Stackview_top.constant = 35;
+         _customControlView.Stackview_top.constant = 35;
     }
     
     ////
@@ -1706,13 +1703,6 @@ static ContentBuisnessType buisnessType;
     model4.type = 1;
     model4.isSelected = false;
     [models addObject:model4];
-    
-    Zee5MenuModel *model5 = [[Zee5MenuModel alloc] init];
-    model5.imageName = @"";
-    model5.title = @"Go to Downloads";
-    model5.type = 1;
-    model5.isSelected = false;
-    [models addObject:model5];
 
     [_customMenu reloadDataWithObjects:models :false];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
@@ -1800,7 +1790,6 @@ static ContentBuisnessType buisnessType;
     else
     {
         [self removeMenuView];
-        [self GoToDownloadsSection];
         
     }
 }
@@ -2494,6 +2483,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.audioLanguages =model.audioLanguages;
     self.currentItem.charecters = model.charecters;
     self.currentItem.skipintrotime = model.introStarttime;
+    self.currentItem.AgeRate = model.ageRating;
     
     if (_playerConfig.playerType == normalPlayer)
     {

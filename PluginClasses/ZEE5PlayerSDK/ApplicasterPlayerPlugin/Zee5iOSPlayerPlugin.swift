@@ -35,8 +35,9 @@ public class Zee5iOSPlayerPlugin: NSObject, ZPPlayerProtocol, ZPPluggableScreenP
         self.pluginModel = pluginModel
         self.screenModel = screenModel
         self.dataSourceModel = dataSourceModel
-        
+    
         super.init()
+        
     }
     
     // MARK: - ZPPlayerProtocol
@@ -105,7 +106,7 @@ public class Zee5iOSPlayerPlugin: NSObject, ZPPlayerProtocol, ZPPluggableScreenP
         
         return instance
     }
-    
+
     public func pluggablePlayerViewController() -> UIViewController?
     {
         return self.kalturaPlayerController
