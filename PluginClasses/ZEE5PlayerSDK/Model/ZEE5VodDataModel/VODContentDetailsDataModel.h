@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *drmKeyID;
 @property (nonatomic, copy)   NSArray *subtitleLanguages;
 @property (nonatomic, copy)   NSArray *audioLanguages;
+@property (nonatomic, copy)   NSArray *charecters;
 @property (nonatomic, copy)   NSString *assetType;
 @property (nonatomic, copy)   NSString *assetSubtype;
 @property (nonatomic)   NSInteger episodeNumber;

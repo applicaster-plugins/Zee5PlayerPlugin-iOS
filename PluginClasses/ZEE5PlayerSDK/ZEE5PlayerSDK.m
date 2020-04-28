@@ -15,6 +15,7 @@
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
 static Usertype usertype = Guest;
+static ConsumptionType consumprionType = Movie;
 
 static comScoreAnalytics *comAnalytics;
 
@@ -62,10 +63,18 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 {
     return user_id;
 }
+
+
++ (void)setDevEnvirnoment:(DevelopmentEnvironment)Servertype{
+    dev_environment = Servertype ;
+}
+
 + (DevelopmentEnvironment)getDevEnvironment
 {
     return dev_environment;
 }
+
+
 + (Usertype)getUserTypeEnum{
     NSString *Usertype = [ZEE5UserDefaults getUserType];
     if ([Usertype isEqualToString:@"guest"]){
@@ -78,6 +87,30 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
         usertype = Guest;
     }
     return usertype;
+}
+
++(ConsumptionType)getConsumpruionType{
+    
+    
+     NSString *genres = [Utility getCommaSaperatedGenreList:[ZEE5PlayerManager sharedInstance].currentItem.geners];
+    
+    if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_type isEqualToString:@"9"]) {
+        consumprionType = Live;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"trailer"]){
+        consumprionType = Trailer;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"episode"]){
+        consumprionType = Episode;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"movie"]){
+        consumprionType = Movie;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"video"] && [genres containsString:@"Music" ]){
+        consumprionType = Music;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"video"]){
+        consumprionType = Video;
+    }
+    else{
+        consumprionType ;
+    }
+    return consumprionType;
 }
 
 + (NSString *)getSDKVersion

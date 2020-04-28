@@ -472,7 +472,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self handlePlayerError];
     
-    
+    [self registerPlayerMetaData];
     [self registerPlayEvent];
     [self registerDurationChangedEvent];
     [self registerPlayerEventStateChangedEvent];
@@ -509,8 +509,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         {
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
-        
-          /// Cheack Code here Why Its Getting Failed
+        [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
                  
                        }];
     
@@ -527,7 +526,19 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        }];
 }
 
+-(void)registerPlayerMetaData{
+    
+    
+    
+    [self.player addObserver:self
+                       event:PlayerEvent.loadedMetadata
+                       block:^(PKEvent * _Nonnull event) {
+                        
+                           NSLog(@"|**** Playing Start ****|");
+        [[AnalyticEngine new]VideoPlayAnalytics];
 
+                       }];
+}
 - (void)registerPlayEvent {
     
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
@@ -672,6 +683,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
                            [[ZEE5PlayerManager sharedInstance] onComplete];
                            NSLog(@"|*** Complete Video- End event ***|");
+        [engine  videoWatchDurationAnalytic];
                            [engine updatePlayerStateWithState: CONVIVA_STOPPED];
                        }];
 }

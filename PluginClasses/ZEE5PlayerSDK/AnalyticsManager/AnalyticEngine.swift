@@ -10,13 +10,15 @@ import Foundation
 import ConvivaSDK
 import LotameDMP
 
+
+
+var VideWatchInt = 0
+
 public class AnalyticEngine: NSObject {
     
    public static let shared = AnalyticEngine()
-    
-    
-    //MARK:- Lotame Anlytics
-    
+   
+   
     @objc public func startLotameAnalytics(with duration: String, quartileValue: String)
     {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
@@ -65,6 +67,8 @@ public class AnalyticEngine: NSObject {
     @objc public func cleanupVideoSesssion()
     {
         ConvivaAnalytics.shared.cleanupSession()
+        VideWatchInt = 0
+        
     }
     
     @objc public func updateMetadata(with data: NSDictionary)
@@ -107,9 +111,9 @@ public class AnalyticEngine: NSObject {
     }
     
     
-    @objc public func VideoPlayAnalytics(with data: NSDictionary)
+    @objc public func VideoPlayAnalytics()
        {
-        AllAnalyticsClass.shared.VideoPlay(with: data)
+        AllAnalyticsClass.shared.VideoViewEvent()
        }
     
     @objc public func AutoSeekAnalytics(with Direction: NSString, time :NSInteger)
@@ -168,11 +172,15 @@ public class AnalyticEngine: NSObject {
          AllAnalyticsClass.shared.VideoExit()
      }
     
+    @objc public func PlayBackError (with ErrorMessage:String)
+    {
+        AllAnalyticsClass.shared.PlayBackError(with: ErrorMessage)
+    }
+
     @objc public func audiolangChangeAnalytics (with oldAudio: String, newAudio: String ,Mode:String )
      {
         AllAnalyticsClass.shared.AudiochangeEvent(with: oldAudio, New: newAudio, TrackingMode: Mode)
      }
-    
     
     @objc public func subtitlelangChangeAnalytics (with oldSubtitle: String, newSubtitle: String ,Mode:String)
      {
@@ -183,16 +191,23 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.CastingStartEvent(with: CastTo)
     }
+
     @objc public func castingEndAnalytics (with CastTo:String)
     {
          AllAnalyticsClass.shared.CastingEndEvent(with: CastTo)
     }
     
-    @objc public func videoWatchDurationAnalytic (with data: NSDictionary)
+    @objc public func videoWatchDurationAnalytic ()
     {
-               //AllAnalyticsClass.shared.AutoseekChanged(with: data)
+        AllAnalyticsClass.shared.VideoWatchDuration()
     }
-
+    
+    
+    @objc public func playerCTA (with Element: String)
+       {
+        AllAnalyticsClass.shared.PlayerBtnPressed(with: Element)
+       }
+       
      // MARK:- For Downlaod Anlytics Events
     
     @objc public func downloadStart (with Quality:String)

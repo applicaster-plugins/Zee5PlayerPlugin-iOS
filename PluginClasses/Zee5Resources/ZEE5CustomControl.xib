@@ -601,46 +601,10 @@ watch this video</string>
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="32F-Kd-DAn">
-                    <rect key="frame" x="2" y="221" width="494" height="71"/>
+                    <rect key="frame" x="2" y="221" width="494" height="35"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="54J-7j-Q5m">
-                            <rect key="frame" x="0.0" y="0.0" width="494" height="35"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TZQ-hU-0eI">
-                                    <rect key="frame" x="384" y="5" width="100" height="25"/>
-                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="25" id="jR7-rd-VAl"/>
-                                        <constraint firstAttribute="width" constant="100" id="ti1-rF-sDU"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="10"/>
-                                    <state key="normal" title="GET PREMIUM">
-                                        <color key="titleColor" red="0.91568344830000004" green="0.19880926609999999" blue="0.56080204249999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="PremiumBtnAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="JSE-nH-tGS"/>
-                                    </connections>
-                                </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subscribe to Premium today! Starting at ₹ 49" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gS-Oc-5Yf" userLabel="Episode">
-                                    <rect key="frame" x="10" y="5" width="344" height="25"/>
-                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="10"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" red="0.18044731019999999" green="0.071742957750000003" blue="0.18824765090000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            <constraints>
-                                <constraint firstAttribute="trailing" secondItem="TZQ-hU-0eI" secondAttribute="trailing" constant="10" id="Jte-nV-6m3"/>
-                                <constraint firstItem="7gS-Oc-5Yf" firstAttribute="leading" secondItem="54J-7j-Q5m" secondAttribute="leading" constant="10" id="Kwf-FE-gR2"/>
-                                <constraint firstItem="7gS-Oc-5Yf" firstAttribute="top" secondItem="54J-7j-Q5m" secondAttribute="top" constant="5" id="SFT-jI-NGd"/>
-                                <constraint firstItem="TZQ-hU-0eI" firstAttribute="leading" secondItem="7gS-Oc-5Yf" secondAttribute="trailing" constant="30" id="YOr-6t-DR2"/>
-                                <constraint firstItem="TZQ-hU-0eI" firstAttribute="centerY" secondItem="54J-7j-Q5m" secondAttribute="centerY" id="cC9-nn-NrU"/>
-                                <constraint firstAttribute="height" constant="35" id="hm1-10-q1I"/>
-                                <constraint firstAttribute="bottom" secondItem="7gS-Oc-5Yf" secondAttribute="bottom" constant="5" id="mJb-gl-tT4"/>
-                            </constraints>
-                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KAO-pB-dvA">
-                            <rect key="frame" x="0.0" y="36" width="494" height="35"/>
+                            <rect key="frame" x="0.0" y="0.0" width="494" height="35"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;  Back To Vodafone Play" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSo-wd-ZW7">
                                     <rect key="frame" x="10" y="5" width="479" height="25"/>
@@ -747,7 +711,6 @@ watch this video</string>
                 <outlet property="con_top_collectionView" destination="Yug-3i-uio" id="Yab-u3-XpE"/>
                 <outlet property="con_width_more" destination="AJR-6U-xiV" id="YjX-O3-jtR"/>
                 <outlet property="downloadBtnOutlet" destination="ETW-Do-w0G" id="UDM-8g-HH3"/>
-                <outlet property="getPremiumStackview" destination="54J-7j-Q5m" id="Nw0-9S-a1z"/>
                 <outlet property="labelCurrentTime" destination="oiw-Ws-4As" id="yTH-Ql-hBh"/>
                 <outlet property="labelLiveCurrentTime" destination="yzV-5K-ZP3" id="l4d-nx-Ixd"/>
                 <outlet property="labelLiveDuration" destination="iNj-wU-uAI" id="gEB-Db-p9Y"/>
@@ -757,7 +720,6 @@ watch this video</string>
                 <outlet property="nextEpisodeImg" destination="Jv0-Zl-75u" id="OcZ-d9-tCr"/>
                 <outlet property="nextEpisodename" destination="qvX-6L-cZA" id="Qqc-wh-vgd"/>
                 <outlet property="partnerLblTxt" destination="lSo-wd-ZW7" id="B7L-Ar-0jP"/>
-                <outlet property="premiumLbltext" destination="7gS-Oc-5Yf" id="ymT-5h-xLs"/>
                 <outlet property="showcreditTimelbl" destination="Vcy-gP-1Ex" id="dVO-vM-UEc"/>
                 <outlet property="skipIntro" destination="p4i-9L-w3V" id="ylZ-tL-Ywg"/>
                 <outlet property="sliderDuration" destination="rig-fB-bhM" id="TBr-GG-P1Z"/>

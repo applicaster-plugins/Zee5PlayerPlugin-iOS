@@ -79,6 +79,8 @@ extension AllAnalyticsClass{
         DMP.addBehaviorData(LOTMonth, forType: "genp")
         DMP.addBehaviorData(LOTAge, forType: "genp")
         DMP.addBehaviorData(LOTGender, forType: "genp")
+        DMP.addBehaviorData("test_i_applicaster", forType: "genp")
+        
         
         DMP.sendBehaviorData(){
             result in

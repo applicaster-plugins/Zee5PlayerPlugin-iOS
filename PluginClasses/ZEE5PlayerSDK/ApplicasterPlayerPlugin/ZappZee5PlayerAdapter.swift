@@ -24,6 +24,7 @@ protocol PlayerAdapterProtocol: class {
     func pause()
     func stop()
     func resume()
+    func serverType()
     
     func registerPlayerEvents()
 }
@@ -68,6 +69,20 @@ class ZappZee5PlayerAdapter: NSObject, PlayerAdapterProtocol, ZEE5PlayerDelegate
         self.player?.play()
     }
     
+    func serverType() {
+        let serverType = APThirdPartyServerSwitchManager.serverType()
+        
+            switch serverType {
+            case .productionServer:
+                ZEE5PlayerSDK.setDevEnvirnoment(production)
+            case .developmentServer:
+                ZEE5PlayerSDK.setDevEnvirnoment(development)
+            case.customServer:
+                ZEE5PlayerSDK.setDevEnvirnoment(development)
+            default:
+                break
+    }
+    }
     func pause() {
         self.player?.pause()
     }

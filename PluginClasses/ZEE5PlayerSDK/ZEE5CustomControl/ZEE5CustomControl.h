@@ -85,10 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *nextEpisodeImg;
 @property (weak, nonatomic) IBOutlet UILabel *nextEpisodename;
 @property (weak, nonatomic) IBOutlet UILabel *showcreditTimelbl;
-@property (weak, nonatomic) IBOutlet UIView *getPremiumStackview;
 @property (weak, nonatomic) IBOutlet UIView *backtoPartnerView;
-- (IBAction)PremiumBtnAction:(UIButton *)sender;
-@property (weak, nonatomic) IBOutlet UILabel *premiumLbltext;
 @property (weak, nonatomic) IBOutlet UILabel *partnerLblTxt;
 - (IBAction)bactoPartnetAppAction:(id)sender;
 

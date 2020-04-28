@@ -15,6 +15,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
     public var licenseUrl                  = ""
     public var title                       = ""
     public var imageURL                    = ""
+    public var Agerating                   = ""
     public var info                        = ""
     public var category                    = ""
     public var episode                     = ""
@@ -42,7 +43,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
     public var contentMeadiaSorce: PKMediaSource!
     public var contentFairPlay: FormFairPlayLicenseProvider?
     
-    public init(id: String, url: String, title: String, imageUrl: String, info: String, episodeNumber: Int, assetType: String, assetSubType: String, duration: Int, showOriginalTitle: String, licenseUrl: String, base64: String, customData: String) {
+    public init(id: String, url: String, title: String, imageUrl: String, info: String, episodeNumber: Int, assetType: String, assetSubType: String, duration: Int, showOriginalTitle: String, licenseUrl: String, base64: String, customData: String,Age:String) {
      
         self.contentId = id
         self.contentUrl = url
@@ -54,6 +55,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
         self.assetSubType = assetSubType
         self.duration = duration
         self.showOriginalTitle = showOriginalTitle
+        self.Agerating = Age
         
         self.licenseUrl = licenseUrl
         self.base64encodedcertificate = base64
@@ -82,6 +84,9 @@ public protocol DownloadDataItem {
     
     // Item's unique id.
     var contentId: String { get }
+    
+    // Item's Age rating
+    var Agerating: String { get }
     
     // Item's remote URL.
     var contentUrl: String { get }

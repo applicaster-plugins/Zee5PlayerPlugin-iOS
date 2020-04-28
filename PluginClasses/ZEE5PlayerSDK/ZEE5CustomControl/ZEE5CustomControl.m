@@ -132,12 +132,14 @@
     {
         [[ZEE5PlayerManager sharedInstance] play];
         [engine playerResumeAnalytics];
+        
        
     }
     else
     {
         [[ZEE5PlayerManager sharedInstance] pause];
         [engine playerPauseAnalytics];
+  
 
     }
     
@@ -145,6 +147,8 @@
 - (IBAction)btnMoreClicked:(UIButton *)sender
 {
     [[ZEE5PlayerManager sharedInstance] moreOptions];
+    [[AnalyticEngine new]playerCTAWith:@"MoreCTA"];
+
 }
 - (IBAction)skipIntroBtnClick:(id)sender
 {

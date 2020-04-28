@@ -37,6 +37,11 @@
         self.imageUrl = [dict ValueForKeyWithNullChecking:@"image_url"];
         self.web_Url = [dict ValueForKeyWithNullChecking:@"web_url"];
         
+     if ([[dict ValueForKeyWithNullChecking:@"actors"] isKindOfClass:NSArray.class]) {
+    
+         self.charecters = [dict ValueForKeyWithNullChecking:@"actors"];
+        }
+        
         if ([self.ageRating isEqualToString:@"A"])
         {
            self.ageRatingAdult = true;
@@ -47,6 +52,7 @@
         
         self.introStarttime =[[dict valueForKey:@"skip_available"] valueForKey:@"intro_start_s"];
         self.introEndTime =[[dict valueForKey:@"skip_available"] valueForKey:@"intro_end_s"];
+        
         self.watchCreditTime =@"NULL";
         if (dict [@"end_credits_marker"])
         {

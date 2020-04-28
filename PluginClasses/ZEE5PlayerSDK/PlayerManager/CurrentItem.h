@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonnull) NSString *business_type;
 @property(strong, nonnull) NSArray *subTitles;
 @property(strong, nonnull) NSArray *audioLanguages;
+@property(strong, nonnull) NSArray *charecters;
 @property (nonatomic)StreamType streamType;
 @property (strong, nonatomic) NSString* asset_type;
 @property (strong, nonatomic) NSString* asset_subtype;
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonnull) NSString *content_id;
 @property(strong, nonnull) NSString *channel_Name;
 @property(strong, nonnull) NSString *showName;
+@property (strong, nonatomic) NSString *AgeRate;
 
 @property(strong, nonnull) NSString *originalTitle;
 @property(strong, nonnull) NSString *info;
@@ -51,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readwrite)  BOOL isDRM;
 @property (nonatomic, readwrite)  BOOL WatchCredit;
+
+
+@property (nonatomic, copy)NSString* skipintrotime;
 
 @end
 
