@@ -17,7 +17,6 @@ static DevelopmentEnvironment dev_environment = development;
 static Usertype usertype = Guest;
 static ConsumptionType consumprionType = Movie;
 
-
 static comScoreAnalytics *comAnalytics;
 
 ///
@@ -113,7 +112,6 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
     }
     return consumprionType;
 }
-
 
 + (NSString *)getSDKVersion
 {

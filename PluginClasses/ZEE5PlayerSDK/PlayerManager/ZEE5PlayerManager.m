@@ -212,6 +212,7 @@ static ContentBuisnessType buisnessType;
         
         [[AnalyticEngine new]ConsumptionAnalyticEvents];
 
+
         if (![self.currentItem.asset_type isEqualToString:@"9"] && ![self.currentItem.asset_subtype isEqualToString:@"trailer"])
         {
              [[ReportingManager sharedInstance] getWatchHistory];
@@ -611,7 +612,6 @@ static ContentBuisnessType buisnessType;
                 _customControlView.watchcreditShowView.hidden = NO;
                 _customControlView.watchCreditVodView.hidden =NO;
                 _customControlView.collectionView.hidden =YES;
-
             }
             else
             {
@@ -1167,7 +1167,7 @@ static ContentBuisnessType buisnessType;
         }
     }];
 
-    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.topmostModalViewController;
+    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.presentedViewController;
     [VC presentViewController:activityVC animated:YES completion: nil];
 }
 
@@ -1311,9 +1311,8 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView.backtoPartnerView.hidden = false;
          _customControlView.Stackview_top.constant = 35;
+
     }
-    
-    ////
     NSDictionary *dict = @{@"viewingMode" : @"Portrait"};
     [self updateConvivaSessionWithMetadata: dict];
     
@@ -2163,8 +2162,10 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock
 {
-    _watchCtreditSeconds = 10;
-
+    NSLog(@"|*** Play VOD Content ***|");
+    
+       _watchCtreditSeconds = 10;
+    
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
     if (self.previousDuration != 0)
@@ -2177,7 +2178,8 @@ static ContentBuisnessType buisnessType;
     NSDictionary *param =@{@"country":country, @"translation":laguage};
     
     NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
-
+    
+    
     [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
     {
         self.ModelValues = [VODContentDetailsDataModel initFromJSONDictionary:result];
@@ -2208,13 +2210,11 @@ static ContentBuisnessType buisnessType;
                     [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
                     
                     // Update video end point
-                    if (![self.ModelValues.assetSubtype isEqualToString:@"trailer"]) {
-                        NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
-                        NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
-                       
-                        NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
-                        [self updateConvivaSessionWithMetadata: dict];
-                    }
+                    NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
+                    NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
+                   
+                    NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
+                    [self updateConvivaSessionWithMetadata: dict];
                     
                     [[Zee5PlayerPlugin sharedInstance].player stop];
                     
@@ -2505,7 +2505,6 @@ static ContentBuisnessType buisnessType;
             {
               [self getVodSimilarContent];
             }
-
             if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
                {
                    self.allowVideoContent = YES;

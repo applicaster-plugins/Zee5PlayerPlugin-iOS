@@ -9,7 +9,6 @@ import Foundation
 
 extension AnalyticEngine
 {
-
     //MARK:- AppsFlyer And Qgraph Events
     
     @objc public func AddtoWatchlistAnlytics()
@@ -59,11 +58,8 @@ extension AnalyticEngine
             
         }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
             
-        }
-        
-        
+        }  
     }
-    
     
     // MARK:Calculate Percent Duration
     
