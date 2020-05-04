@@ -58,7 +58,6 @@ typedef enum consumptiontype
     Video
 } ConsumptionType;
 
-///
 typedef NS_ENUM(NSUInteger, ConvivaPlayerState) {
     ConvivaPlayerStateSTOPPED = 1,
     ConvivaPlayerStatePLAYING = 3,

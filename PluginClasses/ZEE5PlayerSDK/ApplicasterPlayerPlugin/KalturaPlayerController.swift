@@ -77,6 +77,8 @@ internal enum PlayerViewDisplayMode : Int {
     }
     
     public func play() {
+        self.playerAdapter?.serverType()
+
         // Initialize Zee5Player
         let config = ZEE5PlayerConfig()
         country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country

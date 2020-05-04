@@ -467,6 +467,10 @@
                     }
                 }
             } else {
+                guard User.shared.getType() != .guest else {
+                    // user is not logged in, needs to show login screen
+                    return Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+                }
                 addItemToWatchlist { (model) in
                     if let code = model.code, code == 1 {
                         completionBlock(sender)

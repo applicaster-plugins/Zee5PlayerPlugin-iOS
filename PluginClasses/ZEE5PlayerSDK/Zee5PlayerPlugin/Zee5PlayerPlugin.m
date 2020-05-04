@@ -519,7 +519,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
-        
                  
                        }];
     
