@@ -98,7 +98,6 @@
 @property(nonatomic) BOOL isLive;
 @property(nonatomic) BOOL videoCompleted;
 
-@property(nonatomic) BOOL isTelco;     //// Come From Partner App.
 
 @property(nonatomic) CGFloat previousDuration;
 
@@ -336,12 +335,7 @@ static ContentBuisnessType buisnessType;
     [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
     
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest)
-    {
-              _customControlView.adultView.hidden = NO;
-              [self stop];
-    }
-
+    
     if (_currentItem.related.count == 1)
     {
          RelatedVideos *model = self.currentItem.related[0];
@@ -411,6 +405,14 @@ static ContentBuisnessType buisnessType;
   
     [self showAllControls];
     [self showloaderOnPlayer];
+    
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest)
+    {
+              _customControlView.adultView.hidden = NO;
+              [self stop];
+          [self hideLoaderOnPlayer];
+    }
+
     
 }
 
@@ -1108,8 +1110,12 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnMinimizeButton
 {
-     [self stop];
-    
+    if (self.customControlView.buttonFullScreen.selected == YES) {
+        [self hideFullScreen];
+    }else{
+         [self stop];
+    }
+   
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
         [[AnalyticEngine new]VideoExitAnalytics];
@@ -1167,7 +1173,7 @@ static ContentBuisnessType buisnessType;
         }
     }];
 
-    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.presentedViewController;
+    UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.topmostModalViewController;
     [VC presentViewController:activityVC animated:YES completion: nil];
 }
 
@@ -1311,7 +1317,6 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView.backtoPartnerView.hidden = false;
          _customControlView.Stackview_top.constant = 35;
-
     }
     
     ////
@@ -2874,9 +2879,10 @@ static ContentBuisnessType buisnessType;
     
 
    NSString *result = [ZEE5UserDefaults getUserSetting];
-      if ([result isKindOfClass:[NSNull class]] || result.length ==0)
+      if ([result isKindOfClass:[NSNull class]] || result.length ==0 || ZEE5PlayerSDK.getUserTypeEnum == Guest)
       {
           NSLog(@"No Data");
+          self.parentalControl = NO;
           return;
       }
     
@@ -2891,7 +2897,7 @@ static ContentBuisnessType buisnessType;
         if ([self.ageRating isEqualToString:@"A"] || self.ageRating == nil || self.ageRating.length==0)
            {
                self.parentalControl = NO;
-
+               
            }
            else if ([self.ageRating isEqualToString:@"U/A"])
            {
@@ -3088,6 +3094,15 @@ static ContentBuisnessType buisnessType;
             [self notifiyError:error];
         }];
     }
+//MARK:- Telco User checked;
+
+-(void)Telcouser:(BOOL)istelco param:(NSString *)Message{
+    _isTelco = istelco;
+    _customControlView.partnerLblTxt.text = [NSString stringWithFormat: @"< %@",Message];
+    NSLog(@"%@",_customControlView.partnerLblTxt.text);
+    
+    
+}
 
 // MARK:- Offline content Methods
 
