@@ -152,7 +152,7 @@ public class Zee5DownloadManager {
                 var myItem: DTGItem?
                 myItem = try cm?.itemById(item.contentId)
                 if myItem == nil {
-                    myItem = try cm?.addItem(id: mEntry.id, url: mSource.contentUrl!)
+	                    myItem = try cm?.addItem(id: mEntry.id, url: mSource.contentUrl!)
                     if myItem != nil {
                         try zeDB?.add(item: item)
                     }
@@ -312,7 +312,16 @@ public class Zee5DownloadManager {
             throw ZeeError.withError(message: msg)
         }
     }
-    
+    public func getItemById(id: String) throws -> ZeeDownloadItem? {
+        do {
+            let item = try zeDB?.item(byId: id)
+            return item
+        } catch {
+            let msg = "Items not found: \(error.localizedDescription)"
+            ZeeUtility.utility.console(msg)
+            throw ZeeError.withError(message: msg)
+        }
+    }
     /**
      Resume the download if it is paused state
      
@@ -331,6 +340,7 @@ public class Zee5DownloadManager {
             throw ZeeError.withError(message: "Unable to resume the content")
         }
     }
+    
     
     /**
      Pause the download if it is resume state
@@ -856,17 +866,19 @@ extension Zee5DownloadManager: ContentManagerDelegate {
             let btn = self.buttonDownlodState[index]
             let progress = self.circularRings[index]
             let pause = self.viewPause[index]
-            
             btn.isHidden = true
             progress.isHidden = true
+            progress.superview?.isHidden = true
             
             if state == .inProgress {
                 progress.isHidden = false
+                progress.superview?.isHidden = false
                 btn.isHidden = true
                 pause.isHidden = true
             }
             else {
                 progress.isHidden = true
+                progress.superview?.isHidden = true
                 btn.isHidden = false
                 pause.isHidden = true
                 
@@ -899,12 +911,13 @@ extension Zee5DownloadManager: ContentManagerDelegate {
                     btn.isHidden = true
                     progress.isHidden = false
                     pause.isHidden = false
+                    pause.superview?.isHidden = false
                 }
             }
         }
     }
     
-    //
+
     fileprivate func updateProgressBar(contentId: String, downloadedBytes: Int64, estimatedBytes: Int64?) {
     
         let idx = self.circularRings.firstIndex { (ring) -> Bool in
