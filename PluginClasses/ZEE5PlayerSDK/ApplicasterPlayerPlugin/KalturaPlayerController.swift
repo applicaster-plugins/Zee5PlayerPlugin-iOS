@@ -77,6 +77,7 @@ internal enum PlayerViewDisplayMode : Int {
         translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
         
         ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: playerView) { (data,token) in
+            self.ShowIndicator()
         }
     }
     

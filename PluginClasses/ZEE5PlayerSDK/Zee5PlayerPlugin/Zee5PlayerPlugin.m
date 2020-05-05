@@ -523,6 +523,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                  
                        }];
     
+     //[[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     [self.player addObserver:self
                       events:@[PlayerEvent.errorLog]
                        block:^(PKEvent * _Nonnull event){
