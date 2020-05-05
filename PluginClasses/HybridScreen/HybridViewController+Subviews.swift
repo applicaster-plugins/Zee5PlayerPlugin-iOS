@@ -14,6 +14,8 @@
     
     extension HybridViewController {
         
+        
+        
         // MARK: setup
         
         func setupButtons() {
@@ -21,6 +23,8 @@
                 return
             }
             
+            
+                           
             let buttonStyle = stylesFor(key: "consumption_button_text")
             let indicatorStyle = stylesFor(key: "consumption_text_indicator")
             
@@ -140,7 +144,10 @@
                                 stackView.removeArrangedSubview(tmpButton)
                                 tmpButton.removeFromSuperview()
                             }
+                            
                         }
+                            
+                            
                     case ItemTag.Button.trailerButton:
                         //check if trailer link != nil and feed is equal to movie or episode
                         let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_WatchTrailer_Button".localized(hashMap: [:]))
@@ -185,9 +192,13 @@
                 return
             }
             
+            
+
+            
             labelsViewCollection.forEach { (label) in
                 
                 switch label.tag {
+                    
                     
                     //             case ItemTag.Label.searchBarErrorLabel:
                     //                 label.text = "Search_Body_SearchResult_Text".localized(hashMap: ["search_keyword": "\(getSearchBarString())"])
@@ -484,7 +495,26 @@
         }
         
         @objc func consumptionDownloadButtonAction(_ sender: CAButton) {
+            if self.currentItem != nil {
+                if self.currentItem?.downloadState != .completed {
+                    startdownload()
+                }
+            } else {
+                startdownload()
+            }
+        }
+        
+        
+        func startdownload() {
             ZEE5PlayerManager.sharedInstance().startDownload()
+            guard
+                let item = try? getDownloadedItem(id: ZEE5PlayerManager.sharedInstance().currentItem.content_id) else {
+                return
+                
+            }
+            self.currentItem = item
+            self.setupDownloadCircularBar(for: item.contentId!)
+            self.currentItem?.downloadState = .inProgress
         }
         
         @objc func consumptionMoreLessDescriptionButtonAction(_ sender: CAButton) {
@@ -698,7 +728,7 @@
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HybridViewTitleSubtitleCell", for: indexPath) as? HybridViewTitleSubtitleCell  else {
-                return UICollectionViewCell()
+return UICollectionViewCell()
             }
             
             var dataSource: [(title: String?, subtitle: String?, description: String?)]?
@@ -920,4 +950,201 @@
             subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             insertSubview(subView, at: 0)
         }
+        
+        
     }
+
+        //Download state
+    
+        extension HybridViewController: DownloadOptionDelegate, OfflineVideoDurationDelegate {
+        
+        // MARK:- DownloadOption Delegate Method
+        
+        func updateProgressMenu(contentId: String, progress: UICircularProgressRing, buttonState: UIButton, viewPause: UIView, downloadedByte: Int64, estimatedByte: Int64) {
+            
+            Zee5DownloadManager.shared.setupDownloadProgressBar(contentId: contentId, progressRing: progress, imageDownloadState: buttonState, viewPuaseProgress: viewPause, downloadedBytes: downloadedByte, estimatedBytes: estimatedByte)
+        }
+        
+            func getDownloadedItem(id: String) throws -> DownloadItem{
+                do {
+                    guard let movie = try Zee5DownloadManager.shared.getItemById(id: id) else {
+                        let msg = "Items not found \(id)"
+                        ZeeUtility.utility.console(msg)
+                        throw ZeeError.withError(message: msg)
+                        
+                    }
+                    let item = DownloadItem()
+                    
+                        item.contentId = movie.contentId
+                        item.title = movie.title
+                        item.showTitle = movie.showOriginalTitle
+                        item.estimatedBytes = Int64(movie.estimatedSize)
+                        item.downloadedBytes = Int64(movie.downloadedSize)
+                        item.status = movie.state.asString()
+                        item.downloadState = movie.state
+                        item.imgUrl = movie.imageURL
+                        item.duration = movie.duration
+                        item.videoPlayedDuration = movie.offlinePlayingDuration
+                        return item
+
+                    
+                }
+	                catch {
+                    ZeeUtility.utility.console("error: getDownloadedItems: \(error.localizedDescription)")
+
+                    let msg = "Items not found"
+                    ZeeUtility.utility.console(msg)
+                    throw ZeeError.withError(message: msg)
+                    }
+                }
+            
+        func didSelectMenuOption(dataIndex: Int, downloadMenuOption: String) {
+//
+	//            if downloadMenuOption.contains(DownloadStateMenu.play.description) {
+//                self.playDownloadItem(at: dataIndex)
+//            }
+//            else if downloadMenuOption.contains(DownloadStateMenu.retry.description) {
+//                self.retryDownloadItem(at: dataIndex)
+//            }
+//            else if downloadMenuOption.contains(DownloadStateMenu.pause.description) {
+//                self.pauseDownloadItem(at: dataIndex)
+//            }
+//            else if downloadMenuOption.contains(DownloadStateMenu.resume.description) {
+//                self.resumeDownloadItem(at: dataIndex)
+//            }
+//            else if downloadMenuOption.contains(DownloadStateMenu.deleteDownload.description) {
+//                self.deleteDownloadItem(at: dataIndex)
+//            }
+//            else if downloadMenuOption.contains(DownloadStateMenu.cancelDownload.description) {
+//                self.cancelDownloadItem(at: dataIndex)
+//            }
+	//            else if downloadMenuOption.contains(DownloadStateMenu.restoreDownload.description) {
+//                self.restoreDownloadItem(at: dataIndex)
+//            }
+       }
+        
+        //
+//            func playDownloadItem(contentId: String) {
+//           // let video = self.videoArr[index]
+//            //if let contentId = video.contentId {
+//                do {
+//                    let url = try Zee5DownloadManager.shared.playbackUrl(id: contentId)
+//                    //self.gotoVideoPlayer(with: url, video: video)
+//                    //AnalyticEngine.shared.downloadClick(with: video)
+//                }
+//                catch {
+//                    ZeeUtility.utility.console("Play video Error: \(error.localizedDescription)")
+//
+//                }
+//            //}
+//        }
+        
+            func retryDownloadItem(video: DownloadItem) {
+            if let contentId = video.contentId {
+                do {
+                    try Zee5DownloadManager.shared.resumeDownloadItem(id: contentId)
+                    video.downloadState = .inProgress
+                    //self.tableView.reloadData()
+                }
+                catch {
+                    ZeeUtility.utility.console("Retry download Error: \(error.localizedDescription)")
+	                 
+                }
+            }
+        }
+        
+        func pauseDownloadItem(video: DownloadItem) {
+            
+            if let contentId = video.contentId {
+                if video.downloadState == .inProgress {
+                    do {
+                        try Zee5DownloadManager.shared.pauseDownloadItem(id: contentId)
+                        video.downloadState = .paused
+                        //self.tableView.reloadData()
+                    }
+                    catch {
+                        ZeeUtility.utility.console("Pause download Error: \(error.localizedDescription)")
+             
+                    }
+                }
+            }
+        }
+        
+        func resumeDownloadItem(video: DownloadItem) {
+            if let contentId = video.contentId {
+                if video.downloadState == .paused {
+                    do {
+                        try Zee5DownloadManager.shared.resumeDownloadItem(id: contentId)
+                        video.downloadState = .inProgress
+                        //self.tableView.reloadData()
+                    }
+                    catch {
+                        ZeeUtility.utility.console("Resume download Error: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        
+//        func deleteDownloadItem(at index: Int) {
+//            if let contentId = self.videoArr[index].contentId {
+//                do {
+//                    try Zee5DownloadManager.shared.removeDownloadItem(id: contentId)
+//                    AnalyticEngine.shared.downloadDelete(with: self.videoArr[index])
+//                    self.videoArr.remove(at: index)
+//                    self.tableView.reloadData()
+//                }
+//                catch {
+//                    ZeeUtility.utility.console("Delete download Error: \(error.localizedDescription)")
+//
+//                }
+//            }
+//        }
+        
+//        func cancelDownloadItem(video: DownloadItem) {
+//            if let contentId = self.videoArr[index].contentId {
+//                do {
+//                    try Zee5DownloadManager.shared.removeDownloadItem(id: contentId)
+//                    self.videoArr.remove(at: index)
+//                    self.tableView.reloadData()
+//                }
+//                catch {
+//                    ZeeUtility.utility.console("Cancel download Error: \(error.localizedDescription)")
+//                }
+//            }
+//        }
+        
+        func restoreDownloadItem(video: DownloadItem) {
+            if let contentId = video.contentId {
+                DownloadHelper.shared.restoreExpiredContent(id: contentId) { (isExpired, error) in
+                    if error == nil {
+                        video.downloadState = .completed
+                        //self.tableView.reloadData()
+                    }
+                    else {
+                        ZeeUtility.utility.console("Restore download Error: \(String(describing: error))")
+                    }
+                }
+            }
+        }
+        
+        // MARK:- OfflineVideoDurationDelegate Method
+        func updateVideoDuration(item: DownloadItem?, duration: Int) {
+//            guard let id = item?.contentId else { return }
+//
+//            let idx = self.videoArr.firstIndex { (data) -> Bool in
+//                return data.contentId == id ? true : false
+//            }
+//
+//            if let index = idx {
+//                if let ab = item {
+//                    ab.videoPlayedDuration = duration
+//                    self.videoArr[index] = ab
+//                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+//                }
+           }
+            
+            
+            
+            
+        }
+        
