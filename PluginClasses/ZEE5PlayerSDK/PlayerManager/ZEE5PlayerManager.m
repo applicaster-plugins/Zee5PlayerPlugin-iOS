@@ -49,6 +49,7 @@
 #define VIDEOQUALITY @"Quality"
 #define AUTOPLAY @"Enable auto Play"
 #define WATCHLIST @"Add to watch List"
+#define PLAYBACKRATE @"Playback Rate"
 #define POSTTIME @"post"
 #define Conviva_Application_Name @"Kaltura-iOS App"
 
@@ -90,6 +91,7 @@
 @property (weak, nonatomic) NSArray *audioTracks;
 @property (weak, nonatomic) NSArray *textTracks;
 @property (weak, nonatomic) NSArray *selectedTracks;
+@property (strong, nonatomic) NSArray *playBackRate;
 @property (strong,nonatomic) NSTimer *CreditTimer;
 @property(nonatomic) NSString *CurrentAudioTrack;
 @property(nonatomic) NSString *CurrenttextTrack;
@@ -314,6 +316,14 @@ static ContentBuisnessType buisnessType;
 //MARK:- Add Controls to Player(Control View)
 -(void)addCustomControls
 {
+    
+    /************************************/
+    /////  Array of Playeback Rate
+    /***********************************/
+    NSArray * Rate = [[NSArray alloc]initWithObjects:@"0.5X",@"1X",@"1.5X",@"2X",@"2.5X",@"3X", nil];
+    
+    self.playBackRate = Rate;
+       
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
     
     if(_customControlView != nil )
@@ -479,7 +489,8 @@ static ContentBuisnessType buisnessType;
 
 -(void)playSimilarEvent:(NSString *)content_id
 {
-    NSLog(@"|*** Play Similar Event"); 
+    NSLog(@"|*** Play Similar Event");
+    [self setSeekTime:0];
 }
 
 -(void)onPlaying
@@ -704,7 +715,8 @@ static ContentBuisnessType buisnessType;
 - (void)onComplete
 {
     NSLog(@"On Complete");
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
+    [self setSeekTime:0];
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
     {
         _videoCompleted = YES;
         [self pause];
@@ -1382,6 +1394,21 @@ static ContentBuisnessType buisnessType;
     [engine audiolangChangeAnalyticsWith:self. CurrentAudioTrack newAudio:AudioTitle Mode:@"Online"];
 }
 
+-(void)setPlaybackRate:(NSString *)RateId Title:(NSString *)RateTitle
+{
+    self.selectedplaybackRate = RateTitle;
+    float Value = [RateTitle floatValue];
+    NSLog(@"%f",Value);
+    
+    if (self.isOfflineContent == true) {
+        [self.offlinePlayer setRate:Value];
+           }
+        else {
+           [[Zee5PlayerPlugin sharedInstance].player setRate:Value];
+           }
+    
+}
+
 -(void)setSubTitle:(NSString *)subTitleID Title:(NSString *)SubtitleTitle
 {
     [[Zee5PlayerPlugin sharedInstance].player selectTrackWithTrackId:subTitleID];
@@ -1520,6 +1547,44 @@ static ContentBuisnessType buisnessType;
     [_customMenu reloadDataWithObjects:models : true];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
 
+}
+
+-(void)GetPlayBackRate
+{
+    self.selectedString = PLAYBACKRATE;
+
+    [self prepareCustomMenu];
+
+    NSMutableArray<Zee5MenuModel*> *models = [[NSMutableArray alloc] init];
+    Zee5MenuModel *model2 = [[Zee5MenuModel alloc] init];
+    model2.imageName = @"s";
+    model2.title = PLAYBACKRATE;
+    model2.type = 1;
+    model2.isSelected = false;
+    [models addObject:model2];
+
+    for (NSString *value in self.playBackRate) {
+        Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
+        if ([self.selectedplaybackRate isEqualToString:value])
+        {
+            model.imageName = @"t";
+            model.isSelected = true;
+        }
+        else
+        {
+            model.imageName = @"";
+            model.isSelected = false;
+        }
+        
+        model.title = value;
+        model.type = 2;
+        model.idValue = value;
+        [models addObject:model];
+    }
+    
+    [_customMenu reloadDataWithObjects:models : true];
+    [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
+    
 }
 
 
@@ -1705,13 +1770,22 @@ static ContentBuisnessType buisnessType;
         model2.isSelected = false;
         [models addObject:model2];
     }
+    if ([_playBackRate count] > 0)
+    {
+        Zee5MenuModel *model3 = [[Zee5MenuModel alloc] init];
+        model3.imageName = @"p";
+        model3.title = PLAYBACKRATE;
+        model3.type = 1;
+        model3.isSelected = false;
+        [models addObject:model3];
+    }
     
-    Zee5MenuModel *model3 = [[Zee5MenuModel alloc] init];
-    model3.imageName = @"2";
-    model3.title = AUTOPLAY;
-    model3.type = 1;
-    model3.isSelected = false;
-    [models addObject:model3];
+//    Zee5MenuModel *model4 = [[Zee5MenuModel alloc] init];
+//    model4.imageName = @"2";
+//    model4.title = AUTOPLAY;
+//    model4.type = 1;
+//    model4.isSelected = false;
+//    [models addObject:model4];
     
     Zee5MenuModel *model4 = [[Zee5MenuModel alloc] init];
     model4.imageName = @"a";
@@ -1753,6 +1827,17 @@ static ContentBuisnessType buisnessType;
             [self showSubtitleActionSheet];
         }
     }
+    else if ([menuModel.title isEqualToString: PLAYBACKRATE])
+    {
+        self.selectedString = menuModel.title;
+        
+        if (self.isOfflineContent == true) {
+            [self getPlayBackRateForOfflineContent];
+        }
+        else {
+            [self GetPlayBackRate];
+        }
+    }
     else if ([menuModel.title isEqualToString:WATCHLIST])
     {
         if (self.delegate && [self.delegate respondsToSelector:@selector(didTapOnAddToWatchList)])
@@ -1786,6 +1871,13 @@ static ContentBuisnessType buisnessType;
         
         NSDictionary *dict = @{@"audioLanguage": menuModel.title};
         [self updateConvivaSessionWithMetadata: dict];
+    }
+    else if([self.selectedString isEqualToString:PLAYBACKRATE])
+    {
+        [self removeMenuView];
+        self.selectedplaybackRate =menuModel.title;
+        [self setPlaybackRate:menuModel.idValue Title:menuModel.title];
+        
     }
     else if([self.selectedString isEqualToString:SUBTITLES] )
     {
@@ -2125,9 +2217,12 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
+    
     _isStop = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
+    
+    [self setSeekTime:0];
     
     self.playbackView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -2171,6 +2266,7 @@ static ContentBuisnessType buisnessType;
     NSLog(@"|*** Play VOD Content ***|");
     
        _watchCtreditSeconds = 10;
+    [self setSeekTime:0];
     
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
@@ -3109,6 +3205,14 @@ static ContentBuisnessType buisnessType;
 -(void)moreOptionForOfflineContentAudio:(NSArray<Track*>*)audio text:(NSArray<Track*>*)texts withPlayer:(id<Player>)player
 {
     [self prepareCustomMenu];
+    
+    /************************************/
+     /////  Array of Playeback Rate For Offline
+     /***********************************/
+     NSArray * Rate = [[NSArray alloc]initWithObjects:@"0.5X",@"1X",@"1.5X",@"2X",@"2.5X",@"3X", nil];
+     
+     self.playBackRate = Rate;
+    
     NSMutableArray<Zee5MenuModel*> *models = [[NSMutableArray alloc] init];
     
     self.isOfflineContent = true;
@@ -3134,6 +3238,15 @@ static ContentBuisnessType buisnessType;
         model2.type = 1;
         model2.isSelected = false;
         [models addObject:model2];
+    }
+    if (_playBackRate.count > 0) {
+        
+        Zee5MenuModel *model3 = [[Zee5MenuModel alloc] init];
+        model3.imageName = @"p";
+        model3.title = PLAYBACKRATE;
+        model3.type = 1;
+        model3.isSelected = false;
+        [models addObject:model3];
     }
 
     [_customMenu reloadDataWithObjects:models :false];
@@ -3223,6 +3336,44 @@ static ContentBuisnessType buisnessType;
     
     [_customMenu reloadDataWithObjects:models : true];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
+}
+
+-(void)getPlayBackRateForOfflineContent{
+  
+        self.selectedString = PLAYBACKRATE;
+
+        [self prepareCustomMenu];
+
+        NSMutableArray<Zee5MenuModel*> *models = [[NSMutableArray alloc] init];
+        Zee5MenuModel *model2 = [[Zee5MenuModel alloc] init];
+        model2.imageName = @"p";
+        model2.title = PLAYBACKRATE;
+        model2.type = 1;
+        model2.isSelected = false;
+        [models addObject:model2];
+
+        for (NSString *value in self.playBackRate) {
+            Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
+            if ([self.selectedplaybackRate isEqualToString:value])
+            {
+                model.imageName = @"t";
+                model.isSelected = true;
+            }
+            else
+            {
+                model.imageName = @"";
+                model.isSelected = false;
+            }
+            
+            model.title = value;
+            model.type = 2;
+            model.idValue = value;
+            [models addObject:model];
+        }
+        
+        [_customMenu reloadDataWithObjects:models : true];
+        [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
+
 }
 
 

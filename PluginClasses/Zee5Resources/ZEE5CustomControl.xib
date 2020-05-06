@@ -587,7 +587,7 @@ watch this video</string>
                         <constraint firstAttribute="height" constant="45" id="cFk-Go-dqB"/>
                         <constraint firstAttribute="width" constant="50" id="hqU-6Z-Rho"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" image="Back"/>
                     <connections>
                         <action selector="buttonMinimizeClicked:" destination="iN0-l3-epB" eventType="touchUpInside" id="YTz-96-BgF"/>
