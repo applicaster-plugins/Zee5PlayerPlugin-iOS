@@ -28,12 +28,15 @@ internal enum PlayerViewDisplayMode : Int {
     var contentId = "0-0-2464"
     var country = "IN"
     var translation = "en"
+
     
     
     // Current player display mode
     var currentDisplayMode: PlayerViewDisplayMode?
     var previousParentViewController: UIViewController?
     var previousContainerView: UIView?
+    let container = UIView()
+    let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
     
     // MARK: - Lifecycle
     
@@ -74,6 +77,7 @@ internal enum PlayerViewDisplayMode : Int {
         translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
         
         ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: playerView) { (data,token) in
+            self.ShowIndicator()
         }
     }
     
@@ -99,9 +103,29 @@ internal enum PlayerViewDisplayMode : Int {
         }
     }
     
+    
+   @objc public func ShowIndicator()  {
+    container.frame = playerView.bounds
+     container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
+     let loadingView: UIView = UIView()
+     loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+     loadingView.center = container.center
+     loadingView.clipsToBounds = true
+     loadingView.layer.cornerRadius = 20
+     activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
+     loadingView.addSubview(activityLoader)
+     container.addSubview(loadingView)
+     playerView.addSubview(container)
+     activityLoader.startAnimating()
+    
+    }
+    
+    @objc public func HideIndicator()  {
+     container .removeFromSuperview()
+     activityLoader.stopAnimating()
+    
+    }
 }
-
-
 
 // MARK: - ZEE5PlayerDelegate Method
 
@@ -110,7 +134,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     func didFinishPlaying() {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didFinishPlaying ***")
         self.playerAdapter?.stop()
-        
+        self.HideIndicator()
         Zee5ToastView.showToastAboveKeyboard(withMessage: "Error")
         
     }
@@ -120,7 +144,6 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     
        dismissViewController(withAnimation: false)
     }
-    
     func didTapOnEnableAutoPlay() {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didTapOnEnableAutoPlay ***")
     }
@@ -153,8 +176,20 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didTaponPrevButton ***")
     }
     
-     func getPlayerEvent(_ event: PlayerEvent) {
+    func getPlayerEvent(_ event:PlayerEvent) {
         print("KalturaPlayerController ** ZEE5PlayerDelegate getPlayerEvent ::: \(event)")
         
     }
+    
+    func hidePlayerLoader() {
+        print("KalturaPlayerController ** ZEE5PlayerDelegate Hide Loader ***")
+            self.HideIndicator()
+              
+    }
+    func showPlayerLoader() {
+        print("KalturaPlayerController ** ZEE5PlayerDelegate Show Loader ***")
+            self.ShowIndicator()
+              
+    }
+    
 }

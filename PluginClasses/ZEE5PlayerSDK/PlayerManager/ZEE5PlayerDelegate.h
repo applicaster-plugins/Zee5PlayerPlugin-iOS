@@ -37,12 +37,14 @@ typedef NS_ENUM(NSInteger, PlayerControlState) {
 - (void)didTapOnEnableAutoPlay;
 - (void)didTapOnPlayerToNavigateDetail;
 - (void)didTapOnGoToDownload;
+- (void)hidePlayerLoader;
+- (void)showPlayerLoader;
 
 - (void)playerData:(NSDictionary *)dict;
 
 ////
 //
-- (void)getPlayerEvent:(PlayerEvent *) event;
+- (void)getPlayerEvent:(PlayerEvent * ) event;
 
 
 @end

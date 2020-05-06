@@ -882,7 +882,7 @@ extension Zee5DownloadManager: ContentManagerDelegate {
                 btn.isHidden = false
                 pause.isHidden = true
                 
-                let bundle = Bundle(identifier: "org.cocoapods.Zee5PlayerPlugin")
+                let bundle = Bundle(for: DownloadRootController.self)
                 if state == .completed {
                     if #available(iOS 13.0, *) {
                         let img = UIImage(named: "complete_download", in: bundle, with: nil)

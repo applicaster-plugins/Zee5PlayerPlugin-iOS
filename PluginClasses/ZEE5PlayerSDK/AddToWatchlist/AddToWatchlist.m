@@ -9,6 +9,7 @@
 
 #import "AddToWatchlist.h"
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
+#import <Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h>
 
 
 @interface AddToWatchlist ()
@@ -41,6 +42,7 @@ static AddToWatchlist *SharedInstance = nil;
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
+       [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
         return;
         // Send Guest User to Login Screen Here
     }

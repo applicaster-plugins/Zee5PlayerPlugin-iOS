@@ -75,15 +75,15 @@ extension AnalyticEngine
         print("***Percent count **\(VideWatchInt)")
         
  
-        if Percentage == 20.0 && VideWatchInt != 20  {
+        if (20...49).contains(Percentage) && VideWatchInt != 20  {
             VideoWatch20Percent()
             VideWatchInt = 20
             
-        }else if Percentage == 50.0 && VideWatchInt != 50  {
+        }else if (50...84).contains(Percentage) && VideWatchInt != 50  {
             VideoWatch50Percent()
             VideWatchInt = 50
            
-        }else if Percentage == 85.0 &&  VideWatchInt != 85  {
+        }else if Percentage >= 85.0 &&  VideWatchInt != 85  {
             VideoWatch85Percent()
             VideWatchInt = 85
         }else{}

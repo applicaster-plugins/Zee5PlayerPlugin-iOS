@@ -239,6 +239,13 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
             }
             
+            let Telco = User.shared.isTelcoUser()
+            if Telco.0
+            {
+                guard let dict = Telco.1 else { return }
+              setlocalize(param: dict)
+            }
+          
             if let UserSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
                 let userSettingString = String(data: UserSetting, encoding: String.Encoding.utf8)
                 ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
@@ -264,6 +271,31 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 initContent(contentId)
             }
         }
+    }
+    
+    
+    func setlocalize(param:[String: String])  {
+        
+        var message = NSAttributedString(string: "")
+        
+        if (param["partner"] ?? "").lowercased().contains("vodafone")
+        {
+            
+        message = NSAttributedString(string: "BIStrings_Body_LaunchThroughVodafone_Text".localized(hashMap: [:]))
+            
+        }
+        else if (param["partner"] ?? "").lowercased().contains("airtel")
+        {
+          message = NSAttributedString(string: "BIStrings_Body_LaunchThroughAirtel_Text".localized(hashMap: [:]))
+        }
+        else if (param["partner"] ?? "").lowercased().contains("idea")
+        {
+         message = NSAttributedString(string: "BIStrings_Body_LaunchThroughIdea_Text".localized(hashMap: [:]))
+        }
+        print(message);
+        let Message = message.string as String
+        ZEE5PlayerManager.sharedInstance().telcouser(true, param: Message)
+    
     }
     
     func loadExtendedData(completion: @escaping () -> Void) {

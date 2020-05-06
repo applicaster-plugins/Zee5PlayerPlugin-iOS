@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) id <ZEE5PlayerDelegate> delegate;
 @property(strong , nonatomic) PlayerView *playbackView;
 @property(nonatomic) BOOL isStop;
+@property(nonatomic) BOOL isTelco;     //// Come From Partner App.
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 
@@ -166,8 +167,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnMinimizeButton;
 -(void)airplayButtonClicked;
 -(void)StartDownload;
+-(void)showloaderOnPlayer;
+-(void)hideLoaderOnPlayer;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
+-(void)Telcouser:(BOOL)istelco param:(NSString *)Message;
 
 -(CGFloat )getCurrentDuration;
 -(CGFloat )getTotalDuration;

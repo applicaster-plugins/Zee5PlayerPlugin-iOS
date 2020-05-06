@@ -20,8 +20,7 @@ import ZappPlugins
     
   @objc public func GetSubscrbtion(with Assetid:String,beforetv:Bool)
     {
-        
-     Zee5DeepLinkingManager.shared.openURL(withURL:Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: Assetid, beforeTV: beforetv).url)
+        Zee5DeepLinkingManager.shared.openURL(withURL:Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: Assetid, beforeTV: beforetv).url)
         
     }
     
@@ -40,5 +39,9 @@ import ZappPlugins
      {
         Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.myDownload.url)
      }
+    
+    @objc public func NavigatetoHomeScreen()
+    {
+       ZAAppConnector.sharedInstance().navigationDelegate.navigateToHomeScreen()
+    }
 }
-
