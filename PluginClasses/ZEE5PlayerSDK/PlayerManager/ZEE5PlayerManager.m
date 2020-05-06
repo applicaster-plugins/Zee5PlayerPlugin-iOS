@@ -209,9 +209,9 @@ static ContentBuisnessType buisnessType;
         [self handleOrientations];
         [self handleTracks];
         
-        [AnalyticEngine new].ConsumptionAnalyticEvents;
+        [[AnalyticEngine new]ConsumptionAnalyticEvents];
 
-        if (![self.currentItem.asset_type isEqualToString:@"9"] && ![self.currentItem.asset_subtype isEqualToString:@"trailer"])
+        if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
         {
              [[ReportingManager sharedInstance] getWatchHistory];
              [[ContentClickApi sharedInstance]ContentConsumption];
