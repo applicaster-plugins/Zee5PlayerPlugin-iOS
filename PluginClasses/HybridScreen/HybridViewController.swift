@@ -227,17 +227,6 @@ class HybridViewController: UIViewController {
         setupButtons()
         setupLabels()
         setupViews()
-        let item = try? getDownloadedItem(id: self.currentPlayableItem?.identifier as! String)
-        if item != nil {
-                    print("item check aaa ")
-                    self.viewPause.superview?.isHidden = false
-                    self.currentItem = item
-                    self.setupDownloadCircularBar(for: ZEE5PlayerManager.sharedInstance().currentItem.content_id)
-        }
-        else
-        {
-            self.viewProgress.isHidden = true
-        }
     }
     
     var originalPosition: CGPoint?
@@ -402,51 +391,5 @@ class HybridViewController: UIViewController {
             loadingView = videoLoadingView as? UIView & APLoadingView
         }
         return loadingView
-    }
-    
-    public func setupDownloadCircularBar(for contentId: String) {
-        self.circularRing.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
-        self.circularRing.center = CGPoint(x: self.viewProgress.frame.width / 2 - 3, y: self.viewProgress.frame.height / 2)
-        self.circularRing.accessibilityIdentifier = contentId
-        
-        self.circularRing.startAngle = -90
-        self.circularRing.style = .bordered(width: 0, color: AppColor.progressGray)
-        self.circularRing.outerCapStyle = .round
-        self.circularRing.outerRingColor = AppColor.progressGray
-        self.circularRing.outerRingWidth = 2.5
-        
-        self.circularRing.innerCapStyle = .round
-        self.circularRing.innerRingColor = AppColor.aquaGreen
-        self.circularRing.innerRingWidth = 2.5
-        self.circularRing.innerRingSpacing = 0
-        
-        self.circularRing.shouldShowValueText = false
-        self.viewProgress.addSubview(self.circularRing)
-        
-               
-        // Progress button for events
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: self.viewProgress.frame.size.width, height: self.viewProgress.frame.size.height))
-        btn.addTarget(self, action: #selector(self.actionDownload(_:)), for: .touchUpInside)
-        self.viewProgress.addSubview(btn)
-        
-        //
-        self.updateProgressView()
-    }
-    func updateProgressView() {
-        
-        if let id = self.currentItem?.contentId, let downloadedByte = self.currentItem?.downloadedBytes, let estimatedByte = self.currentItem?.estimatedBytes {
-
-            let btnDownload = self.buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton})
-            updateProgressMenu(contentId: id, progress: self.circularRing, buttonState: btnDownload!, viewPause: self.viewPause, downloadedByte: downloadedByte, estimatedByte: estimatedByte)
-        }
-    }
-    @objc private func actionDownload(_ btn: UIButton) {
-        if self.currentItem?.downloadState == .paused {
-            resumeDownloadItem(video: self.currentItem!)
-        //self.menuDownload.dataSource = arr
-        }else{
-            pauseDownloadItem(video: self.currentItem!)
-        }
-        //self.menuDownload.show()
     }
 }

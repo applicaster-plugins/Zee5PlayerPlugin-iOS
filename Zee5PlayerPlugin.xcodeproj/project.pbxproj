@@ -474,6 +474,7 @@
 		4D9F33322436352200C30A5A /* makanbig@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F315C2436352100C30A5A /* makanbig@3x.png */; };
 		4D9F33332436352200C30A5A /* share_more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F315D2436352100C30A5A /* share_more@2x.png */; };
 		4D9F33352436352200C30A5A /* Zee5ResourceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F31602436352100C30A5A /* Zee5ResourceHelper.m */; };
+		7148D2882455E3C300DC1EB4 /* ActionBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */; };
 		71580A922443222A00A6CF0C /* PremiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A912443222A00A6CF0C /* PremiumHelper.swift */; };
 		71580A972446683D00A6CF0C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A962446683D00A6CF0C /* Consts.swift */; };
 		716ECD1B24409BA000917E13 /* AdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716ECD1A24409BA000917E13 /* AdHelper.swift */; };
@@ -1006,6 +1007,7 @@
 		4D9F315D2436352100C30A5A /* share_more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_more@2x.png"; sourceTree = "<group>"; };
 		4D9F31602436352100C30A5A /* Zee5ResourceHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Zee5ResourceHelper.m; sourceTree = "<group>"; };
 		4D9F31612436352100C30A5A /* Zee5ResourceHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zee5ResourceHelper.h; sourceTree = "<group>"; };
+		7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBarViewController.swift; sourceTree = "<group>"; };
 		71580A912443222A00A6CF0C /* PremiumHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumHelper.swift; sourceTree = "<group>"; };
 		71580A962446683D00A6CF0C /* Consts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		716ECD1A24409BA000917E13 /* AdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdHelper.swift; sourceTree = "<group>"; };
@@ -1080,6 +1082,7 @@
 				4D9F2F1B2436352000C30A5A /* HybridViewController.xib */,
 				4D9F2F1C2436352000C30A5A /* HybridViewController+Subviews.swift */,
 				4D9F2F1D2436352000C30A5A /* HybridViewTitleSubtitleCell.swift */,
+				7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */,
 			);
 			path = HybridScreen;
 			sourceTree = "<group>";
@@ -2627,6 +2630,7 @@
 				4D9F31CA2436352200C30A5A /* userSettingDataModel.m in Sources */,
 				4D9F316F2436352200C30A5A /* UICircularRing.swift in Sources */,
 				4D9F31D72436352200C30A5A /* Zee5Slider.m in Sources */,
+				7148D2882455E3C300DC1EB4 /* ActionBarViewController.swift in Sources */,
 				4D9F316A2436352200C30A5A /* ZEE5SdkError.m in Sources */,
 				4D9F31A22436352200C30A5A /* VideoDownloadController.swift in Sources */,
 				4D9F317B2436352200C30A5A /* ZeeManifestAdapter.swift in Sources */,
