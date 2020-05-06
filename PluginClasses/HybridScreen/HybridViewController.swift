@@ -63,16 +63,7 @@ class HybridViewController: UIViewController {
             
             
             let firstNegative = buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton})
-//
-//            if self.currentItem?.downloadState == .inProgress {
-////                self.lblDownloading.text = "Downloading..."
-//            }
-//            else if self.currentItem?.downloadState == .paused {
-//                self.lblDownloading.text = "Paused"
-//            }
-//            else if self.currentItem?.downloadState == .expired {
-//                self.lblDownloading.text = "Download Expired"
-//            }
+
             
             // Checking download state image and progress bar
             if self.currentItem?.downloadState == .inProgress {
@@ -227,9 +218,10 @@ class HybridViewController: UIViewController {
         setupButtons()
         setupLabels()
         setupViews()
-        let item = try? getDownloadedItem(id: self.currentPlayableItem?.identifier as! String)
+        
+        
+        let item = try? getDownloadedItem(id: ZEE5PlayerManager.sharedInstance().currentItem.content_id)
         if item != nil {
-                    print("item check aaa ")
                     self.viewPause.superview?.isHidden = false
                     self.currentItem = item
                     self.setupDownloadCircularBar(for: ZEE5PlayerManager.sharedInstance().currentItem.content_id)
@@ -298,7 +290,6 @@ class HybridViewController: UIViewController {
             guard let extensions = self.currentPlayableItem?.extensionsDictionary, let extaData = extensions[ExtensionsKey.extraData], let exta = extaData as? [String: Any] else {
                 return
             }
-            
             //populate cast data source
             castDataSource = []
             if let cast: [String: Any] = exta[ExtensionsKey.cast] as? [String : Any] {
