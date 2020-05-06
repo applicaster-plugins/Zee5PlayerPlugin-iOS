@@ -261,7 +261,6 @@ static ContentBuisnessType buisnessType;
 -(void)onAudioInterruption
 {
     _customControlView.buttonPlay.hidden = NO;
-    _customControlView.activityView.hidden = YES;
     [self hideUnHideTopView:NO];
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -329,7 +328,6 @@ static ContentBuisnessType buisnessType;
     _customControlView.frame = CGRectMake(0, 0, self.viewPlayer.frame.size.width, self.viewPlayer.frame.size.height);
     _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _customControlView.buttonPlay.hidden = YES;
-    _customControlView.activityView.hidden = NO;
     _customControlView.viewLive.hidden = !self.isLive;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
@@ -341,8 +339,7 @@ static ContentBuisnessType buisnessType;
     {
               _customControlView.adultView.hidden = NO;
               [self stop];
-
-        }
+    }
 
     if (_currentItem.related.count == 1)
     {
@@ -407,10 +404,12 @@ static ContentBuisnessType buisnessType;
     [Zee5PlayerPlugin sharedInstance].player.view.userInteractionEnabled = YES;
     
     _customControlView.collectionView.hidden = YES;
+    _customControlView.backtoPartnerView.hidden = YES;
     
     [_customControlView forwardAndRewindActions];
   
     [self showAllControls];
+    [self showloaderOnPlayer];
     
 }
 
@@ -488,9 +487,11 @@ static ContentBuisnessType buisnessType;
     _videoCompleted = NO;
 
     [self showAllControls];
+    [self hideLoaderOnPlayer];
     _customControlView.buttonPlay.hidden = NO;
-    _customControlView.activityView.hidden = YES;
-    
+  
+
+               
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     if (!_customControlView.topView.hidden) {
         [self perfomAction];
@@ -582,9 +583,7 @@ static ContentBuisnessType buisnessType;
         }
         _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
         
-        
         _customControlView.sliderDuration.maximumValue = [[Zee5PlayerPlugin sharedInstance] getDuration];
-        
         
          //MARK:-  Continue Watching Logic
         if ([[ReportingManager sharedInstance]isCountinueWatching])
@@ -669,8 +668,8 @@ static ContentBuisnessType buisnessType;
 -(void)onBuffring
 {
     [self showAllControls];
+    [self showloaderOnPlayer];
     _customControlView.buttonPlay.hidden = YES;
-    _customControlView.activityView.hidden = NO;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 }
@@ -716,7 +715,6 @@ static ContentBuisnessType buisnessType;
         _videoCompleted = YES;
         _customControlView.buttonPlay.hidden = YES;
         _customControlView.buttonReplay.hidden = NO;
-        _customControlView.activityView.hidden = YES;
         [self hideUnHideTopView:NO];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         
@@ -984,12 +982,11 @@ static ContentBuisnessType buisnessType;
 {
     [self showAllControls];
     _customControlView.buttonPlay.hidden = NO;
-    _customControlView.activityView.hidden = YES;
-    
     _customControlView.sliderDuration.value = 0.0;
     _customControlView.bufferProgress.progress = 0.0;
     _customControlView.labelCurrentTime.text = @"00:00";
      [[AnalyticEngine new]ReplayVideo];
+    [self hideLoaderOnPlayer];
     
     [self play];
     
@@ -1330,6 +1327,20 @@ static ContentBuisnessType buisnessType;
           self.subscribeView.hidden =NO;
           self.devicePopView.hidden =NO;
       }
+}
+
+
+-(void)showloaderOnPlayer{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(showPlayerLoader)]) {
+           [self.delegate showPlayerLoader];
+       }
+}
+
+-(void)hideLoaderOnPlayer{
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(hidePlayerLoader)]) {
+        [self.delegate hidePlayerLoader];
+    }
 }
 
 -(void)forward:(NSInteger)value
@@ -3045,7 +3056,11 @@ static ContentBuisnessType buisnessType;
 //MARK:-  Download Start Method
 -(void)StartDownload
 {
-    [self setFullScreen: NO];
+     [self setFullScreen: NO];
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
+        return;
+    }
      [[DownloadHelper new] startDownloadItemWith:self.currentItem];
  
 }

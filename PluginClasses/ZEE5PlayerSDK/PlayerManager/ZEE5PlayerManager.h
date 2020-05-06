@@ -166,6 +166,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnMinimizeButton;
 -(void)airplayButtonClicked;
 -(void)StartDownload;
+-(void)showloaderOnPlayer;
+-(void)hideLoaderOnPlayer;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 

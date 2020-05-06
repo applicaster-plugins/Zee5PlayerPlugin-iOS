@@ -39,9 +39,6 @@
                                 <action selector="buttonReplayClicked:" destination="iN0-l3-epB" eventType="touchUpInside" id="4fX-L0-u5u"/>
                             </connections>
                         </button>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1ua-e6-zpe">
-                            <rect key="frame" x="227.5" y="83" width="45" height="45"/>
-                        </activityIndicatorView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uL1-sI-kCh">
                             <rect key="frame" x="54" y="10" width="200" height="0.0"/>
                             <constraints>
@@ -85,7 +82,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysF-op-KUn">
-                            <rect key="frame" x="147.5" y="85.5" width="40" height="40"/>
+                            <rect key="frame" x="148.5" y="85.5" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="E9c-Gu-a3H"/>
                                 <constraint firstAttribute="height" constant="40" id="MtA-Fx-UaZ"/>
@@ -101,18 +98,14 @@
                     <constraints>
                         <constraint firstItem="vSG-iY-PNA" firstAttribute="centerY" secondItem="Ih4-4v-ast" secondAttribute="centerY" id="04p-Kx-OO7"/>
                         <constraint firstItem="xuv-L1-UQb" firstAttribute="leading" secondItem="PKF-NI-PJZ" secondAttribute="trailing" constant="40" id="0oT-2N-brM"/>
-                        <constraint firstItem="1ua-e6-zpe" firstAttribute="bottom" secondItem="vSG-iY-PNA" secondAttribute="bottom" id="3Sq-0a-7uQ"/>
                         <constraint firstItem="ysF-op-KUn" firstAttribute="centerY" secondItem="vSG-iY-PNA" secondAttribute="centerY" id="3zp-dI-dHD"/>
-                        <constraint firstItem="1ua-e6-zpe" firstAttribute="leading" secondItem="vSG-iY-PNA" secondAttribute="leading" id="EtB-nb-UpV"/>
                         <constraint firstItem="PKF-NI-PJZ" firstAttribute="centerX" secondItem="Ih4-4v-ast" secondAttribute="centerX" id="JwJ-qn-d5e"/>
-                        <constraint firstItem="1ua-e6-zpe" firstAttribute="top" secondItem="vSG-iY-PNA" secondAttribute="top" id="Mnf-I2-wc6"/>
                         <constraint firstItem="vSG-iY-PNA" firstAttribute="centerX" secondItem="Ih4-4v-ast" secondAttribute="centerX" id="O9U-9d-fI0"/>
                         <constraint firstItem="PKF-NI-PJZ" firstAttribute="centerY" secondItem="Ih4-4v-ast" secondAttribute="centerY" id="Qgx-z0-9Ec"/>
                         <constraint firstItem="cca-iE-Ak3" firstAttribute="top" secondItem="uL1-sI-kCh" secondAttribute="bottom" constant="7" id="RLg-gT-4qT"/>
                         <constraint firstItem="uL1-sI-kCh" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="54" id="bdt-tP-Oda"/>
-                        <constraint firstItem="1ua-e6-zpe" firstAttribute="trailing" secondItem="vSG-iY-PNA" secondAttribute="trailing" id="lPq-Nd-big"/>
+                        <constraint firstItem="ysF-op-KUn" firstAttribute="trailing" secondItem="PKF-NI-PJZ" secondAttribute="leading" constant="-40" id="h4x-by-MDF"/>
                         <constraint firstItem="xuv-L1-UQb" firstAttribute="centerY" secondItem="vSG-iY-PNA" secondAttribute="centerY" id="qwS-c4-8lC"/>
-                        <constraint firstItem="1ua-e6-zpe" firstAttribute="leading" secondItem="ysF-op-KUn" secondAttribute="trailing" constant="40" id="vdr-J1-J0v"/>
                         <constraint firstItem="uL1-sI-kCh" firstAttribute="top" secondItem="Ih4-4v-ast" secondAttribute="top" constant="10" id="zVO-GM-dFe"/>
                         <constraint firstItem="cca-iE-Ak3" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="50" id="zh3-tf-RVw"/>
                     </constraints>
@@ -693,7 +686,6 @@ watch this video</string>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="Stackview_top" destination="bS7-DX-Pte" id="a3c-3p-MNg"/>
-                <outlet property="activityView" destination="1ua-e6-zpe" id="sri-fT-ZXb"/>
                 <outlet property="adultView" destination="orD-Ja-xQR" id="OG0-tW-11g"/>
                 <outlet property="backtoPartnerView" destination="KAO-pB-dvA" id="8sO-bO-MPB"/>
                 <outlet property="btnMinimize" destination="p8M-q7-7S1" id="rbS-tI-8cP"/>

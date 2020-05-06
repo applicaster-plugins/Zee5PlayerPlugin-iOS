@@ -268,7 +268,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         NSLog(@"|** AD Started **|");
         [engine setupConvivaAdSessionWith: dict customTags: tags];
-          [engine AdViewAnalyticsWith:dict tags:tags];
+        [engine AdViewAnalyticsWith:dict tags:tags];
+      
     }
     else if (AdEvent.adSkipped)
     {
@@ -279,6 +280,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         NSLog(@"|** AD Complete **|");
         //[engine AdCompleteAnalyticsWith:dict tags:tags];
+      
     }
     else if (AdEvent.adClicked)
     {
@@ -306,6 +308,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
+        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+    
+        
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
@@ -315,6 +320,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
         
         [engine attachVideoPlayer];
         [engine cleanupAdSession];
+        [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
+    
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
@@ -331,6 +338,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
         NSLog(@"|**** AD Start Buffering ****|");
         [engine updateAdPlayerStateWithState: CONVIVA_BUFFERING];
+        [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
     }];
     
     
@@ -443,6 +451,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adPlaybackReady block:^(PKEvent * _Nonnull event) {
         NSLog(@"\n\n******\n\n");
         NSLog(@"|**** GOT AD Event :: AdEvent .adPlaybackReady ****|");
+        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         NSLog(@"\n\n******\n\n");
     }];
     
@@ -510,6 +519,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
+        
                  
                        }];
     
