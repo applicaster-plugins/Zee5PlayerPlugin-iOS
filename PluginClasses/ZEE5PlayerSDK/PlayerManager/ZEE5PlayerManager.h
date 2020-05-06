@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isTelco;     //// Come From Partner App.
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
+@property(nonatomic) NSString *selectedplaybackRate;
 
 
 @property(nonatomic) NSString *KcdnUrl;   /////////************ CDN URL String*************//////
