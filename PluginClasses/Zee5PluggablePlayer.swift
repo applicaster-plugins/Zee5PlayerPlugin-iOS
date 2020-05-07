@@ -47,6 +47,11 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         var errorViewConfig: ErrorViewConfiguration?
         if let configuration = configurationJSON {
             errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
+            
+            //prepare ads envirnoment from the plugin configurations
+            if let isProdAdsEnvirnoment = configurationJSON!["is_ads_production"] as? Int {
+                ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
+            }
         }
         
         let playerViewController = ViewControllerFactory.createPlayerViewController(videoItems: videos, errorViewConfig: errorViewConfig)

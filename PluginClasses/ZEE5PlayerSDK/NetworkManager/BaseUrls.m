@@ -11,7 +11,7 @@
 @implementation BaseUrls
 
 //+ (NSString*)userToken {
-//    
+//
 //    switch (ZEE5PlayerSDK.getDevEnvironment) {
 //        case development:
 //            return @"https://stagingb2bapi.zee5.com/partner/api/get-token.php?";
@@ -173,11 +173,11 @@
 
 + (NSString*)adConfig
 {
-    switch (ZEE5PlayerSDK.getDevEnvironment) {
-        case development:
+    switch (ZEE5PlayerSDK.getAdsEnvironment) {
+        case staging:
         return @"https://stagingb2bapi.zee5.com/adtags/adds_v3.php?";
         break;
-        case production:
+        case prod:
         return @"https://b2bapi.zee5.com/adtags/adds_v3.php?";
         break;
     }

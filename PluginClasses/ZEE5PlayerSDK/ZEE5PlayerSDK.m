@@ -14,6 +14,7 @@
 
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
+static AdsEnvironment adsEnvironment = staging;
 static Usertype usertype = Guest;
 static ConsumptionType consumprionType = Movie;
 
@@ -72,6 +73,13 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 + (DevelopmentEnvironment)getDevEnvironment
 {
     return dev_environment;
+}
+
++ (void)setAdsEnvirnoment:(AdsEnvironment)Servertype {
+    adsEnvironment = Servertype;
+}
++ (AdsEnvironment)getAdsEnvironment {
+    return adsEnvironment;
 }
 
 
