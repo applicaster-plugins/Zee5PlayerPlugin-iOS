@@ -43,6 +43,7 @@ static AddToWatchlist *SharedInstance = nil;
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
+        [[ZEE5PlayerManager sharedInstance]pause];
         return;
         // Send Guest User to Login Screen Here
     }

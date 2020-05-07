@@ -284,8 +284,13 @@
 - (IBAction)loginNow:(UIButton *)sender {
     [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
 }
-- (IBAction)PremiumBtnAction:(UIButton *)sender {
-}
+
 - (IBAction)bactoPartnetAppAction:(id)sender {
+    [[ZEE5PlayerManager sharedInstance]pause];
+    //[ZEE5PlayerDeeplinkManager];
+}
+
+- (IBAction)upNextAction:(id)sender {
+    [[ZEE5PlayerManager sharedInstance]tapOnUpNext];
 }
 @end
