@@ -49,4 +49,5 @@ Pod::Spec.new do |s|
   s.dependency 'SQLite.swift'
   s.dependency 'React', '~> 0.59.10'
   s.dependency 'ZeeHomeScreen'
+
 end
