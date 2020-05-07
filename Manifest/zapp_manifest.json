@@ -12,12 +12,12 @@
   "dependency_repository_url": [
     "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
   ],
-  "dependency_version": "1.1.9",
+  "dependency_version": "1.1.11",
   "deprecated_since_zapp_sdk": "",
   "description": "Zee5 Player Plugin",
   "extra_dependencies": [],
   "identifier": "zee_player",
-  "manifest_version": "1.1.9",
+  "manifest_version": "1.1.11",
   "min_zapp_sdk": "13.0.0",
   "name": "Zee5 Player Plugin",
   "npm_dependencies": [],
@@ -69,6 +69,12 @@
       "key": "ios_assets_bundle",
       "tooltip_text": "Upload Assets Folder Zip File",
       "default": "https://assets-production.applicaster.com/applicaster-employees/israel_team/Dan/Kannewapp/IOSassets.zip"
+    },
+    {
+      "key": "is_ads_production",
+      "tooltip_text": "should use production env",
+      "type": "checkbox",
+      "default": 0
     },
     {
       "type": "checkbox",

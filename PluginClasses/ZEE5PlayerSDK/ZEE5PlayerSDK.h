@@ -23,6 +23,12 @@ typedef enum devEnvironment
     production
 } DevelopmentEnvironment;
 
+typedef enum adsEnvironment
+{
+    prod,
+    staging
+} AdsEnvironment;
+
 typedef enum playerType
 {
     normalPlayer,
@@ -114,6 +120,8 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 + (NSString *)getUserId;
 + (void)setDevEnvirnoment:(DevelopmentEnvironment)Servertype;
 + (DevelopmentEnvironment)getDevEnvironment;
++ (void)setAdsEnvirnoment:(AdsEnvironment)Servertype;
++ (AdsEnvironment)getAdsEnvironment;
 + (Usertype)getUserTypeEnum;
 + (ConsumptionType)getConsumpruionType;
 + (NSString *)getSDKVersion;
