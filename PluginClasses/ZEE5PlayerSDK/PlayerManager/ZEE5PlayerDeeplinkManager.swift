@@ -46,7 +46,38 @@ import ZappPlugins
     }
     
     @objc public func NavigateToPartnerApp()
-       {
-        
-      }
+    {
+        let Telco = User.shared.isTelcoUser()
+          if Telco.0
+            {
+                    if let ParameterDict = Telco.1 {
+                        debugPrint(ParameterDict["partner_schema_ios"]as Any)
+                        openCustomURLScheme(customURLScheme: "\(ParameterDict["partner_schema_ios"] ?? "")://", complitionHandler: {(isNavigate) in
+                    if !isNavigate{
+                                // handle unable to open the app, perhaps redirect to the App Store
+                        let myUrl = "https://itunes.apple.com/us/app/apple-store/\(ParameterDict["partner_bundle_id_ios"] ?? "")?mt=8"
+                        if let url = URL(string: "\(myUrl)"), !url.absoluteString.isEmpty {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                
+                            }
+                        }
+                    }
+                )}
+               }
+        }
+    
+    
+    public func openCustomURLScheme(customURLScheme: String, complitionHandler:@escaping(Bool)->Void)  {
+                      let customURL = URL(string: customURLScheme)!
+                      UIApplication.shared.open(customURL) { (result) in
+                          if result {
+                             // The URL was delivered successfully!
+                              complitionHandler(true)
+                          }
+                          else
+                          {
+                              complitionHandler(false)
+                          }
+                      }
+                  }
 }

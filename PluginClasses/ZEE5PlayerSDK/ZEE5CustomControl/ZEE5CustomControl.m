@@ -36,8 +36,9 @@
     [_sliderLive setThumbImage:image forState:UIControlStateNormal];
     [_sliderLive setThumbImage:image forState:UIControlStateHighlighted];
     
-    [_sliderDuration addTarget:self action:@selector(sliderValueChanged:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
     [_sliderDuration addTarget:self action:@selector(sliderValueChanged:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+  
+    [_sliderDuration addTarget:self action:@selector(sliderValueChanged:withEvent:) forControlEvents:UIControlEventValueChanged];
 
     
     [_collectionView registerNib:[UINib nibWithNibName:@"Zee5CollectionCell" bundle:bundel] forCellWithReuseIdentifier:@"cell"];
@@ -231,12 +232,11 @@
 
 }
 
-- (void)sliderValueChanged:(UISlider *)sender  withEvent:(UIEvent*)event
+- (void)sliderValueChanged:(Zee5Slider *)sender  withEvent:(UIEvent*)event
 {
     [[ZEE5PlayerManager sharedInstance] setSeekTime:sender.value];
 
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;
 {
