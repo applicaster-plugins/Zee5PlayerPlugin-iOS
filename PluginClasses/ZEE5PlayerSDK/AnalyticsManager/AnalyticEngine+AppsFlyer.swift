@@ -72,7 +72,6 @@ extension AnalyticEngine
         let  currentDuration = ZEE5PlayerManager.sharedInstance().getCurrentDuration()
        
         let Percentage = (currentDuration * 100 / totalDuration).rounded(.toNearestOrAwayFromZero)
-        print("***Percent count **\(VideWatchInt)")
         
  
         if (20...49).contains(Percentage) && VideWatchInt != 20  {

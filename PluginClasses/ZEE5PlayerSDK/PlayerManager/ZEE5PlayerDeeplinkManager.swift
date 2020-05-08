@@ -44,4 +44,9 @@ import ZappPlugins
     {
        ZAAppConnector.sharedInstance().navigationDelegate.navigateToHomeScreen()
     }
+    
+    @objc public func NavigateToPartnerApp()
+       {
+        
+      }
 }

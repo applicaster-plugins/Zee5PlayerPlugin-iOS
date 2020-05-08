@@ -164,6 +164,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnShareButton;
 -(void)tapOnPrevButton;
 -(void)tapOnNextButton;
+-(void)tapOnUpNext;
 -(void)navigateToDetail;
 -(void)tapOnMinimizeButton;
 -(void)airplayButtonClicked;

@@ -336,7 +336,7 @@ static ContentBuisnessType buisnessType;
     }
     _customControlView.frame = CGRectMake(0, 0, self.viewPlayer.frame.size.width, self.viewPlayer.frame.size.height);
     _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _customControlView.buttonPlay.hidden = YES;
+    _customControlView.playerControlView.hidden = YES;
     _customControlView.viewLive.hidden = !self.isLive;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
@@ -454,6 +454,7 @@ static ContentBuisnessType buisnessType;
 {
     _customControlView.viewTop.hidden = isHidden;
     _customControlView.topView.hidden = isHidden;
+    _customControlView.playerControlView.hidden = isHidden;
     _customControlView.btnMinimize.hidden = isHidden;
     if (!self.isLive)
     {
@@ -586,13 +587,14 @@ static ContentBuisnessType buisnessType;
       
         //MARK:- SkipIntro Click Logic
         
-        if (totalSeconds>=self.startIntroTime && totalSeconds<=self.endIntroTime && _endIntroTime!=0)
+        if (totalSeconds>=self.startIntroTime && totalSeconds<self.endIntroTime && _endIntroTime!=0)
         {
             _customControlView.skipIntro.hidden = NO;
         }
         else
         {
             _customControlView.skipIntro.hidden = YES;
+        
         }
         _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
         
@@ -660,19 +662,7 @@ static ContentBuisnessType buisnessType;
         }
          else
         {
-            
-            [self.CreditTimer invalidate];
-            _CreditTimer = nil;
-            _customControlView.watchcreditsTimeLbl.hidden=YES;
-             _customControlView.collectionView.hidden =YES;
-            _customControlView.watchcretidStackview.hidden = YES;
-            
-            if (self.currentItem.WatchCredit==NO)
-            {
-                 [self handleDownwardsGesture:nil];
-                 [self onComplete];
-            }
-            self.currentItem.WatchCredit = YES;
+            [self tapOnUpNext];
         }
 }
 
@@ -716,6 +706,7 @@ static ContentBuisnessType buisnessType;
 {
     NSLog(@"On Complete");
     [self setSeekTime:0];
+    _isTelco = false;
     if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
     {
         _videoCompleted = YES;
@@ -1017,9 +1008,9 @@ static ContentBuisnessType buisnessType;
 
 -(void) skipIntro
 {
-    [self setSeekTime:self.endIntroTime];
     _customControlView.skipIntro.hidden =YES;
-    
+    [self setSeekTime:self.endIntroTime];
+    [self showloaderOnPlayer];
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
     [engine skipIntroAnalyticsWith:_ModelValues.introStarttime SkipendTime:self.ModelValues.introEndTime];
     
@@ -1042,6 +1033,7 @@ static ContentBuisnessType buisnessType;
 -(void)setSeekTime:(NSInteger)value
 {
     __weak __typeof(self) weakSelf = self;
+    [self showloaderOnPlayer];
     
     int rounded = roundf([[Zee5PlayerPlugin sharedInstance] getDuration]);
     if(value == 0)
@@ -1133,6 +1125,23 @@ static ContentBuisnessType buisnessType;
        
     }
     
+}
+
+-(void)tapOnUpNext
+{
+    [self setSeekTime:0];
+    [self.CreditTimer invalidate];
+    _CreditTimer = nil;
+    _customControlView.watchcreditsTimeLbl.hidden=YES;
+     _customControlView.collectionView.hidden =YES;
+    _customControlView.watchcretidStackview.hidden = YES;
+    
+    if (self.currentItem.WatchCredit==NO)
+    {
+         [self handleDownwardsGesture:nil];
+         [self onComplete];
+    }
+    self.currentItem.WatchCredit = YES;
 }
 -(void)tapOnLiveButton
 {
@@ -1245,8 +1254,7 @@ static ContentBuisnessType buisnessType;
 {
     BOOL fullScreen = !self.customControlView.buttonLiveFull.selected;
     _customControlView.buttonReplay.hidden = YES;
-    _customControlView.btnSkipNext.hidden = fullScreen;
-    _customControlView.btnSkipPrev.hidden = fullScreen;
+    _customControlView.playerControlView.hidden = NO;
     
 }
 
@@ -1308,8 +1316,8 @@ static ContentBuisnessType buisnessType;
     
     self.customControlView.buttonFullScreen.selected = NO;
     self.customControlView.buttonLiveFull.selected = NO;
-    _customControlView.btnSkipNext.hidden = YES;
-    _customControlView.btnSkipPrev.hidden = YES;
+   // _customControlView.btnSkipNext.hidden = YES;
+   // _customControlView.btnSkipPrev.hidden = YES;
     _customControlView.skipIntro.hidden = YES;
     _customControlView.lableSubTitle.hidden = YES;
     
@@ -3156,7 +3164,7 @@ static ContentBuisnessType buisnessType;
 //MARK:-  Download Start Method
 -(void)StartDownload
 {
-     [self setFullScreen: NO];
+    // [self setFullScreen: NO];
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
         return;
@@ -3196,8 +3204,6 @@ static ContentBuisnessType buisnessType;
     _isTelco = istelco;
     _customControlView.partnerLblTxt.text = [NSString stringWithFormat: @"< %@",Message];
     NSLog(@"%@",_customControlView.partnerLblTxt.text);
-    
-    
 }
 
 // MARK:- Offline content Methods
