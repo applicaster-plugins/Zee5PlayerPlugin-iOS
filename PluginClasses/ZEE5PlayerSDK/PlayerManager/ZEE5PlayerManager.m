@@ -543,7 +543,7 @@ static ContentBuisnessType buisnessType;
     {
         if (!_customControlView.sliderLive.isTracking && !_seekStared)
         {
-            _customControlView.sliderLive.value = totalSeconds;
+            //_customControlView.sliderLive.value = totalSeconds;
             if(_customControlView.buttonLiveFull.selected)
             {
                 [_customControlView.sliderLive updateToolTipView];
@@ -553,7 +553,7 @@ static ContentBuisnessType buisnessType;
         }
         _customControlView.sliderLive.maximumValue = [[Zee5PlayerPlugin sharedInstance] getDuration];
         
-        if ((_customControlView.sliderLive.maximumValue - 10) <= _customControlView.sliderLive.value)
+        if ((_customControlView.sliderLive.maximumValue - 10) <= totalSeconds)
         {
             [_customControlView.buttonLive setTitle:@"LIVE" forState:UIControlStateNormal];
         }
@@ -2181,12 +2181,14 @@ static ContentBuisnessType buisnessType;
         self.audioLanguageArr = self.LiveModelValues.languages;
         self.showID = self.LiveModelValues.identifier;
         self.isStop = NO;
-        
-    if (self.LiveModelValues.isDRM)
+    
+    [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result)
 {
-            [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result)
-{
-                NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
+    NSString * VideoToken = [result valueForKey:@"video_token"];
+    
+        if (self.LiveModelValues.isDRM)
+    {
+    //// Fetch Video token here
       [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
        {
           [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken ];
@@ -2206,14 +2208,16 @@ static ContentBuisnessType buisnessType;
     {
        [self notifiyError:error];
     }];
+    }
+    else
+    {
+        [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
+    }
        } faillureblock:^(ZEE5SdkError *error)
     {
-                [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
+        [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
     }];
-        }else
-        {
-            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
-        }
+        
     } failureBlock:^(ZEE5SdkError *error)
      {
         [self notifiyError:error];
