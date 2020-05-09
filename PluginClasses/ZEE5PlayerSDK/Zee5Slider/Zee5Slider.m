@@ -155,6 +155,20 @@
         CGPoint touchPoint = [touch locationInView:self];
         // Check if the touch is within the knob's boundary to show the tooltip-view
 
+        if (touch.tapCount ==1)
+        {
+               Zee5Slider* s = (Zee5Slider*)touch.view;
+                         CGFloat percentage = touchPoint.x / s.bounds.size.width;
+                         CGFloat delta = percentage * (s.maximumValue - s.minimumValue);
+                         CGFloat Finalvalue = s.minimumValue + delta;
+                      self.value = Finalvalue;
+                      [self updateToolTipView];
+                    [self animateToolTipFading:YES];
+               [[ZEE5PlayerManager sharedInstance] setSeekTime:Finalvalue];
+        
+             return [super beginTrackingWithTouch:touch withEvent:event];
+        }
+        
         if(CGRectContainsPoint(self.knobRect, touchPoint)) {
             if(_showTooltipContiously)
             {
