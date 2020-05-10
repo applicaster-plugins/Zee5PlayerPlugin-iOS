@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString*)VideoClickApi;
 + (NSString*)videoTokenApi;
 + (NSString*)getCDNApi;
++ (NSString*)getVodToken;
 @end
 
 NS_ASSUME_NONNULL_END
