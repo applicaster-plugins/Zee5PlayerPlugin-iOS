@@ -209,10 +209,22 @@
 {
     switch (ZEE5PlayerSDK.getDevEnvironment) {
         case development:
-            return @"https://apistaging.zee5.com/api/v2/ndtoken";
+            return @"http://useraction.zee5.com/tokennd/";
             break;
         case production:
-            return @"https://api.zee5.com/api/v2/ndtoken";
+            return @"http://useraction.zee5.com/tokennd/";
+            break;
+    }
+}
+
++ (NSString*)getVodToken
+{
+    switch (ZEE5PlayerSDK.getDevEnvironment) {
+        case development:
+            return @"https://useraction.zee5.com/token/";
+            break;
+        case production:
+            return @"https://useraction.zee5.com/token/";
             break;
     }
 }

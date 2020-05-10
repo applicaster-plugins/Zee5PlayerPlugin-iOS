@@ -10,6 +10,7 @@ import Foundation
 import ZappPlugins
 import ApplicasterSDK
 import Zee5CoreSDK
+import Alamofire
 
 internal enum PlayerViewDisplayMode : Int {
     case unknown = 0
@@ -28,6 +29,7 @@ internal enum PlayerViewDisplayMode : Int {
     var contentId = "0-0-2464"
     var country = "IN"
     var translation = "en"
+    let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
 
     
     
@@ -66,6 +68,7 @@ internal enum PlayerViewDisplayMode : Int {
         
         //  Register the player events
         self.playerAdapter?.registerPlayerEvents()
+        checkForReachability()
     }
     
     public func play() {
@@ -117,6 +120,7 @@ internal enum PlayerViewDisplayMode : Int {
      container.addSubview(loadingView)
      playerView.addSubview(container)
      activityLoader.startAnimating()
+      checkForReachability()
     
     }
     
@@ -125,8 +129,22 @@ internal enum PlayerViewDisplayMode : Int {
      activityLoader.stopAnimating()
     
     }
-}
+    
+  @objc public func checkForReachability() {
+        self.networkReachabilityManager?.listener = { status in
+            print("Network Status: \(status)")
+            switch status {
+            case .notReachable:
+                Zee5ToastView.showToast(withMessage: "No Internet Connection")
+                break;
+            case .reachable(_), .unknown:
+                break;
+            }
+        }
 
+        self.networkReachabilityManager?.startListening()
+    }
+}
 // MARK: - ZEE5PlayerDelegate Method
 
 extension KalturaPlayerController: ZEE5PlayerDelegate {

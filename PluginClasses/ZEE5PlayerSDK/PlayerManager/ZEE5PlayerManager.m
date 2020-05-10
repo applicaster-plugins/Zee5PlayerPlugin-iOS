@@ -192,10 +192,11 @@ static ContentBuisnessType buisnessType;
             [self parentalControlshow];
             return;
         }
-        
+        [self ContentidNotification:_currentItem.content_id];
     [self getBase64StringwithCompletion:^(NSString *base64) {
 
         NSLog(@"****Player INitialize*****");
+        
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.playbackView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         
         self.panGesture = [[UIPanGestureRecognizer alloc]init];
@@ -259,6 +260,9 @@ static ContentBuisnessType buisnessType;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption) name:AVAudioSessionInterruptionNotification object:nil];
     
 }
+-(void)ContentidNotification:(NSString *)ContentId{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
+}
 
 -(void)onAudioInterruption
 {
@@ -317,7 +321,7 @@ static ContentBuisnessType buisnessType;
 //MARK:- Add Controls to Player(Control View)
 -(void)addCustomControls
 {
-    
+     _watchHistorySecond = 0;
     /************************************/
     /////  Array of Playeback Rate
     /***********************************/
@@ -425,7 +429,7 @@ static ContentBuisnessType buisnessType;
     }
     
     if (ZEE5PlayerSDK.getConsumpruionType == Live == false) {
-        _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:11];
+        _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
         
         _PreviousContentArray = [[[NSUserDefaults standardUserDefaults]valueForKey:@"Array"]mutableCopy];
     
@@ -734,6 +738,7 @@ static ContentBuisnessType buisnessType;
     {
         _videoCompleted = YES;
         [self pause];
+        [self hideLoaderOnPlayer];
          [self INDGuestUser];
         [self hideUnHidetrailerEndView:false];
         return;
@@ -994,7 +999,7 @@ static ContentBuisnessType buisnessType;
     {
         self.customControlView.buttonPlay.selected = YES;
         [[Zee5PlayerPlugin sharedInstance].player play];
-        //[[ReportingManager sharedInstance] startReportingWatchHistory];
+        [[ReportingManager sharedInstance] startReportingWatchHistory];
     }
 }
 
@@ -1152,6 +1157,7 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnMinimizeButton
 {
+    [[ReportingManager sharedInstance] startReportingWatchHistory];
     if (self.customControlView.buttonFullScreen.selected == YES) {
         [self hideFullScreen];
     }else{
@@ -2265,7 +2271,7 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
-
+    
     _isStop = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
@@ -2385,7 +2391,9 @@ static ContentBuisnessType buisnessType;
             }];
         }else
         {
-            [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:@""];
+           [self getVodToken:^(NSString *vodToken) {
+                [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
+           }];
         }
     } failureBlock:^(ZEE5SdkError *error)
      {
@@ -2395,6 +2403,18 @@ static ContentBuisnessType buisnessType;
 }
 
 
+-(void)getVodToken:(void (^)(NSString *))completion
+{
+    [[NetworkManager sharedInstance]makeHttpGetRequest:BaseUrls.getVodToken requestParam:@{} requestHeaders:@{} withCompletionHandler:^(id  _Nullable result) {
+        if ([result isKindOfClass:[NSDictionary class]]) {
+        
+        completion(result[@"video_token"]);
+        }
+    } failureBlock:^(ZEE5SdkError * _Nullable error) {
+        
+    }];
+
+}
 
 //MARK:- FetchTvShow Content API.
 
@@ -2610,10 +2630,10 @@ static ContentBuisnessType buisnessType;
     {
         self.currentItem.hls_Url = [self.KcdnUrl stringByAppendingString:model.hlsUrl];
     }else{
-        self.currentItem.hls_Url = model.hlsUrl;
+        self.currentItem.hls_Url = [model.hlsUrl stringByAppendingString:token];
     }
     
-    if ([model.assetType isEqualToString:@"0"] && ![self.currentItem.hls_Url containsString:@"https"])
+    if (![self.currentItem.hls_Url containsString:@"https"])
     {
         self.currentItem.hls_Url = [self.currentItem.hls_Url stringByReplacingOccurrencesOfString:@"http" withString:@"https"];
     }
