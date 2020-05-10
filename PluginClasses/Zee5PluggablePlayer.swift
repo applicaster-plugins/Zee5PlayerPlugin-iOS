@@ -224,7 +224,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             guard
                 let hybridViewController = self.hybridViewController,
                 let kalturaPlayerController = self.kalturaPlayerController else {
-                return
+                    return
             }
                         
             ZEE5PlayerSDK.initialize(withContentID: contentId, and: Zee5UserDefaultsManager.shared.getUserAccessToken())

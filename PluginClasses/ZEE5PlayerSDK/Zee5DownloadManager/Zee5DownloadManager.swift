@@ -76,8 +76,6 @@ public class Zee5DownloadManager {
             try self.cm?.start() {
                 ZeeUtility.utility.console("server started")
             }
-            // resume all interrupted downloads that were stopped in progress
-            try self.cm?.startItems(inStates: .inProgress, .interrupted, .paused)
             
             // Check network connection
             self.setupNetworkReachablity()
@@ -801,6 +799,13 @@ extension Zee5DownloadManager: ContentManagerDelegate {
         
         //
         DispatchQueue.main.async {
+            let data: [String : Any] = [
+                DownloadedItemKeys.id: id,
+                DownloadedItemKeys.downloadedBytes: totalBytesDownloaded,
+                DownloadedItemKeys.estimatedBytes: totalBytesEstimated ?? 0
+            ]
+            
+            NotificationCenter.default.post(name: AppNotification.downloadedItemProgress, object: nil, userInfo: data)
             self.updateProgressBar(contentId: id, downloadedBytes: totalBytesDownloaded, estimatedBytes: totalBytesEstimated)
         }
     }
@@ -854,6 +859,14 @@ extension Zee5DownloadManager: ContentManagerDelegate {
         }
         
         //
+        DispatchQueue.main.async {
+            let data: [String : Any] = [
+                DownloadedItemKeys.id: id,
+                DownloadedItemKeys.state: zeeState
+            ]
+            
+            NotificationCenter.default.post(name: AppNotification.downloadedItemState, object: nil, userInfo: data)
+        }
         self.updateDownloadStateImage(contentId: id, state: zeeState)
     }
     

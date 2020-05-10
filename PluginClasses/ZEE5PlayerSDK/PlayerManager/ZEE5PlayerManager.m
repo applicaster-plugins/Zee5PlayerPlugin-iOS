@@ -2960,7 +2960,7 @@ static ContentBuisnessType buisnessType;
 {
 
     NSString *result = [ZEE5UserDefaults getSubscribedPack];
-    if ([result isKindOfClass:[NSNull class]]|| result.length == 0)
+    if ([result isKindOfClass:[NSNull class]]|| result.length == 0 || [result isEqualToString:@"[]"])
     {
         self.allowVideoContent =YES;
         [self playWithCurrentItem];
@@ -3225,8 +3225,12 @@ static ContentBuisnessType buisnessType;
         [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
         return;
     }
-     [[DownloadHelper new] startDownloadItemWith:self.currentItem];
- 
+    
+    if (self.currentItem == nil) {
+        return;
+    }
+    
+    [[DownloadHelper new] startDownloadItemWith:self.currentItem];
 }
 
 -(void)getContentDetailForCastingItem:(NSString*)content_id country:(NSString*)country translation:(NSString*)language :(void (^)(VODContentDetailsDataModel* model, NSString* drmToken))success

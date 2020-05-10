@@ -1,20 +1,18 @@
-    //
-    //  HybridViewController+Buttons.swift
-    //  Alamofire
-    //
-    //  Created by Miri on 31/03/2020.
-    //
+//
+//  HybridViewController+Buttons.swift
+//  Alamofire
+//
+//  Created by Miri on 31/03/2020.
+//
     
-    import Foundation
-    import ZappPlugins
-    import ZappSDK
-    import UIKit
-    import Zee5CoreSDK
-    import ZeeHomeScreen
-    
-    extension HybridViewController {
-        
-        
+import Foundation
+import ZappPlugins
+import ZappSDK
+import UIKit
+import Zee5CoreSDK
+import ZeeHomeScreen
+
+extension HybridViewController {
         
         // MARK: setup
         
@@ -23,155 +21,13 @@
                 return
             }
             
-            
-                           
             let buttonStyle = stylesFor(key: "consumption_button_text")
             let indicatorStyle = stylesFor(key: "consumption_text_indicator")
             
             buttonViewCollection.forEach { (button) in
                 if let tmpButton = button as? CAButton {
-                    
                     tmpButton.removeTarget(tmpButton, action: #selector(CAButton.handleElementAction(_:)), for: .touchUpInside)
                     switch tmpButton.tag {
-                    case ItemTag.Button.shareButton:
-                        
-                        let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_Share_Link".localized(hashMap: [:]))
-                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-                        tmpButton.setAttributedTitle(attr, for: .normal)
-                        let shareImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_share")
-                        tmpButton.setImage(shareImage, for: .normal)
-                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
-                        tmpButton.titleLabel?.font = buttonStyle.font
-                        tmpButton.addTarget(self, action: #selector(self.shareButtonAction(_:)), for: .touchUpInside)
-                        break
-                    case ItemTag.Button.watchlistButton:
-                        
-                        let attr = NSAttributedString(string: "ShowsConsumption_ShowDetails_Watchlist_ClickableIcon".localized(hashMap: [:]))
-                        tmpButton.setAttributedTitle(attr, for: .normal)
-                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-                        let favouriteImageNormal = ZAAppConnector.sharedInstance().image(forAsset: "consumption_favourite")
-                        tmpButton.setImage(favouriteImageNormal, for: .normal)
-                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
-                        tmpButton.titleLabel?.font = buttonStyle.font
-                        
-                        tmpButton.addTarget(self, action: #selector(watchlistButtonAction(_:)), for: .touchUpInside)
-                        
-                        if consumptionFeedType == .live {
-                            if let stackView = tmpButton.superview as? UIStackView {
-                                stackView.removeArrangedSubview(tmpButton)
-                                tmpButton.removeFromSuperview()
-                            }
-                        } else {
-                            getWatchlist(completion: { (watchlist) in
-                                var isItemAlreadyInWatchlist: Bool = false
-                                
-                                //check if item already in the watchlist
-                                if let movies = watchlist.movie, movies.count > 0 {
-                                    movies.forEach({ (item) in
-                                        if item.id == self.currentPlayableItem?.identifier as! String {
-                                            isItemAlreadyInWatchlist = true
-                                        }
-                                    })
-                                }
-                                if let shows = watchlist.show, shows.count > 0 {
-                                    shows.forEach({ (item) in
-                                        if item.id == self.currentPlayableItem?.identifier as! String {
-                                            isItemAlreadyInWatchlist = true
-                                        }
-                                    })
-                                }
-                                if let videos = watchlist.video, videos.count > 0 {
-                                    videos.forEach({ (item) in
-                                        if item.id == self.currentPlayableItem?.identifier as! String {
-                                            isItemAlreadyInWatchlist = true
-                                        }
-                                    })
-                                }
-                                
-                                tmpButton.isSelected = isItemAlreadyInWatchlist
-                                
-                                let favouriteStyle = self.stylesFor(key: "consumption_text_indicator")
-                                let favouriteImageNormal = ZAAppConnector.sharedInstance().image(forAsset: "consumption_favourite")
-                                let favouriteImageSelected = ZAAppConnector.sharedInstance().image(forAsset: "consumption_favourite")?.imageColoredIn(with: favouriteStyle.color)
-                                DispatchQueue.main.async {
-                                    tmpButton.setImage(isItemAlreadyInWatchlist ? favouriteImageSelected : favouriteImageNormal, for: .normal)
-                                    
-                                }
-                            })
-                        }
-                    case ItemTag.Button.castButton:
-                        ZAAppConnector.sharedInstance().chromecastDelegate.addButton(tmpButton, topOffset: 0, width: tmpButton.bounds.size.width, buttonKey: "consumption_cast", color: nil, useConstrains: true)
-//                        let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_Cast_Link".localized(hashMap: [:]))
-//                        tmpButton.setAttributedTitle(attr, for: .normal)
-//                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-//                        let castImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_cast")
-//                        tmpButton.setImage(castImage, for: .normal)
-//                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-//                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
-//                        tmpButton.titleLabel?.font = buttonStyle.font
-//                        tmpButton.addTarget(self, action: #selector(consumptionCastButtonAction(_:)), for: .touchUpInside)
-                    case ItemTag.Button.downloadButton:
-                        
-                        var translatedString: String = String()
-                        switch consumptionFeedType {
-                        case .movie:
-                            translatedString = "MoviesConsumption_MovieDetails_Download_Button".localized(hashMap: [:])
-                        case .show:
-                            translatedString = "ShowsConsumption_ShowDetails_Download_Button".localized(hashMap: [:])
-                        case .music:
-                            translatedString = "MusicVideosConsumption_VideoDetails_Download_Button".localized(hashMap: [:])
-                        default:
-                            translatedString = "VideosConsumption_VideoDetails_Download_Button".localized(hashMap: [:])
-                        }
-                        let attr = NSAttributedString(string: translatedString)
-                        tmpButton.setAttributedTitle(attr, for: .normal)
-                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-                        let downloadImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_download")
-                        tmpButton.setImage(downloadImage, for: .normal)
-                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-                        tmpButton.titleLabel?.textColor = .white//buttonStyle.color
-                        tmpButton.titleLabel?.font = buttonStyle.font
-                        tmpButton.addTarget(self, action: #selector(consumptionDownloadButtonAction(_:)), for: .touchUpInside)
-                        
-                        guard let _ = self.currentPlayableItem else {
-                            return
-                        }
-                        
-                        if consumptionFeedType == .live || consumptionFeedType == .news {
-                            if let stackView = tmpButton.superview as? UIStackView {
-                                stackView.removeArrangedSubview(tmpButton)
-                                tmpButton.removeFromSuperview()
-                            }
-                            
-                        }
-                            
-                            
-                    case ItemTag.Button.trailerButton:
-                        //check if trailer link != nil and feed is equal to movie or episode
-                        let attr = NSAttributedString(string: "MoviesConsumption_MovieDetails_WatchTrailer_Button".localized(hashMap: [:]))
-                        tmpButton.setAttributedTitle(attr, for: .normal)
-                        tmpButton.titleLabel?.textAlignment = NSTextAlignment.center
-                        tmpButton.titleLabel?.textColor = buttonStyle.color
-                        tmpButton.titleLabel?.font = buttonStyle.font
-                        let trailerImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_play")
-                        tmpButton.setImage(trailerImage, for: .normal)
-                        tmpButton.centerContentRelativeLocation(.imageUpTitleDown, spacing: 5)
-                        
-                        guard let atom = self.currentPlayableItem else {
-                            return
-                        }
-                        
-                        if let _ = atom.extensionsDictionary?[ExtensionsKey.trailerDeeplink], consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .original {
-                            tmpButton.addTarget(self, action: #selector(consumptionTrailerButtonAction(_:)), for: .touchUpInside)
-                        } else {
-                            if let stackView = tmpButton.superview as? UIStackView {
-                                stackView.removeArrangedSubview(tmpButton)
-                                tmpButton.removeFromSuperview()
-                            }
-                        }
-                        
                     case ItemTag.Button.consumptionMoreLessDescriptionButton:
                         let arrowImage = ZAAppConnector.sharedInstance().image(forAsset: "consumption_arrow_down")
                         tmpButton.setImage(arrowImage, for: .normal)
@@ -187,22 +43,12 @@
         }
         
         func setupLabels() {
-            
             guard let labelsViewCollection = self.labelsCollection else {
                 return
             }
             
-            
-
-            
             labelsViewCollection.forEach { (label) in
-                
                 switch label.tag {
-                    
-                    
-                    //             case ItemTag.Label.searchBarErrorLabel:
-                    //                 label.text = "Search_Body_SearchResult_Text".localized(hashMap: ["search_keyword": "\(getSearchBarString())"])
-                //                 NotificationCenter.default.addObserver(self, selector: #selector(updateSearchError), name: Notification.Name(rawValue: DataBinderNotifications.updateSearchErrorAction.rawValue), object: nil)
                 case ItemTag.Label.storyLineLabel:
                     label.text = "Upcoming_Body_StoryLine_Text".localized(hashMap: [:])
                     
@@ -286,38 +132,6 @@
                         timeString.append(contentsOf: "left") //TODO: add translation for "left"
                     }
                     label.text = timeString
-                    //             case ItemTag.Label.episodeNumberAndDateLabel:
-                    //
-                    //                guard let atom = self.currentPlayableItem else {
-                    //                     return
-                    //                 }
-                    //
-                    //                 //setup Episode | date label
-                    //                 var timeString = String()
-                    //
-                    //                 var episodeNumber: String?
-                    //                 if let seasonDetails: [String: Any] = (atom.extensionsDictionary?[ExtensionsKey.seasonDetails] as? [String: Any]) {
-                    //                     if let currentEpisode = seasonDetails[ExtensionsKey.currentEpisode] as? String {
-                    //                         episodeNumber = "E\(currentEpisode)"
-                    //                         timeString.append(contentsOf: episodeNumber!)
-                    //                     }
-                    //                 }
-                    //
-                    //                 var publishedString: String?
-                    //                 guard let date: String = atom.publishDate, !date.isEmptyOrWhitespace() else {
-                    //                     label.text = timeString
-                    //                     return
-                    //                 }
-                    //                 //create date from string
-                    //                 let dateFormatter = DateFormatter.init()
-                    //                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    //                 let publishedDate: Date = dateFormatter.date(from: date)!
-                    //                 dateFormatter.dateFormat = "dd MMM"
-                    //
-                    //                 publishedString = dateFormatter.string(from: publishedDate)
-                    //                 timeString.append(contentsOf: timeString.isEmptyOrWhitespace() ? "\(publishedString!)" : " | \(publishedString!)")
-                    //
-                    //                 label.text = timeString
                     
                 case ItemTag.Label.timeFromToLabel:
                     
@@ -337,12 +151,20 @@
             guard let viewsViewCollection = self.viewCollection else {
                 return
             }
+            
             viewsViewCollection.forEach { (view) in
+                if let actionBarView = view as? ActionBarView {
+                    guard
+                        let playable = self.currentPlayableItem as? ZPAtomEntryPlayableProtocol,
+                        let consumptionFeedType = self.consumptionFeedType else {
+                        return
+                    }
+                                        
+                    ActionBarHelper.setup(playable: playable, consumptionFeedType: consumptionFeedType, actionBarView: actionBarView)
+                    return
+                }
                 
                 let index = viewsViewCollection.firstIndex{$0 as? UIView === view as? UIView }
-                
-                //               if let componentModel = componentModel as? CAComponentModel {
-                //                   let attributesDict: [String: Any]? = componentModel.value(forAttributeKey: "view_\(index!)", withModel: componentDataSourceModel) as? [String : Any]
                 
                 switch (view as! UIView).tag {
                 case ItemTag.View.premiumBanner:
@@ -445,78 +267,6 @@
             return (font: font, color: color)
         }
         
-        
-        //MARK: button actions
-        
-        @objc func watchlistButtonAction(_ sender: CAButton) {
-            
-            guard self.currentPlayableItem != nil else {
-                return
-            }
-            
-            //add / remove item from watchlist
-            
-            let completionBlock: (CAButton) -> () = { sender in
-                
-                DispatchQueue.main.async {
-                    sender.isSelected = !sender.isSelected
-                    
-                    let favouriteStyle = self.stylesFor(key: "consumption_text_indicator")
-                    let favouriteImageNormal = ZAAppConnector.sharedInstance().image(forAsset: "consumption_favourite")
-                    let favouriteImageSelected = ZAAppConnector.sharedInstance().image(forAsset: "consumption_favourite")?.imageColoredIn(with: favouriteStyle.color)
-                    
-                    sender.setImage(sender.isSelected ? favouriteImageSelected : favouriteImageNormal, for: .normal)
-                }
-            }
-            
-            if sender.isSelected {
-                let assetType: NSNumber = NSNumber(value: currentPlayableItem?.extensionsDictionary![ExtensionsKey.assetType] as! Int)
-                deleteWatchlist(withId: currentPlayableItem!.identifier as! String, assetType: assetType.stringValue) { (model) in
-                    print(model)
-                    if let code = model.code, code == 1 {
-                        completionBlock(sender)
-                    }
-                }
-            } else {
-                guard User.shared.getType() != .guest else {
-                    // user is not logged in, needs to show login screen
-                    return Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
-                }
-                addItemToWatchlist { (model) in
-                    if let code = model.code, code == 1 {
-                        completionBlock(sender)
-                    }
-                }
-            }
-        }
-        
-        @objc func consumptionCastButtonAction(_ sender: CAButton) {
-            
-        }
-        
-        @objc func consumptionDownloadButtonAction(_ sender: CAButton) {
-            if self.currentItem != nil {
-                if self.currentItem?.downloadState != .completed {
-                    startdownload()
-                }
-            } else {
-                startdownload()
-            }
-        }
-        
-        
-        func startdownload() {
-            ZEE5PlayerManager.sharedInstance().startDownload()
-            guard
-                let item = try? getDownloadedItem(id: ZEE5PlayerManager.sharedInstance().currentItem.content_id) else {
-                return
-                
-            }
-            self.currentItem = item
-            self.setupDownloadCircularBar(for: item.contentId!)
-            self.currentItem?.downloadState = .inProgress
-        }
-        
         @objc func consumptionMoreLessDescriptionButtonAction(_ sender: CAButton) {
             sender.isSelected = !sender.isSelected
             sender.setImage(ZAAppConnector.sharedInstance().image(forAsset: sender.isSelected ? "consumption_arrow_up" : "consumption_arrow_down"), for: [.normal, .selected])
@@ -530,50 +280,7 @@
             
             NotificationCenter.default.post(name: Notification.Name("kConsumptionCellLayoutHeightChangedNotification"), object: totalHeight)
         }
-        
-        @objc func consumptionTrailerButtonAction(_ sender: CAButton) {
-            
-            //show trailer in new consumption screen
-            if let trailerDeeplink = currentPlayableItem?.extensionsDictionary?[ExtensionsKey.trailerDeeplink] {
-                let url: URL = URL(string: trailerDeeplink as! String)!
-                UIApplication.shared.openURL(url)
-            }
-        }
-        
-        @objc func shareButtonAction(_ sender: CAButton) {
-            guard
-                let playable = self.currentPlayableItem as? APAtomEntryPlayable,
-                let extensions = playable.extensionsDictionary as? [String: Any],
-                let shareLink = extensions[ExtensionsKey.shareLink] as? String else {
-                    return
-            }
-            
-            guard
-                let originalAtomEntry = playable.atomEntry,
-                let linkAtomEntry = APAtomEntry.linkEntry(withURLString: shareLink) else {
-                return
-            }
-            
-            guard let urlComponents = URLComponents(string: shareLink) else {
-                return
-            }
-            
-            linkAtomEntry.link = urlComponents.string
-            linkAtomEntry.title = originalAtomEntry.title
-            linkAtomEntry.entryType = originalAtomEntry.entryType
-            
-            APSocialSharingManager.sharedInstance().shareWithDefaultText(withModel: linkAtomEntry, andSharingType: APSharingViaNativeType)
-            
-            // Send analytics:
-            let parameters = [
-                "sharingType" : "native",
-                "location"    : "iOS Unknown"
-            ]
-            
-            NotificationCenter.default.post(name: NSNotification.Name.caCellTappedShareButton, object: linkAtomEntry, userInfo: parameters as [AnyHashable : Any])
-            
-        }
-        
+
         //MARK: main info sting
         
         private func consumptionMainInfoLabel() -> String? {
@@ -618,7 +325,7 @@
             
             if let feedType = consumptionFeedType {
                 switch feedType {
-                case .movie, .trailer, .show, .original:
+                case .movie, .trailer, .show, .original, .video:
                     mainInfostring = "\(feedType.rawValue) • " + createInfoString(with: [release, duration, genre, age])
                 case .episode:
                     mainInfostring = (totalEpisodes != nil ? "\(totalEpisodes!) Episodes • " : "Episode • ") + createInfoString(with: [release, genre, age])
@@ -652,58 +359,6 @@
                 }
             }
             return tmpString
-        }
-        
-        
-        //MARK: add / remove element from the watchlist
-        
-        private func deleteWatchlist(withId id:String, assetType:String, completion: @escaping ((SuccessDataModel)->())) {
-            
-            let accessToken = Zee5UserDefaultsManager.shared.getUserAccessToken()
-            if accessToken.count > 0 {
-                let requestLoader = ZEE5RequestLoader(apiRequest: DeleteWatchListApiRequest())
-                requestLoader.loadAPIRequest(request: HTTPMethod.delete, funcion: ZEE5ApiEndPoints.deleteFromWatchList(id: id, assetType: assetType), requestData: nil, requestHeaders: ["Authorization":accessToken]) { (response, error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    completion(response!)
-                }
-            }
-        }
-        
-        private func getWatchlist(completion: @escaping ((WatchListDataModel)->())) {
-            
-            let accessToken = Zee5UserDefaultsManager.shared.getUserAccessToken()
-            if accessToken.count > 0 {
-                let requestLoader = ZEE5RequestLoader(apiRequest: WatchListApiRequest())
-                requestLoader.loadAPIRequest(request: HTTPMethod.get, funcion: ZEE5ApiEndPoints.watchList(country: Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country, translation: Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? String()), requestData: nil, requestHeaders: ["Authorization":accessToken]) { (response, error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    completion(response!)
-                }
-            }
-        }
-        
-        private func addItemToWatchlist(completion: @escaping ((SuccessDataModel)->())) {
-            
-            let accessToken = Zee5UserDefaultsManager.shared.getUserAccessToken()
-            if accessToken.count > 0 {
-                let requestLoader = ZEE5RequestLoader(apiRequest: UpdateWatchListApiRequest())
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                let date: String = formatter.string(from: Date())
-                
-                requestLoader.loadAPIRequest(request: HTTPMethod.post, funcion: ZEE5ApiEndPoints.addToWatchList, requestData: ["id": currentPlayableItem?.identifier, ExtensionsKey.assetType: currentPlayableItem?.extensionsDictionary![ExtensionsKey.assetType], ExtensionsKey.duration: currentPlayableItem?.extensionsDictionary![ExtensionsKey.duration], "date": date], requestHeaders: ["Authorization":accessToken]) { (response, error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    completion(response!)
-                }
-            }
         }
     }
     
@@ -952,199 +607,4 @@ return UICollectionViewCell()
         }
         
         
-    }
-
-        //Download state
-    
-        extension HybridViewController: DownloadOptionDelegate, OfflineVideoDurationDelegate {
-        
-        // MARK:- DownloadOption Delegate Method
-        
-        func updateProgressMenu(contentId: String, progress: UICircularProgressRing, buttonState: UIButton, viewPause: UIView, downloadedByte: Int64, estimatedByte: Int64) {
-            
-            Zee5DownloadManager.shared.setupDownloadProgressBar(contentId: contentId, progressRing: progress, imageDownloadState: buttonState, viewPuaseProgress: viewPause, downloadedBytes: downloadedByte, estimatedBytes: estimatedByte)
-        }
-        
-            func getDownloadedItem(id: String) throws -> DownloadItem{
-                do {
-                    guard let movie = try Zee5DownloadManager.shared.getItemById(id: id) else {
-                        let msg = "Items not found \(id)"
-                        ZeeUtility.utility.console(msg)
-                        throw ZeeError.withError(message: msg)
-                        
-                    }
-                    let item = DownloadItem()
-                    
-                        item.contentId = movie.contentId
-                        item.title = movie.title
-                        item.showTitle = movie.showOriginalTitle
-                        item.estimatedBytes = Int64(movie.estimatedSize)
-                        item.downloadedBytes = Int64(movie.downloadedSize)
-                        item.status = movie.state.asString()
-                        item.downloadState = movie.state
-                        item.imgUrl = movie.imageURL
-                        item.duration = movie.duration
-                        item.videoPlayedDuration = movie.offlinePlayingDuration
-                        return item
-
-                    
-                }
-	                catch {
-                    ZeeUtility.utility.console("error: getDownloadedItems: \(error.localizedDescription)")
-
-                    let msg = "Items not found"
-                    ZeeUtility.utility.console(msg)
-                    throw ZeeError.withError(message: msg)
-                    }
-                }
-            
-        func didSelectMenuOption(dataIndex: Int, downloadMenuOption: String) {
-//
-	//            if downloadMenuOption.contains(DownloadStateMenu.play.description) {
-//                self.playDownloadItem(at: dataIndex)
-//            }
-//            else if downloadMenuOption.contains(DownloadStateMenu.retry.description) {
-//                self.retryDownloadItem(at: dataIndex)
-//            }
-//            else if downloadMenuOption.contains(DownloadStateMenu.pause.description) {
-//                self.pauseDownloadItem(at: dataIndex)
-//            }
-//            else if downloadMenuOption.contains(DownloadStateMenu.resume.description) {
-//                self.resumeDownloadItem(at: dataIndex)
-//            }
-//            else if downloadMenuOption.contains(DownloadStateMenu.deleteDownload.description) {
-//                self.deleteDownloadItem(at: dataIndex)
-//            }
-//            else if downloadMenuOption.contains(DownloadStateMenu.cancelDownload.description) {
-//                self.cancelDownloadItem(at: dataIndex)
-//            }
-	//            else if downloadMenuOption.contains(DownloadStateMenu.restoreDownload.description) {
-//                self.restoreDownloadItem(at: dataIndex)
-//            }
-       }
-        
-        //
-//            func playDownloadItem(contentId: String) {
-//           // let video = self.videoArr[index]
-//            //if let contentId = video.contentId {
-//                do {
-//                    let url = try Zee5DownloadManager.shared.playbackUrl(id: contentId)
-//                    //self.gotoVideoPlayer(with: url, video: video)
-//                    //AnalyticEngine.shared.downloadClick(with: video)
-//                }
-//                catch {
-//                    ZeeUtility.utility.console("Play video Error: \(error.localizedDescription)")
-//
-//                }
-//            //}
-//        }
-        
-            func retryDownloadItem(video: DownloadItem) {
-            if let contentId = video.contentId {
-                do {
-                    try Zee5DownloadManager.shared.resumeDownloadItem(id: contentId)
-                    video.downloadState = .inProgress
-                    //self.tableView.reloadData()
-                }
-                catch {
-                    ZeeUtility.utility.console("Retry download Error: \(error.localizedDescription)")
-	                 
-                }
-            }
-        }
-        
-        func pauseDownloadItem(video: DownloadItem) {
-            
-            if let contentId = video.contentId {
-                if video.downloadState == .inProgress {
-                    do {
-                        try Zee5DownloadManager.shared.pauseDownloadItem(id: contentId)
-                        video.downloadState = .paused
-                        //self.tableView.reloadData()
-                    }
-                    catch {
-                        ZeeUtility.utility.console("Pause download Error: \(error.localizedDescription)")
-             
-                    }
-                }
-            }
-        }
-        
-        func resumeDownloadItem(video: DownloadItem) {
-            if let contentId = video.contentId {
-                if video.downloadState == .paused {
-                    do {
-                        try Zee5DownloadManager.shared.resumeDownloadItem(id: contentId)
-                        video.downloadState = .inProgress
-                        //self.tableView.reloadData()
-                    }
-                    catch {
-                        ZeeUtility.utility.console("Resume download Error: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
-        
-//        func deleteDownloadItem(at index: Int) {
-//            if let contentId = self.videoArr[index].contentId {
-//                do {
-//                    try Zee5DownloadManager.shared.removeDownloadItem(id: contentId)
-//                    AnalyticEngine.shared.downloadDelete(with: self.videoArr[index])
-//                    self.videoArr.remove(at: index)
-//                    self.tableView.reloadData()
-//                }
-//                catch {
-//                    ZeeUtility.utility.console("Delete download Error: \(error.localizedDescription)")
-//
-//                }
-//            }
-//        }
-        
-//        func cancelDownloadItem(video: DownloadItem) {
-//            if let contentId = self.videoArr[index].contentId {
-//                do {
-//                    try Zee5DownloadManager.shared.removeDownloadItem(id: contentId)
-//                    self.videoArr.remove(at: index)
-//                    self.tableView.reloadData()
-//                }
-//                catch {
-//                    ZeeUtility.utility.console("Cancel download Error: \(error.localizedDescription)")
-//                }
-//            }
-//        }
-        
-        func restoreDownloadItem(video: DownloadItem) {
-            if let contentId = video.contentId {
-                DownloadHelper.shared.restoreExpiredContent(id: contentId) { (isExpired, error) in
-                    if error == nil {
-                        video.downloadState = .completed
-                        //self.tableView.reloadData()
-                    }
-                    else {
-                        ZeeUtility.utility.console("Restore download Error: \(String(describing: error))")
-                    }
-                }
-            }
-        }
-        
-        // MARK:- OfflineVideoDurationDelegate Method
-        func updateVideoDuration(item: DownloadItem?, duration: Int) {
-//            guard let id = item?.contentId else { return }
-//
-//            let idx = self.videoArr.firstIndex { (data) -> Bool in
-//                return data.contentId == id ? true : false
-//            }
-//
-//            if let index = idx {
-//                if let ab = item {
-//                    ab.videoPlayedDuration = duration
-//                    self.videoArr[index] = ab
-//                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//                }
-           }
-            
-            
-            
-            
-        }
-        
+}

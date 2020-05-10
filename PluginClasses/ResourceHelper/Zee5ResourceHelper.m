@@ -53,6 +53,14 @@
 + (UIImage *)imageNamed:(NSString *)imageName{
     UIImage *resultImage;
 
+    NSBundle *currentBundle = [NSBundle bundleForClass:[Zee5ResourceHelper class]];
+    if (currentBundle != nil) {
+        resultImage = [self imageNamed:imageName fromBundle:currentBundle];
+        if (resultImage != nil) {
+            return resultImage;
+        }
+    }
+    
     for (NSBundle *bundle in [self bundlesArray]) {
         resultImage = [self imageNamed:imageName
                             fromBundle:bundle];
@@ -63,6 +71,7 @@
 
     return resultImage;
 }
+
 
 + (UIImage *)imageNamed:(NSString *)imageName
              fromBundle:(NSBundle *)bundle {

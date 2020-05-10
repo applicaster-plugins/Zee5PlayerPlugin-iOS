@@ -16,6 +16,7 @@ public enum ConsumptionFeedType: String, CaseIterable {
     case trailer = "Trailer"
     case show = "Show"
     case original = "Original"
+    case video = "Video"
 }
 
 public struct ExtensionsKey {

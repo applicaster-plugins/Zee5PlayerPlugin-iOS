@@ -56,76 +56,6 @@ class HybridViewController: UIViewController {
         }
     }
     
-    var currentItem: DownloadItem? {
-        didSet {
-            
-            // For show/episodes
-            
-            
-            let firstNegative = buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton})
-
-            
-            // Checking download state image and progress bar
-            if self.currentItem?.downloadState == .inProgress {
-                self.viewProgress.isHidden = false
-                if let firstNegative = buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton}){
-                firstNegative.isHidden = false}
-                
-                self.viewPause.isHidden = true
-            }
-            else {
-                if let firstNegative = buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton}){
-                    firstNegative.isHidden = false}
-                self.viewProgress.isHidden = true
-                self.viewPause.isHidden = true
-                
-                if self.currentItem?.downloadState == .completed {
-                    if #available(iOS 13.0, *) {
-                        let img = UIImage(named: "complete_download", in: bundle, with: nil)
-                        firstNegative!.setImage(img, for: .normal)
-                    } else {
-                        // Fallback on earlier versions
-                        let ab = UIImage(named: "complete_download", in: bundle, compatibleWith: nil)
-                        firstNegative!.setImage(ab, for: .normal)
-                    }
-                }
-                else if self.currentItem?.downloadState == .failed || self.currentItem?.downloadState == .interrupted || self.currentItem?.downloadState == .dbFailure || self.currentItem?.downloadState == .expired {
-                    if #available(iOS 13.0, *) {
-                        let img = UIImage(named: "error_download", in: bundle, with: nil)
-                        firstNegative!.setImage(img, for: .normal)
-                    } else {
-                        // Fallback on earlier versions
-                        let ab = UIImage(named: "error_download", in: bundle, compatibleWith: nil)
-                        firstNegative!.setImage(ab, for: .normal)
-                    }
-                }
-                else
-            if self.currentItem?.downloadState == .paused {
-                    if let firstNegative = buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton}){
-                    firstNegative.isHidden = false}
-                    self.viewProgress.isHidden = false
-                    self.viewPause.superview?.isHidden = false
-                    self.viewPause.isHidden = false
-                }
-            }
-
-            // Upadating progress bar
-            if let downloadedBytes = self.currentItem?.downloadedBytes, let estimatedBytes = self.currentItem?.estimatedBytes, estimatedBytes > 0 {
-                let percentage = CGFloat(downloadedBytes) / CGFloat(estimatedBytes) * CGFloat(100)
-                
-                if self.currentItem?.downloadState == .completed {
-                    self.circularRing.value = 100
-                }
-                else if let size = self.currentItem?.estimatedBytes, size > 0 {
-                    self.circularRing.value = percentage
-                }
-                else {
-                    self.circularRing.value = 0
-                }
-            }
-        }
-    }
-    
     // MARK: Orientation
     
     override open var shouldAutorotate: Bool {
@@ -218,18 +148,6 @@ class HybridViewController: UIViewController {
         setupButtons()
         setupLabels()
         setupViews()
-        
-        
-        let item = try? getDownloadedItem(id: ZEE5PlayerManager.sharedInstance().currentItem.content_id)
-        if item != nil {
-                    self.viewPause.superview?.isHidden = false
-                    self.currentItem = item
-                    self.setupDownloadCircularBar(for: ZEE5PlayerManager.sharedInstance().currentItem.content_id)
-        }
-        else
-        {
-            self.viewProgress.isHidden = true
-        }
     }
     
     var originalPosition: CGPoint?
@@ -281,7 +199,6 @@ class HybridViewController: UIViewController {
                 }).first
             }
         }
-        
     }
     
     func setupDataSources() {
@@ -290,6 +207,7 @@ class HybridViewController: UIViewController {
             guard let extensions = self.currentPlayableItem?.extensionsDictionary, let extaData = extensions[ExtensionsKey.extraData], let exta = extaData as? [String: Any] else {
                 return
             }
+            
             //populate cast data source
             castDataSource = []
             if let cast: [String: Any] = exta[ExtensionsKey.cast] as? [String : Any] {
@@ -381,6 +299,7 @@ class HybridViewController: UIViewController {
     }
     
     func closePlayer() {
+        ZEE5PlayerManager.sharedInstance().stop()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -393,51 +312,5 @@ class HybridViewController: UIViewController {
             loadingView = videoLoadingView as? UIView & APLoadingView
         }
         return loadingView
-    }
-    
-    public func setupDownloadCircularBar(for contentId: String) {
-        self.circularRing.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
-        self.circularRing.center = CGPoint(x: self.viewProgress.frame.width / 2 - 3, y: self.viewProgress.frame.height / 2)
-        self.circularRing.accessibilityIdentifier = contentId
-        
-        self.circularRing.startAngle = -90
-        self.circularRing.style = .bordered(width: 0, color: AppColor.progressGray)
-        self.circularRing.outerCapStyle = .round
-        self.circularRing.outerRingColor = AppColor.progressGray
-        self.circularRing.outerRingWidth = 2.5
-        
-        self.circularRing.innerCapStyle = .round
-        self.circularRing.innerRingColor = AppColor.aquaGreen
-        self.circularRing.innerRingWidth = 2.5
-        self.circularRing.innerRingSpacing = 0
-        
-        self.circularRing.shouldShowValueText = false
-        self.viewProgress.addSubview(self.circularRing)
-        
-               
-        // Progress button for events
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: self.viewProgress.frame.size.width, height: self.viewProgress.frame.size.height))
-        btn.addTarget(self, action: #selector(self.actionDownload(_:)), for: .touchUpInside)
-        self.viewProgress.addSubview(btn)
-        
-        //
-        self.updateProgressView()
-    }
-    func updateProgressView() {
-        
-        if let id = self.currentItem?.contentId, let downloadedByte = self.currentItem?.downloadedBytes, let estimatedByte = self.currentItem?.estimatedBytes {
-
-            let btnDownload = self.buttonsViewCollection?.first(where: { $0.tag ==  ItemTag.Button.downloadButton})
-            updateProgressMenu(contentId: id, progress: self.circularRing, buttonState: btnDownload!, viewPause: self.viewPause, downloadedByte: downloadedByte, estimatedByte: estimatedByte)
-        }
-    }
-    @objc private func actionDownload(_ btn: UIButton) {
-        if self.currentItem?.downloadState == .paused {
-            resumeDownloadItem(video: self.currentItem!)
-        //self.menuDownload.dataSource = arr
-        }else{
-            pauseDownloadItem(video: self.currentItem!)
-        }
-        //self.menuDownload.show()
     }
 }

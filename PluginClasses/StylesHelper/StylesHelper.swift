@@ -62,5 +62,4 @@ import Foundation
         }
         button.titleLabel?.font = font
     }
-
 }

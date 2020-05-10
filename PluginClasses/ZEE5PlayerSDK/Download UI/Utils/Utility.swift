@@ -58,6 +58,15 @@ struct AppNotification {
     static let videoDetail = Notification.Name("NotificationContentDetailObject")
     static let editDownload = Notification.Name("NotificationEditDownloadItem")
     static let stateUpdate = Notification.Name("NotificationStateUpdate")
+    static let downloadedItemProgress = Notification.Name("NotificationDownloadedItemProgress")
+    static let downloadedItemState = Notification.Name("NotificationDownloadedItemState")
+}
+
+struct DownloadedItemKeys {
+    static let id = "id"
+    static let state = "state"
+    static let downloadedBytes = "downloadedBytes"
+    static let estimatedBytes = "estimatedBytes"
 }
 
 extension UIColor {

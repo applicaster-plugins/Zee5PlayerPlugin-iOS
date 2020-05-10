@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,12 +13,7 @@
                 <outlet property="itemNameLabel" destination="wjd-rP-I2u" id="YDC-qK-rjF"/>
                 <outlet property="playerView" destination="YWE-fi-K7N" id="7tk-hi-ban"/>
                 <outlet property="view" destination="iN0-l3-epB" id="o1d-Gp-gHL"/>
-                <outlet property="viewPause" destination="91f-J9-pts" id="Dqi-3f-y6p"/>
-                <outlet property="viewProgress" destination="rgN-1H-2nn" id="NMp-LY-h2e"/>
                 <outletCollection property="buttonsViewCollection" destination="1RJ-94-jKa" collectionClass="NSMutableArray" id="Csx-vc-FZp"/>
-                <outletCollection property="buttonsViewCollection" destination="5mf-Hw-9mi" collectionClass="NSMutableArray" id="43B-Hd-0eq"/>
-                <outletCollection property="buttonsViewCollection" destination="1xG-Oc-wWP" collectionClass="NSMutableArray" id="G5a-18-4Dy"/>
-                <outletCollection property="buttonsViewCollection" destination="oyf-e6-1bV" collectionClass="NSMutableArray" id="4Go-1Q-wdo"/>
                 <outletCollection property="labelsCollection" destination="wjd-rP-I2u" collectionClass="NSMutableArray" id="WbM-1v-bJf"/>
                 <outletCollection property="labelsCollection" destination="6b6-h1-Zud" collectionClass="NSMutableArray" id="uja-Tl-0rx"/>
                 <outletCollection property="labelsCollection" destination="Nh3-lZ-otx" collectionClass="NSMutableArray" id="SRh-Pr-L7j"/>
@@ -29,7 +24,6 @@
                 <outletCollection property="labelsCollection" destination="1Em-7i-KVc" collectionClass="NSMutableArray" id="TfC-bd-7O2"/>
                 <outletCollection property="labelsCollection" destination="62G-sS-Qim" collectionClass="NSMutableArray" id="uj6-qt-i0T"/>
                 <outletCollection property="viewCollection" destination="0eM-EZ-T0J" collectionClass="NSMutableArray" id="PYA-ph-xtP"/>
-                <outletCollection property="viewCollection" destination="aar-lL-0JN" collectionClass="NSMutableArray" id="XNU-Nx-dOV"/>
                 <outletCollection property="viewCollection" destination="PDd-AU-oJQ" collectionClass="NSMutableArray" id="ZYF-6j-mr5"/>
                 <outletCollection property="viewCollection" destination="s13-AK-H7Y" collectionClass="NSMutableArray" id="eN9-E7-4od"/>
                 <outletCollection property="viewCollection" destination="5bL-Xu-N4J" collectionClass="NSMutableArray" id="8XA-qU-EM2"/>
@@ -37,11 +31,10 @@
                 <outletCollection property="viewCollection" destination="bkv-C8-LBD" collectionClass="NSMutableArray" id="qBD-q7-OtW"/>
                 <outletCollection property="viewCollection" destination="Wn3-ik-VTi" collectionClass="NSMutableArray" id="law-de-1Kr"/>
                 <outletCollection property="viewCollection" destination="6Y6-7u-bxm" collectionClass="NSMutableArray" id="rjs-6m-z1h"/>
-                <outletCollection property="buttonsViewCollection" destination="GyK-s4-Pst" collectionClass="NSMutableArray" id="oz7-Uf-CSk"/>
                 <outletCollection property="viewCollection" destination="u5v-LO-op9" collectionClass="NSMutableArray" id="Oit-8N-XWu"/>
                 <outletCollection property="viewCollection" destination="Nd1-en-ZoC" collectionClass="NSMutableArray" id="Fmj-LU-khU"/>
                 <outletCollection property="viewCollection" destination="fgH-rX-aeW" collectionClass="NSMutableArray" id="7Xd-b3-7VJ"/>
-                <outletCollection property="buttonsViewCollection" destination="ERx-Sg-sEk" collectionClass="NSMutableArray" id="Ue1-0m-evi"/>
+                <outletCollection property="viewCollection" destination="3Rd-Uk-v6A" collectionClass="NSMutableArray" id="XSL-QH-K0a"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -230,80 +223,13 @@
                                                         <constraint firstAttribute="height" constant="65" id="WNP-P3-Yon"/>
                                                     </constraints>
                                                 </stackView>
-                                                <stackView opaque="NO" tag="871" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="aar-lL-0JN" userLabel="tabs">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Rd-Uk-v6A" customClass="ActionBarView" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="70" width="414" height="60"/>
-                                                    <subviews>
-                                                        <button opaque="NO" tag="806" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GyK-s4-Pst" userLabel="share" customClass="CAButton">
-                                                            <rect key="frame" x="0.0" y="0.0" width="40" height="60"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" title="Share">
-                                                                <color key="titleColor" red="0.52156862745098043" green="0.49019607843137253" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </state>
-                                                        </button>
-                                                        <button opaque="NO" tag="807" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1xG-Oc-wWP" userLabel="watchlist" customClass="CAButton">
-                                                            <rect key="frame" x="40" y="0.0" width="64" height="60"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" title="Watchlist">
-                                                                <color key="titleColor" red="0.52156862745098043" green="0.49019607843137253" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </state>
-                                                        </button>
-                                                        <button opaque="NO" tag="808" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ERx-Sg-sEk" userLabel="cast" customClass="CAButton">
-                                                            <rect key="frame" x="104" y="0.0" width="32" height="60"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" title="Cast">
-                                                                <color key="titleColor" red="0.52156862745098043" green="0.49019607843137253" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </state>
-                                                        </button>
-                                                        <button opaque="NO" tag="809" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5mf-Hw-9mi" userLabel="download" customClass="CAButton">
-                                                            <rect key="frame" x="136" y="0.0" width="69" height="60"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" title="Download">
-                                                                <color key="titleColor" red="0.52156862745098043" green="0.49019607843137253" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </state>
-                                                        </button>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rgN-1H-2nn" userLabel="View Progress">
-                                                            <rect key="frame" x="205" y="0.0" width="118" height="60"/>
-                                                            <subviews>
-                                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="91f-J9-pts" userLabel="View Pause">
-                                                                    <rect key="frame" x="41" y="25" width="8" height="8"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                    <color key="backgroundColor" red="0.12549019610000001" green="0.67843137249999996" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                            <real key="value" value="0.80000000000000004"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                </view>
-                                                            </subviews>
-                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="JLT-BT-WiS"/>
-                                                                <constraint firstAttribute="height" constant="50" id="eWh-P3-OdM"/>
-                                                            </constraints>
-                                                        </view>
-                                                        <button opaque="NO" tag="810" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oyf-e6-1bV" userLabel="watchlistTrailer" customClass="CAButton">
-                                                            <rect key="frame" x="323" y="0.0" width="91" height="60"/>
-                                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="displayP3"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" title="Watch Trailer">
-                                                                <color key="titleColor" red="0.52156862745098043" green="0.49019607843137253" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </state>
-                                                        </button>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="60" id="ms7-Jd-2Y6"/>
+                                                        <constraint firstAttribute="height" constant="60" id="mM6-R8-fTB"/>
                                                     </constraints>
-                                                </stackView>
+                                                </view>
                                                 <stackView opaque="NO" tag="856" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="PDd-AU-oJQ">
                                                     <rect key="frame" x="0.0" y="135" width="414" height="60"/>
                                                     <subviews>
