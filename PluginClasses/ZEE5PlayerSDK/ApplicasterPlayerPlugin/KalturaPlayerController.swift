@@ -160,7 +160,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
    func didTaponMinimizeButton() {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didTaponMinimizeButton ***")
     
-       dismissViewController(withAnimation: false)
+        self.changePlayer(displayMode: .inline)
     }
     func didTapOnEnableAutoPlay() {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didTapOnEnableAutoPlay ***")

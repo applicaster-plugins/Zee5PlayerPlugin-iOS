@@ -37,6 +37,8 @@ extension KalturaPlayerController {
                 self.previousContainerView = self.view.superview
                 self.removeViewFromParentViewController()
                 self.currentDisplayMode = .fullScreen;
+                self.modalPresentationStyle = .fullScreen
+
                 ZAAppConnector.sharedInstance().navigationDelegate.topmostModal()?.present(self, animated: true, completion: {
                     self.playerAdapter?.player?.play()
                 })
