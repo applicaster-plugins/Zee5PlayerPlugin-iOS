@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -78,35 +77,34 @@
                                                 <view hidden="YES" tag="881" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgH-rX-aeW" userLabel="Premium View" customClass="PremiumBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="-60" width="414" height="60"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="111" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UW1-bz-alX">
-                                                            <rect key="frame" x="294" y="12.5" width="120" height="35"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="111" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EMC-G0-vjv">
+                                                            <rect key="frame" x="279" y="12.5" width="120" height="35"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="120" id="uKI-AE-yFj"/>
-                                                                <constraint firstAttribute="height" constant="35" id="yI8-kJ-XZh"/>
+                                                                <constraint firstAttribute="width" constant="120" id="V0d-qv-PyR"/>
+                                                                <constraint firstAttribute="height" constant="35" id="iVe-6o-c2v"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <button opaque="NO" tag="111" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I4q-jt-DYS" customClass="CAButton">
-                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OC5-IW-c7o">
+                                                            <rect key="frame" x="15" y="30" width="256" height="0.0"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                                            <state key="normal" title="Premium Banner"/>
-                                                            <connections>
-                                                                <action selector="handleButtonClick" destination="fgH-rX-aeW" eventType="touchUpInside" id="oxP-Ie-BKK"/>
-                                                            </connections>
-                                                        </button>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="I4q-jt-DYS" firstAttribute="top" secondItem="fgH-rX-aeW" secondAttribute="top" id="IOp-It-s20"/>
-                                                        <constraint firstAttribute="trailing" secondItem="I4q-jt-DYS" secondAttribute="trailing" id="OU7-u1-9z7"/>
+                                                        <constraint firstItem="EMC-G0-vjv" firstAttribute="leading" secondItem="OC5-IW-c7o" secondAttribute="trailing" constant="8" id="5Xs-FG-Vbr"/>
+                                                        <constraint firstItem="OC5-IW-c7o" firstAttribute="centerY" secondItem="fgH-rX-aeW" secondAttribute="centerY" id="AxL-1Q-1dr"/>
+                                                        <constraint firstItem="OC5-IW-c7o" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fgH-rX-aeW" secondAttribute="top" constant="5" id="OsL-9Y-N94"/>
+                                                        <constraint firstAttribute="trailing" secondItem="EMC-G0-vjv" secondAttribute="trailing" constant="15" id="atm-je-gbz"/>
+                                                        <constraint firstItem="EMC-G0-vjv" firstAttribute="centerY" secondItem="fgH-rX-aeW" secondAttribute="centerY" id="bVq-sk-S14"/>
                                                         <constraint firstAttribute="height" constant="60" id="iSc-Tu-Qsq"/>
-                                                        <constraint firstItem="UW1-bz-alX" firstAttribute="centerY" secondItem="fgH-rX-aeW" secondAttribute="centerY" id="lxV-p5-ZKz"/>
-                                                        <constraint firstAttribute="bottom" secondItem="I4q-jt-DYS" secondAttribute="bottom" id="rUO-MR-c8P"/>
-                                                        <constraint firstItem="I4q-jt-DYS" firstAttribute="leading" secondItem="fgH-rX-aeW" secondAttribute="leading" id="sy7-MK-K0p"/>
-                                                        <constraint firstAttribute="trailing" secondItem="UW1-bz-alX" secondAttribute="trailing" id="x61-JK-Zip"/>
+                                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="OC5-IW-c7o" secondAttribute="bottom" constant="5" id="jYT-Ye-1Ou"/>
+                                                        <constraint firstItem="OC5-IW-c7o" firstAttribute="leading" secondItem="fgH-rX-aeW" secondAttribute="leading" constant="15" id="vFt-9H-mi5"/>
                                                     </constraints>
                                                     <connections>
-                                                        <outlet property="button" destination="I4q-jt-DYS" id="3i5-Mc-jid"/>
-                                                        <outlet property="imageView" destination="UW1-bz-alX" id="E2O-sI-Ku2"/>
+                                                        <outlet property="imageView" destination="EMC-G0-vjv" id="f1x-yE-zHI"/>
+                                                        <outlet property="titleLabel" destination="OC5-IW-c7o" id="HGC-0R-Fic"/>
                                                     </connections>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="K1f-NU-fgY" userLabel="generalInfo">
@@ -392,7 +390,7 @@
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6Y6-7u-bxm" secondAttribute="bottom" id="neB-c8-8Mr"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-1109" y="351"/>
+            <point key="canvasLocation" x="-1110.144927536232" y="350.89285714285711"/>
         </view>
     </objects>
 </document>

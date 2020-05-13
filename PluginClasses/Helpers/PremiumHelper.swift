@@ -16,7 +16,7 @@ fileprivate extension Notification.Name {
 }
 
 class PremiumBanner: UIView {
-    @IBOutlet fileprivate var button: UIButton?
+    @IBOutlet fileprivate var titleLabel: UILabel?
     @IBOutlet fileprivate var imageView: UIImageView?
     
     fileprivate var observer: NSObjectProtocol?
@@ -25,6 +25,8 @@ class PremiumBanner: UIView {
     func setupBanner(playable: ZPPlayable?) {
         self.observer = NotificationCenter.default.addObserver(forName: .subscriptionFinished, object: nil, queue: nil,using: handleSubscription)
 
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(handleBannerAction))
+        addGestureRecognizer(tapGesture)
         self.premiumHelper.setupPremiumBanner(self, playable: playable)
     }
     
@@ -32,7 +34,7 @@ class PremiumBanner: UIView {
         self.premiumHelper.updatePremiumBanner(self)
     }
     
-    @IBAction fileprivate func handleButtonClick() {
+    @objc fileprivate func handleBannerAction() {
         self.premiumHelper.openSubscriptionScreen()
     }
 }
@@ -62,8 +64,8 @@ fileprivate class PremiumHelper {
                 
         //        button.setTitleColor(premiumStyle.color, for: .normal)
         //        button.titleLabel?.font = premiumStyle.font
-        
-        banner.button?.setTitle("Subscribe to premium today! Starting At RS 49", for: .normal)
+
+        banner.titleLabel?.text = "Subscribe to premium today! Starting At RS 49"
         
         banner.isHidden = false
     }
