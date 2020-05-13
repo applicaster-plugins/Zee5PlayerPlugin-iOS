@@ -10,6 +10,7 @@ import Foundation
 import DownloadToGo
 import PlayKit
 import Alamofire
+import Zee5CoreSDK
 
 // Network preferences enum
 enum DeviceNetwork {
@@ -77,8 +78,12 @@ public class Zee5DownloadManager {
                 ZeeUtility.utility.console("server started")
             }
             
+    NotificationCenter.default.addObserver(self,selector:#selector(self.logoutDone),name: NSNotification.Name.ZPLoginProviderLoggedOut,
+            object: nil)
+            
             // Check network connection
             self.setupNetworkReachablity()
+            
         }
         catch {
             // handle error here
@@ -92,6 +97,10 @@ public class Zee5DownloadManager {
         self.zeDB = ZeeDB()
         _ = try getZeeDB()
         self.zeDB?.createTable()
+    }
+    
+    @objc private func logoutDone(){
+        _ = try? self.removeAll()
     }
     
     // Checking current network connection state

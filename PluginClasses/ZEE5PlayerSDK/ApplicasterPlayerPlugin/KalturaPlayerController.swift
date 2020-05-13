@@ -135,9 +135,14 @@ internal enum PlayerViewDisplayMode : Int {
             print("Network Status: \(status)")
             switch status {
             case .notReachable:
+                ZEE5PlayerSDK.setConnection(NoInternet)
                 Zee5ToastView.showToast(withMessage: "No Internet Connection")
                 break;
-            case .reachable(_), .unknown:
+            case .reachable(.ethernetOrWiFi), .unknown:
+                ZEE5PlayerSDK.setConnection(Wifi)
+                break;
+            case .reachable(.wwan):
+                ZEE5PlayerSDK.setConnection(WWAN)
                 break;
             }
         }

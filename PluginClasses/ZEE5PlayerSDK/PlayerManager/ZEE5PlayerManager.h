@@ -23,6 +23,7 @@ typedef void(^DRMFailureHandler)(NSString* _Nullable error);
 typedef void(^VODDataHandler)(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData);
 typedef void(^TokenSuccessHandler)(id _Nullable result);
 typedef void(^TokenFailureHandler)(ZEE5SdkError * _Nullable error);
+typedef void(^CIdHandler)(BOOL isSame, NSString * _Nullable customData);
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong , nonatomic) PlayerView *playbackView;
 @property(nonatomic) BOOL isStop;
 @property(nonatomic) BOOL isTelco;     //// Come From Partner App.
+@property(nonatomic) BOOL isAutoplay;
+@property(nonatomic) BOOL isStreamoverWifi;
+@property(nonatomic) BOOL isdownloadOverWifi;
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;
@@ -97,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 
 
-
+-(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success;
 /*!
  * @discussion This method used to play hls content with content id
  * @param content_id Need to pass content id of the video
@@ -171,6 +175,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)StartDownload;
 -(void)showloaderOnPlayer;
 -(void)hideLoaderOnPlayer;
+-(void)ShowToastMessage:(NSString *)Message;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;

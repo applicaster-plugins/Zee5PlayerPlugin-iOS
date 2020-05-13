@@ -38,10 +38,15 @@ static AddToWatchlist *SharedInstance = nil;
 }
 // *** Api calling For Add Content For Watchlist.******//
 
+
+-(void)getWatchList:(CurrentItem *)currentItem{
+    
+}
 -(void)AddToWatchlist:(CurrentItem *)currentItem
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
+        [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"You must be logged in to perform this action."];
        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
         [[ZEE5PlayerManager sharedInstance]pause];
         return;

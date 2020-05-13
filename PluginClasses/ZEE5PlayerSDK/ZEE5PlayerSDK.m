@@ -17,6 +17,7 @@ static DevelopmentEnvironment dev_environment = development;
 static AdsEnvironment adsEnvironment = staging;
 static Usertype usertype = Guest;
 static ConsumptionType consumprionType = Movie;
+static ConnectionType Connection = Mobile;
 
 static comScoreAnalytics *comAnalytics;
 
@@ -80,6 +81,13 @@ static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
 }
 + (AdsEnvironment)getAdsEnvironment {
     return adsEnvironment;
+}
+
++(void)setConnection:(ConnectionType)Type{
+    Connection = Type;
+}
++(ConnectionType)Getconnectiontype{
+    return Connection;
 }
 
 

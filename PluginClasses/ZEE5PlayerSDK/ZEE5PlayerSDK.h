@@ -52,6 +52,14 @@ typedef enum userType
     Premium
 } Usertype;
 
+typedef enum InternetConnection
+{
+    Wifi,
+    Mobile,
+    WWAN,
+    NoInternet
+} ConnectionType;
+
 typedef enum consumptiontype
 {
     Movie,
@@ -127,7 +135,8 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 + (NSString *)getSDKVersion;
 + (NSString *)getPlayerSDKVersion;
 
-
++(void)setConnection:(ConnectionType)Type;
++(ConnectionType)Getconnectiontype;
 ///  Analytics Setup For Comscore And Conviva
 +(void)setupConvivaAnalytics;
 +(void)setupComScoreAnalytics;

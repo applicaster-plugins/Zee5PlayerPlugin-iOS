@@ -58,6 +58,17 @@ NSString *const kFirstTimeLogin = @"first_time_login";
                     self.autoPlay = [userSetting ValueForKeyWithNullChecking:kValue];
                     
                 }
+                
+                if ([[userSetting valueForKey:@"key"]isEqualToString:kStreamOverWifi] && ![[userSetting valueForKey:kValue]isKindOfClass:[NSNull class]] )
+                {
+                    self.streamOverWifi = [userSetting ValueForKeyWithNullChecking:kValue];
+                    
+                }
+                if ([[userSetting valueForKey:@"key"]isEqualToString:kDownloadOverWifi] && ![[userSetting valueForKey:kValue]isKindOfClass:[NSNull class]] )
+                {
+                self.downloadOverWifi = [userSetting ValueForKeyWithNullChecking:kValue];
+                                   
+                }
         
                 
             }

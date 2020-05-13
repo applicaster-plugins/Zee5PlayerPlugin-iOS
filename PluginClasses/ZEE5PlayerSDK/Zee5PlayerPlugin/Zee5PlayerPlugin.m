@@ -760,6 +760,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
         }
         else
         {
+            model.time = [Utility getDuration:[(model.time)intValue] total:0];
+            
             part2 = [NSString stringWithFormat:@"%@%@%@%@%ld%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"midroll-",(long)index,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
 
         }

@@ -8,11 +8,14 @@
 
 import UIKit
 import CarbonKit
+import Zee5CoreSDK
+import ZappPlugins
 
 public class DownloadRootController: UIViewController {
 
     @IBOutlet weak var btnEdit: UIButton!
     
+    @IBOutlet weak var topview: UIView!
     private var selectedTabIndex: UInt = 0
     private var carbonNav: CarbonTabSwipeNavigation!
     
@@ -24,11 +27,12 @@ public class DownloadRootController: UIViewController {
         
         //
         self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
     
     @IBAction func actionBack(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+       ZAAppConnector.sharedInstance().navigationDelegate.navigateToHomeScreen()
     }
     
     func setupTopSgment() {

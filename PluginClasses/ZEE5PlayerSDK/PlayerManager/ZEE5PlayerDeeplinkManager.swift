@@ -80,4 +80,8 @@ import ZappPlugins
                           }
                       }
                   }
+    
+    @objc public func Showtoast(Message:String){
+        Zee5ToastView.showToast(withMessage: Message);
+    }
 }
