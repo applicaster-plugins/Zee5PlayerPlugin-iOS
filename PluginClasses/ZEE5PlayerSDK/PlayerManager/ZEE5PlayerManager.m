@@ -187,9 +187,13 @@ static ContentBuisnessType buisnessType;
     else
     {
       
-        if (self.parentalControl ==YES)
+    if (self.parentalControl ==YES)
         {
             [self parentalControlshow];
+            return;
+        }
+    if (_isStreamoverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile){
+        [self ShowToastMessage:@"WiFi is not connected! You have selected stream over WiFi only"];
             return;
         }
         [self ContentidNotification:_currentItem.content_id];
@@ -743,7 +747,7 @@ static ContentBuisnessType buisnessType;
         [self hideUnHidetrailerEndView:false];
         return;
     }
-    if ([self.currentItem.related count] == 0)
+    if (_isAutoplay == false)
     {
         _videoCompleted = YES;
         _customControlView.buttonPlay.hidden = YES;
@@ -807,8 +811,6 @@ static ContentBuisnessType buisnessType;
     }];
 
 }
-
-
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion
 {
     NSURL *url = [[NSURL alloc] initWithString:BaseUrls.drmCertificateUrl];
@@ -1398,6 +1400,7 @@ static ContentBuisnessType buisnessType;
       }
 }
 
+//MARK:- Player Loader
 
 -(void)showloaderOnPlayer{
     if (self.delegate && [self.delegate respondsToSelector:@selector(showPlayerLoader)]) {
@@ -1410,6 +1413,10 @@ static ContentBuisnessType buisnessType;
     if (self.delegate && [self.delegate respondsToSelector:@selector(hidePlayerLoader)]) {
         [self.delegate hidePlayerLoader];
     }
+}
+-(void)ShowToastMessage:(NSString *)Message{
+    [[ZEE5PlayerDeeplinkManager new]ShowtoastWithMessage:Message];
+   
 }
 
 -(void)forward:(NSInteger)value
@@ -1750,7 +1757,7 @@ static ContentBuisnessType buisnessType;
     }
     else
     {
-
+        [self ShowToastMessage:@"Incorrect PIN please try again"];
     }
 }
 
@@ -2271,7 +2278,7 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
-    
+
     _isStop = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
@@ -2464,6 +2471,16 @@ static ContentBuisnessType buisnessType;
     [self playAESContent:content_id country:country translation:laguage platform_name:platform_name playbacksession_id:playbacksession_id];
 }
 
+
+-(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success{
+    
+    if ([_currentItem.content_id isKindOfClass:[NSNull class]] == false)
+    {
+        if ([_currentItem.content_id isEqualToString:content_id]==false) {
+            success(YES,_currentItem.content_id);
+        }
+    }
+}
 
 // MARK:- Download Ad Config
 
@@ -3055,6 +3072,20 @@ static ContentBuisnessType buisnessType;
         userSettingDataModel *settingModel = [userSettingDataModel initFromJSONDictionary:resultData];
         self.ageRating =settingModel.ageRating;
         self.parentalPin = settingModel.userPin;
+    _isAutoplay = false;
+    _isStreamoverWifi = false;
+    _isdownloadOverWifi = false;
+    
+    if ([settingModel.autoPlay isEqualToString:@"true"]) {
+        _isAutoplay = true;
+    }
+    
+    if ([settingModel.streamOverWifi isEqualToString:@"true"]) {
+           _isStreamoverWifi = true;
+       }
+    if ([settingModel.downloadOverWifi isEqualToString:@"true"]) {
+        _isdownloadOverWifi = true;
+    }
         
         if ([self.ageRating isEqualToString:@"A"] || self.ageRating == nil || self.ageRating.length==0)
            {
@@ -3076,6 +3107,7 @@ static ContentBuisnessType buisnessType;
            {
              self.parentalControl = YES;
            }
+    
 }
 
 
@@ -3229,6 +3261,11 @@ static ContentBuisnessType buisnessType;
     if (self.currentItem == nil) {
         return;
     }
+    if (_isdownloadOverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
+        [self ShowToastMessage:@"WiFi is not connected! You have selected download over WiFi only"];
+        return;
+    }
+    
     
     [[DownloadHelper new] startDownloadItemWith:self.currentItem];
 }

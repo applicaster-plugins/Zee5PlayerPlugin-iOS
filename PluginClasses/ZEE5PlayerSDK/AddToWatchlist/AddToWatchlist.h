@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (AddToWatchlist *)Shared;
 -(void)AddToWatchlist:(CurrentItem *)currentItem;
+-(void)getWatchList:(NSString *)contentId;
 
 @end
 
