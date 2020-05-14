@@ -83,7 +83,7 @@ class OfflinePlayerController: UIViewController {
     }
     
     @IBAction func actionBack(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+        self.dismissViewController(withAnimation: true);
     }
     
     func hideUnHindeTopView(isHidden: Bool) {
@@ -231,8 +231,9 @@ extension OfflinePlayerController {
     func forwardAndRewindActions() {
         let value: TimeInterval = 10
         weak var weakSelf = self
+        let frame = UIScreen .main.bounds
         
-        self.forwardButton.frame = .init(x: self.viewPlayer.frame.width - 200, y: 0, width: 200, height: self.viewPlayer.frame.height)
+        self.forwardButton.frame = .init(x: frame.size.height - 200, y: 0, width: 200, height: frame.size.width)
         self.viewPlayer.addSubview(self.forwardButton)
         
         self.forwardButton.singleTouch = { touch in

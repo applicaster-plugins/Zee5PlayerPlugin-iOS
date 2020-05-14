@@ -8,18 +8,19 @@
 
 import UIKit
 
-class DownloadQualityMenu: UIView {
+public class DownloadQualityMenu: UIView {
     
     static let identifier = "DownloadQualityMenu"
     
     @IBOutlet weak var viewBackground: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var btnDownload: UIButton!
+   @objc @IBOutlet weak var Con_table_height: NSLayoutConstraint!
     
     private var downloadOption = [Z5Option]()
     private var currentDownloadItem: ZeeDownloadItem!
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         
         self.viewBackground.roundCorners(corners: [.topLeft, .topRight], radius: 25.0)
@@ -27,6 +28,8 @@ class DownloadQualityMenu: UIView {
         
         let bundle = Bundle(for: DownloadRootController.self)
         self.tableView.register(UINib(nibName: VideoQualityCell.identifer, bundle: bundle), forCellReuseIdentifier: VideoQualityCell.identifer)
+          rotated()
+
         
         self.setupDragable()
     }
@@ -35,6 +38,16 @@ class DownloadQualityMenu: UIView {
         self.currentDownloadItem = data
         self.downloadOption = config.download_options ?? []
         self.tableView.reloadData()
+    }
+    @objc func rotated(){
+        
+        if UIDevice.current.orientation.isLandscape{
+            print("landscape");
+             self.Con_table_height.constant = 190.0
+        }
+        if UIDevice.current.orientation.isPortrait{
+            self.Con_table_height.constant = 295.0
+        }
     }
     
     @IBAction func actionStartDownload(_ sender: Any) {
@@ -58,11 +71,11 @@ class DownloadQualityMenu: UIView {
 
 extension DownloadQualityMenu: UITableViewDataSource, UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.downloadOption.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoQualityCell.identifer) as? VideoQualityCell else { return UITableViewCell() }
         cell.selectedOption = self.downloadOption[indexPath.row]
         cell.setSelected(false, animated: true)

@@ -26,12 +26,21 @@ import ZappPlugins
     
     @objc public func NavigatetoLoginpage()
     {
-       Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+      // Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+        Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url) { (isSuccess) in
+          if isSuccess {
+            print("Login Sucees");
+          }
+        }
     }
     
     
     @objc public func NavigatetoParentalViewPage()
     {
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
       Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.parentalControl.url)
     }
     
@@ -42,6 +51,8 @@ import ZappPlugins
     
     @objc public func NavigatetoHomeScreen()
     {
+    let value = UIInterfaceOrientation.portrait.rawValue
+    UIDevice.current.setValue(value, forKey: "orientation")
        ZAAppConnector.sharedInstance().navigationDelegate.navigateToHomeScreen()
     }
     

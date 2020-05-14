@@ -92,7 +92,7 @@ class ZappZee5PlayerAdapter: NSObject, PlayerAdapterProtocol, ZEE5PlayerDelegate
     }
     
     func resume() {
-        self.player?.resume()
+        self.player?.play()
     }
     
     // MARK: - ZEE5PlayerDelegate Method
