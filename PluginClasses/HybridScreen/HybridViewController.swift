@@ -66,6 +66,10 @@ class HybridViewController: UIViewController {
         return false
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
