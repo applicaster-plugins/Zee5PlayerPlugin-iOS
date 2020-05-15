@@ -61,12 +61,13 @@
 
 
 
-@interface ZEE5PlayerManager()<UIGestureRecognizerDelegate>  // PlayerDelegate>
-@property ZEE5CustomControl *customControlView;              // Player Controls (play,pause Button)
-@property Zee5MenuView *customMenu;                          // MenuView Includes(Subtitle,Audio Selection)
+@interface ZEE5PlayerManager()<UIGestureRecognizerDelegate>//// PlayerDelegate>
+@property ZEE5CustomControl *customControlView;           //// Player Controls (play,pause Button)
+@property DownloadQualityMenu *QualityView;
+@property Zee5MenuView *customMenu;                         //// MenuView Includes(Subtitle,Audio Selection)
 @property Zee5MuteView *muteView;
-@property ParentalView *parentalView;                        // Parental Lock View(Insert 4 Digit Pin)
-@property devicePopView *devicePopView;                      // Device Limit reached for Single user (View will Appear)
+@property ParentalView *parentalView;                 //// Parental Lock View(Insert 4 Digit Pin)
+@property devicePopView *devicePopView;              //// Device Limit reached for Single user (View will Appear)
 @property upgradeSubscriView *subscribeView;
 @property IndGuestUserRegistration *GuestuserPopView;
 @property InternationlguestUser *IntenationalGuestuserView;
@@ -1080,6 +1081,11 @@ static ContentBuisnessType buisnessType;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakSelf.seekStared = false;
     });
+   
+    if ( self.customControlView.buttonPlay.selected == NO){
+        [self hideLoaderOnPlayer];
+    }
+    
 
     //    self.customControlView.buttonPlay.selected = YES;
     
@@ -1334,8 +1340,10 @@ static ContentBuisnessType buisnessType;
    
     _customControlView.Stackview_top.constant = 0;
     
-    _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 200, 0, 200, self.playbackView.frame.size.height);
-    _customControlView.rewindButton.frame = CGRectMake(0, 0, 200, self.playbackView.frame.size.height);
+    CGRect frame = [UIScreen mainScreen].bounds;
+    _customControlView.forwardButton.frame = CGRectMake(frame.size.width - 200, 0, 200, frame.size.height);
+    
+    _customControlView.rewindButton.frame = CGRectMake(0, 0, 200, frame.size.height);
     
     
     _customControlView.backtoPartnerView.hidden = YES;
@@ -1988,6 +1996,7 @@ static ContentBuisnessType buisnessType;
 {
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
     
+    [self hideLoaderOnPlayer];
     if(_GuestuserPopView == nil)
     {
         _GuestuserPopView = [[bundel loadNibNamed:@"IndGuestUserRegistration" owner:self options:nil]objectAtIndex:0];
@@ -2279,6 +2288,8 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
+   // content_id = @"0-0-2464";
+    
     _isStop = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
@@ -3016,7 +3027,7 @@ static ContentBuisnessType buisnessType;
                         }
                          else if (buisnessType == premium_downloadable || buisnessType == premium)
                         {
-                           [self playTrailer];   // Trailer Play Here.
+                          // [self playTrailer];   // Trailer Play Here.
                         }
                         else
                         {
@@ -3048,8 +3059,8 @@ static ContentBuisnessType buisnessType;
           }];
         return;
     }
-    [self INDGuestUser];
     [self hideUnHidetrailerEndView:false];
+    [self INDGuestUser];
     
 }
 
@@ -3254,6 +3265,7 @@ static ContentBuisnessType buisnessType;
 {
     // [self setFullScreen: NO];
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+        [self pause];
         [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
         return;
     }

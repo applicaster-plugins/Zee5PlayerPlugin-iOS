@@ -748,21 +748,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *part1 = @"<vmap:VMAP xmlns:vmap=\"http://www.iab.net/videosuite/vmap\" version=\"1.0\">\n";
     NSString *part3 = @"</vmap:VMAP>";
     NSString *part2 = @"";
+    NSString *range =@"";
 
     for (ZEE5AdModel *model in self.currentItem.googleAds) {
-        
-        NSInteger index = [self.currentItem.googleAds indexOfObject:model];
+       NSInteger index = [self.currentItem.googleAds indexOfObject:model];
         if ([model.time.lowercaseString isEqualToString:@"pre"]) {
-            part2 = [NSString stringWithFormat:@"%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"preroll-ad-1\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
         }
         else if ([model.time.lowercaseString isEqualToString:@"post"]) {
-            part2 = [NSString stringWithFormat:@"%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"end\" breakType=\"linear\" breakId=\"postroll\">\n<vmap:AdSource id=\"postroll-ad-1\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"end\" breakType=\"linear\" breakId=\"postroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
         }
         else
         {
+            range = [model.tag_name substringWithRange:NSMakeRange(0, 9)];
             model.time = [Utility getDuration:[(model.time)intValue] total:0];
-            
-            part2 = [NSString stringWithFormat:@"%@%@%@%@%ld%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"midroll-",(long)index,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"",range,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
 
         }
     }

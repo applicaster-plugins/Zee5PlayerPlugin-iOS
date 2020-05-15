@@ -187,7 +187,10 @@ class ShowDetailController: UIViewController {
         offlineVC.delegate = self
         offlineVC.selectedUrl = url
         offlineVC.selectedVideo = video
-        self.navigationController?.pushViewController(offlineVC, animated: true)
+        offlineVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.present(offlineVC, animated: true, completion: {
+//            print("Present Video view");
+       })
     }
 }
 
