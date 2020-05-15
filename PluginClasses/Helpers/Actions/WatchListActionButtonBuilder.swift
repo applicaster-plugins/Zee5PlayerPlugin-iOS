@@ -123,8 +123,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             request: UpdateWatchListApiRequest(),
             endpoint: ZEE5ApiEndPoints.addToWatchList,
             params: params) { (response) in
-                self.isItemInWatchlist = true
-                self.actionBarUpdateHandler.setSelected(true)
+                self.setItemInWatchList(itemIn: true,
+                                  toastMessage: self.localizedText(for: "Consumption_ToastMessage_ItemAddedToWatchlist_Text"))
         }
     }
     
@@ -141,8 +141,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             request: DeleteWatchListApiRequest(),
             endpoint: ZEE5ApiEndPoints.deleteFromWatchList(id: itemId, assetType: String(assetType)),
             params: nil) { (response) in
-                self.isItemInWatchlist = false
-                self.actionBarUpdateHandler.setSelected(false)
+                self.setItemInWatchList(itemIn: false,
+                                  toastMessage: self.localizedText(for: "Consumption_ToastMessage_RemovedFromWatchlist_Text"))
         }
     }
 
@@ -170,6 +170,12 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             
             completion(response)
         }
+    }
+    
+    fileprivate func setItemInWatchList(itemIn: Bool, toastMessage: String?) {
+        self.isItemInWatchlist = itemIn
+        self.actionBarUpdateHandler.setSelected(itemIn)
+        Zee5ToastView.showToast(withMessage: toastMessage ?? "Unknwon Error")
     }
     
 }
