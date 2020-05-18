@@ -68,6 +68,12 @@
                         <view hidden="YES" tag="881" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgH-rX-aeW" userLabel="Premium View" customClass="PremiumBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="-60" width="414" height="60"/>
                             <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Tf-XC-1gj">
+                                    <rect key="frame" x="8" y="5" width="271" height="50"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="111" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UW1-bz-alX">
                                     <rect key="frame" x="294" y="12.5" width="120" height="35"/>
                                     <constraints>
@@ -75,28 +81,21 @@
                                         <constraint firstAttribute="height" constant="35" id="yI8-kJ-XZh"/>
                                     </constraints>
                                 </imageView>
-                                <button opaque="NO" tag="111" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I4q-jt-DYS" customClass="CAButton">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                    <state key="normal" title="Premium Banner"/>
-                                    <connections>
-                                        <action selector="handleButtonClick" destination="fgH-rX-aeW" eventType="touchUpInside" id="oxP-Ie-BKK"/>
-                                    </connections>
-                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="I4q-jt-DYS" firstAttribute="top" secondItem="fgH-rX-aeW" secondAttribute="top" id="IOp-It-s20"/>
-                                <constraint firstAttribute="trailing" secondItem="I4q-jt-DYS" secondAttribute="trailing" id="OU7-u1-9z7"/>
+                                <constraint firstItem="5Tf-XC-1gj" firstAttribute="top" secondItem="fgH-rX-aeW" secondAttribute="top" constant="5" id="87F-TZ-A1j"/>
+                                <constraint firstItem="5Tf-XC-1gj" firstAttribute="leading" secondItem="fgH-rX-aeW" secondAttribute="leading" constant="8" id="EWr-w7-ctd"/>
+                                <constraint firstItem="5Tf-XC-1gj" firstAttribute="centerY" secondItem="fgH-rX-aeW" secondAttribute="centerY" id="S5Q-gA-073"/>
+                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="5Tf-XC-1gj" secondAttribute="bottom" constant="5" id="SSg-LA-RST"/>
                                 <constraint firstAttribute="height" constant="60" id="iSc-Tu-Qsq"/>
                                 <constraint firstItem="UW1-bz-alX" firstAttribute="centerY" secondItem="fgH-rX-aeW" secondAttribute="centerY" id="lxV-p5-ZKz"/>
-                                <constraint firstAttribute="bottom" secondItem="I4q-jt-DYS" secondAttribute="bottom" id="rUO-MR-c8P"/>
-                                <constraint firstItem="I4q-jt-DYS" firstAttribute="leading" secondItem="fgH-rX-aeW" secondAttribute="leading" id="sy7-MK-K0p"/>
                                 <constraint firstAttribute="trailing" secondItem="UW1-bz-alX" secondAttribute="trailing" id="x61-JK-Zip"/>
+                                <constraint firstItem="UW1-bz-alX" firstAttribute="leading" secondItem="5Tf-XC-1gj" secondAttribute="trailing" constant="15" id="zOS-0y-XiM"/>
                             </constraints>
                             <connections>
-                                <outlet property="button" destination="I4q-jt-DYS" id="3i5-Mc-jid"/>
                                 <outlet property="imageView" destination="UW1-bz-alX" id="E2O-sI-Ku2"/>
+                                <outlet property="titleLabel" destination="5Tf-XC-1gj" id="Bg7-By-JVI"/>
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="K1f-NU-fgY" userLabel="General Info View">

@@ -16,8 +16,8 @@ fileprivate extension Notification.Name {
 }
 
 class PremiumBanner: UIView {
-    @IBOutlet fileprivate var titleLabel: UILabel?
-    @IBOutlet fileprivate var imageView: UIImageView?
+    @IBOutlet fileprivate var titleLabel: UILabel!
+    @IBOutlet fileprivate var imageView: UIImageView!
     
     fileprivate var observer: NSObjectProtocol?
     fileprivate let premiumHelper = PremiumHelper()
@@ -61,11 +61,14 @@ fileprivate class PremiumHelper {
         
         banner.imageView?.image = UIImage.init(named: "item_locked_image_view")
 
-                
-        //        button.setTitleColor(premiumStyle.color, for: .normal)
-        //        button.titleLabel?.font = premiumStyle.font
-
+        if let bannerStyle = StylesHelper.style(for: "consumption_text_description") {
+            banner.titleLabel?.textColor = bannerStyle.color
+            banner.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        }
+        
         banner.titleLabel?.text = "Subscribe to premium today! Starting At RS 49"
+        
+        banner.backgroundColor = UIColor(red: 0.14, green: 0.04, blue: 0.13, alpha: 1.0)
         
         banner.isHidden = false
     }

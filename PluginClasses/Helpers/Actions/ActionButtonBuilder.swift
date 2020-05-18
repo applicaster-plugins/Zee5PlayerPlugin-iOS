@@ -39,12 +39,6 @@ public class BaseActionButtonBuilder {
     }
     
     public func style(for key: String) -> (font: UIFont, color: UIColor)? {
-        guard let style = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: key),
-            let font = style["font"] as? UIFont,
-            let color = style["color"] as? UIColor else {
-                return nil
-        }
-        
-        return (font, color)
+        return StylesHelper.style(for: key)
     }
 }

@@ -251,14 +251,7 @@ extension HybridViewController {
         
         
         private func stylesFor(key: String) -> (font: UIFont, color: UIColor) {
-            
-            guard let style = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: key),
-                let color = style["color"] as? UIColor,
-                let font = style["font"] as? UIFont else {
-                    return (font: UIFont.systemFont(ofSize: 14), color: UIColor.white)
-            }
-            
-            return (font: font, color: color)
+            return StylesHelper.style(for: key) ?? (font: UIFont.systemFont(ofSize: 14), color: UIColor.white)
         }
         
         @objc func consumptionMoreLessDescriptionButtonAction(_ sender: CAButton) {
