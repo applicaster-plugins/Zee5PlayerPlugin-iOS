@@ -18,11 +18,16 @@ fileprivate extension Notification.Name {
 class PremiumBanner: UIView {
     @IBOutlet fileprivate var titleLabel: UILabel!
     @IBOutlet fileprivate var imageView: UIImageView!
-    
+    @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint!
+
     fileprivate var observer: NSObjectProtocol?
     fileprivate let premiumHelper = PremiumHelper()
     
+    fileprivate var originalHeightValue = CGFloat(0)
+    
     func setupBanner(playable: ZPPlayable?) {
+        self.originalHeightValue = self.heightConstraint.constant
+        
         self.observer = NotificationCenter.default.addObserver(forName: .subscriptionFinished, object: nil, queue: nil,using: handleSubscription)
 
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(handleBannerAction))
@@ -43,7 +48,7 @@ fileprivate class PremiumHelper {
     fileprivate var playable: ZPPlayable?
 
     func setupPremiumBanner(_ banner: PremiumBanner, playable: ZPPlayable?) {
-        banner.isHidden = true
+        banner.heightConstraint.constant = 0
         
         guard let atom = playable, let extensions = atom.extensionsDictionary else {
             return
@@ -71,11 +76,13 @@ fileprivate class PremiumHelper {
         banner.backgroundColor = UIColor(red: 0.14, green: 0.04, blue: 0.13, alpha: 1.0)
         
         banner.isHidden = false
+        banner.heightConstraint.constant = banner.originalHeightValue
+
     }
     
     func updatePremiumBanner(_ banner: PremiumBanner) {
         if User.shared.getType() == .premium {
-            banner.isHidden = true
+            banner.heightConstraint.constant = 0
         }
     }
     
