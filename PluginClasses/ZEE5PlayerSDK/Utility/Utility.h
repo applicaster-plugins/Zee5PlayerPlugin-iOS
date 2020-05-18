@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSMutableAttributedString *)addAttribuedFont :(NSTimeInterval)startTime :(NSTimeInterval)endTime;
 + (NSNumber *)secondsForTimeString:(NSString *)string;
 + (NSDictionary*)getDictionaryFrom:(NSString*)string;
++ (NSString *)getDurationForAd:(NSInteger )currentDuraton total:(NSInteger)totalDuraton;
 
 
 ////

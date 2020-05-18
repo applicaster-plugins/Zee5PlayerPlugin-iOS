@@ -145,6 +145,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 -(void)pause;
 
+/*!
+ * @discussion This method used to Remove Playback View
+ */
+-(void)DestroyPlayer;
+
 // To get custom data and license url for the content
 - (void)getDRMToken:(NSString*)content_id andDrmKey:(NSString*)drmKey  withCompletionHandler:(TokenSuccessHandler)success failureBlock:(TokenFailureHandler)failure;
 

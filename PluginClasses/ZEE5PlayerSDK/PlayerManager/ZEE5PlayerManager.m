@@ -101,6 +101,7 @@
 
 @property(nonatomic) BOOL isLive;
 @property(nonatomic) BOOL videoCompleted;
+@property(nonatomic) BOOL isAllreadyAdded;
 
 
 @property(nonatomic) CGFloat previousDuration;
@@ -351,6 +352,7 @@ static ContentBuisnessType buisnessType;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
     _customControlView.btnSkipPrev.hidden = true;
+    _customControlView.btnSkipNext.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
     [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
@@ -371,18 +373,12 @@ static ContentBuisnessType buisnessType;
                    [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
                });
            });
-        
     }
-    
-
-
     if (self.isLive) {
         _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];
 
 
         _customControlView.sliderLive.userInteractionEnabled = NO;
-        //_customControlView.sliderLive.defaultValue = _startTime;
-       // _customControlView.labelLiveCurrentTime.text = [Utility convertEpochToTime:_startTime];
         if (_endTime == 0) {
             [self refreshLabel];
         }
@@ -433,28 +429,8 @@ static ContentBuisnessType buisnessType;
           [self hideLoaderOnPlayer];
     }
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Live == false) {
-        _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
-        
-        _PreviousContentArray = [[[NSUserDefaults standardUserDefaults]valueForKey:@"Array"]mutableCopy];
     
-        if (_PreviousContentArray.count>10) {
-            [_PreviousContentArray removeObjectAtIndex:0];
-        }
-        
-        if (_PreviousContentArray == nil) {
-            _PreviousContentArray = [[[NSMutableArray alloc]initWithObjects:_currentItem.content_id, nil]mutableCopy];
-        }else{
-            [_PreviousContentArray addObject:_currentItem.content_id];
-        }
-        [[NSUserDefaults standardUserDefaults]setObject:_PreviousContentArray forKey:@"Array"];
-       }
-    
-    if (_PreviousContentArray.count>1) {
-        _customControlView.btnSkipPrev.hidden = false;
-    }
-
-    
+    [self LocalStorageArray];
 }
 
 -(void)addMuteViewToPlayer
@@ -765,11 +741,29 @@ static ContentBuisnessType buisnessType;
     else
     {
         [self pause];
-        RelatedVideos *model = self.currentItem.related[0];
-        [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
-        
-        
-        [[ZEE5PlayerManager sharedInstance]playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
+        if (_CreditTimer != nil) {
+            return;
+        }
+        RelatedVideos *Model;
+        for (RelatedVideos *Object in self.currentItem.related) {
+         
+            NSLog(@"%@",Object.identifier);
+            
+             if ([_PreviousContentArray containsObject:Object.identifier])
+            {
+              NSLog(@"Allready present");
+            }
+             else{
+                 Model = Object;
+                 break;
+             }
+        }
+        if (self.currentItem.related.count == 1) {
+            Model = self.currentItem.related[0];
+        }
+       
+        [[ZEE5PlayerManager sharedInstance] playSimilarEvent:Model.identifier];
+        [[ZEE5PlayerManager sharedInstance]playVODContent:Model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
             
         }];
     }
@@ -1014,6 +1008,11 @@ static ContentBuisnessType buisnessType;
 
 }
 
+-(void)DestroyPlayer{
+    [[Zee5PlayerPlugin sharedInstance].player destroy];
+    [self.playbackView removeFromSuperview];
+}
+
 -(void)replay
 {
     [self showAllControls];
@@ -1129,14 +1128,7 @@ static ContentBuisnessType buisnessType;
         [self.delegate didTaponNextButton];
         if (_currentItem.related.count>0)
         {
-            [self pause];
-            RelatedVideos *model = self.currentItem.related[0];
-            [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
-            
-            
-            [[ZEE5PlayerManager sharedInstance]playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                
-            }];
+            [self onComplete];
         }
     }
 }
@@ -1148,7 +1140,7 @@ static ContentBuisnessType buisnessType;
         if (_PreviousContentArray.count>1) {
             for (int i = 0; i< _PreviousContentArray.count; i++) {
                 NSString *cId = [_PreviousContentArray objectAtIndex:i];
-                if ([_currentItem.content_id isEqualToString:cId])
+                if ([_currentItem.content_id isEqualToString:cId] && i != 0)
                 {
                     cId = [_PreviousContentArray objectAtIndex:i-1];
                    
@@ -1162,6 +1154,43 @@ static ContentBuisnessType buisnessType;
         
     }
     
+}
+//MARK:- Handle Local Storage Array.
+-(void)LocalStorageArray{
+    
+    if (ZEE5PlayerSDK.getConsumpruionType == Live == false) {
+        _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
+        
+        _isAllreadyAdded = false;
+        _PreviousContentArray = [[[NSUserDefaults standardUserDefaults]valueForKey:@"Array"]mutableCopy];
+    
+        if (_PreviousContentArray.count>10) {
+            [_PreviousContentArray removeObjectAtIndex:0];
+        }
+        
+        if (_PreviousContentArray == nil) {
+            _PreviousContentArray = [[[NSMutableArray alloc]initWithObjects:_currentItem.content_id, nil]mutableCopy];
+        }else{
+            
+            for (NSString  *Contentid in _PreviousContentArray) {
+                if ([Contentid isEqualToString:_currentItem.content_id]) {
+                    _isAllreadyAdded = TRUE;
+                    break;
+                }
+                
+            }
+            
+        }
+        if (_isAllreadyAdded == false && _PreviousContentArray != nil){
+            [_PreviousContentArray addObject:_currentItem.content_id];
+        }
+       
+        [[NSUserDefaults standardUserDefaults]setObject:_PreviousContentArray forKey:@"Array"];
+       }
+    
+      if (_PreviousContentArray.count>2 && ! _isLive) {
+          _customControlView.btnSkipPrev.hidden = false;
+      }
 }
 -(void)tapOnMinimizeButton
 {
@@ -2115,17 +2144,17 @@ static ContentBuisnessType buisnessType;
                        }];
     }
   
-   else if (PlayerStateEnded && self.currentItem.related.count>0 )
-    {
-        NSLog(@"Player End Complete");
-        
-        RelatedVideos *model = self.currentItem.related[0];
-               [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
-               
-        [[ZEE5PlayerManager sharedInstance]playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                   
-               }];
-    }
+//   else if (PlayerStateEnded && self.currentItem.related.count>0 )
+//    {
+//        NSLog(@"Player End Complete");
+//
+//        RelatedVideos *model = self.currentItem.related[0];
+//               [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
+//
+//        [[ZEE5PlayerManager sharedInstance]playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
+//
+//               }];
+ //   }
 }
 
 
@@ -2288,7 +2317,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-2464";
+    //content_id = @"0-6-2208";
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -2712,6 +2741,7 @@ static ContentBuisnessType buisnessType;
             
         } failureBlock:^(ZEE5SdkError *error) {
             NSLog(@"%ld",(long)error.zeeErrorCode);
+            [self playWithCurrentItem];
         }];
     }
     else
@@ -2991,6 +3021,10 @@ static ContentBuisnessType buisnessType;
     if ([result isKindOfClass:[NSNull class]]|| result.length == 0 || [result isEqualToString:@"[]"])
     {
         self.allowVideoContent =YES;
+        if (ZEE5PlayerSDK.getUserTypeEnum == Premium == false && (buisnessType == premium || buisnessType == premium_downloadable)) {
+            [self playTrailer];
+            return;
+        }
         [self playWithCurrentItem];
         return;
     }
@@ -3103,7 +3137,7 @@ static ContentBuisnessType buisnessType;
                self.parentalControl = NO;
                
            }
-           else if ([self.ageRating isEqualToString:@"U/A"])
+           else if ([self.ageRating isEqualToString:@"UA"])
            {
                if ([self.ModelValues.ageRating isEqualToString:@"U"])
                {
@@ -3270,9 +3304,16 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (self.currentItem == nil) {
+    if (self.currentItem == nil ) {
         return;
     }
+    
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
+        [self pause];
+        [self INDGuestUser];
+        return;
+    }
+    
     if (_isdownloadOverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
         [self ShowToastMessage:@"WiFi is not connected! You have selected download over WiFi only"];
         return;
