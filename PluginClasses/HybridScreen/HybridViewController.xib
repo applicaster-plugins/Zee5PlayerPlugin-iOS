@@ -2,7 +2,9 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -37,16 +39,16 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view tag="1001" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+        <view tag="1001" contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nmm-eb-CiE" userLabel="backgroundImageView" customClass="APImageView">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="770"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="726"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <view tag="870" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="6Y6-7u-bxm">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                     <subviews>
                         <view tag="857" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YWE-fi-K7N" userLabel="player">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="230"/>
@@ -56,7 +58,7 @@
                             </constraints>
                         </view>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ezs-cu-Z71">
-                            <rect key="frame" x="0.0" y="230" width="414" height="666"/>
+                            <rect key="frame" x="0.0" y="230" width="414" height="622"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PxT-Ur-AVJ">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="1011"/>
@@ -385,11 +387,12 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="6Y6-7u-bxm" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9nq-dK-iwL"/>
-                <constraint firstItem="6Y6-7u-bxm" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fYJ-gU-1YZ"/>
+                <constraint firstItem="6Y6-7u-bxm" firstAttribute="top" secondItem="Ulf-vp-G5w" secondAttribute="top" id="fYJ-gU-1YZ"/>
                 <constraint firstAttribute="trailing" secondItem="6Y6-7u-bxm" secondAttribute="trailing" id="kTj-6h-gza"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6Y6-7u-bxm" secondAttribute="bottom" id="neB-c8-8Mr"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Ulf-vp-G5w"/>
             <point key="canvasLocation" x="-1110.144927536232" y="350.89285714285711"/>
         </view>
     </objects>
