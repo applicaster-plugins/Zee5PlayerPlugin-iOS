@@ -295,6 +295,7 @@ class HybridViewController: UIViewController {
     
     func closePlayer() {
         ZEE5PlayerManager.sharedInstance().stop()
+        ZEE5PlayerManager.sharedInstance().destroyPlayer()
         self.dismiss(animated: true, completion: nil)
     }
     

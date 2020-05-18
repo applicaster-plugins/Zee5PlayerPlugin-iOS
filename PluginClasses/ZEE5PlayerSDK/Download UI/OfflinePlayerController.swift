@@ -133,6 +133,7 @@ class OfflinePlayerController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.updateVideoDurationToServer()
+        self.playerOffline.stop()
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         if self.isMovingFromParent == true {

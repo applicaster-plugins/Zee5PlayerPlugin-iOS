@@ -424,7 +424,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UP NEXT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lof-fF-7cJ">
-                                    <rect key="frame" x="131" y="8" width="45" height="15"/>
+                                    <rect key="frame" x="131" y="8" width="46" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="1sX-c4-Ixo"/>
                                     </constraints>
@@ -515,7 +515,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCR-ep-QzZ">
-                            <rect key="frame" x="149.5" y="58" width="200" height="33"/>
+                            <rect key="frame" x="149.5" y="63" width="200" height="28"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="8Ec-em-dcD"/>
                             </constraints>
@@ -526,10 +526,10 @@ watch this video</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Csr-5M-reu">
-                            <rect key="frame" x="166" y="127" width="167.5" height="45"/>
+                            <rect key="frame" x="169.5" y="127" width="160" height="45"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a Premium member? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQN-Ss-Uo3">
-                                    <rect key="frame" x="0.0" y="0.0" width="167.5" height="15"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="NIY-oj-YjN"/>
                                     </constraints>
@@ -538,7 +538,7 @@ watch this video</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uI-wW-vOh">
-                                    <rect key="frame" x="0.0" y="20" width="167.5" height="25"/>
+                                    <rect key="frame" x="0.0" y="20" width="160" height="25"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="25" id="8yN-qf-eRd"/>
                                     </constraints>

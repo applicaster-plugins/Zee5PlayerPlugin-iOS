@@ -106,8 +106,16 @@ static Zee5PlayerPlugin *sharedManager = nil;
     IMAConfig *imaConfig = [IMAConfig new];
     NSString *vmapString = [self vmapTagBuilder];
     NSLog(@"|** VMapTagBuilder **::** %@",vmapString);
+    if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]]) {
 
-    imaConfig.adsResponse = vmapString;
+        imaConfig.adTagUrl = @"";
+    }else
+    {
+        NSArray *VideoMimetypes = [[NSArray alloc]initWithObjects:@"application/x-mpegURL",@"application/dash+xml",@"video/mp4", nil];
+           imaConfig.adsResponse = vmapString;
+           imaConfig.videoMimeTypes = VideoMimetypes;
+           imaConfig.alwaysStartWithPreroll = true;
+    }
     pluginConfigDict[IMAPlugin.pluginName] = imaConfig;
     return [[PluginConfig alloc] initWithConfig:pluginConfigDict];
 }
@@ -749,9 +757,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *part3 = @"</vmap:VMAP>";
     NSString *part2 = @"";
     NSString *range =@"";
-
+    if (self.currentItem.googleAds.count >0) {
     for (ZEE5AdModel *model in self.currentItem.googleAds) {
-       NSInteger index = [self.currentItem.googleAds indexOfObject:model];
+      // NSInteger index = [self.currentItem.googleAds indexOfObject:model];
         if ([model.time.lowercaseString isEqualToString:@"pre"]) {
             part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
         }
@@ -761,13 +769,18 @@ static Zee5PlayerPlugin *sharedManager = nil;
         else
         {
             range = [model.tag_name substringWithRange:NSMakeRange(0, 9)];
-            model.time = [Utility getDuration:[(model.time)intValue] total:0];
+            model.time = [Utility getDurationForAd:[(model.time)intValue] total:0];
             part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"",range,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
 
         }
     }
     
     totalString = [NSString stringWithFormat:@"%@%@%@",part1,part2,part3];
+        
+    }else
+    {
+        totalString = @"";
+    }
 
     return totalString;
 }

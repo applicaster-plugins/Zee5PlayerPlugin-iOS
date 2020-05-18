@@ -207,6 +207,15 @@
     
 }
 
++ (NSString *)getDurationForAd:(NSInteger )currentDuraton total:(NSInteger)totalDuraton
+{
+    int seconds = currentDuraton % 60;
+    int minutes = (currentDuraton / 60) % 60;
+    int hours = (int)(currentDuraton / 3600);
+
+return [NSString stringWithFormat:@"%02d:%02d:%02d.000",hours, minutes, seconds];
+}
+
 + (NSNumber *)secondsForTimeString:(NSString *)string {
     
     NSArray *components = [string componentsSeparatedByString:@":"];
