@@ -95,6 +95,9 @@ extension HybridViewController {
                 case ItemTag.Label.consumptionAvailableInLabel:
                     label.text = "MoviesConsumption_MovieDetails_AvailableVideoTechnology_Text".localized(hashMap: ["video_technology": String()])
                 case ItemTag.Label.consumptionDescriptionLabel:
+                    let descriptionStyle = stylesFor(key: "consumption_text_description")
+                    label.textColor = descriptionStyle.color
+                    label.font = descriptionStyle.font
                     break
                 case ItemTag.Label.consumptionCastLabel:
                     label.text = "     " + "MoviesConsumption_MovieDetails_Cast_Link".localized(hashMap: [:])
@@ -148,6 +151,8 @@ extension HybridViewController {
         }
         
         func setupViews() {
+            self.handleRelatedContent()
+            
             guard let viewsViewCollection = self.viewCollection else {
                 return
             }
@@ -223,8 +228,7 @@ extension HybridViewController {
                         }
                     default: break
                     }
-                case ItemTag.View.consumptionContentView:
-                    consumptionContentView = view as? UIView
+                    
                 case ItemTag.View.consumptionButtonsView:
                     
                     guard let buttonsBackgroundStyle = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: "consumption_bg_buttons"),
@@ -232,16 +236,6 @@ extension HybridViewController {
                             return
                     }
                     (view as! UIStackView).addBackground(color: color)
-                                        
-                case ItemTag.View.consumptionRelatedVideosView:
-                    guard
-                        let url = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.relatedContent] as? String,
-                        let atomFeed = APAtomFeed.init(url: url) else {
-                            return
-                    }
-                    
-                    let vc = Zee5dsAdapter.createScreen(for: atomFeed)
-                    self.addChildViewController(vc, to:view)
                     
                 default:
                     break
@@ -271,14 +265,11 @@ extension HybridViewController {
             sender.isSelected = !sender.isSelected
             sender.setImage(ZAAppConnector.sharedInstance().image(forAsset: sender.isSelected ? "consumption_arrow_up" : "consumption_arrow_down"), for: [.normal, .selected])
             
-            //change height of parent view
-            let oldDescrSizeHeight: CGFloat = self.itemDescriptionLabel!.intrinsicContentSize.height
-            self.itemDescriptionLabel!.numberOfLines = sender.isSelected ? 0 : 2
-            let newDescrSizeHeight: CGFloat = self.itemDescriptionLabel!.intrinsicContentSize.height
-            let diff = newDescrSizeHeight - oldDescrSizeHeight
-            let totalHeight: CGFloat = self.consumptionContentView!.frame.size.height + diff
+            self.itemDescriptionLabel.numberOfLines = sender.isSelected ? 0 : 2
+            self.itemDescriptionLabel.setNeedsLayout()
+            self.itemDescriptionLabel.layoutIfNeeded()
             
-            NotificationCenter.default.post(name: Notification.Name("kConsumptionCellLayoutHeightChangedNotification"), object: totalHeight)
+            self.mainCollectionViewController?.invalidateLayout()
         }
 
         //MARK: main info sting
@@ -360,7 +351,30 @@ extension HybridViewController {
             }
             return tmpString
         }
+    
+    
+    private func handleRelatedContent() {
+        guard
+            let url = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.relatedContent] as? String,
+            let atomFeed = APAtomFeed.init(url: url) else {
+                return
+        }
+        
+        let mainCollectionViewController = StaticViewCollectionViewController()
+        self.mainCollectionViewController = mainCollectionViewController
+        
+        self.metadataViewContainer.isHidden = false
+        self.metadataViewContainer.removeFromSuperview()
+        
+        mainCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.addChild(mainCollectionViewController)
+        self.mainCollectionViewContainer.addSubview(mainCollectionViewController.view)
+        mainCollectionViewController.view.fillParent()
+        mainCollectionViewController.didMove(toParent: self)
+        
+        mainCollectionViewController.load(atomFeed, staticView: self.metadataViewContainer)
     }
+}
     
     //MARK: extension
     

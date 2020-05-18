@@ -13,6 +13,7 @@ import ZappPlugins
 import Foundation
 import MediaPlayer
 import ZappSDK
+import ZeeHomeScreen
 
 
 class HybridViewController: UIViewController {
@@ -24,33 +25,32 @@ class HybridViewController: UIViewController {
     
     var isPortraitUpsideDownOrientation: Bool?
     public var isViewWillAppear = true
-    private var circularRing = UICircularProgressRing()
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
     
-    @IBOutlet weak var playerContainer: UIView?
     @IBOutlet weak var playerView: UIView?
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
     @IBOutlet var buttonsViewCollection: [UIButton]?
     @IBOutlet var viewCollection: [UIView]?
     @IBOutlet var labelsCollection: [UILabel]?
-    @IBOutlet weak var viewProgress: UIView!
-    @IBOutlet weak var viewPause: UIView!
     
     @IBOutlet weak var itemNameLabel: UILabel?
-    @IBOutlet weak var itemDescriptionLabel: UILabel?
+    @IBOutlet weak var itemDescriptionLabel: UILabel!
     
+    @IBOutlet weak var mainCollectionViewContainer: UIView!
+    @IBOutlet var metadataViewContainer: UIView!
+    var mainCollectionViewController: StaticViewCollectionViewController?
+
     var consumptionFeedType: ConsumptionFeedType?
-    var consumptionContentView: UIView?
     
     var castDataSource: [(title: String?, subtitle: String?, description: String?)]?
     var creatorsDataSource: [(title: String?, subtitle: String?, description: String?)]?
     var languagesSubtitlesDataSource: [(title: String?, subtitle: String?, description: String?)]?
-     
+    
     var currentPlayableItem: ZPPlayable? {
         didSet {
             if self.currentPlayableItem != nil {
-                self.view.isHidden = false
+                self.metadataViewContainer.isHidden = false
                 self.commonInit()
             }
         }
@@ -116,18 +116,9 @@ class HybridViewController: UIViewController {
         super.viewDidLoad()
         
         if self.currentPlayableItem == nil {
-            self.view.isHidden = true
+            self.addGradient()
+            self.metadataViewContainer.isHidden = true
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        guard self.currentPlayableItem != nil, consumptionContentView != nil else {
-            return
-        }
-        
-        NotificationCenter.default.post(name: Notification.Name("kConsumptionCellLayoutHeightChangedNotification"), object: consumptionContentView!.frame.size.height)
     }
     
     func commonInit() {
@@ -316,5 +307,23 @@ class HybridViewController: UIViewController {
             loadingView = videoLoadingView as? UIView & APLoadingView
         }
         return loadingView
+    }
+    
+    fileprivate func addGradient() {
+        let gradientLayer = CAGradientLayer()
+
+        gradientLayer.frame = self.mainCollectionViewContainer.bounds
+ 
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
+        
+        gradientLayer.colors = [UIColor(red: 0.13, green: 0, blue: 0.14, alpha: 1).cgColor, UIColor.black.cgColor]
+        gradientLayer.shouldRasterize = true
+        
+        self.mainCollectionViewContainer.layer.addSublayer(gradientLayer)
+    }
+    
+    fileprivate func removeGradient() {
+        self.mainCollectionViewContainer.layer.sublayers?.removeAll()
     }
 }
