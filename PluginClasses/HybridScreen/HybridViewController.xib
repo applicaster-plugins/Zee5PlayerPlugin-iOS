@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -42,14 +43,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view tag="857" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YWE-fi-K7N" userLabel="Player Container">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="230"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="233"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="230" id="bms-qa-3yO"/>
+                        <constraint firstAttribute="height" secondItem="YWE-fi-K7N" secondAttribute="width" multiplier="9:16" id="nBs-Dh-7Ra"/>
                     </constraints>
                 </view>
                 <view hidden="YES" tag="881" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgH-rX-aeW" userLabel="Premium View" customClass="PremiumBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="230" width="414" height="60"/>
+                    <rect key="frame" x="0.0" y="277" width="414" height="60"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Tf-XC-1gj">
                             <rect key="frame" x="8" y="5" width="271" height="50"/>
@@ -83,11 +84,11 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svd-1z-rSB" userLabel="Main Collection View Container">
-                    <rect key="frame" x="0.0" y="290" width="414" height="606"/>
+                    <rect key="frame" x="0.0" y="337" width="414" height="559"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="0eM-EZ-T0J" userLabel="Metadata Stack View">
-                    <rect key="frame" x="0.0" y="290" width="414" height="370"/>
+                    <rect key="frame" x="0.0" y="337" width="414" height="370"/>
                     <subviews>
                         <view hidden="YES" tag="880" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nd1-en-ZoC" customClass="AdBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="-50" width="414" height="50"/>
@@ -327,6 +328,7 @@
                 <constraint firstItem="0eM-EZ-T0J" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8u6-fZ-QFC"/>
                 <constraint firstItem="svd-1z-rSB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Ed0-ga-q5t"/>
                 <constraint firstItem="fgH-rX-aeW" firstAttribute="top" secondItem="YWE-fi-K7N" secondAttribute="bottom" id="If9-ah-4JL"/>
+                <constraint firstItem="4MY-NF-I3P" firstAttribute="top" secondItem="YWE-fi-K7N" secondAttribute="top" id="JQ4-q0-m6h"/>
                 <constraint firstItem="svd-1z-rSB" firstAttribute="top" secondItem="fgH-rX-aeW" secondAttribute="bottom" id="Ltu-qD-yWa"/>
                 <constraint firstItem="fgH-rX-aeW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QfZ-jK-Nfi"/>
                 <constraint firstAttribute="trailing" secondItem="fgH-rX-aeW" secondAttribute="trailing" id="ShB-x4-Xfl"/>
@@ -334,11 +336,11 @@
                 <constraint firstItem="YWE-fi-K7N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ZfG-fh-2ij"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="0eM-EZ-T0J" secondAttribute="bottom" id="h24-OK-qAV"/>
                 <constraint firstItem="0eM-EZ-T0J" firstAttribute="top" secondItem="fgH-rX-aeW" secondAttribute="bottom" id="hSC-27-yaF"/>
-                <constraint firstItem="YWE-fi-K7N" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="iFV-cF-jLT"/>
                 <constraint firstAttribute="bottom" secondItem="svd-1z-rSB" secondAttribute="bottom" id="p8a-dp-XVl"/>
                 <constraint firstAttribute="trailing" secondItem="YWE-fi-K7N" secondAttribute="trailing" id="vy3-60-tds"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="4MY-NF-I3P"/>
             <point key="canvasLocation" x="-1109" y="351"/>
         </view>
     </objects>
