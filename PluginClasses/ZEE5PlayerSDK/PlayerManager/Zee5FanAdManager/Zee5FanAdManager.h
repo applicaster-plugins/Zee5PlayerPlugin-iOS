@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Zee5FanAdManager : NSObject
 + (Zee5FanAdManager *)sharedInstance;
-//-(void)loadfanAds:(NSInteger)value;
-//-(void)createFanAds;
-//-(void)stopFanAd;
+-(void)loadfanAds:(NSInteger)value;
+-(void)createFanAds;
+-(void)stopFanAd;
 @end
 
 NS_ASSUME_NONNULL_END

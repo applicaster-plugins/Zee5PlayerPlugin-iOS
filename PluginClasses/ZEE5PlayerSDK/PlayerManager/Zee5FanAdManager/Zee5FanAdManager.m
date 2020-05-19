@@ -117,22 +117,22 @@ static Zee5FanAdManager *sharedManager = nil;
 //    }
 }
 
-//- (void)adViewDidLoad:(FBInstreamAdView *)adView
-//{
+- (void)adViewDidLoad:(FBInstreamAdView *)adView
+{
 //    if (self.addFailedToLoad)
 //    {
 //        [self showInstreamVideoAd];
 //    }
 //    NSLog(@"Ad is loaded and ready to be displayed");
-//}
-//- (void)adViewDidClick:(FBInstreamAdView *)adView
-//{
+}
+- (void)adViewDidClick:(FBInstreamAdView *)adView
+{
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
 //    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
 //   // ZEE5AdModel *model = getAray.firstObject;
-//}
-//- (void)adViewDidEnd:(FBInstreamAdView *)adView
-//{
+}
+- (void)adViewDidEnd:(FBInstreamAdView *)adView
+{
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
 //    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
 //    //ZEE5AdModel *model = getAray.firstObject;
@@ -140,10 +140,10 @@ static Zee5FanAdManager *sharedManager = nil;
 //    [self removeFanAdFromSuperview];
 //
 //    // The app should now proceed to content
-//}
+}
 //
-//- (void)adView:(FBInstreamAdView *)adView didFailWithError:(NSError *)error
-//{
+- (void)adView:(FBInstreamAdView *)adView didFailWithError:(NSError *)error
+{
 //    NSLog(@"Ad failed: %@", error.localizedDescription);
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
 //    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
@@ -151,10 +151,10 @@ static Zee5FanAdManager *sharedManager = nil;
 //    [self removeFanAdFromSuperview];
 //
 //    // The app should now proceed to content
-//}
+}
 //
-//-(void)removeFanAdFromSuperview
-//{
+-(void)removeFanAdFromSuperview
+{
 //
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
 //
@@ -184,15 +184,15 @@ static Zee5FanAdManager *sharedManager = nil;
 //
 //
 //    NSLog(@"Ad ended");
-//}
-//
-//-(void)stopFanAd
-//{
+}
+
+-(void)stopFanAd
+{
 //    if (_fanAD != nil) {
 //        [self adViewDidEnd:_fanAD];
 //    }
 //
-//}
+}
 
 
 @end
