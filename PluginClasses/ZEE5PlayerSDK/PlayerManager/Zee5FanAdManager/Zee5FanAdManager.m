@@ -7,18 +7,12 @@
 //
 
 #import "Zee5FanAdManager.h"
-//import <FBAudienceNetwork/FBAudienceNetwork.h>
-//#import <FBAudienceNetwork/FBAdSettings.h>
+
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
 
-@interface Zee5FanAdManager()<FBInstreamAdViewDelegate>
+@interface Zee5FanAdManager()
 {
-    
 }
-//@property (nonatomic, strong) FBInstreamAdView *fanAD;
-//@property(nonatomic) NSInteger previousAdTime;
-//@property(nonatomic) BOOL preAdPlayed;
-//@property(nonatomic) BOOL addFailedToLoad;
 
 @end
 
@@ -117,42 +111,6 @@ static Zee5FanAdManager *sharedManager = nil;
 //    }
 }
 
-- (void)adViewDidLoad:(FBInstreamAdView *)adView
-{
-//    if (self.addFailedToLoad)
-//    {
-//        [self showInstreamVideoAd];
-//    }
-//    NSLog(@"Ad is loaded and ready to be displayed");
-}
-- (void)adViewDidClick:(FBInstreamAdView *)adView
-{
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
-//    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
-//   // ZEE5AdModel *model = getAray.firstObject;
-}
-- (void)adViewDidEnd:(FBInstreamAdView *)adView
-{
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
-//    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
-//    //ZEE5AdModel *model = getAray.firstObject;
-//
-//    [self removeFanAdFromSuperview];
-//
-//    // The app should now proceed to content
-}
-//
-- (void)adView:(FBInstreamAdView *)adView didFailWithError:(NSError *)error
-{
-//    NSLog(@"Ad failed: %@", error.localizedDescription);
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(tagValue == %d)", self.fanAD.tag];
-//    NSArray *getAray = [[ZEE5PlayerManager sharedInstance].currentItem.fanAds filteredArrayUsingPredicate:predicate];
-//    //ZEE5AdModel *model = getAray.firstObject;
-//    [self removeFanAdFromSuperview];
-//
-//    // The app should now proceed to content
-}
-//
 -(void)removeFanAdFromSuperview
 {
 //
