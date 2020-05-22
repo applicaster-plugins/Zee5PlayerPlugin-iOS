@@ -197,6 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setWatchHistory:(NSInteger)duration;
 
 -(void)removeSubview;
+-(void)RefreshViewNotification;
 
 -(void)hideUnHideTopView:(BOOL )isHidden;
 

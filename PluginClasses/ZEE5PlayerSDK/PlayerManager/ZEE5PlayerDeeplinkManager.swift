@@ -9,8 +9,7 @@ import Foundation
 import Zee5CoreSDK
 import ZappPlugins
 
-
- 
+var CompletionHandler:((Bool)->(Void))?
 
 @objc public class ZEE5PlayerDeeplinkManager: NSObject
 {
@@ -24,19 +23,14 @@ import ZappPlugins
         
     }
     
-    @objc public func NavigatetoLoginpage()
-    {
-        let value = UIInterfaceOrientation.portrait.rawValue
-        UIDevice.current.setValue(value, forKey: "orientation")
-      // Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
-        Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url) { (isSuccess) in
-          if isSuccess {
-            print("Login Sucees");
-          }
-        }
+    @objc public func NavigatetoLoginpage(Param : String , completion:@escaping((Bool)->(Void))){
+         let value = UIInterfaceOrientation.portrait.rawValue
+                UIDevice.current.setValue(value, forKey: "orientation")
+                User.shared.refreshViewAfterloginOrRegistration = { [weak self] in
+                    completion(true)
+                }
+               Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
     }
-    
-    
     @objc public func NavigatetoParentalViewPage()
     {
         let value = UIInterfaceOrientation.portrait.rawValue
@@ -95,4 +89,27 @@ import ZappPlugins
     @objc public func Showtoast(Message:String){
         Zee5ToastView.showToast(withMessage: Message);
     }
+    
+ @objc public func fetchUserdata() {
+        
+        ZEE5UserDefaults.setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
+        
+        ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
+        ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
+        
+        let Country =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
+        
+        ZEE5UserDefaults.setCountry(Country.country, andState: Country.state)
+        
+        if let SubscribeData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
+            let dataString = String(data: SubscribeData, encoding: String.Encoding.utf8)
+            ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+        }
+        
+        if let UserSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
+        let userSettingString = String(data: UserSetting, encoding: String.Encoding.utf8)
+                      ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
+    }
+    
+}
 }
