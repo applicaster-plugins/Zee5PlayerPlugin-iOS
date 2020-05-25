@@ -11,12 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class CurrentItem;
-
+//typedef void(^succeesHandlerwatchlist)(BOOL* isAddedWatclist);
 @interface AddToWatchlist : NSObject
 
 + (AddToWatchlist *)Shared;
 -(void)AddToWatchlist:(CurrentItem *)currentItem;
--(void)getWatchList:(NSString *)contentId;
+
+//-(void)getWatchListwithCompletion:(succeesHandlerwatchlist)Succees;
+-(void)DeleteWatchList;
 
 @end
 

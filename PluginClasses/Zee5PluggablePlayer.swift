@@ -128,6 +128,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     public override func presentPlayerFullScreen(_ rootViewController:    UIViewController, configuration: ZPPlayerConfiguration?) {
         self.presentPlayerFullScreen(rootViewController, configuration: configuration) {
+            self .RefreshPlayerView()
             self.playContent()
         }
     }
@@ -161,6 +162,23 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     public static func pluggablePlayerType() -> ZPPlayerType {
         return .undefined
+    }
+    
+    // MARK:- NotificationObserver
+    
+    func RefreshPlayerView() {
+       
+        NotificationCenter.default.removeObserver(
+            self,
+            name:NSNotification.Name(rawValue: "ReloadConsumption"),
+            object: nil)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(playContent),
+            name: NSNotification.Name(rawValue: "ReloadConsumption"),
+            object: nil)
+    
     }
     
     // MARK: - ZPAdapterProtocol
@@ -219,7 +237,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
     }
     
-    func playContent() {
+    @objc func playContent() {
         func initContent(_ contentId: String) {
             guard
                 let hybridViewController = self.hybridViewController,
@@ -231,18 +249,29 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             kalturaPlayerController.contentId = contentId
             
             ZEE5UserDefaults.setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
+      
+            SettingsHelper.shared.syncServerSettingsToLocalOnLogin()
+            SubscriptionManager.shared.fetchSubscriptionsAPI {
+            if let SubscribeData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
+            let dataString = String(data: SubscribeData, encoding: String.Encoding.utf8)
+                    ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+              }
+            }
+            let _ = Zee5UserDefaultsManager.shared.saveUserTypeToLocalStorage()
             
+            UserViewModel.shared.fetchLoggedInUserInfo { (response, error) in
+            if let UserSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
+                    let userSettingString = String(data: UserSetting, encoding: String.Encoding.utf8)
+                    ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
+                }
+            }
+        
             ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
             ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
             
             let Country =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             
             ZEE5UserDefaults.setCountry(Country.country, andState: Country.state)
-            
-            if let SubscribeData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
-                let dataString = String(data: SubscribeData, encoding: String.Encoding.utf8)
-                ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
-            }
             
             let Telco = User.shared.isTelcoUser()
             if Telco.0

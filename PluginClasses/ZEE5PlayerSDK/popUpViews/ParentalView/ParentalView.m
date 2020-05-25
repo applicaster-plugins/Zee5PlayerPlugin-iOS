@@ -212,7 +212,7 @@
 }
 
 - (IBAction)closeBtnAction:(id)sender{
-    [ZEE5PlayerManager sharedInstance];
-    [[ZEE5PlayerManager sharedInstance]removeSubview];
+   
+    //[[ZEE5PlayerManager sharedInstance]removeSubview];
 }
 @end

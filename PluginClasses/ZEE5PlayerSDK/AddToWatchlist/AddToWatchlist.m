@@ -12,6 +12,7 @@
 #import <Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h>
 
 
+
 @interface AddToWatchlist ()
 
 @end
@@ -39,15 +40,52 @@ static AddToWatchlist *SharedInstance = nil;
 // *** Api calling For Add Content For Watchlist.******//
 
 
--(void)getWatchList:(CurrentItem *)currentItem{
-    
-}
+//-(void)getWatchListwithCompletion:(succeesHandlerwatchlist)Succees{
+//    
+//    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
+//    {
+//        Succees(FALSE);
+//        return;
+//    }
+//    NSString *requestName = @"GET";
+//    NSDictionary *requestParams =@{};
+//
+//    NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
+//    NSDictionary *requestheaders = @{@"Content-Type":@"application/json", @"authorization": userToken};
+//
+//    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchList requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
+//    {
+//       NSMutableArray *array = [[NSMutableArray alloc] initWithArray:result];
+//            if ([array count] > 0)
+//        {
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.id contains[cd] %@",[ZEE5PlayerManager sharedInstance].currentItem.content_id];
+//
+//            NSArray *filterArray = [array filteredArrayUsingPredicate:predicate];
+//            if ([filterArray count]>0)
+//            {
+//              Succees(TRUE);
+//            }else{
+//              Succees(FALSE);
+//            }
+//    }
+//    }
+//    failureBlock:^(ZEE5SdkError * _Nullable error)
+//     {
+//        NSLog(@"WatchList %@", error.message);
+//    }];
+//
+//}
 -(void)AddToWatchlist:(CurrentItem *)currentItem
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
         [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"You must be logged in to perform this action."];
-       [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
+        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Watclist" completion:^(BOOL IsSucceess) {
+            if (IsSucceess) {
+                NSLog(@"Login succeess");
+                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            }
+        }];
         [[ZEE5PlayerManager sharedInstance]pause];
         return;
         // Send Guest User to Login Screen Here

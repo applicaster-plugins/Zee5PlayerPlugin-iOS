@@ -102,6 +102,8 @@
 @property(nonatomic) BOOL isLive;
 @property(nonatomic) BOOL videoCompleted;
 @property(nonatomic) BOOL isAllreadyAdded;
+@property(nonatomic) BOOL isWatchlistAdded;
+@property(nonatomic) BOOL isParentalControlOffline;
 
 
 @property(nonatomic) CGFloat previousDuration;
@@ -188,12 +190,7 @@ static ContentBuisnessType buisnessType;
     }
     else
     {
-      
-    if (self.parentalControl ==YES)
-        {
-            [self parentalControlshow];
-            return;
-        }
+        
     if (_isStreamoverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile){
         [self ShowToastMessage:@"WiFi is not connected! You have selected stream over WiFi only"];
             return;
@@ -220,7 +217,10 @@ static ContentBuisnessType buisnessType;
         [self handleTracks];
         
         [[AnalyticEngine new]ConsumptionAnalyticEvents];
-
+//        //[[AddToWatchlist Shared]getWatchListwithCompletion:^(BOOL * _Nonnull isAddedWatclist) {
+//            self.isWatchlistAdded = isAddedWatclist;
+//        }];
+        
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
         {
              [[ReportingManager sharedInstance] getWatchHistory];
@@ -252,7 +252,7 @@ static ContentBuisnessType buisnessType;
 
 }
 
-
+//MARK:- Notification
 -(void)registerNotifications
 {
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -267,7 +267,13 @@ static ContentBuisnessType buisnessType;
     
 }
 -(void)ContentidNotification:(NSString *)ContentId{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
+}
+
+-(void)RefreshViewNotification{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"ReloadConsumption" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadConsumption" object:nil userInfo:nil];
 }
 
 -(void)onAudioInterruption
@@ -511,12 +517,14 @@ static ContentBuisnessType buisnessType;
     [self showAllControls];
     [self hideLoaderOnPlayer];
     _customControlView.buttonPlay.hidden = NO;
-  
-
-               
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     if (!_customControlView.topView.hidden) {
         [self perfomAction];
+    }
+    
+    if (_parentalControl == YES) {
+        [self pause];
+        [self parentalControlshow];
     }
 
 }
@@ -833,11 +841,6 @@ static ContentBuisnessType buisnessType;
     }
 }
 
-
-
-
-
-
 -(void)perfomAction
 {
     [self performSelector:@selector(hideCustomControls) withObject:nil afterDelay:HIDECONTROLSVALUE];
@@ -983,6 +986,11 @@ static ContentBuisnessType buisnessType;
 
 -(void)play
 {
+    if (_parentalControl == YES) {
+        [self parentalControlshow];
+        [self pause];
+        return;
+    }
     NSInteger rounded = roundf(_customControlView.sliderDuration.maximumValue);
     if (rounded == _customControlView.sliderDuration.value && rounded != 0)
     {
@@ -998,6 +1006,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)pause
 {
+    [self hideLoaderOnPlayer];
     self.customControlView.buttonPlay.selected = NO;
     [[Zee5PlayerPlugin sharedInstance].player pause];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -1381,12 +1390,9 @@ static ContentBuisnessType buisnessType;
         self.devicePopView.hidden =YES;
         self.parentalView.hidden =YES;
     }
-  
-    
-
-    ////
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
     [self updateConvivaSessionWithMetadata: dict];
+    UIView *View = [[UIApplication sharedApplication].keyWindow.subviews lastObject];
 }
 
 -(void)hideFullScreen
@@ -1432,6 +1438,10 @@ static ContentBuisnessType buisnessType;
           self.subscribeView.hidden =NO;
           self.devicePopView.hidden =NO;
       }
+    if ([[UIApplication sharedApplication].keyWindow.subviews containsObject:_QualityView])
+    {
+        NSLog(@"TRUE");
+    }
 }
 
 //MARK:- Player Loader
@@ -1523,6 +1533,13 @@ static ContentBuisnessType buisnessType;
         
         if ([event isKindOfClass:PlayerEvent.tracksAvailable]) {
             
+            // Extract Text Tracks
+            if (event.tracks.textTracks)
+            {
+                         strongSelf.textTracks = event.tracks.textTracks;
+                         NSLog(@"Tracxks %@",strongSelf.textTracks);
+            }
+            
             // Extract Audio Tracks
             if (event.tracks.audioTracks) {
                 strongSelf.audioTracks = event.tracks.audioTracks;
@@ -1530,12 +1547,6 @@ static ContentBuisnessType buisnessType;
                 // Set Defualt array for Picker View
                 strongSelf.selectedTracks = strongSelf.audioTracks;
 
-            }
-            // Extract Text Tracks
-            if (event.tracks.textTracks)
-            {
-                strongSelf.textTracks = event.tracks.textTracks;
-                NSLog(@"Tracxks %@",strongSelf.textTracks);
             }
         }
         else if ([event isKindOfClass:PlayerEvent.textTrackChanged])
@@ -1603,21 +1614,6 @@ static ContentBuisnessType buisnessType;
     model1.isSelected = false;
     [models addObject:model1];
     
-    Zee5MenuModel *model2 = [[Zee5MenuModel alloc] init];
-    if ([self.selectedSubtitle.lowercaseString isEqualToString:@"Off".lowercaseString]) {
-        model2.imageName = @"t";
-        model2.isSelected = true;
-    }
-    else
-    {
-        model2.imageName = @"";
-        model2.isSelected = false;
-    }
-
-    model2.title = @"Off";
-    model2.type = 2;
-    [models addObject:model2];
-
     for (Track *track in self.textTracks)
     {
         Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
@@ -1781,9 +1777,14 @@ static ContentBuisnessType buisnessType;
                
                 [_parentalView removeFromSuperview];
                 _parentalView = nil;
+                if (_isParentalControlOffline == YES && self.parentalControl == NO) {
+                _isParentalControlOffline = NO;
+                    [self StartDownload];
+                    return;
+                }
                 _parentalControl =NO;
                 _allowVideoContent =YES;
-                [self playWithCurrentItem];
+                [self play];
                 
             }
             return;
@@ -1938,7 +1939,7 @@ static ContentBuisnessType buisnessType;
             [self.delegate didTapOnAddToWatchList];
             NSLog(@"|** btnWatchListClicked 22");
         }
-         [[AddToWatchlist Shared]AddToWatchlist:self.currentItem];  // AddTWatchlist Api Call
+         [[AddToWatchlist Shared]AddToWatchlist:self.currentItem];  //// AddTWatchlist Api Call
           [self removeMenuView];
     }
     else if ([menuModel.title isEqualToString:AUTOPLAY] )
@@ -2180,8 +2181,14 @@ static ContentBuisnessType buisnessType;
 {
      [self stop];    ///*** Player Stop First Here***//
      [self removeSubview];
-     [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
-
+    [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
+        if (isSuccees) {
+            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [self RefreshViewNotification];
+            
+        }
+    }];
+    
 }
 
 //MARK:- Navigate To Download Screen
@@ -2314,11 +2321,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-<<<<<<< Updated upstream
-    //content_id = @"0-6-2208";
-=======
-    //content_id = @"0-0-8241";//0-1-261984
->>>>>>> Stashed changes
+   // content_id = @"0-0-2394";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -3108,6 +3111,7 @@ static ContentBuisnessType buisnessType;
       if ([result isKindOfClass:[NSNull class]] || result.length ==0 || ZEE5PlayerSDK.getUserTypeEnum == Guest)
       {
           self.parentalControl = NO;
+          self.isParentalControlOffline = NO;
           return;
       }
     
@@ -3133,27 +3137,33 @@ static ContentBuisnessType buisnessType;
         _isdownloadOverWifi = true;
     }
         
-        if ([self.ageRating isEqualToString:@"A"] || self.ageRating == nil || self.ageRating.length==0)
-           {
-               self.parentalControl = NO;
-               
-           }
-           else if ([self.ageRating isEqualToString:@"UA"])
-           {
-               if ([self.ModelValues.ageRating isEqualToString:@"U"])
-               {
-                    self.parentalControl = NO;
-               }
-               else
-               {
-                    self.parentalControl = YES;
-               }
-           }
-           else
-           {
+    [self CheckParentalControl];
+}
+-(void)CheckParentalControl{
+    if ([self.ageRating isEqualToString:@"A"] || self.ageRating == nil || self.ageRating.length==0)
+    {
+        self.parentalControl = NO;
+        self.isParentalControlOffline = NO;
+        
+    }
+    else if ([self.ageRating isEqualToString:@"UA"])
+    {
+        if ([self.ModelValues.ageRating isEqualToString:@"U"])
+        {
+             self.parentalControl = NO;
+            self.isParentalControlOffline = NO;
+        }
+        else
+        {
              self.parentalControl = YES;
-           }
-    
+            self.isParentalControlOffline = YES;
+        }
+    }
+    else
+    {
+      self.parentalControl = YES;
+    self.isParentalControlOffline = YES;
+    }
 }
 
 
@@ -3293,15 +3303,19 @@ static ContentBuisnessType buisnessType;
     self.selectedString = @"";
 }
 
-
-
 //MARK:-  Download Start Method
 -(void)StartDownload
 {
-    // [self setFullScreen: NO];
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         [self pause];
-        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpage];
+        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [self RefreshViewNotification];
+               
+               // [self StartDownload];
+            }
+        }];
         return;
     }
     
@@ -3318,6 +3332,14 @@ static ContentBuisnessType buisnessType;
     if (_isdownloadOverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
         [self ShowToastMessage:@"WiFi is not connected! You have selected download over WiFi only"];
         return;
+    }
+    
+    if (self.isParentalControlOffline ==YES)
+    {
+         [self pause];
+      [self parentalControlshow];
+        self.parentalControl = NO;
+      return;
     }
     
     

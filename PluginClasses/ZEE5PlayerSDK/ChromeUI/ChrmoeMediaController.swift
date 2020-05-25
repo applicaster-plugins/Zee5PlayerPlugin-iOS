@@ -150,7 +150,7 @@ extension ChrmoeMediaController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.mediaClient != nil{
-            if let count = self.mediaClient.mediaStatus?.queueItemCount(){
+            if let count = self.mediaClient.mediaStatus?.queueItemCount {
                 return Int(count)
             }
         }
@@ -182,7 +182,7 @@ extension ChrmoeMediaController: UITableViewDataSource, UITableViewDelegate {
         
         guard let currenItem = self.mediaClient.mediaStatus?.queueItem(at: UInt(sourceIndexPath.row)) else { return }
         let currentItemID = currenItem.itemID
-        guard let itemCount = self.mediaClient.mediaStatus?.queueItemCount() else { return }
+        guard let itemCount = self.mediaClient.mediaStatus?.queueItemCount else { return }
         if destinationIndexPath.row < itemCount - 1{
             guard let destionationItem = self.mediaClient.mediaStatus?.queueItem(at: UInt(destinationIndexPath.row)) else {return}
             destItemID = destionationItem.itemID
