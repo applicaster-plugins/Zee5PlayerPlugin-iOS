@@ -30,18 +30,18 @@ public class ChromeCastManager: NSObject {
     let bundle = Bundle(for: ChromeCastManager.self)
     
     @objc public func initializeCastOptions() {
-        
-        let options = GCKCastOptions(receiverApplicationID: self.appId)
-        options.suspendSessionsWhenBackgrounded = true
+        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: self.appId)
+
+        let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
         options.physicalVolumeButtonsWillControlDeviceVolume = true
+        
         GCKCastContext.setSharedInstanceWith(options)
-        self.currentSession?.add(self)
+        GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = true
         
-        
-        GCKLogger.sharedInstance().delegate = self
         GCKCastContext.sharedInstance().sessionManager.add(self)
-        self.customizeCastManager()
-        self.setupCastLogging()
+        
+        setupCastLogging()
+        customizeCastManager()
     }
     
     func customizeCastManager() {
@@ -70,7 +70,8 @@ public class ChromeCastManager: NSObject {
     
     func setupCastLogging() {
         let logFilter = GCKLoggerFilter()
-        let classesToLog = ["GCKDeviceScanner", "GCKDeviceProvider", "GCKDiscoveryManager", "GCKCastChannel", "GCKMediaControlChannel", "GCKUICastButton", "GCKUIMediaController", "NSMutableDictionary"]
+        let classesToLog = ["GCKDeviceScanner", "GCKDeviceProvider", "GCKDiscoveryManager", "GCKCastChannel",
+                            "GCKMediaControlChannel", "GCKUICastButton", "GCKUIMediaController", "NSMutableDictionary"]
         logFilter.setLoggingLevel(.verbose, forClasses: classesToLog)
         GCKLogger.sharedInstance().filter = logFilter
         GCKLogger.sharedInstance().delegate = self
@@ -162,8 +163,19 @@ public class ChromeCastManager: NSObject {
         if let url = URL(string: data.imageUrl) {
             metadata.addImage(GCKImage(url: url, width: 480, height: 720))
         }
-        let tempurl = "https://zee5vod.akamaized.net" + data.hlsUrl
-        return GCKMediaInformation(contentID: tempurl, streamType: .buffered, contentType: "mp4", metadata: metadata, streamDuration: TimeInterval(data.duration), customData: customData)
+        
+        guard let url = URL(string: "https://zee5vod.akamaized.net" + data.hlsUrl) else {
+            return nil
+        }
+        
+        let builder = GCKMediaInformationBuilder(contentURL: url)
+        builder.streamType = .buffered
+        builder.contentType = "mp4"
+        builder.metadata =  metadata
+        builder.streamDuration = TimeInterval(data.duration)
+        builder.customData = customData
+        
+        return builder.build()
     }
 }
 
@@ -212,10 +224,6 @@ extension ChromeCastManager: ChromeQueueMenuDelegate {
 
 
 extension ChromeCastManager: GCKLoggerDelegate {
-    public func logMessage(_ message: String, fromFunction function: String) {
-        ZeeUtility.utility.console("Chromecast Message = \(message) ** \(function)")
-    }
-    
     public func logMessage(_ message: String, at _: GCKLoggerLevel, fromFunction function: String, location: String) {
         if enableSDKLogging {
             ZeeUtility.utility.console("Message from Chromecast *** \(location) :: \(function) :: \(message)")
@@ -227,9 +235,15 @@ extension ChromeCastManager: GCKSessionManagerListener
 {
     public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
         self.playSelectedItemRemotely()
+
     }
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
-        AnalyticEngine .shared .castingEndAnalytics(with:CastDeviceName)
+//        guard String.isNotEmptyOrWhitespace(CastDeviceName) == true else {
+//            return
+//        }
+//
+//        AnalyticEngine .shared .castingEndAnalytics(with:CastDeviceName)
+
     }
     
     public func sessionManager(_ sessionManager: GCKSessionManager, session: GCKSession, didUpdate device: GCKDevice) {

@@ -31,7 +31,7 @@ class CastActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
             font: style.font,
             textColor: style.color,
             isFiller: false,
-            custom: nil,
+            custom: GCKUICastButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60)),
             action: cast
         )
     }
@@ -40,7 +40,5 @@ class CastActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
     }
     
     fileprivate func cast() {
-        let cc = GCKUICastButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        cc.sendActions(for: .touchUpInside)
     }
 }

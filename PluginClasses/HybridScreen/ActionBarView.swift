@@ -68,6 +68,8 @@ public class ActionBarView: UIView {
         let container = ButtonViewContainer()
         
         if let customButton = buttonData.custom {
+            customButton.removeAllSubviews()
+            customButton.backgroundColor = .clear
             container.button = customButton
         }
         else {

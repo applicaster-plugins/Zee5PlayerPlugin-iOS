@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
       'ENABLE_BITCODE' => 'YES',
       'SWIFT_VERSION' => '5.1',
       'OTHER_CFLAGS'  => '-fembed-bitcode',
-      'OTHER_LDFLAGS' => '-objc -ObjC -framework "GoogleCast" -framework "FBSDKCoreKit"',
+      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast" -framework "FBSDKCoreKit"',
       'GCC_SYMBOLS_PRIVATE_EXTERN' => 'YES'
   }
 
@@ -34,7 +34,8 @@ Pod::Spec.new do |s|
   s.dependency 'PlayKit', '3.16.0'
   s.dependency 'PlayKit_IMA', '1.7.1'
   s.dependency 'SnapKit'
-  s.dependency 'google-cast-sdk', '3.5.3'
+  s.dependency 'Protobuf'
+  s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
   s.dependency 'ConvivaSDK'
   s.dependency 'ComScore'
   s.dependency 'LotameDMP', '~> 5.0'
