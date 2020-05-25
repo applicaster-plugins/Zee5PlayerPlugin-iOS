@@ -721,42 +721,38 @@ static ContentBuisnessType buisnessType;
 - (void)onComplete
 {
     NSLog(@"On Complete");
-    [self setSeekTime:0];
     _isTelco = false;
+    [self hideLoaderOnPlayer];
     if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
     {
         _videoCompleted = YES;
         [self pause];
-        [self hideLoaderOnPlayer];
          [self INDGuestUser];
         [self hideUnHidetrailerEndView:false];
         return;
     }
-    if (_isAutoplay == false)
+    if (_isAutoplay == false && _customControlView.btnSkipNext.selected == false)
     {
         _videoCompleted = YES;
         _customControlView.buttonPlay.hidden = YES;
         _customControlView.buttonReplay.hidden = NO;
         [self hideUnHideTopView:NO];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self setSeekTime:0];
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
             [self.delegate didFinishPlaying];
-            
         }
-        
     }
     else
     {
         [self pause];
+        _customControlView.btnSkipNext.selected = false;
         if (_CreditTimer != nil) {
             return;
         }
         RelatedVideos *Model;
         for (RelatedVideos *Object in self.currentItem.related) {
-         
-            NSLog(@"%@",Object.identifier);
-            
              if ([_PreviousContentArray containsObject:Object.identifier])
             {
               NSLog(@"Allready present");
@@ -1137,6 +1133,7 @@ static ContentBuisnessType buisnessType;
         [self.delegate didTaponNextButton];
         if (_currentItem.related.count>0)
         {
+            _customControlView.btnSkipNext.selected = YES;
             [self onComplete];
         }
     }
