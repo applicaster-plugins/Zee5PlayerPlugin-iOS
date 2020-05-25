@@ -318,7 +318,7 @@ class HybridViewController: UIViewController {
         gradientLayer.startPoint = CGPoint(x: 0, y: 0)
         gradientLayer.endPoint = CGPoint(x: 0, y: 1)
         
-        gradientLayer.colors = [UIColor(red: 0.13, green: 0, blue: 0.14, alpha: 1).cgColor, UIColor.black.cgColor]
+        gradientLayer.colors = [UIColor(red: 19/255, green: 0, blue: 20/255, alpha: 1).cgColor, UIColor(red: 43/255, green: 2/255, blue: 37/255, alpha: 1).cgColor]
         gradientLayer.shouldRasterize = true
         
         self.mainCollectionViewContainer.layer.addSublayer(gradientLayer)

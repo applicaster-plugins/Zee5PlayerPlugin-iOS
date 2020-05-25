@@ -365,6 +365,7 @@ extension HybridViewController {
         mainCollectionViewController.view.fillParent()
         mainCollectionViewController.didMove(toParent: self)
         
+        mainCollectionViewController.view.backgroundColor = .clear
         mainCollectionViewController.load(atomFeed, staticView: self.metadataViewContainer)
     }
 }
@@ -389,12 +390,14 @@ extension HybridViewController {
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HybridViewTitleSubtitleCell", for: indexPath) as? HybridViewTitleSubtitleCell  else {
-return UICollectionViewCell()
+            guard
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HybridViewTitleSubtitleCell", for: indexPath) as? HybridViewTitleSubtitleCell else {
+                    return UICollectionViewCell()
             }
             
             var dataSource: [(title: String?, subtitle: String?, description: String?)]?
             var textAlignment: NSTextAlignment!
+            
             switch collectionView.tag {
             case ItemTag.View.consumptionCastCollection:
                 dataSource = castDataSource
@@ -409,6 +412,7 @@ return UICollectionViewCell()
             default:
                 break
             }
+
             if dataSource != nil {
                 
                 let model = dataSource![indexPath.row]
@@ -440,6 +444,8 @@ return UICollectionViewCell()
                     break
                 }
             }
+            
+            cell.backgroundColor = .clear
             
             return cell
         }

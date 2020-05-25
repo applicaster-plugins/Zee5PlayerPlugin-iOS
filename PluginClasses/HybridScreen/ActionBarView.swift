@@ -53,14 +53,17 @@ public class ActionBarView: UIView {
         self.stackView = UIStackView()
         self.addSubview(self.stackView)
         
-        self.backgroundColor = .clear
+        self.backgroundColor = UIColor.white.withAlphaComponent(0.04)
         
-        self.stackView.fillParent()
-
+        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+        self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        self.stackView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        
         self.stackView.axis = .horizontal
         self.stackView.alignment = .center
-        self.stackView.distribution = .fill
-        self.stackView.spacing = 3
+        self.stackView.distribution = .equalSpacing
         self.stackView.backgroundColor = .clear
     }
     
@@ -69,8 +72,10 @@ public class ActionBarView: UIView {
         
         if let customButton = buttonData.custom {
             customButton.removeAllSubviews()
+            customButton.removeConstraints(customButton.constraints)
             customButton.backgroundColor = .clear
             container.button = customButton
+            container.button.isHidden = true
         }
         else {
             container.button = UIButton(type: .custom)
@@ -85,10 +90,12 @@ public class ActionBarView: UIView {
         container.button.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.addArrangedSubview(container.button)
         
-        container.button.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        container.button.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
         if buttonData.isFiller {
-            container.button.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            container.button.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            container.button.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         }
         else {
             container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -159,13 +166,13 @@ public class ActionBarView: UIView {
         container.addSubview(label)
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 3).isActive = true
         label.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
         label.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
         
         label.text = buttonData.title
         label.textAlignment = .center
-        label.font = buttonData.font
+        label.font = UIFont.systemFont(ofSize: 10)
         label.textColor = buttonData.textColor
         label.backgroundColor = .clear
         
