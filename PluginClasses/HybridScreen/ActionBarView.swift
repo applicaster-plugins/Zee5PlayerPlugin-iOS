@@ -41,6 +41,7 @@ public class ActionBarView: UIView {
     public func addSpacerView() {
         let spaceView = UIView()
         
+        spaceView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         spaceView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         spaceView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
@@ -95,7 +96,7 @@ public class ActionBarView: UIView {
         if buttonData.isFiller {
             container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             container.button.widthAnchor.constraint(equalToConstant: 100).isActive = true
-            container.button.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+            container.button.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         }
         else {
             container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -166,7 +167,7 @@ public class ActionBarView: UIView {
         container.addSubview(label)
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 3).isActive = true
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 6).isActive = true
         label.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
         label.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
         

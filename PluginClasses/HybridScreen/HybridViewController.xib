@@ -171,7 +171,7 @@
                         <stackView opaque="NO" tag="856" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="PDd-AU-oJQ" userLabel="Additional Info View">
                             <rect key="frame" x="0.0" y="140" width="414" height="60"/>
                             <subviews>
-                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="855" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="s13-AK-H7Y" userLabel="additionalInfo">
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="855" contentMode="scaleToFill" directionalLockEnabled="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="s13-AK-H7Y">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
