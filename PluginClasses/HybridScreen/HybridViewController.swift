@@ -15,7 +15,6 @@ import MediaPlayer
 import ZappSDK
 import ZeeHomeScreen
 
-
 class HybridViewController: UIViewController {
     
     var configurationJSON: NSDictionary?
@@ -23,7 +22,6 @@ class HybridViewController: UIViewController {
     
     var kalturaPlayerController: KalturaPlayerController?
     
-    var isPortraitUpsideDownOrientation: Bool?
     public var isViewWillAppear = true
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
@@ -49,7 +47,7 @@ class HybridViewController: UIViewController {
     
     var currentPlayableItem: ZPPlayable? {
         didSet {
-            if self.currentPlayableItem != nil {
+            if self.currentPlayableItem != nil && self.isViewLoaded {
                 self.metadataViewContainer.isHidden = false
                 self.commonInit()
             }
@@ -57,11 +55,7 @@ class HybridViewController: UIViewController {
     }
     
     // MARK: Orientation
-    
-    override open var shouldAutorotate: Bool {
-        return true
-    }
-    
+        
     override open var prefersStatusBarHidden: Bool {
         return false
     }
@@ -70,32 +64,27 @@ class HybridViewController: UIViewController {
         .lightContent
     }
     
-    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-    
-    @objc func rotated() {
-        if UIDevice.current.orientation == UIDeviceOrientation.portraitUpsideDown {
-            self.isPortraitUpsideDownOrientation = true
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+  
+        guard let playerViewController = self.kalturaPlayerController else {
+            return
         }
-        else {
-            self.isPortraitUpsideDownOrientation = false
-        }
-        if !UIDevice.current.orientation.isFlat {
-            if UIDevice.current.orientation.isLandscape {
-                if self.isPortraitUpsideDownOrientation == false,
-                    let mode = self.kalturaPlayerController?.currentDisplayMode,
-                    mode != .mini {
-                    self.kalturaPlayerController?.changePlayer(displayMode: .fullScreen)
+        
+        DownloadHelper.shared.transition(to: nil)
+
+        coordinator.animate(alongsideTransition: nil, completion: { (context) in
+            switch newCollection.verticalSizeClass {
+            case .compact:
+                playerViewController.changePlayer(displayMode: .fullScreen) {
+                    DownloadHelper.shared.transition(to: playerViewController.view)
                 }
-            } else {
-                if let mode = self.kalturaPlayerController?.currentDisplayMode,
-                    mode != .mini,
-                    self.isPortraitUpsideDownOrientation == false {
-                    self.kalturaPlayerController?.changePlayer(displayMode: .inline)
+            default:
+                playerViewController.changePlayer(displayMode: .inline) {
+                    DownloadHelper.shared.transition(to: self.view)
                 }
             }
-        }
+        })
     }
     
     // MARK:
@@ -128,9 +117,7 @@ class HybridViewController: UIViewController {
         self.activityIndicator?.startAnimating()
         
         self.observer()
-        
-        self.isPortraitUpsideDownOrientation = false
-        
+                
         kalturaPlayerConfiguration()
         
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
@@ -165,17 +152,6 @@ class HybridViewController: UIViewController {
     }
     
     func observer() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil)
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(rotated),
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil)
-        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(changePlayerDisplayToMini),
                                                name: NSNotification.Name(rawValue: "chromecastPlayerWasMinimized"),

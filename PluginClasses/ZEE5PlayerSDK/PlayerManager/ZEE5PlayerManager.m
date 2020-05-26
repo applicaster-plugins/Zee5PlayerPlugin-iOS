@@ -3343,7 +3343,7 @@ static ContentBuisnessType buisnessType;
     }
     
     
-    [[DownloadHelper new] startDownloadItemWith:self.currentItem];
+   [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
 }
 
 -(void)getContentDetailForCastingItem:(NSString*)content_id country:(NSString*)country translation:(NSString*)language :(void (^)(VODContentDetailsDataModel* model, NSString* drmToken))success

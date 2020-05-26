@@ -23,13 +23,8 @@ public class DownloadQualityMenu: UIView {
     override public func awakeFromNib() {
         super.awakeFromNib()
         
-        self.viewBackground.roundCorners(corners: [.topLeft, .topRight], radius: 25.0)
-        self.btnDownload.applyGradient(withColors: AppColor.gradient)
-        
         let bundle = Bundle(for: DownloadRootController.self)
         self.tableView.register(UINib(nibName: VideoQualityCell.identifer, bundle: bundle), forCellReuseIdentifier: VideoQualityCell.identifer)
-          rotated()
-
         
         self.setupDragable()
     }
@@ -39,15 +34,13 @@ public class DownloadQualityMenu: UIView {
         self.downloadOption = config.download_options ?? []
         self.tableView.reloadData()
     }
-    @objc func rotated(){
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
         
-        if UIDevice.current.orientation.isLandscape{
-            print("landscape");
-             self.Con_table_height.constant = 190.0
-        }
-        if UIDevice.current.orientation.isPortrait{
-            self.Con_table_height.constant = 295.0
-        }
+        self.setRoundedCorner(for:  self.viewBackground, corners: [.topLeft, .topRight], radius: 25.0)
+        
+        self.btnDownload.applyGradient(withColors: AppColor.gradient)
     }
     
     @IBAction func actionStartDownload(_ sender: Any) {
@@ -84,7 +77,6 @@ extension DownloadQualityMenu: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension DownloadQualityMenu {
-    
     func setupDragable() {
         self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
     }
@@ -122,5 +114,14 @@ extension DownloadQualityMenu {
 
     fileprivate func ensureRange<T>(value: T, minimum: T, maximum: T) -> T where T : Comparable {
         return min(max(value, minimum), maximum)
+    }
+    
+    fileprivate func setRoundedCorner(for view: UIView, corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        
+        view.layer.mask = mask
     }
 }

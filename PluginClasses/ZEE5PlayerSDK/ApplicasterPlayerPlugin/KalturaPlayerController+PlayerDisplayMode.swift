@@ -10,7 +10,7 @@ import ApplicasterSDK
 
 extension KalturaPlayerController {
     
-    func changePlayer(displayMode: PlayerViewDisplayMode) {
+    func changePlayer(displayMode: PlayerViewDisplayMode, completion: (() -> Void)? = nil) {
         if let currentDisplayMode = self.currentDisplayMode,
             displayMode == currentDisplayMode {
             APLoggerDebug("Trying to switch to same display mode as currently presented")
@@ -21,10 +21,11 @@ extension KalturaPlayerController {
         case .inline:
             if previousParentViewController != nil {
                 self.currentDisplayMode = .inline;
-                self.presentingViewController?.dismiss(animated: true, completion: {
+                self.presentingViewController?.dismiss(animated: false, completion: {
                     self.previousParentViewController?.addChildViewController(self, to: self.previousContainerView)
                     self.previousParentViewController = nil
                     self.previousContainerView = nil
+                    completion?()
                 })
             } else {
                 APLoggerError("No previous parent view controller - can't move to inline");
@@ -39,7 +40,8 @@ extension KalturaPlayerController {
                 self.currentDisplayMode = .fullScreen;
                 self.modalPresentationStyle = .fullScreen
 
-                ZAAppConnector.sharedInstance().navigationDelegate.topmostModal()?.present(self, animated: true, completion: {
+                ZAAppConnector.sharedInstance().navigationDelegate.topmostModal()?.present(self, animated: false, completion: {
+                    completion?()
                     self.playerAdapter?.player?.play()
                 })
             }
