@@ -242,6 +242,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             guard let kalturaPlayerController = self.kalturaPlayerController else {
                 return
             }
+
+            ZEE5PlayerSDK.initialize(withContentID: contentId, and:User.shared.getUserId() )
+            kalturaPlayerController.contentId = contentId ?? "0-0-2464"
             
             kalturaPlayerController.play()
         }

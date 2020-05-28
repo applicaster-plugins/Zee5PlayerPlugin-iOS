@@ -8,6 +8,7 @@
 
 import Foundation
 import ConvivaSDK
+import Zee5CoreSDK
 
 public class ConvivaAnalytics: NSObject {
     
@@ -76,6 +77,23 @@ public class ConvivaAnalytics: NSObject {
         }
     }
     
+    public func ReportErrorConviva(with ErrorMsg: NSString, Severity:NSInteger) {
+    
+        if let sessionID = self.videoSessionID
+        {
+            var ConvivaSeverity = ErrorSeverity.ERROR_WARNING
+            
+            if Severity == 0 {
+                ConvivaSeverity = ErrorSeverity.ERROR_FATAL
+            }
+            self.client?.reportError(sessionID, errorMessage: ErrorMsg as String, errorSeverity:ConvivaSeverity)
+            
+       if Severity == 0 {
+            self.client?.cleanupSession(sessionID)
+                   }
+        }
+
+    }
     public func createConvivaSession(with data: NSDictionary) {
         
         let assetName = data.value(forKey: "assetName") as? String
@@ -98,6 +116,8 @@ public class ConvivaAnalytics: NSObject {
         if let sessionID = self.videoSessionID
         {
             let dict: NSMutableDictionary = NSMutableDictionary.init(dictionary: data)
+            dict.setValue(AllAnalyticsClass.shared.Age, forKey:"viewerAge")
+            dict.setValue(analytics.getGender(), forKey:"viewerGender")
             let metadata = CISContentMetadata()
             metadata.custom = dict
             

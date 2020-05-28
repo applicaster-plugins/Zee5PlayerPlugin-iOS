@@ -22,16 +22,21 @@ static ConnectionType Connection = Mobile;
 static comScoreAnalytics *comAnalytics;
 
 ///
-static NSString *convivaCustomerKey = @"68b23e5e4a3770c20f04989fa8e89e0872e1c843";
-static NSString *convivaGatewayUrl = @"https://zee-test.testonly.conviva.com/";
+static NSString *convivaCustomerKey = @"28bbf0a3decf6d1165032bfd835d6e1844c5d44d";
+static NSString *convivaGatewayUrl = @"https://cws.conviva.com";
+
+/* TouchStone gateway and url  */
+static NSString *touchConvivaCustomerKey = @"28bbf0a3decf6d1165032bfd835d6e1844c5d44d";
+static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
+
 
 
 @implementation ZEE5PlayerSDK
 
-+ (void)initializeWithContentID:(NSString*)content_id and:(NSString*)token;
++ (void)initializeWithContentID:(NSString*)content_id and:(NSString*)userId;
 {
     id Dict;
-    
+    user_id = userId;
     [[AppConfigManager sharedInstance] setConfig:[ZEE5ConfigDataModel initFromJSONDictionary:Dict]];
     
     [self setupConvivaAnalytics];

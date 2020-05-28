@@ -51,6 +51,12 @@ public func VideoViewEvent()
 
     ]
       analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
+    
+    if Buisnesstype == "premium" || Buisnesstype == "premium_downloadable"{
+        AllAnalyticsClass.shared.SvodContentplayed()
+    }else{
+        AllAnalyticsClass.shared.AvodContentplayed()
+    }
            
     }
     

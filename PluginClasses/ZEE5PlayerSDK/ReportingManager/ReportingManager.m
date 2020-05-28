@@ -277,7 +277,6 @@ static ReportingManager *sharedManager = nil;
             
                 if ([filterArray count]>0)
                 {
-                   
                     self.isCountinueWatching =YES;
                     NSInteger Duration =[[[filterArray objectAtIndex:0]objectForKey:@"duration"]integerValue];
                     [[ZEE5PlayerManager sharedInstance]setWatchHistory:Duration];

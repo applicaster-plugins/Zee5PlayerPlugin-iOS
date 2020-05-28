@@ -411,10 +411,10 @@ func getAge() -> String {
                #if DEBUG
                print(settingDataModel.value!)
                #endif
-            return (settingDataModel.value ?? "")
+            return (settingDataModel.value ?? "NA")
            }
        }
-    return ""
+    return "N/A"
 }
 
 

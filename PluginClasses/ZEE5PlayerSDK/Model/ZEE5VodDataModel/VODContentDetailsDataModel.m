@@ -28,6 +28,7 @@
         self.drmKeyID = [dict ValueForKeyWithNullChecking:@"drm_key_id"];
         self.subtitleLanguages = [dict ValueForKeyWithNullChecking:@"subtitle_languages"];
         self.audioLanguages = [dict ValueForKeyWithNullChecking:@"audio_languages"];
+        self.Languages = [dict ValueForKeyWithNullChecking:@"languages"];
         self.assetType = [NSString stringWithFormat:@"%d", [[dict ValueForKeyWithNullChecking:@"asset_type"]intValue]];
         self.assetSubtype = [dict ValueForKeyWithNullChecking:@"asset_subtype"];
         self.releaseDate = [dict ValueForKeyWithNullChecking:@"release_date"];
