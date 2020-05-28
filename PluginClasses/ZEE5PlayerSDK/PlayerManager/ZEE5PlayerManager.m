@@ -73,6 +73,8 @@
 @property InternationlguestUser *IntenationalGuestuserView;
 @property BeforeTvcontentView *TvContentView;
 
+@property(nonatomic, strong) UIViewController *currentShareViewController;
+
 @property VODContentDetailsDataModel *ModelValues;         // Stored data Model of Content Response
 @property LiveContentDetails *LiveModelValues;             // Stored Data Model Of Live Content
 @property tvShowModel *TvShowModel;             // Stored Data Model Of TvShow Content
@@ -1272,6 +1274,8 @@ static ContentBuisnessType buisnessType;
   
     [activityVC setCompletionWithItemsHandler:^(UIActivityType  _Nullable activityType, BOOL completed, NSArray * _Nullable returnedItems, NSError * _Nullable activityError)
      {
+        self.currentShareViewController = nil;
+
         if (completed){
             NSLog(@"Done");
             [self play];
@@ -1283,6 +1287,8 @@ static ContentBuisnessType buisnessType;
 
     UIViewController *VC = [[UIApplication sharedApplication]keyWindow].rootViewController.topmostModalViewController;
     [VC presentViewController:activityVC animated:YES completion: nil];
+    
+    self.currentShareViewController = activityVC;
 }
 
 -(void)navigateToDetail

@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;
 
+@property(nonatomic, strong, readonly) UIViewController *_Nullable currentShareViewController;
+
 
 @property(nonatomic) NSString *KcdnUrl;   /////////************ CDN URL String*************//////
 

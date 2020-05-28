@@ -72,16 +72,29 @@ class HybridViewController: UIViewController {
         }
         
         DownloadHelper.shared.transition(to: nil)
-
+        
+        let shareViwController = ZEE5PlayerManager.sharedInstance().currentShareViewController
+        if let shareViwController = shareViwController {
+            shareViwController.dismiss(animated: false)
+        }
+        
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
             switch newCollection.verticalSizeClass {
             case .compact:
                 playerViewController.changePlayer(displayMode: .fullScreen) {
                     DownloadHelper.shared.transition(to: playerViewController.view)
+                    if let shareViwController = shareViwController {
+                        playerViewController.present(shareViwController, animated: false)
+                    }
+
                 }
             default:
                 playerViewController.changePlayer(displayMode: .inline) {
                     DownloadHelper.shared.transition(to: self.view)
+                    
+                    if let shareViwController = shareViwController {
+                        self.present(shareViwController, animated: false)
+                    }
                 }
             }
         })
