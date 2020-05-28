@@ -269,7 +269,6 @@ static ContentBuisnessType buisnessType;
     
 }
 -(void)ContentidNotification:(NSString *)ContentId{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
 }
 

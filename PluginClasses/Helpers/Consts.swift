@@ -17,6 +17,29 @@ public enum ConsumptionFeedType: String, CaseIterable {
     case show = "Show"
     case original = "Original"
     case video = "Video"
+    
+    init?(type: ConsumptionType) {
+        switch type {
+        case Movie:
+            self = .movie
+        case Episode:
+            self = .episode
+        case Shows:
+            self = .show
+        case Trailer:
+            self = .trailer
+        case Live:
+            self = .live
+        case Music:
+            self = .music
+        case Original:
+            self = .original
+        case Video:
+            self = .video
+        default:
+            return nil
+        }
+    }
 }
 
 public struct ExtensionsKey {

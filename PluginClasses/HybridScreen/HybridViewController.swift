@@ -117,6 +117,9 @@ class HybridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
+        self.playerView?.addGestureRecognizer(panGestureRecognizer)
+        
         if self.currentPlayableItem == nil {
             self.addGradient()
             self.metadataViewContainer.isHidden = true
@@ -126,15 +129,9 @@ class HybridViewController: UIViewController {
     func commonInit() {
         self.stylesConfiguration()
         
-        self.activityIndicator?.isHidden = false
-        self.activityIndicator?.startAnimating()
-        
         self.observer()
                 
         kalturaPlayerConfiguration()
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-        self.playerView?.addGestureRecognizer(panGestureRecognizer)
         
         self.itemNameLabel?.text = self.currentPlayableItem?.playableName()
         self.itemDescriptionLabel?.text = self.currentPlayableItem?.playableDescription()
