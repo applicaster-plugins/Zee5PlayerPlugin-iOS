@@ -484,7 +484,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         NSLog(@"|**** GOT AD Event :: AdEvent .error :: %@ ****|", event.adError.localizedDescription);
         NSLog(@"\n\n******\n\n");
         
-        [self ConvivaErrorCode:event.error.code platformCode:003 severityCode:1 andErrorMsg:@"Ad Playback Error - "];
+        [self ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error - "];
     }];
 }
 
@@ -517,14 +517,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
 //MARK:- Handle basic event Of Player (Play, Pause, CanPlay ..  Failed)
 
 
--(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSInteger)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg{
+-(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSString *)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg{
     
     NSString *ErrorMSG = [NSString stringWithFormat:@"%@%ld",ErrorMsg,Code];
-    NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%ld",Platform];
-    NSLog(@"%@ %@",ErrorCode,ErrorMSG);
+    NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%@",Platform];
     NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
-    
     NSString *Message = [NSString stringWithFormat:@"%@",dict];
+    NSLog(@"%@",Message);
     [[AnalyticEngine shared]setupConvivvaErrorMsgWith:Message COSeverity:Severity];
 }
 
@@ -544,13 +543,11 @@ static Zee5PlayerPlugin *sharedManager = nil;
         {
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
             
-            [weakSelf ConvivaErrorCode:event.error.code platformCode:005 severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
+            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
             
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
-        
-                 
-                       }];
+        }];
     
      //[[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     [self.player addObserver:self
@@ -561,14 +558,10 @@ static Zee5PlayerPlugin *sharedManager = nil;
               NSLog(@"|**** ErrorLog From Kaltura %@",PlayerEvent.errorLog);
         
                 /// Cheack Code here Why Its Getting Failed
-                         
-        
                        }];
 }
 
 -(void)registerPlayerMetaData{
-    
-    
     
     [self.player addObserver:self
                        event:PlayerEvent.loadedMetadata
@@ -698,7 +691,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                                   weakSelf.Direction = @"Forward";
                                }
         [engine setSeekEndTimeWithDuration: weakSelf.PlayerEndTime];
-        [engine VideoWatchPercentCalc];
+        [engine VideoWatchPercentCalcWith:weakSelf.Direction];
         [engine seekValueChangeAnalyticsWith:weakSelf.Direction Starttime:weakSelf.PlayerStartTime EndTime:weakSelf.PlayerEndTime];
                        }];
 }

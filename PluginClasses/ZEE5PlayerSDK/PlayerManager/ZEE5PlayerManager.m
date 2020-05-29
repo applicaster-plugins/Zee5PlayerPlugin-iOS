@@ -373,6 +373,12 @@ static ContentBuisnessType buisnessType;
     [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
     
+    if (_GuestuserPopView != nil) {
+        [self.playbackView addSubview:_customControlView];
+       [self hideUnHidetrailerEndView:false];
+        return;
+    }
+    
     
     if (_currentItem.related.count == 1)
     {
@@ -562,7 +568,7 @@ static ContentBuisnessType buisnessType;
     NSInteger totalSeconds = (NSInteger) floored;
     
   
-    [[AnalyticEngine new]VideoWatchPercentCalc];
+    [[AnalyticEngine new]VideoWatchPercentCalcWith:@"Forward"];
     
  
     [[Zee5FanAdManager sharedInstance] loadfanAds:totalSeconds];
@@ -1842,7 +1848,7 @@ static ContentBuisnessType buisnessType;
     else
     {
         [self ShowToastMessage:@"Incorrect PIN please try again"];
-        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:8 severityCode:1 andErrorMsg:@"Parental Control Message -"];
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:@"008" severityCode:1 andErrorMsg:@"Parental Control Message -"];
     }
 }
 
@@ -2217,13 +2223,28 @@ static ContentBuisnessType buisnessType;
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
-             [[ZEE5PlayerDeeplinkManager new]GetSubscrbtionWith:_ModelValues.assetType beforetv:true];
+             [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:true Param:@"Subscribe" completion:^(BOOL isSuccees) {
+            if (isSuccees){
+            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [self RefreshViewNotification];
+        }
+    }];
             return;
         }
-         [[ZEE5PlayerDeeplinkManager new]GetSubscrbtionWith:_ModelValues.assetType beforetv:false];
+        [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
+                if (isSuccees) {
+                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [self RefreshViewNotification];
+            }
+                }];
         
     }else{
-        [[ZEE5PlayerDeeplinkManager new]GetSubscrbtionWith:_LiveModelValues.assetType beforetv:false];
+        [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_LiveModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
+            if (isSuccees) {
+                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [self RefreshViewNotification];
+            }
+        }];
     }
 
 }
@@ -2362,7 +2383,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-2394";//0-1-261984
+  //  content_id = @"0-0-93267";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -2489,7 +2510,7 @@ static ContentBuisnessType buisnessType;
     } failureBlock:^(ZEE5SdkError *error)
      {
         [self notifiyError:error];
-         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:001 severityCode:0 andErrorMsg:@"Content Detail API Failure -"];
+         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:@"001" severityCode:0 andErrorMsg:@"Content Detail API Failure -"];
     }];
     
 }
@@ -3163,10 +3184,11 @@ static ContentBuisnessType buisnessType;
         return;
     }
     if (_ModelValues.isBeforeTv == true) {
-        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:006 severityCode:0 andErrorMsg:@"Before TV Popup -"];
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
-    [self hideUnHidetrailerEndView:false];
     [self INDGuestUser];
+    [self addCustomControls];
+    
     
 }
 
@@ -3305,7 +3327,7 @@ static ContentBuisnessType buisnessType;
         [self notifiyError:error];
          NSLog(@"DRM Fail"); // Cheack Trailer
         
-        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:004 severityCode:1 andErrorMsg:@"Entitlement API Error -"];
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:@"004" severityCode:1 andErrorMsg:@"Entitlement API Error -"];
         
         if (error.zeeErrorCode == 3608)
         {
