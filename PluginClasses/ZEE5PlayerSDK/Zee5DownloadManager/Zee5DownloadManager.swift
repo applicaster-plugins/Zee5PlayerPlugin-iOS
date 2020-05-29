@@ -540,27 +540,30 @@ public class Zee5DownloadManager {
      - Returns: The array of all removed items `[DTGItem]`.
      */
     public func removeAll() throws -> [DTGItem]? {
-        
-        if let allDownloads = try cm?.itemsByState(.completed) {
-        
-            var removedItems: [DTGItem] = []
-            if allDownloads.count > 0 {
-                for item in allDownloads {
-                    let id = item.id
-                    do {
-                        try self.removeDownloadItem(id: id)
-                        removedItems.append(item)
+       
+        for State in DTGItemState.allCases {
+            print(State)
+            
+        if let allDownloads = try cm?.itemsByState(State) {
+                var removedItems: [DTGItem] = []
+                if allDownloads.count > 0 {
+                    for item in allDownloads {
+                        let id = item.id
+                        do {
+                            try self.removeDownloadItem(id: id)
+                            removedItems.append(item)
+                        }
+                        catch {
+                            continue
+                        }
                     }
-                    catch {
-                        continue
-                    }
+                    return removedItems
                 }
-                return removedItems
-            }
-            else {
-                let msg = "Unable to remove all the items"
-                ZeeUtility.utility.console(msg)
-                throw ZeeError.withError(message: msg)
+                else {
+                    let msg = "Unable to remove all the items"
+                    ZeeUtility.utility.console(msg)
+                    throw ZeeError.withError(message: msg)
+                }
             }
         }
         return nil

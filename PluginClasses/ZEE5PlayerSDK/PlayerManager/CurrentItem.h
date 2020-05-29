@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonnull) NSString *business_type;
 @property(strong, nonnull) NSArray *subTitles;
 @property(strong, nonnull) NSArray *audioLanguages;
+@property(strong, nonnull) NSArray *language;
 @property(strong, nonnull) NSArray *charecters;
 @property (nonatomic)StreamType streamType;
 @property (strong, nonatomic) NSString* asset_type;

@@ -36,8 +36,35 @@ extension AnalyticEngine
     @objc public func VideoWatch85Percent()
      {
           AllAnalyticsClass.shared.VideoWatch85()
-         
      }
+    @objc public func VideoClick1Event()
+    {
+        AllAnalyticsClass.shared.VideoClicked1()
+    }
+    @objc public func VideoClick3Event()
+    {
+        AllAnalyticsClass.shared.VideoClicked3()
+    }
+    @objc public func VideoClick5Event()
+    {
+        AllAnalyticsClass.shared.VideoClicked5()
+    }
+    @objc public func VideoClick7Event()
+    {
+        AllAnalyticsClass.shared.VideoClicked7()
+    }
+    @objc public func VideoClick10Event()
+    {
+        AllAnalyticsClass.shared.VideoClicked10()
+    }
+    @objc public func VideoClick15Event()
+    {
+      AllAnalyticsClass.shared.VideoClicked15()
+    }
+    @objc public func VideoClick20Event()
+    {
+      AllAnalyticsClass.shared.VideoClicked20()
+    }
     
     @objc public func ConsumptionAnalyticEvents(){
         if ZEE5PlayerSDK.getConsumpruionType() == Live {
@@ -55,6 +82,7 @@ extension AnalyticEngine
         }else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
             
              AllAnalyticsClass.shared.TvShowplayed()
+            AllAnalyticsClass.shared.TvShowSectionplayed()
             
         }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
             

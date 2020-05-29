@@ -16,7 +16,7 @@ var VideWatchInt = 0
 
 public class AnalyticEngine: NSObject {
     
-   public static let shared = AnalyticEngine()
+ @objc public static let shared = AnalyticEngine()
    
    
     @objc public func startLotameAnalytics(with duration: String, quartileValue: String)
@@ -43,6 +43,11 @@ public class AnalyticEngine: NSObject {
         
         // Setup player interface
         ConvivaAnalytics.shared.setupPlayerInterface()
+    }
+    
+    @objc public func setupConvivvaErrorMsg(with Error: NSString, COSeverity:NSInteger)
+    {
+        ConvivaAnalytics.shared.ReportErrorConviva(with: Error, Severity: COSeverity)
     }
     
     @objc public func updatePlayerState(state:PlayerState)
@@ -108,13 +113,11 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.DataModelContent(with: data)
     }
-    
-    
     @objc public func VideoPlayAnalytics()
        {
         AllAnalyticsClass.shared.VideoViewEvent()
+      
        }
-    
     @objc public func AutoSeekAnalytics(with Direction: NSString, time :NSInteger)
       {
         AllAnalyticsClass.shared.AutoseekChanged(with: Direction, Value: time)
@@ -227,6 +230,10 @@ public class AnalyticEngine: NSObject {
     public func downloadClick (with item:DownloadItem)
     {
         AllAnalyticsClass.shared.DownloadPlayClick(with: item)
+    }
+    @objc public func DownloadCTAClicked ()
+    {
+        AllAnalyticsClass.shared.DownloadCTAclicked()
     }
 
     

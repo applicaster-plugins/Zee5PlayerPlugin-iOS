@@ -51,7 +51,8 @@
 #define WATCHLIST @"Add to watch List"
 #define PLAYBACKRATE @"Playback Rate"
 #define POSTTIME @"post"
-#define Conviva_Application_Name @"Kaltura-iOS App"
+#define Conviva_Application_Name @"ZEE5-iOS App"
+#define Conviva_Player_name @"ZEE5KalturaPlayer"
 
  /****************************************
      On Clck Of Share Button Use this url (For Live and VOD)
@@ -96,6 +97,7 @@
 @property (weak, nonatomic) NSArray *selectedTracks;
 @property (strong, nonatomic) NSArray *playBackRate;
 @property (strong, nonatomic) NSMutableArray *PreviousContentArray;
+@property (strong, nonatomic) NSMutableArray *VideocountArray;
 @property (strong,nonatomic) NSTimer *CreditTimer;
 @property(nonatomic) NSString *CurrentAudioTrack;
 @property(nonatomic) NSString *CurrenttextTrack;
@@ -267,6 +269,13 @@ static ContentBuisnessType buisnessType;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption) name:AVAudioSessionInterruptionNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LogoutDone) name:@"ZPLoginProviderLoggedOut" object:nil];
+    
+}
+-(void)LogoutDone{
+    
+    [_PreviousContentArray removeAllObjects];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Array"];
 }
 -(void)ContentidNotification:(NSString *)ContentId{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
@@ -438,6 +447,7 @@ static ContentBuisnessType buisnessType;
     
     
     [self LocalStorageArray];
+    [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
 }
 
 -(void)addMuteViewToPlayer
@@ -1037,6 +1047,7 @@ static ContentBuisnessType buisnessType;
 {
     [[Zee5PlayerPlugin sharedInstance].player pause];
     [[Zee5PlayerPlugin sharedInstance].player stop];
+    [[AnalyticEngine new] cleanupVideoSesssion];
    
     self.isStop = YES;
     [[Zee5FanAdManager sharedInstance] stopFanAd];
@@ -1116,7 +1127,13 @@ static ContentBuisnessType buisnessType;
 }
 -(void)setWatchHistory:(NSInteger)duration
 {
-    _PlayerStartTime = duration;    // Duration Get From WatchHistory Api Response
+    _PlayerStartTime = duration;    // Duration Get From WatchHistory Api Response.
+    
+    NSString *videoStartPoint = [Utility stringFromTimeInterval:duration];
+    NSString *VideoEndpoint = [Utility stringFromTimeInterval:[[Zee5PlayerPlugin sharedInstance]getDuration]];
+    NSDictionary *dict = @{@"videoStartPoint" : videoStartPoint,@"videoEndPoint":VideoEndpoint};
+    [self updateConvivaSessionWithMetadata: dict];
+    
 }
 
 -(void)setLock:(BOOL)isLock
@@ -1165,6 +1182,33 @@ static ContentBuisnessType buisnessType;
 //MARK:- Handle Local Storage Array.
 -(void)LocalStorageArray{
     
+    _VideocountArray =[[NSMutableArray alloc]initWithCapacity:23];
+    _VideocountArray = [[[NSUserDefaults standardUserDefaults]valueForKey:@"VideoCount"]mutableCopy];
+    
+    if (_VideocountArray.count <=20) {
+        if (_VideocountArray == nil) {
+            _VideocountArray = [[[NSMutableArray alloc]initWithObjects:@"Video", nil]mutableCopy];
+        }else{
+             [_VideocountArray addObject:@"Video"];
+        }
+             
+        if (_VideocountArray.count == 1) {
+            [[AnalyticEngine shared]VideoClick1Event];
+        }else if (_VideocountArray.count == 3){
+            [[AnalyticEngine shared]VideoClick3Event];
+        }else if (_VideocountArray.count == 5){
+             [[AnalyticEngine shared]VideoClick5Event];
+        }else if (_VideocountArray.count == 7){
+            [[AnalyticEngine shared]VideoClick7Event];
+        }else if (_VideocountArray.count == 10){
+             [[AnalyticEngine shared]VideoClick10Event];
+        }else if (_VideocountArray.count == 15){
+              [[AnalyticEngine shared]VideoClick15Event];
+        }else if (_VideocountArray.count == 20){
+              [[AnalyticEngine shared]VideoClick20Event];
+        }
+        [[NSUserDefaults standardUserDefaults]setObject:_VideocountArray forKey:@"VideoCount"];
+    }
     if (ZEE5PlayerSDK.getConsumpruionType == Live == false) {
         _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
         
@@ -1559,10 +1603,12 @@ static ContentBuisnessType buisnessType;
             
             NSLog(@"selected text track:: %@", event.selectedTrack.title);
             self.selectedSubtitle = event.selectedTrack.title;
+            self.CurrenttextTrack = event.selectedTrack.title;
         }
         else if ([event isKindOfClass:PlayerEvent.audioTrackChanged])
         {
             NSLog(@"selected audio track:: %@", event.selectedTrack.title);
+            self.CurrentAudioTrack = event.selectedTrack.title;
         }
     }];
 }
@@ -1687,8 +1733,6 @@ static ContentBuisnessType buisnessType;
 -(void)prepareCustomMenu
 {
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
-    self.CurrenttextTrack = [[Zee5PlayerPlugin sharedInstance]getCurrenttextTrack];
-    self.CurrentAudioTrack = [[Zee5PlayerPlugin sharedInstance]getCurrentAuditrack];
 
     if(_customMenu == nil)
     {
@@ -1798,6 +1842,7 @@ static ContentBuisnessType buisnessType;
     else
     {
         [self ShowToastMessage:@"Incorrect PIN please try again"];
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:8 severityCode:1 andErrorMsg:@"Parental Control Message -"];
     }
 }
 
@@ -2290,16 +2335,7 @@ static ContentBuisnessType buisnessType;
        {
           [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken ];
           
-          // Update video end point
-          NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
-          NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
-          
-          NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
-          [self updateConvivaSessionWithMetadata: dict];
-          
-          [[Zee5PlayerPlugin sharedInstance].player stop];
-          
-          [[AnalyticEngine new] cleanupVideoSesssion];
+          [self stop];
           
     } failureBlock:^(ZEE5SdkError * _Nullable error)
     {
@@ -2340,6 +2376,8 @@ static ContentBuisnessType buisnessType;
      
     [ZEE5UserDefaults settranslationLanguage:laguage];
     [ZEE5UserDefaults setContentId:content_id];
+    //Clean up video Session
+    [[AnalyticEngine new] cleanupVideoSesssion];
     
     
     [self registerNotifications];
@@ -2428,10 +2466,7 @@ static ContentBuisnessType buisnessType;
                     NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
                     [self updateConvivaSessionWithMetadata: dict];
                     
-                    [[Zee5PlayerPlugin sharedInstance].player stop];
-                    
-                    // Cleanup old or existing video session
-                   [[AnalyticEngine new] cleanupVideoSesssion];
+                    [self stop];
                 
                     [self createConvivaSeesionWithMetadata];
                     
@@ -2454,6 +2489,7 @@ static ContentBuisnessType buisnessType;
     } failureBlock:^(ZEE5SdkError *error)
      {
         [self notifiyError:error];
+         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:001 severityCode:0 andErrorMsg:@"Content Detail API Failure -"];
     }];
     
 }
@@ -2729,6 +2765,8 @@ static ContentBuisnessType buisnessType;
     self.currentItem.charecters = model.charecters;
     self.currentItem.skipintrotime = model.introStarttime;
     self.currentItem.AgeRate = model.ageRating;
+    self.currentItem.business_type = model.buisnessType;
+    self.currentItem.language = model.Languages;
     
     if (_playerConfig.playerType == normalPlayer)
     {
@@ -2782,6 +2820,8 @@ static ContentBuisnessType buisnessType;
     self.currentItem.geners = Livemodel.geners;
     self.currentItem.isDRM = Livemodel.isDRM;
     self.currentItem.audioLanguages = Livemodel.languages;
+    self.currentItem.business_type = Livemodel.buisnessType;
+    self.currentItem.language = Livemodel.languages;
     
     if (_playerConfig.playerType != normalPlayer)
     {
@@ -2820,7 +2860,7 @@ static ContentBuisnessType buisnessType;
              @"streamUrl": self.currentItem.hls_Url ?: [NSNull null],
              
              @"isLive": isLive,
-             @"playerName": Conviva_Application_Name,
+             @"playerName": Conviva_Player_name,
              @"viewerId": ZEE5PlayerSDK.getUserId
              };
  
@@ -2856,12 +2896,9 @@ static ContentBuisnessType buisnessType;
              @"streamUrl": self.currentItem.hls_Url ?: [NSNull null],
              
              @"isLive": isLive,
-             @"playerName": Conviva_Application_Name,
+             @"playerName": Conviva_Player_name,
              @"viewerId": ZEE5PlayerSDK.getUserId
              };
-    
-   // NSLog(@"|*** Create Comscore object:: %@ ***|", dict);
-
      [SCORAnalytics notifyViewEventWithLabels:dict];
 }
 -(void)setupMetadataWithContent:(CurrentItem *)item
@@ -2880,18 +2917,38 @@ static ContentBuisnessType buisnessType;
     
     NSTimeInterval startPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
     NSString *videoStartPoint = [Utility stringFromTimeInterval: startPoint];
-  
+    NSString *Affiliate = @"Zee Entertainment Enterprises Ltd";
+    if (_isTelco) {
+        if ([self.customControlView.partnerLblTxt.text containsString:@"vodafone"]) {
+            Affiliate = @"Vodafone";
+        }else if ([self.customControlView.partnerLblTxt.text containsString:@"airtel"]){
+              Affiliate = @"Airtel";
+        }else if ([self.customControlView.partnerLblTxt.text containsString:@"idea"]){
+              Affiliate = @"Idea";
+        }else{
+              Affiliate = @"NA";
+        }
+    }
+    NSString *AutoPlay = @"False";
+    if (_isAutoplay) {
+        AutoPlay = @"True";
+    }
+    
+    NSString *BeforeTv = @"Y";
+    if (_ModelValues.isBeforeTv) {
+        AutoPlay = @"N";
+    }
     
     NSString *NA = @"NA";
     
     dict = @{
              @"viewerId": userId,
              @"episodeName": item.channel_Name?: NA,
-             @"category": item.asset_type?: NA,
-             @"channel": item.asset_subtype?: NA,
+             @"category": item.asset_subtype?: NA,
+             @"channel": item.channel_Name?: NA,
              
              @"contentID": item.content_id?: NA,
-             @"ContentType": item.business_type?: NA,
+             @"ContentType": item.asset_subtype?: NA,
              @"genre": genres?: NA,
              @"pubDate": releaseDate?: NA,
              
@@ -2902,22 +2959,25 @@ static ContentBuisnessType buisnessType;
              @"carrier": networkName?: NA,
              @"connectionType": connectionType?: NA,
              
-             @"accessType": NA,
+             @"accessType": [ZEE5UserDefaults getUserType]?:NA,
              @"viewerAge": NA,
              @"viewerGender": NA,
              
-             @"autoplay": @"True",  // "False"
+             @"autoplay": AutoPlay,  // "False"
              @"videoStartPoint": videoStartPoint,
-             @"playbackQuality": NA,
-             @"originalLanguage": NA,
+             @"playbackQuality": @"Auto",
+             @"originalLanguage": [item.language componentsJoinedByString:@","]?:NA,
              
              @"isan": NA,
-             @"rootID": NA,
-             @"site": NA,
+             @"rootID": item.content_id,
+             @"site": @"zee5.com",
              @"tmsID": NA,
+             @"adID": [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString],
              
-             @"affiliate": NA,
-             @"streamingProtocol": NA
+             @"affiliate": Affiliate?:NA,
+             @"streamingProtocol": @"HLS",
+             @"platformName":@"IOS",
+             @"catchUp":BeforeTv
              };
     
     [self updateConvivaSessionWithMetadata: dict];
@@ -3102,6 +3162,9 @@ static ContentBuisnessType buisnessType;
           }];
         return;
     }
+    if (_ModelValues.isBeforeTv == true) {
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:006 severityCode:0 andErrorMsg:@"Before TV Popup -"];
+    }
     [self hideUnHidetrailerEndView:false];
     [self INDGuestUser];
     
@@ -3242,6 +3305,8 @@ static ContentBuisnessType buisnessType;
         [self notifiyError:error];
          NSLog(@"DRM Fail"); // Cheack Trailer
         
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:004 severityCode:1 andErrorMsg:@"Entitlement API Error -"];
+        
         if (error.zeeErrorCode == 3608)
         {
             [DeviceManager addDevice];
@@ -3347,7 +3412,7 @@ static ContentBuisnessType buisnessType;
       return;
     }
     
-    
+   [[AnalyticEngine new]DownloadCTAClicked];
    [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
 }
 

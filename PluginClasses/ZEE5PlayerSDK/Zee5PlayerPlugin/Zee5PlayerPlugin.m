@@ -16,7 +16,8 @@
 #import <ConvivaSDK/ConvivaSDK-iOS-umbrella.h>
 
 
-#define Conviva_Application_Name @"ZEE5"
+#define Conviva_Application_Name @"ZEE5-iOS App"
+#define Conviva_Player_Name @"ZEE5-KalturaPlayer"
 
 
 @interface Zee5PlayerPlugin() // <PlayerDelegate>
@@ -180,13 +181,14 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
     NSLog(@"%@",stremType);
     NSDictionary *dict = [[NSDictionary alloc] init];
+    AdPositionType Adpositiontype = event.adInfo.positionType;
     
     NSLog(@"|*** AdObject EventTitle: %@ *** streamUrl: %@ *** Adtotaltime: %d", event.adInfo.title, event.adTagUrl, [event.adMediaTime intValue]);
     
     dict = @{
              @"assetName": event.adInfo.title,
              @"applicationName": Conviva_Application_Name,
-             @"streamType": @"Vod",
+             @"streamType": stremType,
              @"duration": @"NA",
              @"streamUrl": @"NA" ,
              @"adPosition":[NSString stringWithFormat:@"%ld",(long)event.adInfo.adPosition],
@@ -227,7 +229,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
              @"streamUrl": @"NA",
              
              @"isLive": isLive,
-             @"playerName": Conviva_Application_Name,
+             @"playerName": Conviva_Player_Name,
              @"viewerId": ZEE5PlayerSDK.getUserId,
              
              @"c3.ad.technology": @"Client Side",   // "Server Side" or "Client Side"
@@ -481,6 +483,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
         NSLog(@"\n\n******\n\n");
         NSLog(@"|**** GOT AD Event :: AdEvent .error :: %@ ****|", event.adError.localizedDescription);
         NSLog(@"\n\n******\n\n");
+        
+        [self ConvivaErrorCode:event.error.code platformCode:003 severityCode:1 andErrorMsg:@"Ad Playback Error - "];
     }];
 }
 
@@ -512,7 +516,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 //MARK:- Handle basic event Of Player (Play, Pause, CanPlay ..  Failed)
 
+
+-(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSInteger)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg{
+    
+    NSString *ErrorMSG = [NSString stringWithFormat:@"%@%ld",ErrorMsg,Code];
+    NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%ld",Platform];
+    NSLog(@"%@ %@",ErrorCode,ErrorMSG);
+    NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
+    
+    NSString *Message = [NSString stringWithFormat:@"%@",dict];
+    [[AnalyticEngine shared]setupConvivvaErrorMsgWith:Message COSeverity:Severity];
+}
+
 - (void)handlePlayerError {
+    
+      __weak typeof(self) weakSelf = self;
     
     [self.player addObserver:self
                        event:PlayerEvent.error
@@ -525,6 +543,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
         if (event.error.code >= 7000)
         {
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
+            
+            [weakSelf ConvivaErrorCode:event.error.code platformCode:005 severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
+            
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
         

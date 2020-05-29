@@ -179,6 +179,20 @@ extension AllAnalyticsClass{
     
         }
     
+    @objc public func TvShowSectionplayed(){
+           
+         let parameter : Set = [
+               
+               Keys.TVSHOWSSECTION_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+               Keys.TVSHOWSSECTION_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+               Keys.TVSHOWSSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+               Keys.TVSHOWSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
+               Keys.TVSHOWSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+                   ]
+           analytics.track(Events.TVSHOWSSECTION_PLAYED, trackedProperties: parameter)
+       
+           }
+    
     //MARK:- Video Content played Event
        @objc public func videoContentplayed(){
            
@@ -196,17 +210,185 @@ extension AllAnalyticsClass{
        
            }
     
+    @objc public func videoContentSectionplayed(){
+             
+            analytics.track(Events.VIDEOSECTION_PLAYED, trackedProperties: Set<TrackedProperty>())
+         
+             }
+    
+    //MARK:- Player CTA Pressed
     
     @objc public func PlayerBtnPressed(with Element : String){
         
       let parameter : Set = [
             Keys.PLAYER_CTAS.SOURCE ~>> notAppplicable,
             Keys.PLAYER_CTAS.ELEMENT ~>> Element  == "" ? notAppplicable : Element,
-            Keys.PLAYER_CTAS.BUTTON_TYPE ~>> "Player More Button",
+            Keys.PLAYER_CTAS.BUTTON_TYPE ~>> Element  == "" ? notAppplicable : Element,
                 ]
         analytics.track(Events.PLAYER_CTAS, trackedProperties: parameter)
     
         }
+    //MARK:- Download CTA Clicked
+    
+    @objc public func DownloadCTAclicked(){
+        
+    let parameter : Set = [
+             Keys.DOWNLOAD_CLICK.SOURCE ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.ELEMENT ~>> "Download CTA",
+             Keys.DOWNLOAD_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+             Keys.DOWNLOAD_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+             Keys.DOWNLOAD_CLICK.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+             Keys.DOWNLOAD_CLICK.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+             Keys.DOWNLOAD_CLICK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+             Keys.DOWNLOAD_CLICK.SERIES ~>> series == "" ? notAppplicable:series,
+             Keys.DOWNLOAD_CLICK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+             Keys.DOWNLOAD_CLICK.CAST_TO ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+             Keys.DOWNLOAD_CLICK.PAGE_NAME ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.DRM_VIDEO ~>> DrmVideo,
+             Keys.DOWNLOAD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+             Keys.DOWNLOAD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+             Keys.DOWNLOAD_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+             Keys.DOWNLOAD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+             Keys.DOWNLOAD_CLICK.TAB_NAME ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.TV_CATEGORY ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.CHANNEL_NAME ~>> notAppplicable,
+             ]
+              analytics.track(Events.DOWNLOAD_CLICK, trackedProperties: parameter)
+    
+        }
     
     
+    //MARK:- Video Click Events(1,3,5,7,10,15,20)
+    
+    @objc public func VideoClicked1(){
+        
+    let parameter : Set = [
+          
+             Keys.DD1ST_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+             Keys.DD1ST_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+             Keys.DD1ST_VIDEO_CLICK.SEASON_ID ~>> "" ,
+             Keys.DD1ST_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+             Keys.DD1ST_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+             Keys.DD1ST_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+             Keys.DD1ST_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+             Keys.DD1ST_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+             Keys.DD1ST_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD1ST_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    @objc public func VideoClicked3(){
+           
+       let parameter : Set = [
+            
+           Keys.DD3RD_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+           Keys.DD3RD_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+           Keys.DD3RD_VIDEO_CLICK.SEASON_ID ~>> "",
+           Keys.DD3RD_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+           Keys.DD3RD_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+           Keys.DD3RD_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+           Keys.DD3RD_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+           Keys.DD3RD_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+           Keys.DD3RD_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+                ]
+                 analytics.track(Events.DD3RD_VIDEO_CLICK, trackedProperties: parameter)
+           }
+    
+    @objc public func VideoClicked5(){
+        
+    let parameter : Set = [
+         
+        Keys.DD5TH_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD5TH_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD5TH_VIDEO_CLICK.SEASON_ID ~>> "",
+        Keys.DD5TH_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.DD5TH_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+        Keys.DD5TH_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.DD5TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.DD5TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.DD5TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD5TH_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    
+    @objc public func VideoClicked7(){
+        
+    let parameter : Set = [
+         
+        Keys.DD7TH_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD7TH_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD7TH_VIDEO_CLICK.SEASON_ID ~>> "",
+        Keys.DD7TH_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.DD7TH_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+        Keys.DD7TH_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.DD7TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.DD7TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.DD7TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD7TH_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    
+    @objc public func VideoClicked10(){
+        
+    let parameter : Set = [
+         
+        Keys.DD10TH_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD10TH_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD10TH_VIDEO_CLICK.SEASON_ID ~>> "",
+        Keys.DD10TH_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.DD10TH_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+        Keys.DD10TH_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.DD10TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.DD10TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.DD10TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD10TH_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    
+    @objc public func VideoClicked15(){
+        
+    let parameter : Set = [
+         
+        Keys.DD15TH_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD15TH_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD15TH_VIDEO_CLICK.SEASON_ID ~>> "",
+        Keys.DD15TH_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.DD15TH_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+        Keys.DD15TH_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.DD15TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.DD15TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.DD15TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD15TH_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    
+    @objc public func VideoClicked20(){
+        
+    let parameter : Set = [
+         
+        Keys.DD20TH_VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD20TH_VIDEO_CLICK.SHOW_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.DD20TH_VIDEO_CLICK.SEASON_ID ~>> "",
+        Keys.DD20TH_VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.DD20TH_VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+        Keys.DD20TH_VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.DD20TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.DD20TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+        Keys.DD20TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+             ]
+              analytics.track(Events.DD20TH_VIDEO_CLICK, trackedProperties: parameter)
+        }
+    
+    //MARK:- SVOD Content play
+    
+    @objc public func SvodContentplayed(){
+    
+            analytics.track(Events.SVOD_CONTENT_VIEW, trackedProperties: Set<TrackedProperty>())
+        }
+    //MARK:- AVod Content play
+    
+    @objc public func AvodContentplayed(){
+    
+            analytics.track(Events.AVOD_CONTENT_VIEW, trackedProperties: Set<TrackedProperty>())
+        }
 }

@@ -58,6 +58,14 @@ NS_ASSUME_NONNULL_BEGIN
 */
 -(NSString *)getCurrenttextTrack;
 
+/*!
+ @discussion This method used toReport ConvivaErrorSession
+ @param Code PlaybackfailErrorCode
+ @param Platform  PlatformCode
+ @param ErrorMsg ConvivaErrorMsg
+**/
+-(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSInteger)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg;
+
 @end
 
 NS_ASSUME_NONNULL_END
