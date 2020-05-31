@@ -139,7 +139,7 @@ fileprivate class DownloadProgressView: UIView {
         if self.statusImageView.superview == nil {
             self.addSubview(statusImageView)
             
-            self.statusImageView.anchorToTop(size: CGSize(width: 20, height: 16))
+            self.statusImageView.anchorCenteredToTop(size: CGSize(width: 20, height: 16))
             
             self.statusImageView.contentMode = .scaleAspectFit
         }
@@ -163,7 +163,7 @@ fileprivate class DownloadProgressView: UIView {
             
             self.addSubview(self.circularRing)
             
-            self.circularRing.anchorToTop(size: CGSize(width: 27, height: 27))
+            self.circularRing.anchorCenteredToTop(size: CGSize(width: 27, height: 27))
 
             self.circularRing.startAngle = -90
             self.circularRing.style = .bordered(width: 0, color: AppColor.progressGray)

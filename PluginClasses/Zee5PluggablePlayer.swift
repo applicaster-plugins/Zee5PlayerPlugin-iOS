@@ -67,9 +67,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
             }
         }
-        
-        let playerViewController = ViewControllerFactory.createPlayerViewController(videoItems: videos, errorViewConfig: errorViewConfig)
-        
+                
         let instance: Zee5PluggablePlayer
         
         // Hybrid presented
@@ -79,11 +77,17 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         else {
             instance = Zee5PluggablePlayer()
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
+            
+            let playerViewController = ViewControllerFactory.createPlayerViewController(videoItems: videos, errorViewConfig: errorViewConfig)
+            instance.hybridViewController?.kalturaPlayerController = playerViewController
+            
+            instance.kalturaPlayerController = playerViewController
+            
+            instance.addPlayerObservers()
         }
         
         instance.configurationJSON = configurationJSON
         instance.currentPlayableItem = playable
-        instance.hybridViewController?.kalturaPlayerController = playerViewController
         instance.hybridViewController?.configurationJSON = configurationJSON
         
         if let screenModel = ZAAppConnector.sharedInstance().layoutComponentsDelegate.componentsManagerGetScreenComponentforPluginID(pluginID: "zee_player"),
@@ -93,9 +97,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.pluginStyles = instance.hybridViewController?.pluginStyles
         }
         
-        instance.kalturaPlayerController = playerViewController
-        
-        instance.addPlayerObservers()
         instance.contentId = playable.identifier as String?
         
         return instance
@@ -201,24 +202,10 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     // MARK: - private
     
     static func lastActiveInstance() -> Zee5PluggablePlayer? {
-        // No player present
         guard let lastActiveInstance = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
             return nil
         }
         
-        guard let topModal = ZAAppConnector.sharedInstance().navigationDelegate.topmostModal() else {
-            return nil
-        }
-        // Mini Player Present and user click on another item
-        guard topModal is HybridViewController else {
-            let instance = Zee5PluggablePlayer()
-            instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
-            Zee5PluggablePlayer.clear(instans: lastActiveInstance)
-            return instance
-        }
-        
-        // Hybrid Player Present and user click on related content
-        Zee5PluggablePlayer.clear(instans: lastActiveInstance)
         return lastActiveInstance
     }
     

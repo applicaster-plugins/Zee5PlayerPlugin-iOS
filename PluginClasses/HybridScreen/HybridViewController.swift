@@ -26,15 +26,16 @@ class HybridViewController: UIViewController {
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
     
-    @IBOutlet weak var playerView: UIView?
+    @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
-    @IBOutlet var buttonsViewCollection: [UIButton]?
-    @IBOutlet var viewCollection: [UIView]?
-    @IBOutlet var labelsCollection: [UILabel]?
+    @IBOutlet var buttonsViewCollection: [UIButton]!
+    @IBOutlet var viewCollection: [UIView]!
+    @IBOutlet var labelsCollection: [UILabel]!
     
-    @IBOutlet weak var itemNameLabel: UILabel?
+    @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemDescriptionLabel: UILabel!
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
     var mainCollectionViewController: StaticViewCollectionViewController?
@@ -46,9 +47,51 @@ class HybridViewController: UIViewController {
     var languagesSubtitlesDataSource: [(title: String?, subtitle: String?, description: String?)]?
     
     var currentPlayableItem: ZPPlayable? {
+        willSet(newValue) {
+            guard self.isViewLoaded else {
+                return
+            }
+            
+            if self.currentPlayableItem !== newValue || newValue == nil {
+                self.itemNameLabel?.text = nil
+                self.itemDescriptionLabel?.text = nil
+                
+                self.castDataSource = nil
+                self.creatorsDataSource = nil
+                self.languagesSubtitlesDataSource = nil
+                
+                self.labelsCollection.forEach { (label) in
+                    label.text = nil
+                    label.isHidden = true
+                }
+                
+                self.viewCollection.forEach { (view) in
+                    if let actionBarView = view as? ActionBarView {
+                        actionBarView.resetButtons()
+                    }
+                    else if let metaDataCollectionView = view as? UICollectionView {
+                        metaDataCollectionView.reloadData()
+                    }
+                    else if let adBanner = view as? AdBanner {
+                        adBanner.isHidden = true
+                    }
+                    else if let premiumBanner = view as? PremiumBanner {
+                        premiumBanner.isHidden = true
+                    }
+                }
+                
+                self.mainCollectionViewContainer.removeAllSubviews()
+                
+                self.metadataViewContainer.isHidden = true
+            }
+        }
+        
         didSet {
-            if self.currentPlayableItem != nil && self.isViewLoaded {
-                self.metadataViewContainer.isHidden = false
+            guard self.isViewLoaded else {
+                return
+            }
+            
+            if self.currentPlayableItem != nil {
                 self.commonInit()
             }
         }
@@ -120,10 +163,7 @@ class HybridViewController: UIViewController {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
         self.playerView?.addGestureRecognizer(panGestureRecognizer)
         
-        if self.currentPlayableItem == nil {
-            self.addGradient()
-            self.metadataViewContainer.isHidden = true
-        }
+        self.addGradient()
     }
     
     func commonInit() {
@@ -135,11 +175,14 @@ class HybridViewController: UIViewController {
         
         self.itemNameLabel?.text = self.currentPlayableItem?.playableName()
         self.itemDescriptionLabel?.text = self.currentPlayableItem?.playableDescription()
+        self.itemDescriptionLabel.isHidden = false
         
         setupModel()
         setupButtons()
         setupLabels()
         setupViews()
+        
+        self.metadataViewContainer.isHidden = false
     }
     
     var originalPosition: CGPoint?
@@ -282,7 +325,10 @@ class HybridViewController: UIViewController {
     func closePlayer() {
         ZEE5PlayerManager.sharedInstance().stop()
         ZEE5PlayerManager.sharedInstance().destroyPlayer()
-        self.dismiss(animated: true, completion: nil)
+        
+        self.dismiss(animated: true) {
+            self.currentPlayableItem = nil
+        }
     }
     
     // MARK: Video Loading View
@@ -307,7 +353,8 @@ class HybridViewController: UIViewController {
         gradientLayer.colors = [UIColor(red: 19/255, green: 0, blue: 20/255, alpha: 1).cgColor, UIColor(red: 43/255, green: 2/255, blue: 37/255, alpha: 1).cgColor]
         gradientLayer.shouldRasterize = true
         
-        self.mainCollectionViewContainer.layer.addSublayer(gradientLayer)
+        self.backgroundView.layer.sublayers?.removeAll()
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     fileprivate func removeGradient() {

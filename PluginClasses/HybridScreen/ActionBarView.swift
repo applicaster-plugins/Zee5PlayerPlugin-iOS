@@ -157,7 +157,7 @@ public class ActionBarView: UIView {
         let imageView = UIImageView()
         container.addSubview(imageView)
         
-        imageView.anchorToTop(size: CGSize(width: 20, height: 16))
+        imageView.anchorCenteredToTop(size: CGSize(width: 20, height: 16))
         
         imageView.image = buttonData.image
         imageView.contentMode = .scaleAspectFit

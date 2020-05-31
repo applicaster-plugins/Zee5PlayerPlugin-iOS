@@ -349,19 +349,33 @@ extension HybridViewController {
     private func handleRelatedContent() {
         guard
             let url = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.relatedContent] as? String,
-            let atomFeed = APAtomFeed.init(url: url) else {
+            let atomFeed = APAtomFeed(url: url) else {
+                if self.metadataViewContainer.superview != self.mainCollectionViewContainer {
+                    self.mainCollectionViewContainer.addSubview(self.metadataViewContainer)
+                    
+                    self.metadataViewContainer.removeConstraints(self.metadataViewContainer.constraints)
+                    self.metadataViewContainer.anchorToTop()
+                }
+                
                 return
         }
+        
+        if let mainCollectionViewController = self.mainCollectionViewController {
+            mainCollectionViewController.removeFromParent()
+        }
+        
+        self.mainCollectionViewContainer.removeAllSubviews()
         
         let mainCollectionViewController = StaticViewCollectionViewController()
         self.mainCollectionViewController = mainCollectionViewController
         
-        self.metadataViewContainer.isHidden = false
         self.metadataViewContainer.removeFromSuperview()
         
         mainCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addChild(mainCollectionViewController)
         self.mainCollectionViewContainer.addSubview(mainCollectionViewController.view)
+        
         mainCollectionViewController.view.fillParent()
         mainCollectionViewController.didMove(toParent: self)
         
@@ -375,7 +389,6 @@ extension HybridViewController {
     extension HybridViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            
             switch collectionView.tag {
             case ItemTag.View.consumptionCastCollection:
                 return castDataSource?.count ?? 0
