@@ -50,6 +50,7 @@ public struct ExtensionsKey {
     static let promotedUrl = "promoted_url"
     static let durationDate = "durationDate"
     static let assetType = "asset_type"
+    static let assetSubtype = "asset_subtype"
     static let rating = "rating"
     static let extraData = "extra_data"
     static let releaseYear = "release_year"

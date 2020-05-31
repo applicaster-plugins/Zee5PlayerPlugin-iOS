@@ -26,7 +26,7 @@ class PremiumBanner: UIView {
     fileprivate var originalHeightValue = CGFloat(0)
     
     func setupBanner(playable: ZPPlayable?) {
-        self.originalHeightValue = self.heightConstraint.constant
+        self.originalHeightValue = 60.0
         
         self.observer = NotificationCenter.default.addObserver(forName: .subscriptionFinished, object: nil, queue: nil,using: handleSubscription)
 
@@ -54,12 +54,14 @@ fileprivate class PremiumHelper {
             return
         }
         
-        guard let isFree = extensions[ExtensionsKey.isFree] as? Bool, !isFree else {
+        guard User.shared.getType() != .premium else {
             return
         }
         
-        guard User.shared.getType() != .premium else {
-            return
+        if let isFree = extensions[ExtensionsKey.isFree] as? Bool, let subtype = extensions[ExtensionsKey.assetSubtype] as? String, subtype != "trailer" {
+            guard !isFree else {
+                return
+            }
         }
         
         self.playable = playable
