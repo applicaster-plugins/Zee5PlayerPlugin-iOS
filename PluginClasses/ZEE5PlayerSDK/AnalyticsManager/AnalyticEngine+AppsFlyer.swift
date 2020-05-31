@@ -94,7 +94,7 @@ extension AnalyticEngine
     
     // MARK:Calculate Percent Duration
     
-    @objc public func VideoWatchPercentCalc(){
+    @objc public func VideoWatchPercentCalc(with Direction:String){
         
         let totalDuration = ZEE5PlayerManager .sharedInstance().getTotalDuration()
         let  currentDuration = ZEE5PlayerManager.sharedInstance().getCurrentDuration()
@@ -102,15 +102,15 @@ extension AnalyticEngine
         let Percentage = (currentDuration * 100 / totalDuration).rounded(.toNearestOrAwayFromZero)
         
  
-        if (20...49).contains(Percentage) && VideWatchInt != 20  {
+        if (20...49).contains(Percentage) && VideWatchInt != 20 && Direction == "Forward" && VideWatchInt != 50 && VideWatchInt != 85  {
             VideoWatch20Percent()
             VideWatchInt = 20
             
-        }else if (50...84).contains(Percentage) && VideWatchInt != 50  {
+        }else if (50...84).contains(Percentage) && VideWatchInt != 50 && Direction == "Forward" && VideWatchInt != 85 {
             VideoWatch50Percent()
             VideWatchInt = 50
            
-        }else if Percentage >= 85.0 &&  VideWatchInt != 85  {
+        }else if Percentage >= 85.0 &&  VideWatchInt != 85 && Direction == "Forward"  {
             VideoWatch85Percent()
             VideWatchInt = 85
         }else{}

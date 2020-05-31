@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param Platform  PlatformCode
  @param ErrorMsg ConvivaErrorMsg
 **/
--(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSInteger)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg;
+-(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSString *)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg;
 
 @end
 

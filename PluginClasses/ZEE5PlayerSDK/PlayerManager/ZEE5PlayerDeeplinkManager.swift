@@ -13,20 +13,24 @@ var CompletionHandler:((Bool)->(Void))?
 
 @objc public class ZEE5PlayerDeeplinkManager: NSObject
 {
-    @objc static let sharedMethod = ZEE5PlayerDeeplinkManager()
+    @objc public static let sharedMethod = ZEE5PlayerDeeplinkManager()
 
     //private override init() {}
     
-  @objc public func GetSubscrbtion(with Assetid:String,beforetv:Bool)
+  @objc public func GetSubscrbtion(with Assetid:String,beforetv:Bool,Param : String , completion:@escaping((Bool)->(Void)))
     {
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        User.shared.refreshViewAfterloginOrRegistration = { [] in
+                           completion(true)
+                       }
         Zee5DeepLinkingManager.shared.openURL(withURL:Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: Assetid, beforeTV: beforetv).url)
-        
     }
     
     @objc public func NavigatetoLoginpage(Param : String , completion:@escaping((Bool)->(Void))){
          let value = UIInterfaceOrientation.portrait.rawValue
                 UIDevice.current.setValue(value, forKey: "orientation")
-                User.shared.refreshViewAfterloginOrRegistration = { [weak self] in
+                User.shared.refreshViewAfterloginOrRegistration = { [] in
                     completion(true)
                 }
                Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
