@@ -74,7 +74,7 @@ typedef enum consumptiontype
 
 
 ///
-typedef NS_ENUM(NSUInteger, ConvivaPlayerState) {
+typedef NS_ENUM(NSUInteger, ZEEConvivaPlayerState) {
     ConvivaPlayerStateSTOPPED = 1,
     ConvivaPlayerStatePLAYING = 3,
     ConvivaPlayerStateBUFFERING = 6,

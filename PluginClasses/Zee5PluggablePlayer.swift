@@ -263,15 +263,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         func prepareUserData() {
             ZEE5UserDefaults.setPlateFormToken(Zee5UserDefaultsManager.shared.getPlatformToken())
             
-            SettingsHelper.shared.syncServerSettingsToLocalOnLogin()
-            
-            SubscriptionManager.shared.fetchSubscriptionsAPI {
-                if let subscriptionData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
-                    let dataString = String(data: subscriptionData, encoding: String.Encoding.utf8)
-                    ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+            SettingsHelper.shared.syncServerSettingsToLocalOnLogin() { updated in
+                SubscriptionManager.shared.fetchSubscriptionsAPI {
+                    if let subscriptionData = Zee5UserDefaultsManager.shared.getSubscriptionPacksData() {
+                        let dataString = String(data: subscriptionData, encoding: String.Encoding.utf8)
+                        ZEE5UserDefaults.setUserSubscribedPack(dataString ?? "")
+                    }
+                    
+                    continueAfterSubscriptionResponse()
                 }
-                
-                continueAfterSubscriptionResponse()
             }
         }
         
