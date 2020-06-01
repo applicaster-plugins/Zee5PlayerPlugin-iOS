@@ -63,6 +63,7 @@ class ShowsDownloadController: UIViewController {
                 tmp.estimatedBytes = Int64(item.estimatedSize)
                 tmp.downloadState = item.state
                 tmp.imgUrl = item.imageURL
+                tmp.showimgUrl = item.showimgUrl
                 tmp.assetType = item.assetType
                 tmp.originalTitle = item.showOriginalTitle
                 tmp.noOfEpisodes = item.episode

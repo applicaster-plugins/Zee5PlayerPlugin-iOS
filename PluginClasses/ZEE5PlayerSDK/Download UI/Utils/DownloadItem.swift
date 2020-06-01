@@ -13,6 +13,7 @@ public class DownloadItem {
     var title: String?
     var showTitle: String?
     var imgUrl: String?
+    var showimgUrl: String?
     var noOfEpisodes: String?
     var noOfBytes: String?
     var noOfDownloads: String?
@@ -31,12 +32,14 @@ public class DownloadItem {
     var assetType: String?
     var originalTitle: String?
     var pendingDownloads: String?
+    //var Agerating: String?
     
     init() {}
     
-    init(itemId: String, title: String, imgUrl: String, noOfEpisodes: String, noofBytes: String, noOfDownloads: String, duration: Int, status: String, lblInfo: String)
+    init(itemId: String, title: String, imgUrl: String,showimgUrl: String, noOfEpisodes: String, noofBytes: String, noOfDownloads: String, duration: Int, status: String, lblInfo: String)
     {
         self.contentId = itemId
+        self.showimgUrl = showimgUrl
         self.title = title
         self.imgUrl = imgUrl
         self.noOfEpisodes = noOfEpisodes
@@ -45,5 +48,6 @@ public class DownloadItem {
         self.duration = duration
         self.status = status
         self.lblInfo = lblInfo
+       // self.Agerating = Agerating
     }
 }

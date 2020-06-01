@@ -56,6 +56,7 @@ public class DownloadHelper: NSObject {
         data.showOriginalTitle = item.originalTitle
         data.duration = item.duration
         data.imageUrl = item.imageUrl
+        data.tvShowimgurl = item.tvShowImgurl
         data.contentDescription = item.info
         data.geners = item.geners
         data.isDRM = item.isDRM
@@ -158,7 +159,7 @@ public class DownloadHelper: NSObject {
         }
         
         // Update value from player sdk
-        let zeeItem = ZeeDownloadItem(id: data.identifier, url: videoUrl, title: data.title, imageUrl: data.imageUrl, info: data.contentDescription, episodeNumber: data.episodeNumber, assetType: data.assetType, assetSubType: data.assetSubtype, duration: data.duration, showOriginalTitle: data.showOriginalTitle, licenseUrl: self.licenseUrl, base64: self.base64, customData: customData, Age: data.ageRating)
+        let zeeItem = ZeeDownloadItem(id: data.identifier, url: videoUrl, title: data.title, imageUrl: data.imageUrl,showimgUrl:data.tvShowimgurl, info: data.contentDescription, episodeNumber: data.episodeNumber, assetType: data.assetType, assetSubType: data.assetSubtype, duration: data.duration, showOriginalTitle: data.showOriginalTitle, licenseUrl: self.licenseUrl, base64: self.base64, customData: customData, Age: data.ageRating)
         
         // Setup Fairplay license for offline plyaback
         let fairParam = FairPlayDRMParams(licenseUri: self.licenseUrl, base64EncodedCertificate: self.base64)

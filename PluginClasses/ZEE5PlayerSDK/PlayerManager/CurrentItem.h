@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonnull) NSString *hls_Full_Url;
 @property (nonatomic, copy)   NSString *mpd_Url;
 @property(strong, nonnull) NSString *imageUrl;
+@property(strong, nonnull) NSString *TvShowImgurl;
 
 @property(strong, nonnull) NSString *drm_token;
 @property(strong, nonnull) NSString *business_type;

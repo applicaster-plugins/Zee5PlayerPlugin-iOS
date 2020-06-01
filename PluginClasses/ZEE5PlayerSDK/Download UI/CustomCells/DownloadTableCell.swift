@@ -25,7 +25,7 @@ class DownloadTableCell: UITableViewCell {
                 lblInfo.text = "\(show.noOfEpisodes ?? "") Episodes • \(totalSize)"
                 lblDownloading.text = "Downloading \(show.pendingDownloads ?? "") of \(show.noOfEpisodes ?? "")"
                 lblDownloading.isHidden = show.downloadState == .inProgress ? false : true
-                imgView.setImage(with: show.imgUrl)
+                imgView.setImage(with: show.showimgUrl)
             }
         }
     }

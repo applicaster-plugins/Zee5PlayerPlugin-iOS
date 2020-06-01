@@ -2216,10 +2216,10 @@ static ContentBuisnessType buisnessType;
 
 -(void)tapOnSubscribeButton                  /// Navigate To Subscription Page
 {
-
      [self stop];    ///*** Player Stop First Here***//
     [_GuestuserPopView removeFromSuperview];
     _GuestuserPopView = nil;
+    [self hideUnHidetrailerEndView:true];
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
@@ -2252,6 +2252,7 @@ static ContentBuisnessType buisnessType;
 {
      [self stop];    ///*** Player Stop First Here***//
      [self removeSubview];
+    [self hideUnHidetrailerEndView:true];
     [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
@@ -2779,6 +2780,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.originalTitle = model.showOriginalTitle;
     self.currentItem.duration = model.duration;
     self.currentItem.imageUrl = model.imageUrl;
+    self.currentItem.TvShowImgurl = model.tvShowimgurl;
     self.currentItem.info = model.contentDescription;
     self.currentItem.geners = model.geners;
     self.currentItem.isDRM = model.isDRM;
@@ -2809,7 +2811,7 @@ static ContentBuisnessType buisnessType;
             
         } failureBlock:^(ZEE5SdkError *error) {
             NSLog(@"%ld",(long)error.zeeErrorCode);
-            [self playWithCurrentItem];
+           [self getSubscrptionList];
         }];
     }
     else
