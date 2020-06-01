@@ -8,6 +8,8 @@
 
 import UIKit
 import PlayKit
+import Alamofire
+import Zee5CoreSDK
 
 protocol OfflineVideoDurationDelegate: class {
     func updateVideoDuration(item: DownloadItem?, duration: Int)
@@ -58,12 +60,20 @@ class OfflinePlayerController: UIViewController {
     private var forwardButton: TouchableButton!
     private var rewindButton: TouchableButton!
     private var videoPlayingDuration = 0
+    private let reachability = NetworkReachabilityManager()
+    var ParentalPin = ""
+    var Agerating = ""
     
     private var availableTracks: PKTracks? {
         didSet {
             self.checkMenuOptionState()
         }
     }
+//    private var isparentalPin:Bool?{
+//        didSet{
+//            self.checkParentalSet()
+//        }
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +113,33 @@ class OfflinePlayerController: UIViewController {
         }
     }
     
+//    func checkParentalSet() {
+//        isparentalPin = false
+//         if let isNetworkReachable = self.reachability?.isReachable,
+//            isNetworkReachable == true {
+//            if let data = Zee5UserSettingsManager.shared.getUserSettingsModal(){
+//            for settingDataModel in data {
+//                if settingDataModel.key == "age_rating"{
+//                     print(settingDataModel.value!)
+//                    Agerating = settingDataModel.value!
+//                   }
+//                if settingDataModel.key == "pin"{
+//                    print(settingDataModel.value!)
+//                    ParentalPin = settingDataModel.value!
+//                   }
+//                }
+//                if ParentalPin != nil && Agerating != nil {
+//                    parentalLogic()
+//                }
+//            }
+//
+//        }
+//    }
+//
+//    func parentalLogic() {
+//
+//        print(selectedVideo?.Agerating! ?? "")
+//    }
     func updateVideoDurationToServer() {
         if let id = self.selectedVideo?.contentId {
             do {

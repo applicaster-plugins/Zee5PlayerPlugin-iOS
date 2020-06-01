@@ -124,6 +124,7 @@
             NSDictionary * showDetail = [dict ValueForKeyWithNullChecking:@"tvshow_details"];
             NSString *str = [showDetail ValueForKeyWithNullChecking: @"original_title"];
             self.tvShowBuisnessType = [showDetail ValueForKeyWithNullChecking:@"business_type"];
+            self.tvShowimgurl = [showDetail ValueForKeyWithNullChecking:@"image_url"];
             
             /// ********* Before TV Logic On PopUp Close ***************//////////////
               if (!([self.tvShowBuisnessType isEqualToString:@"premium"] || [self.tvShowBuisnessType isEqualToString:@"premium_downloadable"]) && ([self.buisnessType isEqualToString:@"premium"] || [self.buisnessType isEqualToString:@"premium_downloadable"]))

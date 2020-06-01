@@ -15,6 +15,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
     public var licenseUrl                  = ""
     public var title                       = ""
     public var imageURL                    = ""
+    public var showimgUrl                  = ""
     public var Agerating                   = ""
     public var info                        = ""
     public var category                    = ""
@@ -43,7 +44,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
     public var contentMeadiaSorce: PKMediaSource!
     public var contentFairPlay: FormFairPlayLicenseProvider?
     
-    public init(id: String, url: String, title: String, imageUrl: String, info: String, episodeNumber: Int, assetType: String, assetSubType: String, duration: Int, showOriginalTitle: String, licenseUrl: String, base64: String, customData: String,Age:String) {
+    public init(id: String, url: String, title: String, imageUrl: String,showimgUrl: String ,info: String, episodeNumber: Int, assetType: String, assetSubType: String, duration: Int, showOriginalTitle: String, licenseUrl: String, base64: String, customData: String,Age:String) {
      
         self.contentId = id
         self.contentUrl = url
@@ -60,6 +61,7 @@ public class ZeeDownloadItem: NSObject, DownloadDataItem {
         self.licenseUrl = licenseUrl
         self.base64encodedcertificate = base64
         self.customData = customData
+        self.showimgUrl = showimgUrl
         
         let fairParam = FairPlayDRMParams(licenseUri: licenseUrl, base64EncodedCertificate: base64)
         self.contentMeadiaSorce = PKMediaSource(id, contentUrl: URL(string: url), mimeType: nil, drmData: [fairParam], mediaFormat: .hls)
@@ -99,6 +101,9 @@ public protocol DownloadDataItem {
     
     // Item's image URL.
     var imageURL: String { get set }
+    
+    // Item's Show image URL.
+    var showimgUrl: String { get set }
     
     // Item's description.
     var description: String { get }

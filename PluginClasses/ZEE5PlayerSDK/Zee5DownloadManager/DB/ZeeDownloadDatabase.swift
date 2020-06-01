@@ -19,6 +19,7 @@ class ZeeDownloadDatabase {
     let licenseUrl               = Expression<String>("licenseUrl")
     let title                    = Expression<String>("title")
     var imageURL                 = Expression<String>("imageURL")
+    var showimgUrl               = Expression<String>("showimgUrl")
     var description              = Expression<String>("description")
     let category                 = Expression<String>("category")
     let episode                  = Expression<String>("episode")
@@ -38,6 +39,7 @@ class ZeeDownloadDatabase {
     var episodeNumber            = Expression<Int>("episodeNumber")
     var duration                 = Expression<Int>("duration")
     var offlinePlayingDuration   = Expression<Int>("offlinePlayingDuration")
+   // var Agerating                = Expression<String>("Agerating")
     
     //
     var showOriginalTitle        = Expression<String>("showOriginalTitle")
@@ -68,6 +70,7 @@ extension ZeeDownloadDatabase {
                 t.column(licenseUrl)
                 t.column(title)
                 t.column(imageURL)
+                t.column(showimgUrl)
                 t.column(description)
                 t.column(category)
                 t.column(episode)
@@ -86,7 +89,7 @@ extension ZeeDownloadDatabase {
                 t.column(episodeNumber)
                 t.column(duration)
                 t.column(offlinePlayingDuration)
-                //
+               // t.column(Agerating)
                 t.column(showOriginalTitle)
             })
         } catch {
@@ -103,6 +106,7 @@ extension ZeeDownloadDatabase {
                                                   licenseUrl <- downloadItem.licenseUrl,
                                                   title <- downloadItem.title,
                                                   imageURL <- downloadItem.imageURL,
+                                                  showimgUrl <- downloadItem.showimgUrl,
                                                   description <- downloadItem.description,
                                                   category <- downloadItem.category,
                                                   episode <- downloadItem.episode,
@@ -122,6 +126,7 @@ extension ZeeDownloadDatabase {
                                                   duration <- downloadItem.duration,
                                                   offlinePlayingDuration <- downloadItem.offlinePlayingDuration,
                                                   showOriginalTitle <- downloadItem.showOriginalTitle)
+                                                 // Agerating <- downloadItem.Agerating)
             _ = try db.run(insert)
             
         } catch {
@@ -165,6 +170,7 @@ extension ZeeDownloadDatabase {
                                          licenseUrl <- item.licenseUrl,
                                          title <- item.title,
                                          imageURL <- item.imageURL,
+                                         showimgUrl <- item.showimgUrl,
                                          description <- item.description,
                                          category <- item.category,
                                          episode <- item.episode,
@@ -183,6 +189,7 @@ extension ZeeDownloadDatabase {
                                          episodeNumber <- item.episodeNumber,
                                          duration <- item.duration,
                                          offlinePlayingDuration <- item.offlinePlayingDuration,
+                                        // Agerating <- item.Agerating,
                                          showOriginalTitle <- item.showOriginalTitle)
         
         do {
@@ -306,15 +313,16 @@ extension ZeeDownloadDatabase {
         do{
             var downloadItems = [ZeeDownloadItem]()
             var tmp : ZeeDownloadItem
-            for row in try db.prepare("SELECT showOriginalTitle,imageURL,count(title),sum(estimatedSize),assetType, contentId, assetSubType FROM DownloadItemTable WHERE (assetType = '1') GROUP BY showOriginalTitle") {
+            for row in try db.prepare("SELECT showOriginalTitle,imageURL,showimgUrl,count(title),sum(estimatedSize),assetType, contentId, assetSubType FROM DownloadItemTable WHERE (assetType = '1') GROUP BY showOriginalTitle") {
                 tmp = ZeeDownloadItem()
                 tmp.showOriginalTitle = row[0] as! String
                 tmp.imageURL = row[1] as! String
-                tmp.episode = String(row[2] as!  Int64)
-                tmp.downloadedSize = Int(row[3] as! Int64)
-                tmp.assetType = row[4] as! String
-                tmp.contentId = row[5] as! String
-                tmp.assetSubType = row[6] as! String
+                tmp.showimgUrl = row[2] as! String
+                tmp.episode = String(row[3] as!  Int64)
+                tmp.downloadedSize = Int(row[4] as! Int64)
+                tmp.assetType = row[5] as! String
+                tmp.contentId = row[6] as! String
+                tmp.assetSubType = row[7] as! String
                 downloadItems.append(tmp)
             }
             return downloadItems
@@ -328,10 +336,11 @@ extension ZeeDownloadDatabase {
             var dict: [String: String] = [:]
             var count: String
             var tmp: ZeeDownloadItem
-            for row in try db.prepare("SELECT showOriginalTitle,count(item_status) FROM DownloadItemTable WHERE assetType == 1 and item_status in ('inProgress','inQueue','paused') GROUP BY showOriginalTitle ") {
+            for row in try db.prepare("SELECT showOriginalTitle,showimgUrl,count(item_status) FROM DownloadItemTable WHERE assetType == 1 and item_status in ('inProgress','inQueue','paused') GROUP BY showOriginalTitle ") {
                 tmp = ZeeDownloadItem()
                 tmp.showOriginalTitle = row[0] as! String
-                count =  String(row[1] as! Int64)
+                tmp.showimgUrl = row[1] as! String
+                count =  String(row[2] as! Int64)
                 dict = [tmp.showOriginalTitle: count]
             }
             return dict
@@ -347,8 +356,10 @@ extension ZeeDownloadDatabase {
         item.contentId = itemRow[contentId]
         item.contentUrl = itemRow[contentUrl]
         item.licenseUrl = itemRow[licenseUrl]
+       // item.Agerating = itemRow[Agerating]
         item.title = itemRow[title]
         item.imageURL = itemRow[imageURL]
+        item.showimgUrl = itemRow[showimgUrl]
         item.info = itemRow[description]
         item.category = itemRow[category]
         item.episode = itemRow[episode]

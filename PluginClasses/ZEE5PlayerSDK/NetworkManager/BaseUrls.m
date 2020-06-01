@@ -175,10 +175,10 @@
 {
     switch (ZEE5PlayerSDK.getAdsEnvironment) {
         case staging:
-        return @"https://stagingb2bapi.zee5.com/adtags/adds_v3.php?";
+        return @"https://stagingb2bapi.zee5.com/adtags/adds_v3.php";
         break;
         case prod:
-        return @"https://b2bapi.zee5.com/adtags/adds_v3.php?";
+        return @"https://b2bapi.zee5.com/adtags/adds_v3.php";
         break;
     }
 }
