@@ -96,6 +96,7 @@ class ShowDetailController: UIViewController {
                     tmp.assetType = item.assetType
                     tmp.episodeNumber = item.episodeNumber
                     tmp.videoPlayedDuration = item.offlinePlayingDuration
+                    tmp.Agerating = item.Agerating
                     items.append(tmp)
                 }
                 self.episodeArr = items

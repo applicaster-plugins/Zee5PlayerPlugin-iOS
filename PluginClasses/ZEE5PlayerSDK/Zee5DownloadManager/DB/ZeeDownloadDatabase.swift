@@ -39,7 +39,7 @@ class ZeeDownloadDatabase {
     var episodeNumber            = Expression<Int>("episodeNumber")
     var duration                 = Expression<Int>("duration")
     var offlinePlayingDuration   = Expression<Int>("offlinePlayingDuration")
-   // var Agerating                = Expression<String>("Agerating")
+    var Agerating                = Expression<String>("Agerating")
     
     //
     var showOriginalTitle        = Expression<String>("showOriginalTitle")
@@ -89,7 +89,7 @@ extension ZeeDownloadDatabase {
                 t.column(episodeNumber)
                 t.column(duration)
                 t.column(offlinePlayingDuration)
-               // t.column(Agerating)
+                t.column(Agerating)
                 t.column(showOriginalTitle)
             })
         } catch {
@@ -125,8 +125,8 @@ extension ZeeDownloadDatabase {
                                                   episodeNumber <- downloadItem.episodeNumber,
                                                   duration <- downloadItem.duration,
                                                   offlinePlayingDuration <- downloadItem.offlinePlayingDuration,
+                                                  Agerating <- downloadItem.Agerating,
                                                   showOriginalTitle <- downloadItem.showOriginalTitle)
-                                                 // Agerating <- downloadItem.Agerating)
             _ = try db.run(insert)
             
         } catch {
@@ -189,7 +189,7 @@ extension ZeeDownloadDatabase {
                                          episodeNumber <- item.episodeNumber,
                                          duration <- item.duration,
                                          offlinePlayingDuration <- item.offlinePlayingDuration,
-                                        // Agerating <- item.Agerating,
+                                         Agerating <- item.Agerating,
                                          showOriginalTitle <- item.showOriginalTitle)
         
         do {
@@ -356,7 +356,7 @@ extension ZeeDownloadDatabase {
         item.contentId = itemRow[contentId]
         item.contentUrl = itemRow[contentUrl]
         item.licenseUrl = itemRow[licenseUrl]
-       // item.Agerating = itemRow[Agerating]
+        item.Agerating = itemRow[Agerating]
         item.title = itemRow[title]
         item.imageURL = itemRow[imageURL]
         item.showimgUrl = itemRow[showimgUrl]

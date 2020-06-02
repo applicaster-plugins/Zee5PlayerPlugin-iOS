@@ -104,6 +104,7 @@ class DownloadActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder 
         result.imgUrl = item.imageURL
         result.duration = item.duration
         result.videoPlayedDuration = item.offlinePlayingDuration
+        result.Agerating = item.Agerating
     
         return result
     }

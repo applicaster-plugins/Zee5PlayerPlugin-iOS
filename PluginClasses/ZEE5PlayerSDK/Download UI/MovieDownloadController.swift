@@ -98,6 +98,7 @@ class MovieDownloadController: UIViewController {
                 tmp.imgUrl = item.imageURL
                 tmp.duration = item.duration
                 tmp.videoPlayedDuration = item.offlinePlayingDuration
+                tmp.Agerating = item.Agerating
                 items.append(tmp)
             }
             self.movieArr = items

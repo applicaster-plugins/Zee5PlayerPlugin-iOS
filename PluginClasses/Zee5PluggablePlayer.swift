@@ -98,6 +98,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         instance.contentId = playable.identifier as String?
+        UserDefaults.standard.set(playable.identifier as String?, forKey: "originalContentId")
         
         return instance
     }
@@ -352,7 +353,8 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         self.refreshRequiredNotificationToken = NotificationCenter.default.addObserver(forName: .refreshRequiredNotification, object: nil, queue: nil) { (notification) in
-            
+            self.contentId! = UserDefaults.standard .value(forKey: "originalContentId") as! String
+            self.playContent()
         }
     }
     
