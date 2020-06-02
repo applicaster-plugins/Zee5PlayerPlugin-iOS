@@ -122,6 +122,7 @@ extension EditDownloadController {
                 tmp.originalTitle = item.showOriginalTitle
                 tmp.noOfEpisodes = item.episode
                 tmp.noOfBytes = String(item.downloadedSize)
+                tmp.Agerating = item.Agerating
                 items.append(tmp)
             }
             self.editItems = items
@@ -147,6 +148,7 @@ extension EditDownloadController {
                 tmp.imgUrl = item.imageURL
                 tmp.duration = item.duration
                 tmp.assetType = item.assetType
+                tmp.Agerating = item.Agerating
                 items.append(tmp)
             }
             self.editItems = items
@@ -172,6 +174,7 @@ extension EditDownloadController {
                 tmp.imgUrl = item.imageURL
                 tmp.duration = item.duration
                 tmp.assetType = item.assetType
+                tmp.Agerating = item.Agerating
                 items.append(tmp)
             }
             self.editItems = items
@@ -198,6 +201,7 @@ extension EditDownloadController {
                     tmp.duration = item.duration
                     tmp.assetType = item.assetType
                     tmp.episodeNumber = item.episodeNumber
+                    tmp.Agerating = item.Agerating
                     items.append(tmp)
                 }
                 self.editItems = items

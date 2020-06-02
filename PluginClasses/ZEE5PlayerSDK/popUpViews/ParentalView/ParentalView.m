@@ -192,6 +192,8 @@
     {
         NSString * PIN =[NSString stringWithFormat:@"%@%@%@%@",_textPin.text,_textPin2.text,_textPin3.text,_textPin4.text];
         [[ZEE5PlayerManager sharedInstance]checkParentalPin:PIN];
+        [self AddNotification:PIN];
+            
         _textPin.text=@"";
         _textPin2.text=@"";
         _textPin3.text=@"";
@@ -199,6 +201,9 @@
     }
     
   
+}
+-(void)AddNotification:(NSString *)Pin{
+   [[NSNotificationCenter defaultCenter] postNotificationName:@"ParentalPin" object:Pin userInfo:nil];
 }
 - (IBAction)textPin3:(id)sender {
 }

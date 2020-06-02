@@ -119,8 +119,8 @@
                                 <constraint firstAttribute="height" constant="50" id="W1W-7p-AXA"/>
                                 <constraint firstAttribute="width" constant="50" id="ho9-hh-g55"/>
                             </constraints>
-                            <state key="normal" image="pause-circle"/>
-                            <state key="selected" image="play-circle"/>
+                            <state key="normal" image="play-circle"/>
+                            <state key="selected" image="pause-circle"/>
                             <connections>
                                 <action selector="actionPlayPause:" destination="-1" eventType="touchUpInside" id="uRf-b7-J1p"/>
                             </connections>

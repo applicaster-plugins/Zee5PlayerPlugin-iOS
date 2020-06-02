@@ -199,7 +199,7 @@ static ContentBuisnessType buisnessType;
         [self ShowToastMessage:@"WiFi is not connected! You have selected stream over WiFi only"];
             return;
         }
-        [self ContentidNotification:_currentItem.content_id];
+      
     [self getBase64StringwithCompletion:^(NSString *base64) {
 
         NSLog(@"****Player INitialize*****");
@@ -1821,13 +1821,11 @@ static ContentBuisnessType buisnessType;
 
 -(void)checkParentalPin:(NSString *)Pin
 {
+    if(_parentalView != nil)
+{
     if ([Pin isEqualToString:self.parentalPin])
     {
-        
-        if(_parentalView != nil)
-        {
-            
-            if (_parentalView.superview != nil)
+       if (_parentalView.superview != nil)
             {
                
                 [_parentalView removeFromSuperview];
@@ -1843,12 +1841,15 @@ static ContentBuisnessType buisnessType;
                 
             }
             return;
+        }else
+        {
+            [self ShowToastMessage:@"Incorrect PIN please try again"];
+               [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:@"008" severityCode:1 andErrorMsg:@"Parental Control Message -"];
         }
     }
     else
     {
-        [self ShowToastMessage:@"Incorrect PIN please try again"];
-        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:@"008" severityCode:1 andErrorMsg:@"Parental Control Message -"];
+   
     }
 }
 
@@ -2356,6 +2357,9 @@ static ContentBuisnessType buisnessType;
       [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
        {
           [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken ];
+          if (_currentItem == nil) {
+              return ;
+          }
           
           [self stop];
           
@@ -2366,11 +2370,17 @@ static ContentBuisnessType buisnessType;
 } else
        {
            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
+           if (_currentItem == nil) {
+                        return ;
+                    }
        }
     
 } faillureblock:^(ZEE5SdkError *error)
     {
                 [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
+        if (_currentItem == nil) {
+                     return ;
+                 }
     }];
     } failureBlock:^(ZEE5SdkError *error)
      {
@@ -2480,6 +2490,9 @@ static ContentBuisnessType buisnessType;
                 [self getDRMToken:self.ModelValues.identifier andDrmKey:self.ModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
                  {
                     [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
+                    if (self.currentItem == nil) {
+                        return ;
+                    }
                     
                     // Update video end point
                     NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
@@ -2506,6 +2519,9 @@ static ContentBuisnessType buisnessType;
         {
            [self getVodToken:^(NSString *vodToken) {
                 [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
+               if (_currentItem == nil) {
+                return ;
+                }
            }];
         }
     } failureBlock:^(ZEE5SdkError *error)
@@ -2787,9 +2803,15 @@ static ContentBuisnessType buisnessType;
     self.currentItem.audioLanguages =model.audioLanguages;
     self.currentItem.charecters = model.charecters;
     self.currentItem.skipintrotime = model.introStarttime;
-    self.currentItem.AgeRate = model.ageRating;
+    self.currentItem.ageRate = model.ageRating;
     self.currentItem.business_type = model.buisnessType;
     self.currentItem.language = model.Languages;
+
+    if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
+      [self ContentidNotification:_currentItem.content_id];
+        _currentItem = nil;
+        return;
+    }
     
     if (_playerConfig.playerType == normalPlayer)
     {
@@ -2846,6 +2868,11 @@ static ContentBuisnessType buisnessType;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
     
+    if (ZEE5UserDefaults.getContentID != _currentItem.content_id) {
+         [self ContentidNotification:_currentItem.content_id];
+        _currentItem = nil;
+           return;
+       }
     if (_playerConfig.playerType != normalPlayer)
     {
         self.playerConfig.showCustomPlayerControls = false;

@@ -15,11 +15,12 @@ protocol OfflineVideoDurationDelegate: class {
     func updateVideoDuration(item: DownloadItem?, duration: Int)
 }
 
-class OfflinePlayerController: UIViewController {
+@objc public class OfflinePlayerController: UIViewController {
 
     static let identifier = "OfflinePlayerController"
     
-    public weak var delegate: OfflineVideoDurationDelegate?
+    
+     weak var delegate: OfflineVideoDurationDelegate?
     
     @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var viewSlider: UIView!
@@ -28,6 +29,7 @@ class OfflinePlayerController: UIViewController {
     @IBOutlet weak var lblCurrentTime: UILabel!
     @IBOutlet weak var lblTotalDuration: UILabel!
     @IBOutlet weak var viewPlayer: PlayerView!
+    @IBOutlet weak var parentalView: ParentalView!
     
     @IBOutlet weak var lblContentTitle: UILabel! {
         didSet {
@@ -61,28 +63,22 @@ class OfflinePlayerController: UIViewController {
     private var rewindButton: TouchableButton!
     private var videoPlayingDuration = 0
     private let reachability = NetworkReachabilityManager()
-    var ParentalPin = ""
-    var Agerating = ""
+    private let bundle = Bundle(for: OfflinePlayerController.self)
+    public var ParentalPin = ""
+    public var Agerating = ""
+    public var isparentalPin:Bool?
     
     private var availableTracks: PKTracks? {
         didSet {
             self.checkMenuOptionState()
         }
     }
-//    private var isparentalPin:Bool?{
-//        didSet{
-//            self.checkParentalSet()
-//        }
-//    }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
-        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        let value = UIInterfaceOrientation.landscapeRight.rawValue
-        UIDevice.current.setValue(value, forKey: "orientation")
-        
+        self.NotificationObserver()
+        self.checkParentalSet()
         //
         self.configurePlayer(with: self.selectedUrl)
     }
@@ -113,33 +109,114 @@ class OfflinePlayerController: UIViewController {
         }
     }
     
-//    func checkParentalSet() {
-//        isparentalPin = false
-//         if let isNetworkReachable = self.reachability?.isReachable,
-//            isNetworkReachable == true {
-//            if let data = Zee5UserSettingsManager.shared.getUserSettingsModal(){
-//            for settingDataModel in data {
-//                if settingDataModel.key == "age_rating"{
-//                     print(settingDataModel.value!)
-//                    Agerating = settingDataModel.value!
-//                   }
-//                if settingDataModel.key == "pin"{
-//                    print(settingDataModel.value!)
-//                    ParentalPin = settingDataModel.value!
-//                   }
-//                }
-//                if ParentalPin != nil && Agerating != nil {
-//                    parentalLogic()
-//                }
-//            }
-//
-//        }
-//    }
-//
-//    func parentalLogic() {
-//
-//        print(selectedVideo?.Agerating! ?? "")
-//    }
+    func NotificationObserver() {
+    NotificationCenter.default.addObserver(self, selector: #selector(self.RemoveView(_:)), name: NSNotification.Name(rawValue: "ParentalPin"), object: nil)
+        
+    NotificationCenter.default.addObserver(self, selector: #selector(KeypadShow), name:UIResponder.keyboardDidShowNotification, object: nil)
+        
+     NotificationCenter.default.addObserver(self, selector: #selector(KeypadHide), name:UIResponder.keyboardDidHideNotification, object: nil)
+        
+    NotificationCenter.default.addObserver(self, selector: #selector(RemoveSubView), name:NSNotification.Name(rawValue: "RemoveSubView"), object: nil)
+    }
+    
+    func RemoveNotification() {
+        NotificationCenter.default .removeObserver(self, name: NSNotification.Name(rawValue: "ParentalPin"), object: nil)
+         NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidShowNotification, object: nil)
+         NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default .removeObserver(self, name: NSNotification.Name(rawValue: "RemoveSubView"), object: nil)
+       }
+    
+    @objc func RemoveSubView() {
+        parentalView.removeFromSuperview()
+        parentalView = nil
+       }
+    @objc func KeypadShow() {
+        parentalView.top_parentalView?.constant = 100
+        UIView .animate(withDuration: 0.3, animations: {
+            self.parentalView .layoutIfNeeded()
+        })
+    }
+    @objc func KeypadHide() {
+        if parentalView != nil {
+            parentalView.top_parentalView?.constant = 0
+        UIView .animate(withDuration: 0.3, animations: {
+                              self.parentalView .layoutIfNeeded()
+                          })
+        }
+    }
+    @objc func RemoveView(_ notification:NSNotification) {
+    let userPIn = notification.object as! String
+        if parentalView != nil {
+            if userPIn == ParentalPin {
+            let value = UIInterfaceOrientation.landscapeRight.rawValue
+            UIDevice.current.setValue(value, forKey: "orientation")
+                 isparentalPin = false
+                self.btnPlay.isSelected = true;
+                 playerOffline.play()
+                 parentalView.removeFromSuperview()
+               
+            }else{
+              print("Wrong Pin")
+                Zee5ToastView .showToastAboveKeyboard(withMessage: "Please Enter Correct Pin!")
+            }
+        }
+   
+    }
+    func checkParentalSet() {
+            if let data = Zee5UserSettingsManager.shared.getUserSettingsModal(){
+            for settingDataModel in data {
+                if settingDataModel.key == "parental_control"{
+                     print(settingDataModel.value!)
+                    if let dict = convertToDictionary(from: settingDataModel.value!) {
+                        Agerating = dict["age_rating"]!
+                        ParentalPin = dict["pin"]!
+                        break
+                    }
+                  }
+                }
+                if ParentalPin != "" && Agerating != "" {
+                    parentalLogic()
+                }
+            }
+    }
+
+    func parentalLogic() {
+        if let Age = selectedVideo?.Agerating {
+            print(Age)
+            if Agerating == "UA" {
+                if Age == "U" {
+                    isparentalPin = false
+                }else{
+                    isparentalPin = true
+                }
+            }else if Agerating == "U"{
+                isparentalPin = true
+            }
+        }
+    }
+    
+    func convertToDictionary(from text: String) -> [String: String]? {
+        guard let data = text.data(using: .utf8) else { return nil }
+        let anyResult = try? JSONSerialization.jsonObject(with: data, options: [])
+        return anyResult as? [String: String]
+    }
+
+      func parentalControlshow (){
+        self.btnPlay.isSelected = false
+        prepareParentalView()
+        self.view .addSubview(parentalView)
+    }
+
+      func prepareParentalView(){
+        if parentalView == nil {
+            parentalView = bundle.loadNibNamed("ParentalView", owner: self, options: nil)?.first as! UIView as? ParentalView
+        }else{
+            parentalView .removeFromSuperview()
+        }
+        parentalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parentalView.frame = UIScreen.main.bounds
+    }
+    
     func updateVideoDurationToServer() {
         if let id = self.selectedVideo?.contentId {
             do {
@@ -166,19 +243,18 @@ class OfflinePlayerController: UIViewController {
             }
         }
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.updateVideoDurationToServer()
         self.playerOffline.stop()
-        
+        self.RemoveNotification()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         if self.isMovingFromParent == true {
-            UIDevice.current.setValue(Int(UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
+    UIDevice.current.setValue(Int(UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
         }
     }
     
-    @objc func canRotate() -> Void {}
+    @objc public func canRotate() -> Void {}
     
     deinit {
         self.playerOffline.destroy()
@@ -212,8 +288,15 @@ extension OfflinePlayerController {
             self.playerOffline.play()
             
             self.getOfflineVideoPlayedDuration()
+            if self.isparentalPin  == true {
+                self.playerOffline.pause()
+                self.parentalControlshow()
+            }else{
+                self.btnPlay.isSelected = true
+                let value = UIInterfaceOrientation.landscapeRight.rawValue
+                UIDevice.current.setValue(value, forKey: "orientation")
+            }
         }
-        
         self.playerOffline.addObserver(self, event: PlayerEvent.playheadUpdate) { [weak self] (event) in
             guard let self = self else { return }
             let floored =  floor(event.currentTime?.doubleValue ?? 0)
@@ -335,13 +418,18 @@ extension OfflinePlayerController {
     }
     
     @IBAction func actionPlayPause(_ sender: UIButton) {
-        if sender.isSelected == true {
-            self.playerOffline.play()
-        }
-        else {
+        if btnPlay.isSelected == true {
+            btnPlay.isSelected = false
             self.playerOffline.pause()
         }
-        sender.isSelected.toggle()
+        else {
+            if isparentalPin == true {
+                self.parentalControlshow()
+                return
+            }
+            btnPlay.isSelected = true
+            self.playerOffline.play()
+        }
     }
     
     @IBAction func actionMoreClicked(_ sender: UIButton) {

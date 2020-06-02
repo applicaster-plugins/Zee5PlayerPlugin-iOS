@@ -27,8 +27,7 @@ public extension UIView {
             if velocity.y >= 300 || progress > percentThreshold {
                 DownloadHelper.shared.removeDownloadOptionMenu()
                 ZEE5PlayerManager .sharedInstance() .removeSubview()
-                
-                
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "RemoveSubView"), object: nil)
             }
             else {
                 UIView.animate(withDuration: 0.2, animations: {
