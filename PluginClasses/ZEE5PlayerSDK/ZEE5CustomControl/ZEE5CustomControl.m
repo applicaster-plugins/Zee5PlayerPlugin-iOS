@@ -183,7 +183,7 @@
 }
 - (IBAction)buttonMinimizeClicked:(UIButton *)sender {
 
-    [[ZEE5PlayerManager sharedInstance]tapOnMinimizeButton];
+    [[ZEE5PlayerManager sharedInstance] setFullScreen:false];
 }
 - (IBAction)buttonReplayClicked:(UIButton *)sender {
     [[ZEE5PlayerManager sharedInstance] replay];
