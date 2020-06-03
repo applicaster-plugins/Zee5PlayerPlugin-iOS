@@ -40,6 +40,8 @@ internal enum PlayerViewDisplayMode : Int {
     let container = UIView()
     let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
     
+    var delegate: ZEE5PlayerDelegate?
+    
     // MARK: - Lifecycle
     
     required init(builder: PlayerViewBuilderProtocol, player: PlayerAdapterProtocol) {
@@ -150,23 +152,28 @@ internal enum PlayerViewDisplayMode : Int {
         self.networkReachabilityManager?.startListening()
     }
 }
+
 // MARK: - ZEE5PlayerDelegate Method
 
 extension KalturaPlayerController: ZEE5PlayerDelegate {
-    
     func didFinishPlaying() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didFinishPlaying ***")
-        self.playerAdapter?.stop()
         self.HideIndicator()
-        Zee5ToastView.showToastAboveKeyboard(withMessage: "Error")
-        
+        self.delegate?.didFinishPlaying?()
     }
     
-   func didTaponMinimizeButton() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didTaponMinimizeButton ***")
+    func didTaponMinimizeButton() {
+        guard let currentDisplayMode = self.currentDisplayMode else {
+            return
+        }
     
-        self.changePlayer(displayMode: .inline)
+        if currentDisplayMode == .inline {
+            self.delegate?.didFinishPlaying?()
+        }
+        else {
+            ZEE5PlayerManager.sharedInstance().setFullScreen(false)
+        }
     }
+    
     func didTapOnEnableAutoPlay() {
         print("KalturaPlayerController ** ZEE5PlayerDelegate didTapOnEnableAutoPlay ***")
     }

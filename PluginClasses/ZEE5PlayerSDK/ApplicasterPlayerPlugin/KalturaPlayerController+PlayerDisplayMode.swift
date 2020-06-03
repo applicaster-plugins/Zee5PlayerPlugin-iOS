@@ -20,8 +20,8 @@ extension KalturaPlayerController {
         switch displayMode {
         case .inline:
             if previousParentViewController != nil {
-                self.currentDisplayMode = .inline;
-                self.presentingViewController?.dismiss(animated: false, completion: {
+                self.currentDisplayMode = .inline
+                self.dismiss(animated: false, completion: {
                     self.previousParentViewController?.addChildViewController(self, to: self.previousContainerView)
                     self.previousParentViewController = nil
                     self.previousContainerView = nil

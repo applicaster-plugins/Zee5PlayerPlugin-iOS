@@ -164,6 +164,8 @@ class HybridViewController: UIViewController {
         self.playerView?.addGestureRecognizer(panGestureRecognizer)
         
         self.addGradient()
+        
+        self.kalturaPlayerController?.delegate = self
     }
     
     func commonInit() {
@@ -323,12 +325,11 @@ class HybridViewController: UIViewController {
     }
     
     func closePlayer() {
-        ZEE5PlayerManager.sharedInstance().stop()
-        ZEE5PlayerManager.sharedInstance().destroyPlayer()
-        
-        self.dismiss(animated: true) {
-            self.currentPlayableItem = nil
+        guard let playerManager = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
+            return
         }
+        
+        playerManager.stopAndDismiss()
     }
     
     // MARK: Video Loading View
@@ -359,5 +360,11 @@ class HybridViewController: UIViewController {
     
     fileprivate func removeGradient() {
         self.mainCollectionViewContainer.layer.sublayers?.removeAll()
+    }
+}
+
+extension HybridViewController: ZEE5PlayerDelegate {
+    func didFinishPlaying() {
+        self.closePlayer()
     }
 }

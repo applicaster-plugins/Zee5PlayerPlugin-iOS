@@ -19,7 +19,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     var hybridViewController: HybridViewController?
     var currentPlayableItem: ZPPlayable?
-    var shouldDissmis: Bool = true
     
     var kalturaPlayerController: KalturaPlayerController?
     private var pluginModel: ZPPluginModel?
@@ -96,10 +95,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.hybridViewController?.pluginStyles = style.object
             instance.pluginStyles = instance.hybridViewController?.pluginStyles
         }
-        
-        instance.contentId = playable.identifier as String?
+
         UserDefaults.standard.set(playable.identifier as String?, forKey: "originalContentId")
-        
+
         return instance
     }
     
@@ -120,7 +118,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         let urlString = item?.contentVideoURLPath() ?? ""
         return NSURL(string: urlString)
     }
-    
     
     // MARK: - Inline playback
     
@@ -200,6 +197,26 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         link.play()
     }
     
+    public func stopAndDismiss() {
+        ZEE5PlayerManager.sharedInstance().stop()
+        ZEE5PlayerManager.sharedInstance().destroyPlayer()
+        
+        func resetContent() {
+            self.currentPlayableItem = nil
+            self.contentId = nil
+        }
+        
+        if let playerViewController = self.hybridViewController {
+            playerViewController.dismiss(animated: true) {
+                playerViewController.currentPlayableItem = nil
+                resetContent()
+            }
+        }
+        else {
+            resetContent()
+        }
+    }
+    
     // MARK: - private
     
     static func lastActiveInstance() -> Zee5PluggablePlayer? {
@@ -210,19 +227,11 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         return lastActiveInstance
     }
     
-    static func clear(instans: Zee5PluggablePlayer) {
-        instans.shouldDissmis = false
-        instans.hybridViewController?.currentPlayableItem = nil
-        instans.currentPlayableItem = nil
-    }
-    
-    @objc func stop() {
-        if self.shouldDissmis == true,
-            let playerVC = self.pluggablePlayerViewController() {
-            playerVC.dismiss(animated: true, completion: nil)
-            self.currentPlayableItem = nil
-            self.hybridViewController = nil
-        }
+    func clearInstance() {
+        self.pluggablePlayerStop()
+        
+        self.hybridViewController = nil
+        self.kalturaPlayerController = nil
     }
     
     func playContent() {
@@ -230,6 +239,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             guard let kalturaPlayerController = self.kalturaPlayerController else {
                 return
             }
+            
             kalturaPlayerController.play()
         }
         
@@ -304,8 +314,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         else {
             self.loadExtendedData() {
                 guard let contentId = self.contentId else {
-                    self.shouldDissmis = true
-                    self.stop()
+                    self.clearInstance()
                     return
                 }
                 
