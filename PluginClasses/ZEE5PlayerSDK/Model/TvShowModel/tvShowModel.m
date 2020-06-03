@@ -47,7 +47,19 @@
         
         if ([self.seasons isKindOfClass:[NSArray class]] || self.seasons.count>0)
                {
-                   self.LatestSeason = [self.seasons objectAtIndex:0];
+                   NSInteger MaxNumber; MaxNumber = 0;
+                   for (int i = 0; i < self.seasons.count ; i++) {
+                    if ([[_seasons valueForKey:@"index"]objectAtIndex:i]!= nil) {
+                        _ModelIndex = [[[_seasons valueForKey:@"index"]objectAtIndex:i]intValue];
+                        if (_ModelIndex > MaxNumber ) {
+                            MaxNumber = _ModelIndex  ;
+                            self.LatestSeason = [self.seasons objectAtIndex:i];
+                         }
+                       }
+                    else{
+                         self.LatestSeason = [self.seasons lastObject];
+                    }
+                   }
                    self.LatestSeasonId = [self.LatestSeason valueForKey:@"id"];
                    self.LatestSeasonAssetType =[NSString stringWithFormat:@"%d",[[self.LatestSeason valueForKey:@"asset_type"]intValue]];
     
