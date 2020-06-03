@@ -48,9 +48,10 @@ fileprivate class PremiumHelper {
     fileprivate var playable: ZPPlayable?
 
     func setupPremiumBanner(_ banner: PremiumBanner, playable: ZPPlayable?) {
+        // all items are assumed as free by default, so the premium banner should be hidden
         banner.heightConstraint.constant = 0
         
-        guard let atom = playable, let extensions = atom.extensionsDictionary else {
+        guard let playable = playable, let extensions = playable.extensionsDictionary as? [String: Any] else {
             return
         }
         
@@ -58,8 +59,9 @@ fileprivate class PremiumHelper {
             return
         }
         
-        if let isFree = extensions[ExtensionsKey.isFree] as? Bool, let subtype = extensions[ExtensionsKey.assetSubtype] as? String, subtype != "trailer" {
-            guard !isFree else {
+        let subtype = extensions[ExtensionsKey.assetSubtype] as? String
+        if subtype != "trailer" {
+            guard !ExtensionsHelper.isPlaybleFree(extensions) else {
                 return
             }
         }

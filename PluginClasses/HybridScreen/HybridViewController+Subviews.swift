@@ -43,8 +43,11 @@ extension HybridViewController {
         }
         
         func setupLabels() {
-            guard let labelsViewCollection = self.labelsCollection else {
-                return
+            guard
+                let labelsViewCollection = self.labelsCollection,
+                let playable = self.currentPlayableItem,
+                let extensions = playable.extensionsDictionary else {
+                    return
             }
             
             labelsViewCollection.forEach { (label) in
@@ -84,14 +87,17 @@ extension HybridViewController {
                     label.text = consumptionMainInfoLabel()
                     label.isHidden = label.text == nil
                 case ItemTag.Label.consumptionIMDBRatingLabel:
-                    //setup IMDB rating label
-                    if let rating: NSNumber = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.rating] as? NSNumber {
-                        label.text = rating.stringValue
-                        label.layer.cornerRadius = 3
-                        label.isHidden = false
-                    } else {
-                        label.isHidden = true
+                    guard
+                        self.consumptionFeedType != .live,
+                        let rating = extensions[ExtensionsKey.rating] as? NSNumber else {
+                            label.isHidden = true
+                            return
                     }
+                    
+                    label.text = rating.stringValue
+                    label.layer.cornerRadius = 3
+                    label.isHidden = false
+         
                 case ItemTag.Label.consumptionAvailableInLabel:
                     label.text = "MoviesConsumption_MovieDetails_AvailableVideoTechnology_Text".localized(hashMap: ["video_technology": String()])
                 case ItemTag.Label.consumptionDescriptionLabel:
@@ -319,6 +325,8 @@ extension HybridViewController {
                     mainInfostring = "Videos • " + createInfoString(with: [duration, genre, age])
                 case .live:
                     mainInfostring = "Episode • " + createInfoString(with: [episodeNumber])
+                case .channel:
+                    return nil
                 }
                 if rating != nil {
                     mainInfostring.append(mainInfostring.isEmptyOrWhitespace() ? "IMDb" : " • IMDb")

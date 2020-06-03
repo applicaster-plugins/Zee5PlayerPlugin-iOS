@@ -39,15 +39,16 @@ public class ActionBarView: UIView {
     }
     
     public func addSpacerView() {
-        let spaceView = UIView()
+        let dynamicSpaceView = UIView()
+        dynamicSpaceView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        dynamicSpaceView.backgroundColor = .clear
+        self.stackView.addArrangedSubview(dynamicSpaceView)
         
-        spaceView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        spaceView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        spaceView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        spaceView.backgroundColor = .clear
-        
-        self.stackView.addArrangedSubview(spaceView)
+        let fixedSpaceView = UIView()
+        fixedSpaceView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        fixedSpaceView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        fixedSpaceView.backgroundColor = .clear
+        self.stackView.addArrangedSubview(fixedSpaceView)
     }
     
     override public func awakeFromNib() {
@@ -64,7 +65,8 @@ public class ActionBarView: UIView {
         
         self.stackView.axis = .horizontal
         self.stackView.alignment = .center
-        self.stackView.distribution = .equalSpacing
+        self.stackView.distribution = .fill
+        self.stackView.spacing = 20
         self.stackView.backgroundColor = .clear
     }
     

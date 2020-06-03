@@ -19,13 +19,13 @@ public class ActionBarHelper {
         
         builders.append(ShareActionButtonBuilder.self)
         
-        if consumptionFeedType != .live {
+        if consumptionFeedType != .live && consumptionFeedType != .channel {
             builders.append(WatchListActionButtonBuilder.self)
         }
         
         builders.append(CastActionButtonBuilder.self)
 
-        if consumptionFeedType != .live && consumptionFeedType != .news {
+        if consumptionFeedType != .live && consumptionFeedType != .news && consumptionFeedType != .channel {
             builders.append(DownloadActionButtonBuilder.self)
         }
         

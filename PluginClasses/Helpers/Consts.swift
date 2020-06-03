@@ -17,7 +17,8 @@ public enum ConsumptionFeedType: String, CaseIterable {
     case show = "Show"
     case original = "Original"
     case video = "Video"
-    
+    case channel = "channel"
+
     init?(type: ConsumptionType) {
         switch type {
         case Movie:
@@ -77,6 +78,7 @@ public struct ExtensionsKey {
     static let itemDetailsUrl = "item_details_url"
     static let relatedContent = "relatedContent"
     static let shareLink = "share_link"
+    static let businessType = "business_type"
 }
 
 public struct ItemTag {
@@ -140,5 +142,17 @@ public struct ItemTag {
         
         static let releasingOnLabel = 835
         static let storyLineLabel = 836
+    }
+}
+
+public class ExtensionsHelper {
+    public static func isPlaybleFree(_ extensions: [String: Any]) -> Bool {
+        var result = true
+        
+        if let isFreeValue = extensions[ExtensionsKey.isFree] as? Bool {
+            result = isFreeValue
+        }
+        
+        return result
     }
 }

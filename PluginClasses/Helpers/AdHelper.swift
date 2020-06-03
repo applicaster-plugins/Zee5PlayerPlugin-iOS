@@ -12,7 +12,7 @@ import ZappPlugins
 import Zee5CoreSDK
 
 class AdBanner: UIView {
-    @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint?
+    @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint!
     fileprivate let adHelper = AdHelper()
     
     func setupAds(playable: ZPPlayable?) {
@@ -26,7 +26,9 @@ extension AdBanner: ZPAdViewProtocol {
             return
         }
         
-        self.heightConstraint?.constant = view.height
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.heightConstraint.constant = view.height
         self.backgroundColor = view.backgroundColor
         self.addSubview(view)
 
@@ -52,18 +54,24 @@ class AdHelper {
         banner.isHidden = true
         banner.removeAllSubviews()
         
-        guard let atom = playable, let extensions = atom.extensionsDictionary, let contentId = atom.identifier as String? else {
-            return
-        }
-        
-        guard let isFree = extensions[ExtensionsKey.isFree] as? Bool, isFree else {
-            return
-        }
-        
         let userType = User.shared.getType()
-        
         guard userType != .premium else {
             return
+        }
+        
+        guard let playable = playable, let contentId = playable.identifier as String? else {
+            return
+        }
+        
+        if let extensions = playable.extensionsDictionary as? [String: Any] {
+            let subtype = extensions[ExtensionsKey.assetSubtype] as? String
+            guard subtype != "trailer" else {
+                return
+            }
+            
+            guard ExtensionsHelper.isPlaybleFree(extensions) else {
+                return
+            }
         }
         
         guard let pluginModel = ZPPluginManager.pluginModelById("Zee5Ads"), let plugin = ZPPluginManager.adapter(pluginModel) as? ZPAdPluginProtocol else {
