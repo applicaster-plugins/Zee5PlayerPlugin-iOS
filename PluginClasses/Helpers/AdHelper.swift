@@ -31,9 +31,8 @@ extension AdBanner: ZPAdViewProtocol {
         self.heightConstraint.constant = view.height
         self.backgroundColor = view.backgroundColor
         self.addSubview(view)
-
-        view.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        view.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        
+        view.fillParent()
         
         self.isHidden = false
     }
