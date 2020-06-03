@@ -117,7 +117,7 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
     
     if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_type isEqualToString:@"9"]) {
         consumprionType = Live;
-    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"trailer"]){
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"trailer"] || [[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"promo"]){
         consumprionType = Trailer;
     }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"episode"]){
         consumprionType = Episode;

@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *assetType;
 @property (nonatomic, copy)   NSString *assetSubtype;
 @property (nonatomic)   NSInteger totalSeasons;
+@property (nonatomic)   NSInteger ModelIndex;
 @property (nonatomic, copy)   NSString *releaseDate;
 @property (nonatomic, copy)   NSString *ageRating;
 @property (nonatomic, copy)   NSString *seasonBuisnessType;

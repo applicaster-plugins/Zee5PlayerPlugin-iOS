@@ -228,7 +228,7 @@ static ContentBuisnessType buisnessType;
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
         {
              [[ReportingManager sharedInstance] getWatchHistory];
-             [[ContentClickApi sharedInstance]ContentConsumption];
+            // [[ContentClickApi sharedInstance]ContentConsumption];
         }
        
     }];
@@ -444,7 +444,7 @@ static ContentBuisnessType buisnessType;
     [self showAllControls];
     [self showloaderOnPlayer];
     
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest)
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
     {
               _customControlView.adultView.hidden = NO;
               [self stop];
@@ -1032,6 +1032,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)DestroyPlayer{
     [[Zee5PlayerPlugin sharedInstance].player destroy];
+    _currentItem = nil;
     [self.playbackView removeFromSuperview];
 }
 
@@ -1257,13 +1258,10 @@ static ContentBuisnessType buisnessType;
     }else{
          [self stop];
     }
-   
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
         [[AnalyticEngine new]VideoExitAnalytics];
-       
     }
-    
 }
 
 -(void)tapOnUpNext
@@ -2561,8 +2559,6 @@ static ContentBuisnessType buisnessType;
 
         self.TvShowModel = [tvShowModel initFromJSONDictionary:result];
         NSString *ContentID = self.TvShowModel.Episodes[0].episodeId;
-        
-        
             if (![ContentID isKindOfClass:[NSNull class]] || ![ContentID isEqualToString:@"(NULL)"])
             {
                 [self playVODContent:ContentID country:country translation:laguage withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
