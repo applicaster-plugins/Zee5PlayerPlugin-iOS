@@ -2428,7 +2428,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-    content_id = @"0-1-manual_1lj6ioaqd3ig";//0-1-261984
+    //content_id = @"0-0-8241";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -2658,6 +2658,8 @@ static ContentBuisnessType buisnessType;
         NSArray *coAds = [result ValueForKeyWithNullChecking:@"companion_ads"];
         if (coAds.count > 0) {
             self.companionAds = coAds;
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"CompanionAds" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"CompanionAds" object:nil];
         }
         if([videoAds count] > 0)
         {
@@ -2697,6 +2699,10 @@ static ContentBuisnessType buisnessType;
         [sharedManager playWithCurrentItem];
         
     }];
+}
+
+-(NSArray *)getComanionAds{
+    return self.companionAds;
 }
 
 -(ContentBuisnessType)getBusinessType
