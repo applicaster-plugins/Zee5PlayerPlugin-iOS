@@ -12,6 +12,7 @@ import ApplicasterSDK
 import Zee5CoreSDK
 import Alamofire
 
+
 internal enum PlayerViewDisplayMode : Int {
     case unknown = 0
     case fullScreen = 1
@@ -122,7 +123,8 @@ internal enum PlayerViewDisplayMode : Int {
      container.addSubview(loadingView)
      playerView.addSubview(container)
      activityLoader.startAnimating()
-      checkForReachability()
+     checkForReachability()
+    
     
     }
     
