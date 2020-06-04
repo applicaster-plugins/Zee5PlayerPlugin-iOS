@@ -2852,8 +2852,6 @@ static ContentBuisnessType buisnessType;
 
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
       [self ContentidNotification:_currentItem.content_id];
-        _currentItem = nil;
-        return;
     }
     
     if (_playerConfig.playerType == normalPlayer)
@@ -2913,8 +2911,6 @@ static ContentBuisnessType buisnessType;
     
     if (ZEE5UserDefaults.getContentID != _currentItem.content_id) {
          [self ContentidNotification:_currentItem.content_id];
-        _currentItem = nil;
-           return;
        }
     if (_playerConfig.playerType != normalPlayer)
     {
