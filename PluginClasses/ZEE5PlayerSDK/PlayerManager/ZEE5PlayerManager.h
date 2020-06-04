@@ -191,6 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(CGFloat )getCurrentDuration;
 -(CGFloat )getTotalDuration;
 -(NSUInteger )getBufferPercentage;
+-(NSArray *)getComanionAds;
 -(void)playSimilarEvent:(NSString *)content_id;
 -(void)onPlaying;
 -(void)onDurationUpdate:(PKEvent *)event;
