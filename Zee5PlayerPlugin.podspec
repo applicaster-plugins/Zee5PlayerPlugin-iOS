@@ -25,14 +25,16 @@ Pod::Spec.new do |s|
       'SWIFT_VERSION' => '5.1',
       'OTHER_CFLAGS'  => '-fembed-bitcode',
       'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast" -framework "FBSDKCoreKit"',
+      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast"',
       'GCC_SYMBOLS_PRIVATE_EXTERN' => 'YES'
   }
 
   s.dependency 'ZappPlugins'
   s.dependency 'ApplicasterSDK'
   s.dependency 'ZappSDK'
-  s.dependency 'PlayKit', '3.16.0'
   s.dependency 'PlayKit_IMA', '1.7.1'
+  s.dependency 'PlayKit'
+  s.dependency 'PlayKit_IMA'
   s.dependency 'SnapKit'
   s.dependency 'Protobuf'
   s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'

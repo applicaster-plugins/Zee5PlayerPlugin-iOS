@@ -38,7 +38,7 @@
 #import "AddToWatchlist.h"
 #import "tvShowModel.h"
 #import "CdnHandler.h"
-
+#import "SingletonClass.h"
 
 
 #define HIDECONTROLSVALUE 5.0
@@ -146,7 +146,9 @@
 
 static ZEE5PlayerManager *sharedManager = nil;
 static ChromeCastManager *castManager;
+static SingletonClass *singleton;
 static ContentBuisnessType buisnessType;
+
 
 + (ZEE5PlayerManager *)sharedInstance
 {
@@ -159,6 +161,7 @@ static ContentBuisnessType buisnessType;
     dispatch_once(&t, ^{
         sharedManager = [[ZEE5PlayerManager alloc] init];
         castManager = [[ChromeCastManager alloc] init];
+        singleton = [SingletonClass sharedManager];
         [castManager initializeCastOptions];
 
         //            imaSettings.enableOmidExperimentally = YES;
@@ -204,19 +207,19 @@ static ContentBuisnessType buisnessType;
 
         NSLog(@"****Player INitialize*****");
         
+        
+        if (self.playerConfig.showCustomPlayerControls)
+              {
+                  [self addCustomControls];
+                  self.customControlView.buttonPlay.selected = true;
+              }
+              else
+              {
+                  [self addMuteViewToPlayer];
+              }
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.playbackView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         
         self.panGesture = [[UIPanGestureRecognizer alloc]init];
-        if (self.playerConfig.showCustomPlayerControls)
-        {
-            [self addCustomControls];
-            self.customControlView.buttonPlay.selected = true;
-        }
-        else
-        {
-            [self addMuteViewToPlayer];
-        }
-
         [self handleOrientations];
         [self handleTracks];
         
@@ -452,8 +455,41 @@ static ContentBuisnessType buisnessType;
     }
     
     
+    [self MoatViewAdd];
     [self LocalStorageArray];
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
+}
+
+-(void)MoatViewAdd{
+    
+    if (_customControlView != nil ) {
+        [singleton.ViewsArray addObject:_customControlView];
+    }
+    if (_customControlView.viewTop != nil ) {
+        [singleton.ViewsArray addObject:_customControlView.viewTop];
+    }
+    if (_customControlView.viewVod != nil ) {
+        [singleton.ViewsArray addObject:_customControlView.viewVod];
+    }
+    if (_customControlView.collectionView != nil ) {
+        [singleton.ViewsArray addObject:_customControlView.collectionView];
+    }
+    if (_customControlView.viewLive != nil ) {
+        [singleton.ViewsArray addObject:_customControlView.viewLive];
+    }
+    if (_customControlView.stackLoginView != nil ) {
+          [singleton.ViewsArray addObject:_customControlView.stackLoginView];
+      }
+    if (_customControlView.watchcretidStackview != nil ) {
+             [singleton.ViewsArray addObject:_customControlView.watchcretidStackview];
+         }
+    if (_customControlView.adultView != nil ) {
+                [singleton.ViewsArray addObject:_customControlView.adultView];
+        }
+    if (_customControlView.playerControlView != nil ) {
+            [singleton.ViewsArray addObject:_customControlView.playerControlView];
+    }
+    
 }
 
 -(void)addMuteViewToPlayer
@@ -2355,7 +2391,7 @@ static ContentBuisnessType buisnessType;
       [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
        {
           [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken ];
-          if (_currentItem == nil) {
+          if (self.currentItem == nil) {
               return ;
           }
           
@@ -2368,7 +2404,7 @@ static ContentBuisnessType buisnessType;
 } else
        {
            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
-           if (_currentItem == nil) {
+           if (self.currentItem == nil) {
                         return ;
                     }
        }
@@ -2376,7 +2412,7 @@ static ContentBuisnessType buisnessType;
 } faillureblock:^(ZEE5SdkError *error)
     {
                 [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
-        if (_currentItem == nil) {
+        if (self.currentItem == nil) {
                      return ;
                  }
     }];
@@ -2392,7 +2428,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-  //  content_id = @"0-0-93267";//0-1-261984
+    content_id = @"0-1-manual_1lj6ioaqd3ig";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -2609,7 +2645,8 @@ static ContentBuisnessType buisnessType;
     {
         [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
     }
-    NSDictionary *params = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":@"3.1.1",@"audio_language":ZEE5UserDefaults.gettranslation};
+    NSString * Bundleversion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    NSDictionary *params = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
     
     [[NetworkManager sharedInstance] makeHttpGetRequest:BaseUrls.adConfig requestParam:params requestHeaders:@{} withCompletionHandler:^(id  _Nullable result)
     {
@@ -2618,6 +2655,10 @@ static ContentBuisnessType buisnessType;
         NSMutableArray <ZEE5AdModel*>*googleAdModelArray = [[NSMutableArray alloc] init];
         
         NSArray *videoAds = [result ValueForKeyWithNullChecking:@"video_ads"];
+        NSArray *coAds = [result ValueForKeyWithNullChecking:@"companion_ads"];
+        if (coAds.count > 0) {
+            self.companionAds = coAds;
+        }
         if([videoAds count] > 0)
         {
             

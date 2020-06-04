@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;
+@property (weak, nonatomic) NSArray *companionAds;
 
 @property(nonatomic, strong, readonly) UIViewController *_Nullable currentShareViewController;
 

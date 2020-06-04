@@ -14,6 +14,7 @@
 #import "Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h"
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
 #import <ConvivaSDK/ConvivaSDK-iOS-umbrella.h>
+#import "SingletonClass.h"
 
 
 #define Conviva_Application_Name @"ZEE5-iOS App"
@@ -30,12 +31,16 @@
 @property (nonatomic) int PlayerStartTime;          ///   Use In analytics when Seekbar chnaged
 @property (nonatomic) int PlayerEndTime;            ///   Use In analytics when Seekbar chnaged
 
+
+
 @end
 
 
 @implementation Zee5PlayerPlugin
 
+
 static Zee5PlayerPlugin *sharedManager = nil;
+
 + (Zee5PlayerPlugin *)sharedInstance
 {
     if (sharedManager)
@@ -105,6 +110,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 {
     NSMutableDictionary *pluginConfigDict = [NSMutableDictionary new];
     IMAConfig *imaConfig = [IMAConfig new];
+   // [self listSubviewsOfView:[UIApplication sharedApplication].keyWindow.parentViewController.view];
     NSString *vmapString = [self vmapTagBuilder];
     NSLog(@"|** VMapTagBuilder **::** %@",vmapString);
     if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]]) {
@@ -116,9 +122,25 @@ static Zee5PlayerPlugin *sharedManager = nil;
            imaConfig.adsResponse = vmapString;
            imaConfig.videoMimeTypes = VideoMimetypes;
            imaConfig.alwaysStartWithPreroll = true;
+           imaConfig.enableDebugMode = true;
+           NSLog(@"%@", [[SingletonClass sharedManager]ViewsArray]);
+           imaConfig.videoControlsOverlays = [[SingletonClass sharedManager]ViewsArray];
     }
     pluginConfigDict[IMAPlugin.pluginName] = imaConfig;
     return [[PluginConfig alloc] initWithConfig:pluginConfigDict];
+}
+
+
+
+- (void)listSubviewsOfView:(UIView *)view {
+    NSArray *subviews = [view subviews];
+
+    if ([subviews count] == 0) return; // COUNT CHECK LINE
+
+    for (UIView *subview in subviews) {
+        NSLog(@"%@", subview);
+        [self listSubviewsOfView:subview];
+    }
 }
 
 
@@ -272,7 +294,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         NSLog(@"|** AD Requested **|");
         [engine setupConvivaAdSessionWith: dict customTags: tags];
-        [engine SetupMixpanelAnalyticsWith:dict tags:tags]; 
+        [engine SetupMixpanelAnalyticsWith:dict tags:tags];
+        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     }
    else if (AdEvent.adStarted)
     {
@@ -318,7 +341,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
-        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+       // [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     
         
     }];
@@ -348,7 +371,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
         NSLog(@"|**** AD Start Buffering ****|");
         [engine updateAdPlayerStateWithState: CONVIVA_BUFFERING];
-        [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
+       // [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
     }];
     
     
@@ -461,7 +484,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adPlaybackReady block:^(PKEvent * _Nonnull event) {
         NSLog(@"\n\n******\n\n");
         NSLog(@"|**** GOT AD Event :: AdEvent .adPlaybackReady ****|");
-        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+       // [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         NSLog(@"\n\n******\n\n");
     }];
     
