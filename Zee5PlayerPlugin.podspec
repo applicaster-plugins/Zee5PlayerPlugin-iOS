@@ -24,15 +24,15 @@ Pod::Spec.new do |s|
       'ENABLE_BITCODE' => 'YES',
       'SWIFT_VERSION' => '5.1',
       'OTHER_CFLAGS'  => '-fembed-bitcode',
-      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast" -framework "FBSDKCoreKit"',
+      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast"',
       'GCC_SYMBOLS_PRIVATE_EXTERN' => 'YES'
   }
 
   s.dependency 'ZappPlugins'
   s.dependency 'ApplicasterSDK'
   s.dependency 'ZappSDK'
-  s.dependency 'PlayKit', '3.16.0'
-  s.dependency 'PlayKit_IMA', '1.7.1'
+  s.dependency 'PlayKit'
+  s.dependency 'PlayKit_IMA'
   s.dependency 'SnapKit'
   s.dependency 'Protobuf'
   s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
@@ -40,14 +40,13 @@ Pod::Spec.new do |s|
   s.dependency 'ComScore'
   s.dependency 'LotameDMP', '~> 5.0'
   s.dependency 'Zee5CoreSDK'
-  s.dependency 'FBSDKCoreKit'
   s.dependency 'CarbonKit'
   s.dependency 'DropDown'
   s.dependency 'UICircularProgressRing'
   s.dependency 'SDWebImage'
   s.dependency 'DownloadToGo'
   s.dependency 'SQLite.swift'
-  s.dependency 'React', '~> 0.59.10'
+  s.dependency 'React'
   s.dependency 'ZeeHomeScreen'
 
 end

@@ -6,10 +6,9 @@
 //
 
 #import "SingletonClass.h"
-<<<<<<< Updated upstream
 
-@implementation SingletonClass
-=======
+
+
 #import <Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h>
 
 @implementation SingletonClass
@@ -34,6 +33,6 @@
 - (void)dealloc {
   // Should never be called, but just here for clarity really.
 }
->>>>>>> Stashed changes
+
 
 @end

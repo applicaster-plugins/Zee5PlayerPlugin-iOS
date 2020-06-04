@@ -2428,6 +2428,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
+    content_id = @"0-1-manual_1lj6ioaqd3ig";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;
@@ -2654,6 +2655,10 @@ static ContentBuisnessType buisnessType;
         NSMutableArray <ZEE5AdModel*>*googleAdModelArray = [[NSMutableArray alloc] init];
         
         NSArray *videoAds = [result ValueForKeyWithNullChecking:@"video_ads"];
+        NSArray *coAds = [result ValueForKeyWithNullChecking:@"companion_ads"];
+        if (coAds.count > 0) {
+            self.companionAds = coAds;
+        }
         if([videoAds count] > 0)
         {
             

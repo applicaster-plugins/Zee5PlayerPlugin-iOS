@@ -9,9 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-<<<<<<< Updated upstream
-@interface SingletonClass : NSObject
-=======
+
 @interface SingletonClass : NSObject{
     
 }
@@ -20,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (id)sharedManager;
 
->>>>>>> Stashed changes
 
 @end
 
