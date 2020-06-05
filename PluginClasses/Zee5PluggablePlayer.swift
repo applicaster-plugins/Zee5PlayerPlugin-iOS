@@ -99,7 +99,8 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
 
         instance.initialContentId = playable.identifier as String?
-
+        instance.contentId = nil
+        
         return instance
     }
     
@@ -192,7 +193,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         guard let dsUrl = params["data_source"] as? String else {
             return
         }
-        
+                
         let link = APAtomEntryPlayable()
         link.extensionsDictionary = [AnyHashable: String]()
         link.extensionsDictionary["item_details_url"] = dsUrl

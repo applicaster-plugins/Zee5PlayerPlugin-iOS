@@ -161,7 +161,7 @@ class HybridViewController: UIViewController {
         super.viewDidLoad()
         
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-        self.playerView?.addGestureRecognizer(panGestureRecognizer)
+        self.playerView.addGestureRecognizer(panGestureRecognizer)
         
         self.addGradient()
         
