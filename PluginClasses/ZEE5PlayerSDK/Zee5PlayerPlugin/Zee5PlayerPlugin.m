@@ -799,7 +799,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 {
     NSString *totalString = @"";
     NSString *part1 = @"<vmap:VMAP xmlns:vmap=\"http://www.iab.net/videosuite/vmap\" version=\"1.0\">\n";
-    NSString *part3 = @"</vmap:VMAP>";
+    NSString *part3 = @"\n</vmap:VMAP>";
     NSString *part2 = @"";
     NSString *range =@"";
     if (self.currentItem.googleAds.count >0) {
