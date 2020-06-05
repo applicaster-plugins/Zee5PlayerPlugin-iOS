@@ -3178,7 +3178,7 @@ static ContentBuisnessType buisnessType;
     if ([result isKindOfClass:[NSNull class]]|| result.length == 0 || [result isEqualToString:@"[]"])
     {
         self.allowVideoContent =YES;
-        if (ZEE5PlayerSDK.getUserTypeEnum == Premium == false && (buisnessType == premium || buisnessType == premium_downloadable)) {
+        if (ZEE5PlayerSDK.getUserTypeEnum == Premium == false && (buisnessType == premium || buisnessType == premium_downloadable) && _isLive == false) {
             [self playTrailer];
             return;
         }
