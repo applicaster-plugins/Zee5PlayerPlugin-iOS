@@ -231,7 +231,6 @@ static ContentBuisnessType buisnessType;
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
         {
              [[ReportingManager sharedInstance] getWatchHistory];
-            // [[ContentClickApi sharedInstance]ContentConsumption];
         }
        
     }];
@@ -2428,7 +2427,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-    //content_id = @"0-0-8241";//0-1-261984
+   // content_id = @"0-1-200439_782008633";//0-1-261984
     
     _isStop = false;
     self.viewPlayer = playbackView;

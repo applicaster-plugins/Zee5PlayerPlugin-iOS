@@ -122,7 +122,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
            imaConfig.adsResponse = vmapString;
            imaConfig.videoMimeTypes = VideoMimetypes;
            imaConfig.alwaysStartWithPreroll = true;
-           imaConfig.enableDebugMode = true;
+          // imaConfig.enableDebugMode = true;
            NSLog(@"%@", [[SingletonClass sharedManager]ViewsArray]);
            imaConfig.videoControlsOverlays = [[SingletonClass sharedManager]ViewsArray];
     }
@@ -341,7 +341,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
-       // [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     
         
     }];
@@ -611,7 +611,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.pause]
                        block:^(PKEvent * _Nonnull event){
-                           [[ZEE5PlayerManager sharedInstance] pause];
                            
                            NSLog(@"|**** Pause Event ****|");
                            [engine updatePlayerStateWithState: CONVIVA_PAUSED];
@@ -663,7 +662,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                                       
                                       AnalyticEngine *engine = [[AnalyticEngine alloc] init];
                                 
-                                //   [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+                                   [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
                                   }
         
         
