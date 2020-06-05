@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.dependency 'ZappPlugins'
   s.dependency 'ApplicasterSDK'
   s.dependency 'ZappSDK'
-  s.dependency 'PlayKit_IMA', '= 1.7.1'
+  s.dependency 'PlayKit_IMA', '1.7.1'
   s.dependency 'SnapKit'
   s.dependency 'Protobuf'
   s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
