@@ -11,12 +11,24 @@ import Foundation
 import ZappPlugins
 import Zee5CoreSDK
 
+fileprivate extension Notification.Name {
+    static let companionAdsUpdated = Notification.Name("CompanionAds")
+}
+
 class AdBanner: UIView {
     @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint!
-    fileprivate let adHelper = AdHelper()
     
+    fileprivate var observer: NSObjectProtocol?
+    fileprivate let adHelper = AdHelper()
+
     func setupAds(playable: ZPPlayable?) {
+        self.observer = NotificationCenter.default.addObserver(forName: .companionAdsUpdated, object: nil, queue: nil,using: handleCompanionAdsUpdated)
+
         adHelper.setupAdsBanner(self, playable: playable)
+    }
+    
+    func handleCompanionAdsUpdated(notification: Notification) {
+        self.adHelper.updateAdBanner(self)
     }
 }
 
@@ -46,6 +58,7 @@ extension AdBanner: ZPAdViewProtocol {
 
 class AdHelper {
     fileprivate var adPresenter: ZPAdPresenterProtocol?
+    fileprivate var playable: ZPPlayable!
 
     typealias JSON = [String: Any]
     
@@ -53,12 +66,18 @@ class AdHelper {
         banner.isHidden = true
         banner.removeAllSubviews()
         
+        self.playable = playable
+    }
+    
+    func updateAdBanner(_ banner: AdBanner) {
         let userType = User.shared.getType()
         guard userType != .premium else {
             return
         }
         
-        guard let playable = playable, let contentId = playable.identifier as String? else {
+        guard
+            let pluginModel = ZPPluginManager.pluginModelById("Zee5Ads"), let plugin = ZPPluginManager.adapter(pluginModel) as? ZPAdPluginProtocol,
+            let playable = self.playable else {
             return
         }
         
@@ -73,20 +92,16 @@ class AdHelper {
             }
         }
         
-        guard let pluginModel = ZPPluginManager.pluginModelById("Zee5Ads"), let plugin = ZPPluginManager.adapter(pluginModel) as? ZPAdPluginProtocol else {
-            return
+        guard
+            let ads = ZEE5PlayerManager.sharedInstance().companionAds as? [JSON],
+            let adConfig = self.parseResponse(ads, userType) else {
+                return
         }
         
-        self.downloadAdConfig(contentId, userType: userType) { adConfig in
-            guard let adConfig = adConfig else {
-                return
-            }
-            
-            let adPresenter = plugin.createAdPresenter(adView: banner, parentVC: banner.parentViewController())
-            self.adPresenter = adPresenter
-            
-            adPresenter.load(adConfig: adConfig)
-        }
+        let adPresenter = plugin.createAdPresenter(adView: banner, parentVC: banner.parentViewController())
+        self.adPresenter = adPresenter
+        
+        adPresenter.load(adConfig: adConfig)
     }
     
     fileprivate func downloadAdConfig(_ contentId: String, userType: UserType, completion: @escaping (_ ad: ZPAdConfig?) -> Void) {
