@@ -26,17 +26,17 @@ class HybridViewController: UIViewController {
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
     
-    @IBOutlet weak var playerView: UIView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
+    @IBOutlet var playerView: UIView!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView?
     @IBOutlet var buttonsViewCollection: [UIButton]!
     @IBOutlet var viewCollection: [UIView]!
     @IBOutlet var labelsCollection: [UILabel]!
     
-    @IBOutlet weak var itemNameLabel: UILabel!
-    @IBOutlet weak var itemDescriptionLabel: UILabel!
+    @IBOutlet var itemNameLabel: UILabel!
+    @IBOutlet var itemDescriptionLabel: UILabel!
     
-    @IBOutlet weak var backgroundView: UIView!
-    @IBOutlet weak var mainCollectionViewContainer: UIView!
+    @IBOutlet var backgroundView: UIView!
+    @IBOutlet var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
     var mainCollectionViewController: StaticViewCollectionViewController?
 

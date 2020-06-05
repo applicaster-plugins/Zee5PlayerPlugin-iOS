@@ -12,6 +12,7 @@ import Zee5CoreSDK
 fileprivate extension Notification.Name {
     static let contentIdUpdatedNotification = Notification.Name("ContentIdUpdatedNotification")
     static let refreshRequiredNotification = Notification.Name("ReloadConsumption")
+    static let subscriptionEnabledNotification = Notification.Name(Zee5CoreSDKPluginConstants.BUY_SUBSCRIPTION_COMPLETE)
 }
 
 public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
@@ -28,6 +29,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     fileprivate var contentIdNotificationToken: Any?
     fileprivate var refreshRequiredNotificationToken: Any?
 
+    fileprivate var initialContentId: String? = nil
     fileprivate var contentId: String? = nil
     
     // MARK: - Lifecycle
@@ -96,7 +98,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.pluginStyles = instance.hybridViewController?.pluginStyles
         }
 
-        UserDefaults.standard.set(playable.identifier as String?, forKey: "originalContentId")
+        instance.initialContentId = playable.identifier as String?
 
         return instance
     }
@@ -220,24 +222,29 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     // MARK: - private
     
     static func lastActiveInstance() -> Zee5PluggablePlayer? {
-        guard let lastActiveInstance = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
-            return nil
+        guard
+            let lastActiveInstance = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer,
+            lastActiveInstance.kalturaPlayerController != nil,
+            lastActiveInstance.hybridViewController != nil else {
+                return nil
         }
         
         return lastActiveInstance
     }
     
     func clearInstance() {
-        self.pluggablePlayerStop()
+        self.stopAndDismiss()
         
         self.hybridViewController = nil
         self.kalturaPlayerController = nil
     }
     
-    func playContent() {
+    func updateContent(shouldPlay: Bool) {
         func play() {
-            guard let kalturaPlayerController = self.kalturaPlayerController else {
-                return
+            guard
+                shouldPlay,
+                let kalturaPlayerController = self.kalturaPlayerController else {
+                    return
             }
             
             kalturaPlayerController.play()
@@ -252,7 +259,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             
             let (isTelcoUser, telcoUserData) = User.shared.isTelcoUser()
             if isTelcoUser, let telcoUserData = telcoUserData {
-                setlocalize(param: telcoUserData)
+                self.handleTelcoData(param: telcoUserData)
             }
             
             if let userSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
@@ -323,29 +330,24 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
     }
     
+    func playContent() {
+        self.updateContent(shouldPlay: true)
+    }
     
-    func setlocalize(param:[String: String])  {
-        
+    func handleTelcoData(param:[String: String])  {
         var message = NSAttributedString(string: "")
         
-        if (param["partner"] ?? "").lowercased().contains("vodafone")
-        {
-            
-        message = NSAttributedString(string: "BIStrings_Body_LaunchThroughVodafone_Text".localized(hashMap: [:]))
-            
+        if (param["partner"] ?? "").lowercased().contains("vodafone") {
+            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughVodafone_Text".localized(hashMap: [:]))
         }
-        else if (param["partner"] ?? "").lowercased().contains("airtel")
-        {
-          message = NSAttributedString(string: "BIStrings_Body_LaunchThroughAirtel_Text".localized(hashMap: [:]))
+        else if (param["partner"] ?? "").lowercased().contains("airtel") {
+            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughAirtel_Text".localized(hashMap: [:]))
         }
-        else if (param["partner"] ?? "").lowercased().contains("idea")
-        {
-         message = NSAttributedString(string: "BIStrings_Body_LaunchThroughIdea_Text".localized(hashMap: [:]))
+        else if (param["partner"] ?? "").lowercased().contains("idea") {
+            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughIdea_Text".localized(hashMap: [:]))
         }
-        print(message);
-        let Message = message.string as String
-        ZEE5PlayerManager.sharedInstance().telcouser(true, param: Message)
-    
+
+        ZEE5PlayerManager.sharedInstance().telcouser(true, param: message.string)
     }
     
     func addPlayerObservers() {
@@ -357,12 +359,16 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             let newContentId = ZEE5PlayerManager.sharedInstance().currentItem.content_id
             if self.contentId != newContentId {
                 self.contentId = newContentId
-                self.playContent()
+                self.updateContent(shouldPlay: false)
             }
         }
         
-        self.refreshRequiredNotificationToken = NotificationCenter.default.addObserver(forName: .refreshRequiredNotification, object: nil, queue: nil) { (notification) in
-            self.contentId! = UserDefaults.standard .value(forKey: "originalContentId") as! String
+        self.refreshRequiredNotificationToken = NotificationCenter.default.addObserver(forName: .subscriptionEnabledNotification, object: nil, queue: nil) { (notification) in
+            guard let initialContentId = self.initialContentId else {
+                return
+            }
+            
+            self.contentId = initialContentId
             self.playContent()
         }
     }
