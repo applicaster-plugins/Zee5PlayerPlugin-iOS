@@ -1274,7 +1274,7 @@ static ContentBuisnessType buisnessType;
             }
             
         }
-        if (_isAllreadyAdded == false && _PreviousContentArray != nil){
+        if (_isAllreadyAdded == false && _PreviousContentArray != nil && _currentItem != nil){
             [_PreviousContentArray addObject:_currentItem.content_id];
         }
        
@@ -2389,7 +2389,7 @@ static ContentBuisnessType buisnessType;
     {
       [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
        {
-          [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken ];
+          [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken];
           if (self.currentItem == nil) {
               return ;
           }
@@ -2410,7 +2410,7 @@ static ContentBuisnessType buisnessType;
     
 } faillureblock:^(ZEE5SdkError *error)
     {
-                [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
+        [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
         if (self.currentItem == nil) {
                      return ;
                  }
@@ -3355,6 +3355,9 @@ static ContentBuisnessType buisnessType;
                {
                    [self DevicePopupShow];
                }
+        if (error.zeeErrorCode == 3803) {
+            [self playTrailer];
+        }
     }];
 }
 

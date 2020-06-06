@@ -18,7 +18,6 @@
 + (NSString *)getUserToken
 {
     NSString *userToken = [[ZappPlayerAdapter new]getUserAccessToken];
-    NSLog( @"user token From Core SDK%@",userToken);
     if (userToken)
     {
         return userToken;
