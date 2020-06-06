@@ -19,10 +19,16 @@ public class ZappPlayerAdapter: NSObject {
     @objc public func getUserAccessToken()->String
        {
            User.shared.getAccessToken { (Token, error) in
-                         print(Token)
-               self.userAccessToken = Token
-                     }
-           return userAccessToken
-       }
+            if (error != nil  && User.shared.getType() != .guest){
+             // Need to Login here.
+                Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+                return;
+            }else{
+                print(Token)
+                self.userAccessToken = Token;
+            }
+        }
+        return self.userAccessToken
+    }
     
 }

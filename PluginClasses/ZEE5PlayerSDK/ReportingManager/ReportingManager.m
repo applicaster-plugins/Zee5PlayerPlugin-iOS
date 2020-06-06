@@ -112,8 +112,6 @@ static ReportingManager *sharedManager = nil;
         else
         {
             self.isAlreadyExist = false;
-           
-            
         }
     }];
    
