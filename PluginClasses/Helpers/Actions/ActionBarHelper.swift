@@ -12,13 +12,11 @@ import ZappPlugins
 public class ActionBarHelper {
     public static func setup(playable: ZPAtomEntryPlayableProtocol, consumptionFeedType: ConsumptionFeedType, actionBarView: ActionBarView) {
         actionBarView.resetButtons()
-        
-        var needSpacer = true
-        
+                
         var builders: [ActionButtonBuilder.Type] = []
         
         builders.append(ShareActionButtonBuilder.self)
-        
+
         if consumptionFeedType != .live && consumptionFeedType != .channel {
             builders.append(WatchListActionButtonBuilder.self)
         }
@@ -40,17 +38,9 @@ public class ActionBarHelper {
                 continue
             }
             
-            if builder == TrailerActionButtonBuilder.self {
-                needSpacer = false
-            }
-            
             let handler = actionBarView.addButton(button)
             instance.setActionBarUpdateHandler(handler)
             instance.fetchInitialState()
-        }
-        
-        if needSpacer {
-            actionBarView.addSpacerView()
         }
     }
 }

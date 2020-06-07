@@ -20,7 +20,20 @@ extension UIView {
         self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
     }
     
-    public func anchorCenteredToTop(size: CGSize) {
+    public func anchorCenteredToTop(size: CGSize, inset: CGFloat) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: parent.topAnchor, constant: inset).isActive = true
+        self.widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        self.centerXAnchor.constraint(equalTo: parent.centerXAnchor).isActive = true
+    }
+
+    public func fillCenteredInParent(width: CGFloat) {
         guard let parent = self.superview else {
             return
         }
@@ -28,11 +41,11 @@ extension UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         
         self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
-        self.widthAnchor.constraint(equalToConstant: size.width).isActive = true
-        self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
         self.centerXAnchor.constraint(equalTo: parent.centerXAnchor).isActive = true
     }
-
+    
     public func anchorToTop() {
         guard let parent = self.superview else {
             return
@@ -46,15 +59,55 @@ extension UIView {
         self.bottomAnchor.constraint(lessThanOrEqualTo: parent.bottomAnchor).isActive = true
     }
     
+    public func anchorToRight(width: CGFloat) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+        self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+    }
+    
+    public func anchorLeftOf(view: UIView) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(lessThanOrEqualTo: view.leadingAnchor).isActive = true
+    }
+    
     public func centerInParent(size: CGSize) {
         guard let parent = self.superview else {
             return
         }
         
         self.translatesAutoresizingMaskIntoConstraints = false
+        
         self.widthAnchor.constraint(equalToConstant: size.width).isActive = true
         self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
         self.centerXAnchor.constraint(equalTo: parent.centerXAnchor).isActive = true
         self.centerYAnchor.constraint(equalTo: parent.centerYAnchor).isActive = true
+    }
+    
+    public func fillParentLeftOf(view: UIView) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
 }

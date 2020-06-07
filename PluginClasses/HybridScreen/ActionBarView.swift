@@ -28,6 +28,7 @@ public class ActionBarView: UIView {
         public let action: (() -> Void)
     }
     
+    fileprivate var fixedSpaceView: UIView!
     fileprivate var stackView: UIStackView!
     
     public func addButton(_ buttonData: ButtonData) -> ActionBarUpdateHandler {
@@ -35,38 +36,28 @@ public class ActionBarView: UIView {
     }
     
     public func resetButtons() {
-        return self.stackView.removeAllSubviews()
-    }
-    
-    public func addSpacerView() {
-        let dynamicSpaceView = UIView()
-        dynamicSpaceView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        dynamicSpaceView.backgroundColor = .clear
-        self.stackView.addArrangedSubview(dynamicSpaceView)
-        
-        let fixedSpaceView = UIView()
-        fixedSpaceView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        fixedSpaceView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        fixedSpaceView.backgroundColor = .clear
-        self.stackView.addArrangedSubview(fixedSpaceView)
+        self.stackView.removeAllSubviews()
+        self.fixedSpaceView.removeAllSubviews()
     }
     
     override public func awakeFromNib() {
+        self.backgroundColor = UIColor.white.withAlphaComponent(0.04)
+
+        self.fixedSpaceView = UIView()
+        self.addSubview(self.fixedSpaceView)
+
+        self.fixedSpaceView.anchorToRight(width: 100)
+        self.fixedSpaceView.backgroundColor = .clear
+
         self.stackView = UIStackView()
         self.addSubview(self.stackView)
         
-        self.backgroundColor = UIColor.white.withAlphaComponent(0.04)
-        
-        self.stackView.translatesAutoresizingMaskIntoConstraints = false
-        self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        self.stackView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        self.stackView.anchorLeftOf(view: self.fixedSpaceView)
         
         self.stackView.axis = .horizontal
-        self.stackView.alignment = .center
-        self.stackView.distribution = .fill
-        self.stackView.spacing = 20
+        self.stackView.alignment = .fill
+        self.stackView.distribution = .fillEqually
+        self.stackView.spacing = 0
         self.stackView.backgroundColor = .clear
     }
     
@@ -76,7 +67,9 @@ public class ActionBarView: UIView {
         if let customButton = buttonData.custom {
             customButton.removeAllSubviews()
             customButton.removeConstraints(customButton.constraints)
+            
             customButton.backgroundColor = .clear
+            
             container.button = customButton
             container.button.isHidden = true
         }
@@ -91,28 +84,34 @@ public class ActionBarView: UIView {
         }
         
         container.button.translatesAutoresizingMaskIntoConstraints = false
-        self.stackView.addArrangedSubview(container.button)
-        
-        container.button.heightAnchor.constraint(equalToConstant: 40).isActive = true
-
-        if buttonData.isFiller {
-            container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            container.button.widthAnchor.constraint(equalToConstant: 100).isActive = true
-            container.button.backgroundColor = UIColor.white.withAlphaComponent(0.3)
-        }
-        else {
-            container.button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            container.button.widthAnchor.constraint(equalToConstant: 55).isActive = true
-        }
-        
-        container.button.backgroundColor = .clear
         
         container.innerViewsContainer = UIView()
         container.button.addSubview(container.innerViewsContainer)
-        
-        container.innerViewsContainer.fillParent()
-        
+
+        container.innerViewsContainer.translatesAutoresizingMaskIntoConstraints = false
+
+        container.innerViewsContainer.backgroundColor = .clear
         container.innerViewsContainer.isUserInteractionEnabled = false
+        
+        if buttonData.isFiller {
+            self.fixedSpaceView.addSubview(container.button)
+            
+            container.button.fillParent()
+            container.innerViewsContainer.fillParent()
+
+            container.button.backgroundColor = UIColor.white.withAlphaComponent(0.04)
+        }
+        else {
+            self.stackView.addArrangedSubview(container.button)
+            
+            let widthConstraint = container.button.widthAnchor.constraint(equalToConstant: 75)
+            widthConstraint.priority = UILayoutPriority(rawValue: 999)
+            widthConstraint.isActive = true
+            
+            container.innerViewsContainer.fillCenteredInParent(width: 55)
+                        
+            container.button.backgroundColor = .clear
+        }
         
         let (imageView, label) = self.addInnerViews(container: container.innerViewsContainer, buttonData: buttonData)
                 
@@ -159,7 +158,7 @@ public class ActionBarView: UIView {
         let imageView = UIImageView()
         container.addSubview(imageView)
         
-        imageView.anchorCenteredToTop(size: CGSize(width: 20, height: 16))
+        imageView.anchorCenteredToTop(size: CGSize(width: 20, height: 16), inset: 13)
         
         imageView.image = buttonData.image
         imageView.contentMode = .scaleAspectFit
@@ -169,14 +168,17 @@ public class ActionBarView: UIView {
         container.addSubview(label)
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 6).isActive = true
-        label.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2).isActive = true
+        label.leadingAnchor.constraint(equalTo: container.leadingAnchor).isActive = true
+        label.trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
         label.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
         
         label.text = buttonData.title
         label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         label.font = UIFont.systemFont(ofSize: 10)
         label.textColor = buttonData.textColor
+        label.numberOfLines = 2
         label.backgroundColor = .clear
         
         return (imageView, label)
