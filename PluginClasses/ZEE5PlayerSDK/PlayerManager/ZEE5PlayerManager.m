@@ -108,6 +108,8 @@
 @property(nonatomic) BOOL isAllreadyAdded;
 @property(nonatomic) BOOL isWatchlistAdded;
 @property(nonatomic) BOOL isParentalControlOffline;
+@property(nonatomic) BOOL ishybridViewOpen;
+@property(nonatomic) BOOL isNeedToSubscribe;
 
 
 @property(nonatomic) CGFloat previousDuration;
@@ -178,7 +180,7 @@ static ContentBuisnessType buisnessType;
         [UIFont jbs_registerFontWithFilenameString:@"NotoSans-Medium.ttf" bundle:bundel];
         [UIFont jbs_registerFontWithFilenameString:@"NotoSans-Regular.ttf" bundle:bundel];
         [UIFont jbs_registerFontWithFilenameString:@"NotoSans-SemiBold.ttf" bundle:bundel];
-
+        
         [[PlayKitManager sharedInstance] registerPlugin:IMAPlugin.self];
         
     });
@@ -375,7 +377,7 @@ static ContentBuisnessType buisnessType;
     [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
     
-    if (_GuestuserPopView != nil) {
+    if (_ishybridViewOpen == true) {
         [self.playbackView addSubview:_customControlView];
        [self hideUnHidetrailerEndView:false];
         return;
@@ -611,7 +613,7 @@ static ContentBuisnessType buisnessType;
     {
         if (!_customControlView.sliderLive.isTracking && !_seekStared)
         {
-            //_customControlView.sliderLive.value = totalSeconds;
+            _customControlView.sliderLive.value = totalSeconds;
             if(_customControlView.buttonLiveFull.selected)
             {
                 [_customControlView.sliderLive updateToolTipView];
@@ -775,11 +777,11 @@ static ContentBuisnessType buisnessType;
     NSLog(@"On Complete");
     _isTelco = false;
     [self hideLoaderOnPlayer];
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && _isNeedToSubscribe == true)
     {
         _videoCompleted = YES;
         [self pause];
-         [self INDGuestUser];
+         [self HybridViewOpen];
         [self hideUnHidetrailerEndView:false];
         return;
     }
@@ -2108,6 +2110,36 @@ static ContentBuisnessType buisnessType;
   
 }
 
+-(void)HybridViewOpen{
+    [self HybridviewnotificationObserver];
+    if (_ishybridViewOpen == false) {
+         _ishybridViewOpen = true;
+           [[ZEE5PlayerDeeplinkManager sharedMethod]HybridpackviewWithCompletion:^(BOOL isSuccess) {
+              if (isSuccess) {
+                  [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                 [self RefreshViewNotification];
+             }
+         }];
+        
+    }
+ 
+}
+-(void)HybridviewnotificationObserver{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"upgradePopupDissmiss" object:nil];
+      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DismissHybridView) name:@"upgradePopupDissmiss" object:nil];
+}
+
+-(void)DismissHybridView{
+    
+     _ishybridViewOpen = false;
+    if (_ModelValues.isBeforeTv == true && self.TvShowModel.Episodes.count > 0) {
+           NSString *ContentId = self.TvShowModel.Episodes[1].episodeId;
+           
+           [self playVODContent:ContentId country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
+                          }];
+       }
+    
+}
 
 -(void)INDGuestUser
 {
@@ -2422,6 +2454,8 @@ static ContentBuisnessType buisnessType;
    // content_id = @"0-1-200439_782008633";//0-1-261984
     
     _isStop = false;
+    _isNeedToSubscribe = false;
+    _ishybridViewOpen = false;
     self.viewPlayer = playbackView;
     self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
     
@@ -2652,7 +2686,8 @@ static ContentBuisnessType buisnessType;
             [[NSNotificationCenter defaultCenter]removeObserver:self name:@"CompanionAds" object:nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"CompanionAds" object:nil];
         }
-        if([videoAds count] > 0)
+       
+        if([videoAds count] > 0 && self.isLive == false)
         {
             
             for (NSDictionary *insideDict in videoAds) {
@@ -2904,7 +2939,17 @@ static ContentBuisnessType buisnessType;
         [self ContentidNotification:_currentItem.content_id];
     }
     
-    if (_playerConfig.playerType != normalPlayer) {
+    if (_playerConfig.playerType == normalPlayer)
+    {
+        [self downLoadAddConfig:^(id result) {
+            [self getVodSimilarContent];
+            [self getSubscrptionList];
+            
+        } failureBlock:^(ZEE5SdkError *error) {
+            [self getSubscrptionList];
+        }];
+    }
+    else {
         self.playerConfig.showCustomPlayerControls = false;
         [self playWithCurrentItem];
     }
@@ -3181,6 +3226,10 @@ static ContentBuisnessType buisnessType;
    NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
     id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.id contains[cd] Activated"];
+    
+    NSDictionary *ActivateDict = [resultData filteredArrayUsingPredicate:predicate];
+
         for(NSDictionary *dict in resultData)
             {
                  SubscriptionModel *model = [[SubscriptionModel alloc] initWithDictionary:dict];
@@ -3198,7 +3247,7 @@ static ContentBuisnessType buisnessType;
                         }else
                         {
                             NSLog(@"svod Deactive");
-                            [self playTrailer];
+                           // [self playTrailer];
                            
                         }
                     }else
@@ -3225,7 +3274,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)playTrailer
 {
-    
+    _isNeedToSubscribe = true;
     if (_isLive == false && self.ModelValues.trailerIdentifier!=nil)
     {
         self.allowVideoContent = YES;
@@ -3245,7 +3294,7 @@ static ContentBuisnessType buisnessType;
     if (_ModelValues.isBeforeTv == true) {
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
-    [self INDGuestUser];
+    [self HybridViewOpen];
     [self addCustomControls];
     
     
@@ -3479,7 +3528,7 @@ static ContentBuisnessType buisnessType;
     
     if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
         [self pause];
-        [self INDGuestUser];
+        [self HybridViewOpen];
         return;
     }
     

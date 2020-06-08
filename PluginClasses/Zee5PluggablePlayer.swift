@@ -28,6 +28,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     fileprivate var contentIdNotificationToken: Any?
     fileprivate var refreshRequiredNotificationToken: Any?
+    fileprivate var refreshRequiredNotificationTokenLogin: Any?
 
     fileprivate var initialContentId: String? = nil
     fileprivate var contentId: String? = nil
@@ -49,6 +50,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         if let refreshRequiredNotificationToken = self.refreshRequiredNotificationToken {
             NotificationCenter.default.removeObserver(refreshRequiredNotificationToken)
+        }
+        if let refreshRequiredNotificationTokenLogin = self.refreshRequiredNotificationTokenLogin {
+            NotificationCenter.default.removeObserver(refreshRequiredNotificationTokenLogin)
         }
     }
     
@@ -365,6 +369,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         self.refreshRequiredNotificationToken = NotificationCenter.default.addObserver(forName: .subscriptionEnabledNotification, object: nil, queue: nil) { (notification) in
+            guard let initialContentId = self.initialContentId else {
+                return
+            }
+            
+            self.contentId = initialContentId
+            self.playContent()
+        }
+        
+        self.refreshRequiredNotificationTokenLogin = NotificationCenter.default.addObserver(forName: .refreshRequiredNotification, object: nil, queue: nil) { (notification) in
             guard let initialContentId = self.initialContentId else {
                 return
             }
