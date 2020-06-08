@@ -2363,8 +2363,7 @@ static ContentBuisnessType buisnessType;
 
 //MARK:- Play LiveContent Method.
 
-- (void)playLiveContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage
-{
+- (void)playLiveContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage {
     self.isLive = YES;
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.liveContentDetails, content_id];
@@ -2372,54 +2371,47 @@ static ContentBuisnessType buisnessType;
     
     NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
     
-    
-    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
-    {
+    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result) {
         self.LiveModelValues = [LiveContentDetails initFromJSONDictionary:result];
         self.buisnessType = self.LiveModelValues.buisnessType;
         self.audioLanguageArr = self.LiveModelValues.languages;
         self.showID = self.LiveModelValues.identifier;
         self.isStop = NO;
         
-    [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result)
-{
-    NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
-    
-        if (self.LiveModelValues.isDRM)
-    {
-      [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
-       {
-          [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken];
-          if (self.currentItem == nil) {
-              return ;
-          }
-          
-          [self stop];
-          
-    } failureBlock:^(ZEE5SdkError * _Nullable error)
-    {
-       [self notifiyError:error];
-    }];
-} else
-       {
-           [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
-           if (self.currentItem == nil) {
+        [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result) {
+            NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
+            
+            if (self.LiveModelValues.isDRM) {
+                [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
+                    [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken];
+                    if (self.currentItem == nil) {
                         return ;
                     }
-       }
-    
-} faillureblock:^(ZEE5SdkError *error)
-    {
-        [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
-        if (self.currentItem == nil) {
-                     return ;
-                 }
-    }];
-    } failureBlock:^(ZEE5SdkError *error)
-     {
+                    
+                    [self stop];
+                    
+                } failureBlock:^(ZEE5SdkError * _Nullable error) {
+                    [self notifiyError:error];
+                }];
+            }
+            else {
+                [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
+                
+                if (self.currentItem == nil) {
+                    return ;
+                }
+            }
+            
+        } faillureblock:^(ZEE5SdkError *error) {
+            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
+            
+            if (self.currentItem == nil) {
+                return ;
+            }
+        }];
+    } failureBlock:^(ZEE5SdkError *error) {
         [self notifiyError:error];
     }];
-    
 }
 
 //MARK:-  Applicaster Call Method. (ContentId.Country,Language)
@@ -2908,18 +2900,18 @@ static ContentBuisnessType buisnessType;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
     
-    if (ZEE5UserDefaults.getContentID != _currentItem.content_id) {
-         [self ContentidNotification:_currentItem.content_id];
-       }
-    if (_playerConfig.playerType != normalPlayer)
-    {
+    if (![ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id]) {
+        [self ContentidNotification:_currentItem.content_id];
+    }
+    
+    if (_playerConfig.playerType != normalPlayer) {
         self.playerConfig.showCustomPlayerControls = false;
         [self playWithCurrentItem];
     }
-    [[AnalyticEngine new]CurrentItemDataWith:self.currentItem];
     
-     [self getSubscrptionList];
-
+    [[AnalyticEngine new] CurrentItemDataWith:self.currentItem];
+    
+    [self getSubscrptionList];
 }
 
 
