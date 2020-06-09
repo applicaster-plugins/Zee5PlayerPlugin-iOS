@@ -111,22 +111,25 @@ internal enum PlayerViewDisplayMode : Int {
     
     
    @objc public func ShowIndicator()  {
-    container.frame = playerView.bounds
-     container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
-     let loadingView: UIView = UIView()
-     loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-     loadingView.center = container.center
-     loadingView.clipsToBounds = true
-     loadingView.layer.cornerRadius = 20
-     activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
-     loadingView.addSubview(activityLoader)
-     container.addSubview(loadingView)
-     playerView.addSubview(container)
-     activityLoader.startAnimating()
-     checkForReachability()
+    ShowIndicator(onParent: playerView)
+   }
     
-    
-    }
+    @objc public func ShowIndicator(onParent view: UIView)  {
+      HideIndicator()
+      container.frame = view.bounds
+      container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
+      let loadingView: UIView = UIView()
+      loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+      loadingView.center = container.center
+      loadingView.clipsToBounds = true
+      loadingView.layer.cornerRadius = 20
+      activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
+      loadingView.addSubview(activityLoader)
+      container.addSubview(loadingView)
+      view.addSubview(container)
+      activityLoader.startAnimating()
+      checkForReachability()
+     }
     
     @objc public func HideIndicator()  {
      container .removeFromSuperview()
