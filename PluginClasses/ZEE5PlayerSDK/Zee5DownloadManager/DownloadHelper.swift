@@ -16,6 +16,8 @@ public class DownloadHelper: NSObject {
     
     private let licenseUrl = "https://fp-keyos-aps1.licensekeyserver.com/getkey/"
     private let base64 = "MIIE1zCCA7+gAwIBAgIIWWD0ecwMxBUwDQYJKoZIhvcNAQEFBQAwfzELMAkGA1UEBhMCVVMxEzARBgNVBAoMCkFwcGxlIEluYy4xJjAkBgNVBAsMHUFwcGxlIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MTMwMQYDVQQDDCpBcHBsZSBLZXkgU2VydmljZXMgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMTcxMTI5MTM1NzI0WhcNMTkxMTMwMTM1NzI0WjBuMQswCQYDVQQGEwJVUzEaMBgGA1UECgwRWjVYIEdsb2JhbCBGWi1MTEMxEzARBgNVBAsMCkM5UkVHUEI0NkMxLjAsBgNVBAMMJUZhaXJQbGF5IFN0cmVhbWluZzogWjVYIEdsb2JhbCBGWi1MTEMwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMmRxhh2nLbAqJKQQ+7FDJPocqj8fqpwmG3dEIxo4gpBlLhsbgSSM583PBN6kHUeUys/jegl3OhcP8xSn4mD66mprG1mAlUrZFqIglQaZkFOOQN8PHPZUFpKIfrgzlqB8BqvZnmNv/jAAZlyBJeHcCgiWaX30Dj9AI4mlkebS5TFAgMBAAGjggHqMIIB5jAdBgNVHQ4EFgQUJksWck0AHXZSwsyMf1beneKIDjAwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBRj5EdUy4VxWUYsg6zMRDFkZwMsvjCB4gYDVR0gBIHaMIHXMIHUBgkqhkiG92NkBQEwgcYwgcMGCCsGAQUFBwICMIG2DIGzUmVsaWFuY2Ugb24gdGhpcyBjZXJ0aWZpY2F0ZSBieSBhbnkgcGFydHkgYXNzdW1lcyBhY2NlcHRhbmNlIG9mIHRoZSB0aGVuIGFwcGxpY2FibGUgc3RhbmRhcmQgdGVybXMgYW5kIGNvbmRpdGlvbnMgb2YgdXNlLCBjZXJ0aWZpY2F0ZSBwb2xpY3kgYW5kIGNlcnRpZmljYXRpb24gcHJhY3RpY2Ugc3RhdGVtZW50cy4wNQYDVR0fBC4wLDAqoCigJoYkaHR0cDovL2NybC5hcHBsZS5jb20va2V5c2VydmljZXMuY3JsMA4GA1UdDwEB/wQEAwIFIDA7BgsqhkiG92NkBg0BAwEB/wQpAXBiYWwxd25vcXJybW90ajFlcXE2ZHd3a3ZubG9rd2h6bDV1eTRrZ2EwLQYLKoZIhvdjZAYNAQQBAf8EGwFjMzJ4cXZlZHllaWxvMHowd3VlaWpxcnpuaTANBgkqhkiG9w0BAQUFAAOCAQEAPICsXS/tBrTH4wrSipaLTZYAOEMDgbblgTxK+u7y4jk+QVZ01RpjCO0FJVEAiVmPJvnwBA1OLw1klHVXBGiBcbUXb0MqbcNDwGFK0xAkB6INkFbZCrwNa0EcBXt9QQZIOt0TcHhSHXJCEVuTj5ywJye7EPJiAM4ZDNxw5brn4omqIr8T9CAyRwUnVJJnt+UoMqqZSkEqXZL+VIhIhusaKr39xgl17eE5sSlnZ0R8xwfuPSuMFWsbc5w3yT4c8PHp4M25cv6utMDIpExnQqLBFf8WBnzkdyL2W+egg7hKGUF5fyCbZA22Ij5da/7XwidZgT5q7U8kgaPkFKE/XW0/Uw=="
+    private var isOpen = false
+
     
     private var currentDownloadOptionsView: DownloadQualityMenu?
     
@@ -179,7 +181,7 @@ public class DownloadHelper: NSObject {
 extension DownloadHelper {
 
     fileprivate func setupDownloadOptionMenu(with config: Z5VideoConfig, data: ZeeDownloadItem) {
-        guard let parent = ZAAppConnector.sharedInstance().navigationDelegate.topmostModal() else {
+        guard let parent = ZAAppConnector.sharedInstance().navigationDelegate.topmostModal(),  !isOpen else {
             return
         }
         
@@ -191,12 +193,14 @@ extension DownloadHelper {
         downloadView.fillParent()
         
         self.currentDownloadOptionsView = downloadView
+        isOpen = true
     }
     
     @objc public func removeDownloadOptionMenu() {
         if let currentDownloadOptionsView = self.currentDownloadOptionsView {
             currentDownloadOptionsView.removeFromSuperview()
             self.currentDownloadOptionsView = nil
+            isOpen = false
         }
     }
     
