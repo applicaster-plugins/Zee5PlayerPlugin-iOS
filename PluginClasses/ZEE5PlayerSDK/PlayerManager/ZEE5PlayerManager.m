@@ -642,7 +642,7 @@ static ContentBuisnessType buisnessType;
         
       
         //MARK:- WatchHistory Logic
-        if (totalSeconds - _watchHistorySecond >60 )
+        if (totalSeconds - _watchHistorySecond >60 || _watchHistorySecond - totalSeconds > 60)
         {
             _watchHistorySecond = totalSeconds;
             [[ReportingManager sharedInstance]startReportingWatchHistory];
@@ -3220,10 +3220,6 @@ static ContentBuisnessType buisnessType;
    NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
     id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.id contains[cd] Activated"];
-    
-    NSDictionary *ActivateDict = [resultData filteredArrayUsingPredicate:predicate];
-
         for(NSDictionary *dict in resultData)
             {
                  SubscriptionModel *model = [[SubscriptionModel alloc] initWithDictionary:dict];
@@ -3241,7 +3237,6 @@ static ContentBuisnessType buisnessType;
                         }else
                         {
                             NSLog(@"svod Deactive");
-                           // [self playTrailer];
                            
                         }
                     }else
