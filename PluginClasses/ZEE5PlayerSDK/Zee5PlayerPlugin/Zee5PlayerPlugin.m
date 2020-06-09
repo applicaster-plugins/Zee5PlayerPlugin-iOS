@@ -193,6 +193,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 - (void)createConvivaAdSeesionWithAdEvent: (PKEvent*) event
 {
+    // currently do not need to send the analytics
+    return;
+    
     NSLog(@"|*** create ConvivaAdSeesion");
     
     NSString *stremType = @"Unknown";
