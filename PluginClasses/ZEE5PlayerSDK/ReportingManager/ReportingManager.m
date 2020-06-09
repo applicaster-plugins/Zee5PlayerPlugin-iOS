@@ -107,7 +107,6 @@ static ReportingManager *sharedManager = nil;
         if (error.code == 400)
         {
             self.isAlreadyExist = true;
-            [self reportWatchHistory];
         }
         else
         {
@@ -187,7 +186,6 @@ static ReportingManager *sharedManager = nil;
         if (error.code == 400)
         {
             self.isAlreadyExist = true;
-            [self reportWatchHistory2];
         }
         else
         {
