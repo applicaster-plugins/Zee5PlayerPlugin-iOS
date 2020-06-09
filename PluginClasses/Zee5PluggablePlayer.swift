@@ -428,7 +428,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             completion()
         }
         
+        hybridViewController?.showLoadingActivityIndicator()
         APAtomFeedLoader.loadPipes(model: atomFeed) { (success, atomFeed) in
+            defer { self.hybridViewController?.hideLoadingActivityIndicator() }
             guard let atomFeed = atomFeed else {
                 completion()
                 return

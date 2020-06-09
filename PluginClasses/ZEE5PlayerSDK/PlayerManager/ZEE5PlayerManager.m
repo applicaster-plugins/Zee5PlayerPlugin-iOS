@@ -1142,13 +1142,7 @@ static ContentBuisnessType buisnessType;
         weakSelf.seekStared = false;
     });
    
-    if ( self.customControlView.buttonPlay.selected == NO){
-        [self hideLoaderOnPlayer];
-    }
-    
-
     //    self.customControlView.buttonPlay.selected = YES;
-    
 }
 
 

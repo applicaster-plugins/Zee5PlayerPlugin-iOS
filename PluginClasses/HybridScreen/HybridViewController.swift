@@ -166,14 +166,18 @@ class HybridViewController: UIViewController {
         self.addGradient()
         
         self.kalturaPlayerController?.delegate = self
+        
+        initKalturaPlayer()
+    }
+    
+    func initKalturaPlayer() {
+        self.observer()
+                
+        kalturaPlayerConfiguration()
     }
     
     func commonInit() {
         self.stylesConfiguration()
-        
-        self.observer()
-                
-        kalturaPlayerConfiguration()
         
         self.itemNameLabel?.text = self.currentPlayableItem?.playableName()
         self.itemDescriptionLabel?.text = self.currentPlayableItem?.playableDescription()
@@ -366,5 +370,15 @@ class HybridViewController: UIViewController {
 extension HybridViewController: ZEE5PlayerDelegate {
     func didFinishPlaying() {
         self.closePlayer()
+    }
+}
+
+extension HybridViewController {
+    func showLoadingActivityIndicator() {
+        kalturaPlayerController?.ShowIndicator(onParent: view)
+    }
+    
+    func hideLoadingActivityIndicator() {
+        kalturaPlayerController?.HideIndicator()
     }
 }
