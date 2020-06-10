@@ -462,7 +462,6 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)MoatViewAdd{
-    
     if (_customControlView != nil ) {
         [singleton.ViewsArray addObject:_customControlView];
     }
@@ -490,7 +489,6 @@ static ContentBuisnessType buisnessType;
     if (_customControlView.playerControlView != nil ) {
             [singleton.ViewsArray addObject:_customControlView.playerControlView];
     }
-    
 }
 
 -(void)addMuteViewToPlayer
