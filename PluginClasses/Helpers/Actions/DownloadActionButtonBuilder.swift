@@ -164,7 +164,7 @@ fileprivate class DownloadProgressView: UIView {
             
             self.addSubview(self.circularRing)
             
-            self.circularRing.anchorCenteredToTop(size: CGSize(width: 27, height: 27), inset: 0)
+            self.circularRing.anchorCenteredToTop(size: CGSize(width: 27, height: 27), inset: 13)
 
             self.circularRing.startAngle = -90
             self.circularRing.style = .bordered(width: 0, color: AppColor.progressGray)
