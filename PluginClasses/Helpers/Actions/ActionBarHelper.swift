@@ -23,11 +23,11 @@ public class ActionBarHelper {
         
         builders.append(CastActionButtonBuilder.self)
 
-        if consumptionFeedType != .live && consumptionFeedType != .news && consumptionFeedType != .channel {
+        if consumptionFeedType != .live && consumptionFeedType != .channel && consumptionFeedType != .show && consumptionFeedType != .original {
             builders.append(DownloadActionButtonBuilder.self)
         }
         
-        if consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .original {
+        if consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .show || consumptionFeedType == .original {
             builders.append(TrailerActionButtonBuilder.self)
         }
         
