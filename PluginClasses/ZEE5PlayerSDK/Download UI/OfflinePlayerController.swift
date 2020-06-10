@@ -89,6 +89,8 @@ protocol OfflineVideoDurationDelegate: class {
     }
     
     @IBAction func actionBack(_ sender: Any) {
+        playerOffline.stop()
+        playerOffline.destroy()
         self.dismissViewController(withAnimation: true);
     }
     

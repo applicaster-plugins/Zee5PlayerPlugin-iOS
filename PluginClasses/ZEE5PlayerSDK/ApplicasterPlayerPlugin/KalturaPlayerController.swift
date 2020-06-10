@@ -40,6 +40,8 @@ internal enum PlayerViewDisplayMode : Int {
     var previousContainerView: UIView?
     let container = UIView()
     let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+    let Singleton:SingletonClass
+    
     
     var delegate: ZEE5PlayerDelegate?
     
@@ -48,7 +50,7 @@ internal enum PlayerViewDisplayMode : Int {
     required init(builder: PlayerViewBuilderProtocol, player: PlayerAdapterProtocol) {
         self.builder = builder
         self.playerAdapter = player
-        
+        self.Singleton = SingletonClass .sharedManager() as! SingletonClass
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -129,6 +131,16 @@ internal enum PlayerViewDisplayMode : Int {
       view.addSubview(container)
       activityLoader.startAnimating()
       checkForReachability()
+
+        if Singleton.viewsArray.contains(container) == false {
+            Singleton.viewsArray.add(container)
+        }
+        if Singleton.viewsArray.contains(loadingView) == false {
+             Singleton.viewsArray.add(loadingView)
+        }
+        if Singleton.viewsArray.contains(activityLoader) == false {
+             Singleton.viewsArray.add(activityLoader)
+        }
      }
     
     @objc public func HideIndicator()  {

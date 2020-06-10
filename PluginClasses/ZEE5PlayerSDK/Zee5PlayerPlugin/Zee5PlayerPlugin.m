@@ -207,7 +207,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
     NSLog(@"%@",stremType);
     NSDictionary *dict = [[NSDictionary alloc] init];
-    AdPositionType Adpositiontype = event.adInfo.positionType;
     
     NSLog(@"|*** AdObject EventTitle: %@ *** streamUrl: %@ *** Adtotaltime: %d", event.adInfo.title, event.adTagUrl, [event.adMediaTime intValue]);
     
