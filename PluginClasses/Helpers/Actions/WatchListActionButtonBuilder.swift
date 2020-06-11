@@ -125,6 +125,7 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             params: params) { (response) in
                 self.setItemInWatchList(itemIn: true,
                                   toastMessage: self.localizedText(for: "Consumption_ToastMessage_ItemAddedToWatchlist_Text"))
+            AnalyticEngine().AddtoWatchlistAnlytics()
         }
     }
     

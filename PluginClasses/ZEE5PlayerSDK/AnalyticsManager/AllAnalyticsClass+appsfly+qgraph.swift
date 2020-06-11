@@ -42,9 +42,25 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
         Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
         ]
-         analytics.track(Events.ADD_TO_WATCHLIST, trackedProperties: parameter)
+         analytics.track(findEvent(), trackedProperties: parameter)
     }
     
+    func findEvent() -> Zee5CoreSDK.Events {
+        switch ZEE5PlayerSDK.getConsumpruionType() {
+        case Video:
+            return Events.VIDEOSECTION_ADDED_TO_WATCH_LATER
+        case Episode:
+            return Events.TVSHOWSSECTION_ADDED_TO_WATCH_LATER
+        case Shows:
+            return Events.TVSHOWSSECTION_ADDED_TO_WATCH_LATER
+        case Original:
+            return Events.ORIGINALSSECTION_ADDED_TO_WATCH_LATER
+        case Movie:
+            return Events.MOVIESSECTION_ADDED_TO_WATCH_LATER
+        default:
+            return Events.ADD_TO_WATCHLIST
+        }
+    }
     
     //MARK:- Subscription CTA Button cLicked
     
