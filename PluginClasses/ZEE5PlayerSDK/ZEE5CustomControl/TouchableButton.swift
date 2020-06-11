@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 enum SEEKBTN{
     case forward
@@ -54,11 +53,7 @@ public class TouchableButton: UIButton {
         stack.spacing = 2.0
         self.addSubview(stack)
         stack.isHidden = true
-        stack.snp.makeConstraints { (make) in
-            make.center.equalTo(self.snp.center)
-            make.height.equalTo(50)
-            make.width.equalTo(100)
-        }
+        stack.centerInParent(size: CGSize(width: 100, height: 50))
         stack.isUserInteractionEnabled = false
         return stack
     }()

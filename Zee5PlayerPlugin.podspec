@@ -32,7 +32,6 @@ Pod::Spec.new do |s|
   s.dependency 'ApplicasterSDK'
   s.dependency 'ZappSDK'
   s.dependency 'PlayKit_IMA', '~> 1.8.0'
-  s.dependency 'SnapKit'
   s.dependency 'Protobuf'
   s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
   s.dependency 'ConvivaSDK'
@@ -45,7 +44,6 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage'
   s.dependency 'DownloadToGo'
   s.dependency 'SQLite.swift'
-  s.dependency 'React', '~> 0.59.10'
   s.dependency 'ZeeHomeScreen'
 
 end

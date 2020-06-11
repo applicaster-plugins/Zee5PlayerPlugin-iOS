@@ -42,7 +42,7 @@ extension KalturaPlayerController {
 
                 ZAAppConnector.sharedInstance().navigationDelegate.topmostModal()?.present(self, animated: false, completion: {
                     completion?()
-                    self.playerAdapter?.player?.play()
+                    ZEE5PlayerManager.sharedInstance().play()
                 })
             }
             break

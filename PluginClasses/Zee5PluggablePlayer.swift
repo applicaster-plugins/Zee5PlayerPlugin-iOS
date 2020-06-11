@@ -66,9 +66,8 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         var errorViewConfig: ErrorViewConfiguration?
         if let configuration = configurationJSON {
             errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
-            
             //prepare ads envirnoment from the plugin configurations
-            if let isProdAdsEnvirnoment = configurationJSON!["is_ads_production"] as? Int {
+            if let isProdAdsEnvirnoment = configuration["is_ads_production"] as? Int {
                 ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
             }
         }
@@ -83,7 +82,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance = Zee5PluggablePlayer()
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
             
-            let playerViewController = ViewControllerFactory.createPlayerViewController(videoItems: videos, errorViewConfig: errorViewConfig)
+            let playerViewController = KalturaPlayerController()
             instance.hybridViewController?.kalturaPlayerController = playerViewController
             
             instance.kalturaPlayerController = playerViewController
@@ -113,15 +112,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     public func pluggablePlayerCurrentPlayableItem() -> ZPPlayable? {
-        return self.kalturaPlayerController?.playerAdapter?.currentItem
+        return self.currentPlayableItem
     }
     
     public override func pluggablePlayerFirstPlayableItem() -> ZPPlayable? {
-        return self.kalturaPlayerController?.playerAdapter?.currentItem
+        return self.currentPlayableItem
     }
     
     public func pluggablePlayerCurrentUrl() -> NSURL? {
-        let item = self.kalturaPlayerController?.playerAdapter?.currentItem
+        let item = self.currentPlayableItem
         let urlString = item?.contentVideoURLPath() ?? ""
         return NSURL(string: urlString)
     }
@@ -129,21 +128,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     // MARK: - Inline playback
     
     public override func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
-        guard let kalturaPlayerController = self.kalturaPlayerController else {
-            return
-        }
-        kalturaPlayerController.builder.mode = .inline
-        rootViewController.addChildViewController(kalturaPlayerController, to: container)
-        kalturaPlayerController.view.matchParent()
     }
     
     public override func pluggablePlayerRemoveInline() {
-        if let item = self.kalturaPlayerController?.playerAdapter?.currentItem,
-            let progress = self.kalturaPlayerController?.playerAdapter?.playbackState {
-            print("pluggablePlayerRemoveInline:: item: \(item) *** progress ** \(progress)")
-        }
-        let container = self.kalturaPlayerController?.view.superview
-        container?.removeFromSuperview()
     }
     
     
@@ -156,14 +143,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?, completion: (() -> Void)?) {
-        guard let kalturaPlayerController = self.kalturaPlayerController,
-            let topmostViewController = rootViewController.topmostModal(),
-            let currentItem = kalturaPlayerController.playerAdapter?.currentItem  else {
+        guard
+            self.kalturaPlayerController != nil,
+            self.currentPlayableItem != nil,
+            let topmostViewController = rootViewController.topmostModal() else {
                 return
         }
 
         let animated: Bool = configuration?.animated ?? true
-        kalturaPlayerController.builder.mode = .fullscreen
 
         if let playerVC = self.pluggablePlayerViewController() as? HybridViewController{
             if topmostViewController is HybridViewController {

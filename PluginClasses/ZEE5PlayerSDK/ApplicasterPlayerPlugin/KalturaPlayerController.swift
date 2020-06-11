@@ -21,11 +21,6 @@ internal enum PlayerViewDisplayMode : Int {
 }
 
  class KalturaPlayerController: UIViewController {
-
-    // MARK: - Properties
-    var builder: PlayerViewBuilderProtocol
-    var playerAdapter: PlayerAdapterProtocol?
-    
     var playerView: UIView!
     var contentId = "0-0-2464"
     var country = "IN"
@@ -47,11 +42,11 @@ internal enum PlayerViewDisplayMode : Int {
     
     // MARK: - Lifecycle
     
-    required init(builder: PlayerViewBuilderProtocol, player: PlayerAdapterProtocol) {
-        self.builder = builder
-        self.playerAdapter = player
+    required init() {
         self.Singleton = SingletonClass .sharedManager() as! SingletonClass
         super.init(nibName: nil, bundle: nil)
+        
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -71,14 +66,10 @@ internal enum PlayerViewDisplayMode : Int {
         // Add appication observer
         self.addNotifiactonObserver()
         
-        //  Register the player events
-        self.playerAdapter?.registerPlayerEvents()
         checkForReachability()
     }
     
     public func play() {
-        self.playerAdapter?.serverType()
-
         // Initialize Zee5Player
         let config = ZEE5PlayerConfig()
         country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
@@ -97,12 +88,13 @@ internal enum PlayerViewDisplayMode : Int {
     
     @objc private func wentBackground() {
         if self.view.window != nil {
-            self.playerAdapter?.pause()
+            ZEE5PlayerManager.sharedInstance().play()
         }
     }
     
     @objc private func wentForeground() {
         if self.view.window != nil {
+            ZEE5PlayerManager.sharedInstance().play()
         }
     }
     
@@ -214,12 +206,11 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     }
     
     func hidePlayerLoader() {
-            self.HideIndicator()
+        self.HideIndicator()
               
     }
     func showPlayerLoader() {
-            self.ShowIndicator()
-              
+        self.ShowIndicator()
     }
     
 }
