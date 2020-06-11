@@ -2087,6 +2087,9 @@ static ContentBuisnessType buisnessType;
     [self HybridviewnotificationObserver];
     if (_ishybridViewOpen == false) {
          _ishybridViewOpen = true;
+        if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
+            [self pause];
+        }
            [[ZEE5PlayerDeeplinkManager sharedMethod]HybridpackviewWithCompletion:^(BOOL isSuccess) {
               if (isSuccess) {
                   [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
@@ -2105,6 +2108,10 @@ static ContentBuisnessType buisnessType;
 -(void)DismissHybridView{
     
      _ishybridViewOpen = false;
+    if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
+        [self play];
+        return;
+    }
     if (_ModelValues.isBeforeTv == true && self.TvShowModel.Episodes.count > 0) {
            NSString *ContentId = self.TvShowModel.Episodes[1].episodeId;
            
@@ -2548,7 +2555,7 @@ static ContentBuisnessType buisnessType;
         {
            [self getVodToken:^(NSString *vodToken) {
                 [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
-               if (_currentItem == nil) {
+               if (self.currentItem == nil) {
                 return ;
                 }
            }];
