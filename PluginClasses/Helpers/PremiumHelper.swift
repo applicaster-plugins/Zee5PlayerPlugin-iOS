@@ -91,14 +91,15 @@ fileprivate class PremiumHelper {
     }
     
     func openSubscriptionScreen() {
-        guard let atom = self.playable, let contentId = atom.identifier as String? else {
-            return
-        }
+//        guard let atom = self.playable, let contentId = atom.identifier as String? else {
+//            return
+//        }
         
-        let url = Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: contentId, beforeTV: nil).url
+       // let url = Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: contentId, beforeTV: nil).url
         
         DispatchQueue.main.async {
-            Zee5DeepLinkingManager.shared.openURL(withURL: url)
+            //Zee5DeepLinkingManager.shared.openURL(withURL: url)
+            ZEE5PlayerManager .sharedInstance().hybridViewOpen()
         }
     }
 }

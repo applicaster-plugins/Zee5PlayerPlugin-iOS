@@ -196,7 +196,7 @@ extension VideoDownloadController: DownloadOptionDelegate, OfflineVideoDurationD
             do {
                 let url = try Zee5DownloadManager.shared.playbackUrl(id: contentId)
                 self.gotoVideoPlayer(with: url, video: video)
-                AnalyticEngine.shared.downloadClick(with: video)
+                AnalyticEngine.shared.downloadPlayClick(with: video)
             }
             catch {
                 ZeeUtility.utility.console("Play video Error: \(error.localizedDescription)")

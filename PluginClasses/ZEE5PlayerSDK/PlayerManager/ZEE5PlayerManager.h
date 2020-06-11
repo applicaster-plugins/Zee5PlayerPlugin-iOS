@@ -202,6 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)removeSubview;
 -(void)RefreshViewNotification;
+-(void)HybridViewOpen;
 
 -(void)hideUnHideTopView:(BOOL )isHidden;
 

@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///TV Show Details///
 @property (nonatomic, copy)   NSString *showOriginalTitle;
 @property (nonatomic, copy)   NSString *tvShowBuisnessType;
+@property (nonatomic, copy)   NSString *tvShowAssetSubtype;
 @property (nonatomic, copy)   NSString *tvShowimgurl;
 
 // Season Details If Available
