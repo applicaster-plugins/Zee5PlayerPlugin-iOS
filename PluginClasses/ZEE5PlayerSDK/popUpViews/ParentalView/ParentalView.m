@@ -184,7 +184,6 @@
 {
     if ([_textPin.text isEqualToString:@""] || [_textPin2.text isEqualToString:@""] || [_textPin3.text isEqualToString:@""] || [_textPin4.text isEqualToString:@""])
     {
-        NSLog(@"Please Enter Pin");
         [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"Please Enter Pin"];
 
     }

@@ -317,7 +317,6 @@ extension MovieDownloadController: DownloadOptionDelegate, OfflineVideoDurationD
         offlineVC.selectedVideo = video
         offlineVC.modalPresentationStyle = .fullScreen
         self.navigationController?.present(offlineVC, animated: true, completion: {
-        //            print("Present Video view");
             })
     }
     

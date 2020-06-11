@@ -102,7 +102,6 @@
                 if ([related.assetSubtype isEqualToString:@"trailer"])
                 {
                     self.trailerIdentifier = related.identifier;
-                    NSLog(@" Trailer id here %@", self.trailerIdentifier);
                 }
                 [relatedVideosArray addObject:related];
             }

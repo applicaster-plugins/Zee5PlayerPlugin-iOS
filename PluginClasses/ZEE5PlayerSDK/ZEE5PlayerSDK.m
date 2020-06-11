@@ -47,7 +47,6 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 // MARK:- ConvivaAnalytics Setup
 +(void)setupConvivaAnalytics
 {
-    NSLog(@"|||*** setupConvivaAnalytics ***|||");
     EventManager *eventManager = [[EventManager alloc] init];
     [eventManager setConvivaConfigurationWithCustomerKey: convivaCustomerKey gatewayUrl: convivaGatewayUrl];
 }
@@ -63,7 +62,6 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 
     [[SCORAnalytics configuration] addClientWithConfiguration:myPublisherConfig];
    [SCORAnalytics start];
-   NSLog(@"Analytics Started");
 }
 
 + (NSString *)getUserId

@@ -264,7 +264,6 @@ return [NSString stringWithFormat:@"%02d:%02d:%02d.000",hours, minutes, seconds]
 {
     CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
     CTCarrier *carrier = [netinfo subscriberCellularProvider];
-    NSLog(@"|** Carrier Name: %@", [carrier carrierName]);
     return [carrier carrierName];
 }
 
@@ -281,7 +280,6 @@ return [NSString stringWithFormat:@"%02d:%02d:%02d.000",hours, minutes, seconds]
     } else if([technologyString isEqualToString: CTRadioAccessTechnologyEdge]) {
         str = @"2G";
     }
-    NSLog(@"|** networkType: %@", str);
     return str;
 }
 

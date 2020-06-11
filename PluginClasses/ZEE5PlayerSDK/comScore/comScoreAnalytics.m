@@ -34,7 +34,6 @@ static comScoreAnalytics *comScoreobject = nil;
         [[SCORAnalytics configuration] addClientWithConfiguration:myPublisherConfig];
         [SCORAnalytics start];
         
-        NSLog(@"%s", __PRETTY_FUNCTION__);
     }
     return comScoreobject;
 }

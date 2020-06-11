@@ -19,7 +19,6 @@
     [super awakeFromNib];
     
     [self makeDragable];
-    NSLog(@"At Class %u",[[ZEE5PlayerManager sharedInstance]getBusinessType]);
     
     [self.subscribeBtnOutlet setTitle:@"Subscribe Now" forState:UIControlStateNormal];
     

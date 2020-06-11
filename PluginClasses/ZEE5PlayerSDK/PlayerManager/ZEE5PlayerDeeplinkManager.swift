@@ -68,7 +68,6 @@ var CompletionHandler:((Bool)->(Void))?
           if Telco.0
             {
                     if let ParameterDict = Telco.1 {
-                        debugPrint(ParameterDict["partner_schema_ios"]as Any)
                         openCustomURLScheme(customURLScheme: "\(ParameterDict["partner_schema_ios"] ?? "")://", complitionHandler: {(isNavigate) in
                     if !isNavigate{
                                 // handle unable to open the app, perhaps redirect to the App Store

@@ -543,7 +543,6 @@ public class Zee5DownloadManager {
         
        var AllremovedItems: [DTGItem] = []
     for State in DTGItemState.allCases {
-            print(State)
             
         if let allDownloads = try cm?.itemsByState(State) {
                 if allDownloads.count > 0 {

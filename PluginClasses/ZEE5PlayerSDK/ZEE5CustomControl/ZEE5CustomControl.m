@@ -203,13 +203,11 @@
 }
 
 - (IBAction)btnShareClicked:(UIButton *)sender {
-     NSLog(@"|** BtnShareClicked");
     [[ZEE5PlayerManager sharedInstance]tapOnShareButton];
 }
 
 
 - (IBAction)btnWatchListClicked:(UIButton *)sender {
-    NSLog(@"|** btnWatchListClicked 11");
 }
 
 - (IBAction)btnCastClicked:(UIButton *)sender
@@ -259,8 +257,6 @@
     } completion:^(BOOL finished) {
         [[ZEE5PlayerManager sharedInstance] pause];
         RelatedVideos *model = self.related[indexPath.row];
-        
-        NSLog(@"|*** Releated Video: didSelect ***|");
         
         [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
         

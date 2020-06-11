@@ -71,7 +71,6 @@ static AddToWatchlist *SharedInstance = nil;
 //    }
 //    failureBlock:^(ZEE5SdkError * _Nullable error)
 //     {
-//        NSLog(@"WatchList %@", error.message);
 //    }];
 //
 //}
@@ -82,7 +81,6 @@ static AddToWatchlist *SharedInstance = nil;
         [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"You must be logged in to perform this action."];
         [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Watclist" completion:^(BOOL IsSucceess) {
             if (IsSucceess) {
-                NSLog(@"Login succeess");
                 [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
             }
         }];
@@ -110,12 +108,9 @@ static AddToWatchlist *SharedInstance = nil;
 
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchList requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
-        NSLog(@"**WatchList Result** %@", result);
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {
-        NSLog(@"WatchList %@", error.message);
-        
     }];
 }
 

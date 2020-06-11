@@ -141,7 +141,6 @@ static Zee5FanAdManager *sharedManager = nil;
 //    }
 //
 //
-//    NSLog(@"Ad ended");
 }
 
 -(void)stopFanAd

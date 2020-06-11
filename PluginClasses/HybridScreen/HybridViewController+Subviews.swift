@@ -560,7 +560,6 @@ extension HybridViewController {
             // extend contenArea in case of title is shrink
             if frame.width < titleSize.width + imageSize.width {
                 horizontalResistent = titleSize.width + imageSize.width - frame.width
-                print("horizontalResistent", horizontalResistent)
             } else {
                 horizontalResistent = 0
             }

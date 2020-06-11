@@ -64,8 +64,6 @@ public func VideoViewEvent()
     
     public func AutoseekChanged(with Direction: NSString , Value:NSInteger)
     {
-        print("direction  \(Direction)")
-        print("value \(Value)")
         let scrubDuration = currentDuration - Double(Value)
         
         let parameter : Set = [
@@ -372,9 +370,6 @@ public func VideoViewEvent()
        
     public func Seekbar_ChangeEvent(with Direction: NSString , StartTime:NSInteger,EndTime:NSInteger)
        {
-           print("direction  \(Direction)")
-           print("value \(StartTime)")
-           print("value \(EndTime)")
            let scrubDuration = EndTime - StartTime
            
            let parameter : Set = [
@@ -421,11 +416,6 @@ public func VideoViewEvent()
 
     public func AudiochangeEvent(with Old: String , New:String,TrackingMode:String)
        {
-           print("old Language  \(Old)")
-           print("New language \(New)")
-           print("New language \(TrackingMode)")
-        
-           
            let parameter : Set = [
                Keys.LANGUAGE_AUDIO_CHANGE.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
                Keys.LANGUAGE_AUDIO_CHANGE.SOURCE ~>> notAppplicable,
@@ -470,10 +460,6 @@ public func VideoViewEvent()
 
     public func SubtitleLangChangeEvent(with Old: String , New:String ,TrackingMode:String)
        {
-           print("old Language  \(Old)")
-           print("New language \(New)")
-        
-           
            let parameter : Set = [
                Keys.SUBTITLE_LANGUAGE_CHANGE.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
                Keys.SUBTITLE_LANGUAGE_CHANGE.SOURCE ~>> notAppplicable,

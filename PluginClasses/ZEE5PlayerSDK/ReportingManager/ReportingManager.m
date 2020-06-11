@@ -81,7 +81,6 @@ static ReportingManager *sharedManager = nil;
     
     if (_isAlreadyExist)
     {
-        NSLog(@"PUT");
         requestName = @"PUT";
     }
 
@@ -99,11 +98,9 @@ static ReportingManager *sharedManager = nil;
     
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
-        NSLog(@"**Watch History Result** %@", result);
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {
-        NSLog(@"Watch History Error %@", error.message);
         if (error.code == 400)
         {
             self.isAlreadyExist = true;
@@ -132,7 +129,6 @@ static ReportingManager *sharedManager = nil;
     
     if (_isAlreadyExist)
     {
-        NSLog(@"PUT");
         requestName = @"PUT";
     }
     
@@ -165,7 +161,6 @@ static ReportingManager *sharedManager = nil;
 
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory2 requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
-        NSLog(@"**Watch History Result** %@", result);
         if ([[result valueForKey:@"meta"]isKindOfClass:[NSDictionary class]])
         {
             self.isDmpSync = [[[result valueForKey:@"meta"]valueForKey:@"dmpSync"] boolValue];
@@ -182,7 +177,6 @@ static ReportingManager *sharedManager = nil;
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {
-        NSLog(@"Watch History Error %@", error.message);
         if (error.code == 400)
         {
             self.isAlreadyExist = true;
@@ -302,13 +296,10 @@ static ReportingManager *sharedManager = nil;
     [dictParams addEntriesFromDictionary:dict];
     [dictParams addEntriesFromDictionary:requestParams];
 
-    //NSLog(@"%@", dictParams);
     
     [[NetworkManager sharedInstance] makeHttpGetRequest:BaseUrls.googleAnalytic requestParam:dictParams requestHeaders:@{} withCompletionHandler:^(id  _Nullable result) {
-        //NSLog(@"%@", result);
 
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
-        //NSLog(@"%@", error.message);
 
     }];
     

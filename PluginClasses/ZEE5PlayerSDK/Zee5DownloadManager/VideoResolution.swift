@@ -29,10 +29,6 @@ class ZeeUtility {
     static let utility = ZeeUtility()
     
     func console(_ object: Any) {
-        #if DEBUG
-        print("\n ********* \n")
-        print(object)
-        print("\n *********")
-        #endif
+        // logs disabled, should be enabled only locally
     }
 }

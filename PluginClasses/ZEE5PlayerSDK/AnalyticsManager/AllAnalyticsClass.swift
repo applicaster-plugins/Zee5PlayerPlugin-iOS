@@ -87,12 +87,10 @@ public class AllAnalyticsClass: NSObject {
                    
                   let value = genre.map{$0.value}
                   genereString = value.joined(separator: ",")
-                  print("** Genre **\(genereString)")
         
                if DataModel.audioLanguages.count>0{
                 audiolanguage = DataModel.audioLanguages
                 let audioString = DataModel.audioLanguages.map{$0}
-                print(" string *** \(audioString)")
                 }
                    PlayerVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "nil"
                   
@@ -249,10 +247,6 @@ extension AllAnalyticsClass
     
     public func ADComplete(with data: NSDictionary , CustomTags:NSDictionary)
           {
-              print("Ad Dictionary\(data)")
-              print("Ad Dictionary\(CustomTags)")
-              
-              
               let parameter : Set = [
                   Keys.AD_FORCED_EXIT.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
@@ -300,10 +294,6 @@ extension AllAnalyticsClass
     
     public func ADClicked(with data: NSDictionary , CustomTags:NSDictionary)
        {
-           print("Ad Dictionary\(data)")
-           print("Ad Dictionary\(CustomTags)")
-           
-           
            let parameter : Set = [
                Keys.AD_CLICK.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
                Keys.AD_CLICK.TITLE ~>> data.value(forKey: "assetName") as? String ?? notAppplicable,
@@ -351,10 +341,6 @@ extension AllAnalyticsClass
     
     public func ADWatchedDuration(with data: NSDictionary , CustomTags:NSDictionary)
           {
-              print("Ad Dictionary\(data)")
-              print("Ad Dictionary\(CustomTags)")
-              
-              
               let parameter : Set = [
                   Keys.AD_WATCH_DURATION.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? "No Source",
                   Keys.AD_WATCH_DURATION.TITLE ~>> data.value(forKey: "assetName") as? String ?? "No Title",
@@ -408,9 +394,6 @@ func getAge() -> String {
     for settingDataModel in data {
            if settingDataModel.key == "age"
            {
-               #if DEBUG
-               print(settingDataModel.value!)
-               #endif
             return (settingDataModel.value ?? "NA")
            }
        }

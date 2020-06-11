@@ -96,18 +96,13 @@ internal enum PlayerViewDisplayMode : Int {
     }
     
     @objc private func wentBackground() {
-        print("wentBackground ****")
         if self.view.window != nil {
-            print("wentBackground **")
             self.playerAdapter?.pause()
         }
     }
     
     @objc private func wentForeground() {
-        print("wentForeground ****")
         if self.view.window != nil {
-            print("wentForeground **")
-            self.playerAdapter?.resume()
         }
     }
     
@@ -151,7 +146,6 @@ internal enum PlayerViewDisplayMode : Int {
     
   @objc public func checkForReachability() {
         self.networkReachabilityManager?.listener = { status in
-            print("Network Status: \(status)")
             switch status {
             case .notReachable:
                 ZEE5PlayerSDK.setConnection(NoInternet)
@@ -192,49 +186,38 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     }
     
     func didTapOnEnableAutoPlay() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didTapOnEnableAutoPlay ***")
     }
     
     func didTapOnAddToWatchList() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didTapOnAddToWatchList ***")
     }
     
     func playerData(_ dict: [AnyHashable : Any]) {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate PlayerData ::: \(dict)")
     }
     
    func didFinishWithError(_ error: ZEE5SdkError) {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didFinishWithError ::: \(error)")
     }
     
     func availableAudioTracks(_ aryModels: [Any]) {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate availableAudioTracks ::: \(aryModels)")
     }
     
     func availableSubTitles(_ aryModels: [Any]) {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate availableSubTitles ::: \(aryModels)")
     }
     
     func didTaponNextButton() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didTaponNextButton ***")
     }
     
    func didTaponPrevButton() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate didTaponPrevButton ***")
     }
     
     func getPlayerEvent(_ event:PlayerEvent) {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate getPlayerEvent ::: \(event)")
         
     }
     
     func hidePlayerLoader() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate Hide Loader ***")
             self.HideIndicator()
               
     }
     func showPlayerLoader() {
-        print("KalturaPlayerController ** ZEE5PlayerDelegate Show Loader ***")
             self.ShowIndicator()
               
     }
