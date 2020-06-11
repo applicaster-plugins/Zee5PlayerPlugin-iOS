@@ -16,6 +16,8 @@ public class AllAnalyticsClass: NSObject {
     
     var contentName = ""
     var contentId = ""
+    var seasonId = ""
+    var TvShowId = ""
     var realeseDate = ""
     var PlayerVersion = ""
     var series = ""
@@ -33,6 +35,12 @@ public class AllAnalyticsClass: NSObject {
     var assetSubtype = ""
     var Buisnesstype = ""
     var skipIntroTime = ""
+    var Imageurl = ""
+    var TvShowimagUrl = ""
+    var videoStarttime = ""
+    var AdDict = NSDictionary()
+    var AdTag = NSDictionary()
+
     
     let Gender = analytics.getGender()   /// From Core SDK
     let Age = getAge()
@@ -41,7 +49,9 @@ public class AllAnalyticsClass: NSObject {
     
 
     public override init(){}
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String) {
+
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String,language:[Any],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String,tvshowid:String,addict:NSDictionary,adtag:NSDictionary) {
+
         
         self.contentId = contentId
         self.contentName = contentName
@@ -62,6 +72,13 @@ public class AllAnalyticsClass: NSObject {
         self.Buisnesstype = buisnessType
         self.Charecters = actors
         self.skipIntroTime = skiptime
+        self.contentlanguages = language
+        self.Imageurl = image
+        self.TvShowimagUrl = Tvshowimgurl
+        self.seasonId = seasonID
+        self.TvShowId = tvshowid
+        self.AdDict = addict
+        self.AdTag = adtag
         
     }
     
@@ -80,11 +97,14 @@ public class AllAnalyticsClass: NSObject {
                    assetSubtype = DataModel.asset_subtype
                    Buisnesstype = DataModel.business_type
                    skipIntroTime = DataModel.skipintrotime
-        
+                   contentlanguages = DataModel.language
+                   Imageurl = DataModel.imageUrl
+                   TvShowimagUrl = DataModel.tvShowImgurl
+                   seasonId = DataModel.seasonId
+                   TvShowId = DataModel.showId
                    if DataModel.charecters.count>0{
                        Charecters  = DataModel.charecters
                     }
-                   
                   let value = genre.map{$0.value}
                   genereString = value.joined(separator: ",")
         
@@ -96,8 +116,11 @@ public class AllAnalyticsClass: NSObject {
                   
     }
     
+    public func ADsDataModelContent(with dict:NSDictionary, tags:NSDictionary ){
+    AdTag = tags
+    AdDict = dict
 }
-
+}
 // MARK:- Ad Events Analytics
 
 extension AllAnalyticsClass
@@ -130,7 +153,7 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.TAB_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.CAST_TO ~>> notAppplicable,
             Keys.AD_INITIALIZED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == "" ? "0":videoStarttime,
             Keys.AD_INITIALIZED.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? "Kaltura Player",
             Keys.AD_INITIALIZED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
             Keys.AD_INITIALIZED.AD_PROVIDER ~>> "",
@@ -153,14 +176,14 @@ extension AllAnalyticsClass
     
     // MARK:- AdView
        
-       public func ADView(with data: NSDictionary , CustomTags:NSDictionary)
+       public func ADView()
        {
     
            let parameter : Set = [
-               Keys.AD_VIEW.TITLE ~>> data.value(forKey: "assetName") as? String ?? notAppplicable,
-               Keys.AD_VIEW.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
-               Keys.AD_VIEW.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
-               Keys.AD_VIEW.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
+               Keys.AD_VIEW.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
+               Keys.AD_VIEW.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+               Keys.AD_VIEW.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
+               Keys.AD_VIEW.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
                Keys.AD_VIEW.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
                Keys.AD_VIEW.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
@@ -182,10 +205,10 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.PROVIDER_ID ~>> notAppplicable,
                Keys.AD_VIEW.PROVIDER_NAME ~>> notAppplicable,
                Keys.AD_VIEW.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-               Keys.AD_VIEW.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? "Kaltura Player",
+               Keys.AD_VIEW.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? "Kaltura Player",
                Keys.AD_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_VIEW.AD_PROVIDER ~>> "",
-               Keys.AD_VIEW.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? "nil",
+               Keys.AD_VIEW.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
                Keys.AD_VIEW.AD_CATEGORY ~>> "",
                Keys.AD_VIEW.AD_LOCATION ~>> "",
                Keys.AD_VIEW.AD_CUE_TIME ~>> "",
@@ -203,14 +226,14 @@ extension AllAnalyticsClass
     
 // MARK:- AdSkiped
     
-    public func ADSkiped(with data: NSDictionary , CustomTags:NSDictionary)
+    public func ADSkiped()
        {
          
            let parameter : Set = [
                Keys.AD_SKIP.ELEMENT ~>> "Skip Add",
-               Keys.AD_SKIP.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
-               Keys.AD_SKIP.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
-               Keys.AD_SKIP.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
+               Keys.AD_SKIP.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+               Keys.AD_SKIP.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
+               Keys.AD_SKIP.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
                Keys.AD_SKIP.BUTTON_TYPE ~>> "Button",
                Keys.AD_SKIP.PREVIEW_STATUS ~>> "",
                Keys.AD_SKIP.PAGE_NAME ~>> notAppplicable,
@@ -225,10 +248,10 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.PROVIDER_ID ~>> notAppplicable,
                Keys.AD_SKIP.PROVIDER_NAME ~>> notAppplicable,
                Keys.AD_SKIP.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-               Keys.AD_SKIP.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? notAppplicable,
+               Keys.AD_SKIP.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_SKIP.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_SKIP.AD_PROVIDER ~>> "",
-               Keys.AD_SKIP.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+               Keys.AD_SKIP.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
                Keys.AD_SKIP.AD_CATEGORY ~>> "",
                Keys.AD_SKIP.AD_LOCATION ~>> "",
                Keys.AD_SKIP.AD_CUE_TIME ~>> "",
@@ -245,13 +268,13 @@ extension AllAnalyticsClass
     
   // MARK:- AdComplete
     
-    public func ADComplete(with data: NSDictionary , CustomTags:NSDictionary)
+    public func ADComplete()
           {
               let parameter : Set = [
-                  Keys.AD_FORCED_EXIT.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
-                  Keys.AD_FORCED_EXIT.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
-                  Keys.AD_FORCED_EXIT.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
-                  Keys.AD_FORCED_EXIT.TITLE ~>> data.value(forKey: "assetName") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_FORCED_EXIT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_FORCED_EXIT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
@@ -273,10 +296,10 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.PROVIDER_ID ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.PROVIDER_NAME ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-                  Keys.AD_FORCED_EXIT.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                   Keys.AD_FORCED_EXIT.AD_PROVIDER ~>> "",
-                  Keys.AD_FORCED_EXIT.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.AD_LOCATION ~>> "",
                   Keys.AD_FORCED_EXIT.AD_CUE_TIME ~>> "",
                   Keys.AD_FORCED_EXIT.AD_DESTINATION_URL ~>> "",
@@ -292,11 +315,11 @@ extension AllAnalyticsClass
     
      // MARK:- AdClicked
     
-    public func ADClicked(with data: NSDictionary , CustomTags:NSDictionary)
+    public func ADClicked()
        {
            let parameter : Set = [
-               Keys.AD_CLICK.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
-               Keys.AD_CLICK.TITLE ~>> data.value(forKey: "assetName") as? String ?? notAppplicable,
+               Keys.AD_CLICK.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+               Keys.AD_CLICK.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                Keys.AD_CLICK.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                Keys.AD_CLICK.GENRE ~>> genre.count>0 ? genre.description:notAppplicable,
@@ -318,13 +341,13 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.PROVIDER_ID ~>> notAppplicable,
                Keys.AD_CLICK.PROVIDER_NAME ~>> notAppplicable,
                Keys.AD_CLICK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-               Keys.AD_CLICK.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? notAppplicable,
+               Keys.AD_CLICK.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_CLICK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_CLICK.AD_PROVIDER ~>> "",
-               Keys.AD_CLICK.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+               Keys.AD_CLICK.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
                Keys.AD_CLICK.AD_LOCATION ~>> "",
-               Keys.AD_CLICK.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
-               Keys.AD_CLICK.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
+               Keys.AD_CLICK.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
+               Keys.AD_CLICK.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
                Keys.AD_CLICK.AD_CUE_TIME ~>> "",
                Keys.AD_CLICK.AD_DESTINATION_URL ~>> "",
                Keys.AD_CLICK.CDNstatic ~>> "",
@@ -339,11 +362,11 @@ extension AllAnalyticsClass
     
     // MARK:- AdWatchDuration
     
-    public func ADWatchedDuration(with data: NSDictionary , CustomTags:NSDictionary)
+    public func ADWatchedDuration()
           {
               let parameter : Set = [
-                  Keys.AD_WATCH_DURATION.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? "No Source",
-                  Keys.AD_WATCH_DURATION.TITLE ~>> data.value(forKey: "assetName") as? String ?? "No Title",
+                  Keys.AD_WATCH_DURATION.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? "No Source",
+                  Keys.AD_WATCH_DURATION.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? "No Title",
                   Keys.AD_WATCH_DURATION.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_WATCH_DURATION.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_WATCH_DURATION.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
@@ -365,16 +388,16 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.PROVIDER_ID ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.PROVIDER_NAME ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-                  Keys.AD_WATCH_DURATION.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-                  Keys.AD_WATCH_DURATION.BUFFER_DURATION ~>> data.value(forKey: "adPosition") as? String ?? notAppplicable,
-                  Keys.AD_WATCH_DURATION.WATCH_DURATION ~>> data.value(forKey: "adPosition") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.BUFFER_DURATION ~>> AdDict.value(forKey: "adPosition") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.WATCH_DURATION ~>> AdDict.value(forKey: "adPosition") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.CASTING_DURATION ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.AD_PROVIDER ~>> "",
-                  Keys.AD_WATCH_DURATION.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? "nil",
+                  Keys.AD_WATCH_DURATION.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
                   Keys.AD_WATCH_DURATION.AD_LOCATION ~>> "",
-                  Keys.AD_WATCH_DURATION.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
-                  Keys.AD_WATCH_DURATION.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.AD_CUE_TIME ~>> "",
                   Keys.AD_WATCH_DURATION.AD_DESTINATION_URL ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.DNS ~>> notAppplicable,

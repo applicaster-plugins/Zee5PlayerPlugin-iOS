@@ -190,9 +190,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 - (void)createConvivaAdSeesionWithAdEvent: (PKEvent*) event
 {
-    // currently do not need to send the analytics
-    return;
-    
     
     NSString *stremType = @"Unknown";
     if (self.currentItem.streamType == CONVIVA_STREAM_VOD) {
@@ -214,7 +211,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
              @"adId": event.adInfo.adId,
              @"advertiserName":event.adInfo.advertiserName
              };
-
     
     /// Ad custom tags
     NSString *isLive = @"false";
@@ -281,9 +277,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
              @"c3.indiaexindia": countryAdCode    // "India = 21665149170", "ExIndia = 21800039520"
              };
 
-    
-   
-    
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
     if (AdEvent.adsRequested)
     {
@@ -294,21 +287,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
    else if (AdEvent.adStarted)
     {
         [engine setupConvivaAdSessionWith: dict customTags: tags];
-        [engine AdViewAnalyticsWith:dict tags:tags];
+        [engine SetupMixpanelAnalyticsWith:dict tags:tags];
+        [engine AdViewAnalytics];
       
     }
     else if (AdEvent.adSkipped)
     {
-        [engine AdSkipedAnlyticsWith:dict tags:tags];
+     [engine AdSkipedAnlytics]
     }
     else if (AdEvent.adComplete)
     {
-        //[engine AdCompleteAnalyticsWith:dict tags:tags];
-      
+        [engine AdCompleteAnalytics];
     }
     else if (AdEvent.adClicked)
     {
-        [engine AdClickedAnalyticsWith:dict tags:tags];
+        [engine AdClickedAnalytics];
     }
 }
 
@@ -344,9 +337,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
     
         [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
-        //MARK:- Temporary Comment Due to crash after Skipped.
-       // [weakSelf createConvivaAdSeesionWithAdEvent: event];
-        
         [engine attachVideoPlayer];
         [engine cleanupAdSession];
     }];
@@ -371,8 +361,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
 
-        
-        [weakSelf createConvivaAdSeesionWithAdEvent: event];  // TT
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {

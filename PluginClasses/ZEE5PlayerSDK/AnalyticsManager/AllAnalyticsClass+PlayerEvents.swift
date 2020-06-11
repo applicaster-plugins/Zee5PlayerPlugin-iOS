@@ -23,13 +23,16 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.SOURCE ~>> notAppplicable,      // TT
         Keys.VIDEO_VIEW.VIDEO_INITIATION_METHOD ~>> notAppplicable,
         Keys.VIDEO_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.VIDEO_VIEW.SEASON_ID ~>> seasonId == "" ? notAppplicable:seasonId ,
+        Keys.VIDEO_VIEW.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
         Keys.VIDEO_VIEW.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
         Keys.VIDEO_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
         Keys.VIDEO_VIEW.PREVIEW_STATUS ~>> "",
         Keys.VIDEO_VIEW.PAGE_NAME ~>> notAppplicable,
         Keys.VIDEO_VIEW.DRM_VIDEO ~>> DrmVideo,
         Keys.VIDEO_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-        Keys.VIDEO_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+        Keys.VIDEO_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+        Keys.VIDEO_VIEW.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.VIDEO_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.VIDEO_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
         Keys.VIDEO_VIEW.TAB_NAME ~>> notAppplicable,
@@ -48,6 +51,7 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.DNS ~>> notAppplicable,
         Keys.VIDEO_VIEW.CAROUSAL_NAME ~>> notAppplicable,
         Keys.VIDEO_VIEW.CAROUSAL_ID ~>> notAppplicable,
+        Keys.VIDEO_VIEW.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
     ]
       analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
