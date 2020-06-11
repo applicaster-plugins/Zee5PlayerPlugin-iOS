@@ -12,13 +12,13 @@
   "dependency_repository_url": [
     "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
   ],
-  "dependency_version": "1.1.35",
+  "dependency_version": "1.1.36",
   "deprecated_since_zapp_sdk": "",
   "description": "Zee5 Player Plugin",
   "extra_dependencies": [],
   "identifier": "zee_player",
-  "manifest_version": "1.1.35",
-  "min_zapp_sdk": "13.0.0",
+  "manifest_version": "1.1.36",
+  "min_zapp_sdk": "14.1.8-RC",
   "name": "Zee5 Player Plugin",
   "npm_dependencies": [],
   "platform": "ios",
@@ -36,35 +36,6 @@
   "ui_builder_support": true,
   "custom_configuration_fields": [
     {
-      "type": "text",
-      "key": "show_screen_id"
-    },
-    {
-      "type": "text",
-      "key": "sleep_mode_title"
-    },
-    {
-      "type": "text",
-      "key": "sleep_mode_interval"
-    },
-    {
-      "type": "text",
-      "key": "sleep_mode_close_title"
-    },
-    {
-      "type": "text",
-      "key": "recommendations_limit"
-    },
-    {
-      "type": "text",
-      "key": "next_program_title"
-    },
-    {
-      "type": "text",
-      "key": "skip_interval",
-      "tooltip_text": "seconds"
-    },
-    {
       "type": "uploader",
       "key": "ios_assets_bundle",
       "tooltip_text": "Upload Assets Folder Zip File",
@@ -75,10 +46,6 @@
       "tooltip_text": "should use production env",
       "type": "checkbox",
       "default": 0
-    },
-    {
-      "type": "checkbox",
-      "key": "supports_audio"
     }
   ],
   "assets": {
