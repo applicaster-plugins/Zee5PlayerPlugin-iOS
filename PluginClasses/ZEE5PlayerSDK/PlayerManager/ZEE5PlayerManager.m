@@ -39,6 +39,7 @@
 #import "tvShowModel.h"
 #import "CdnHandler.h"
 #import "SingletonClass.h"
+#import "GestureHandlerHelper.h"
 
 #define HIDECONTROLSVALUE 5.0
 #define TOPBARHEIGHT 30
@@ -58,8 +59,6 @@
   *****************************************/
 #define LiveShareUrl @"https://www.zee5.com/channels/details/"
 #define VodShareUrl @"https://www.zee5.com/"
-
-
 
 @interface ZEE5PlayerManager()<UIGestureRecognizerDelegate>//// PlayerDelegate>
 @property ZEE5CustomControl *customControlView;           //// Player Controls (play,pause Button)
@@ -140,6 +139,7 @@
 @property(nonatomic) Boolean seekStared;
 
 
+@property(strong, nonatomic) GestureHandlerHelper *panDownGestureHandlerHelper;
 @end
 
 
@@ -954,6 +954,7 @@ static ContentBuisnessType buisnessType;
                 if (isVerticalGesture) {
                     if (velocity.y > 0) {
                         direction = UIPanGestureRecognizerDirectionDown;
+                        [self.panDownGestureHandlerHelper execute];
                     } else {
                         direction = UIPanGestureRecognizerDirectionUp;
                     }
@@ -1525,6 +1526,15 @@ static ContentBuisnessType buisnessType;
         [self.delegate hidePlayerLoader];
     }
 }
+
+-(void)startAd {
+    [self.panDownGestureHandlerHelper startAd];
+}
+
+-(void)endAd {
+    [self.panDownGestureHandlerHelper endAd];
+}
+
 -(void)ShowToastMessage:(NSString *)Message{
     [[ZEE5PlayerDeeplinkManager new]ShowtoastWithMessage:Message];
    
@@ -3717,5 +3727,12 @@ static ContentBuisnessType buisnessType;
 
 }
 
+-(void)setPanDownGestureHandler:(GestureHandler)panDownGestureHandler {
+    if (self.panDownGestureHandlerHelper == nil) {
+        self.panDownGestureHandlerHelper = [[GestureHandlerHelper alloc] initWithGestureHandler: panDownGestureHandler];
+    } else {
+        self.panDownGestureHandlerHelper.gestureHandler = panDownGestureHandler;
+    }
+}
 
 @end

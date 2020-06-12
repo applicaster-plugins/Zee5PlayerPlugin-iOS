@@ -310,7 +310,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
-    
+        [[ZEE5PlayerManager sharedInstance] startAd];
         
     }];
     
@@ -321,7 +321,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine attachVideoPlayer];
         [engine cleanupAdSession];
        // [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
-    
+        [[ZEE5PlayerManager sharedInstance] endAd];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
@@ -329,6 +329,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
         [engine attachVideoPlayer];
         [engine cleanupAdSession];
+        [[ZEE5PlayerManager sharedInstance] endAd];
     }];
     
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {

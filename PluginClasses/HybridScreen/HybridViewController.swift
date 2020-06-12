@@ -168,6 +168,8 @@ class HybridViewController: UIViewController {
         self.kalturaPlayerController?.delegate = self
         
         initKalturaPlayer()
+        
+        addGestureRecognizerHandler()
     }
     
     func initKalturaPlayer() {
@@ -364,6 +366,13 @@ class HybridViewController: UIViewController {
     
     fileprivate func removeGradient() {
         self.mainCollectionViewContainer.layer.sublayers?.removeAll()
+    }
+    
+    private func addGestureRecognizerHandler() {
+        guard let playerManager = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
+            return
+        }
+        playerManager.addGesturePanDownHandler(closePlayer)
     }
 }
 
