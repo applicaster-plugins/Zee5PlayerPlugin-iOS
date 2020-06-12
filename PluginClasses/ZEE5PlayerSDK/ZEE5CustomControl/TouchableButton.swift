@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 enum SEEKBTN{
     case forward
@@ -54,11 +53,7 @@ public class TouchableButton: UIButton {
         stack.spacing = 2.0
         self.addSubview(stack)
         stack.isHidden = true
-        stack.snp.makeConstraints { (make) in
-            make.center.equalTo(self.snp.center)
-            make.height.equalTo(50)
-            make.width.equalTo(100)
-        }
+        stack.centerInParent(size: CGSize(width: 100, height: 50))
         stack.isUserInteractionEnabled = false
         return stack
     }()
@@ -160,13 +155,11 @@ public class TouchableButton: UIButton {
         didSet {
             if touches >= minimumTouches {
                 
-                print("noOfTocuches : \(touches)")
                 if touches != 1 {
                     
                     pressed?(true)
                     self.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
                     stackView.isHidden = false
-                    //print("Abinav Jha here")
                     if counter <= 10 {
                         btnLabel.text = "10 Seconds"
                     }else{
@@ -194,28 +187,23 @@ public extension UIFont {
     @objc static func jbs_registerFont(withFilenameString filenameString: String, bundle: Bundle) {
         
         guard let pathForResourceString = bundle.path(forResource: filenameString, ofType: nil) else {
-            print("UIFont+:  Failed to register font - path for resource not found.")
             return
         }
         
         guard let fontData = NSData(contentsOfFile: pathForResourceString) else {
-            print("UIFont+:  Failed to register font - font data could not be loaded.")
             return
         }
         
         guard let dataProvider = CGDataProvider(data: fontData) else {
-            print("UIFont+:  Failed to register font - data provider could not be loaded.")
             return
         }
         
         guard let font = CGFont(dataProvider) else {
-            print("UIFont+:  Failed to register font - font could not be loaded.")
             return
         }
         
         var errorRef: Unmanaged<CFError>? = nil
         if (CTFontManagerRegisterGraphicsFont(font, &errorRef) == false) {
-            print("UIFont+:  Failed to register font - register graphics font failed - this font may have already been registered in the main bundle.")
         }
     }
     

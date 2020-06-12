@@ -452,12 +452,6 @@ import UIKit
 
     func pauseAnimation() {
         guard isAnimating else {
-            #if DEBUG
-            print("""
-                    UICircularProgressRing: Progress was paused without having been started.
-                    This has no effect but may indicate that you're unnecessarily calling this method.
-                    """)
-            #endif
             return
         }
 
@@ -481,12 +475,6 @@ import UIKit
 
     func continueAnimation(completion: @escaping AnimationCompletion) {
         guard let pauseTime = animationPauseTime else {
-            #if DEBUG
-            print("""
-                    UICircularRing: Progress was continued without having been paused.
-                    This has no effect but may indicate that you're unnecessarily calling this method.
-                    """)
-            #endif
             return
         }
 

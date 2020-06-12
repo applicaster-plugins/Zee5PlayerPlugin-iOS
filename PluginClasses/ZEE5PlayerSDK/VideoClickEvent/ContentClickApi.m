@@ -49,7 +49,6 @@ static ContentClickApi *sharedManager = nil;
                                     @"version":ZEE5PlayerSDK.getPlayerSDKVersion,
                                     @"region":State
                                     };
-    //NSLog(@"Params content consumption %@",requestParams);
     
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     NSString *GuestToken=@"";
@@ -59,14 +58,10 @@ static ContentClickApi *sharedManager = nil;
     }
     
     NSDictionary *requestheaders = @{@"Content-Type":@"application/json", @"Authorization": userToken,@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"X-Z5-AppPlatform":@"IOS Mobile",@"X-Z5-Appversion":ZEE5PlayerSDK.getPlayerSDKVersion,@"X-Z5-Guest-Token":GuestToken};
-    
-    //NSLog(@"HEADERS %@",requestheaders);
-    
     [[NetworkManager sharedInstance]makeHttpGetRequest:[NSString stringWithFormat:@"%@reco",BaseUrls.Gwapi] requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
        
         self.Model_name =[[[result valueForKey:@"buckets"]valueForKey:@"modelName"]objectAtIndex:0];
-       // NSLog(@"Count %ld",[[[[result valueForKey:@"buckets"]valueForKey:@"items"]valueForKey:@"clickID"]count]);
         
         if ([[[result valueForKey:@"buckets"]valueForKey:@"items"]count] >0)
         {
@@ -77,7 +72,6 @@ static ContentClickApi *sharedManager = nil;
     }
 failureBlock:^(ZEE5SdkError * _Nullable error)
     {
-        NSLog(@"Content Consumption Failed");
     }];
     
 }
@@ -107,12 +101,10 @@ failureBlock:^(ZEE5SdkError * _Nullable error)
     
     [[NetworkManager sharedInstance]makeHttpRawPostRequest:@"POST" requestUrl:BaseUrls.VideoClickApi requestParam:postData requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
      {
-         //NSLog(@"Video Clickn Api %@",result);
       
      }
      failureBlock:^(ZEE5SdkError * _Nullable error)
     {
-        NSLog(@"Failure Video Click Api");
     }
      ];
 }

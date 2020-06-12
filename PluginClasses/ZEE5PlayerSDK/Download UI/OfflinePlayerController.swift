@@ -158,7 +158,6 @@ protocol OfflineVideoDurationDelegate: class {
                  parentalView.removeFromSuperview()
                
             }else{
-              print("Wrong Pin")
                 Zee5ToastView .showToastAboveKeyboard(withMessage: "Please Enter Correct Pin!")
             }
         }
@@ -168,7 +167,6 @@ protocol OfflineVideoDurationDelegate: class {
             if let data = Zee5UserSettingsManager.shared.getUserSettingsModal(){
             for settingDataModel in data {
                 if settingDataModel.key == "parental_control"{
-                     print(settingDataModel.value!)
                     if let dict = convertToDictionary(from: settingDataModel.value!) {
                         Agerating = dict["age_rating"]!
                         ParentalPin = dict["pin"]!
@@ -184,7 +182,6 @@ protocol OfflineVideoDurationDelegate: class {
 
     func parentalLogic() {
         if let Age = selectedVideo?.Agerating {
-            print(Age)
             if Agerating == "UA" {
                 if Age == "U" {
                     isparentalPin = false

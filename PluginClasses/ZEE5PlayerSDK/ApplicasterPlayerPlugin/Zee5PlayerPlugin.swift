@@ -24,7 +24,6 @@ public class ZappPlayerAdapter: NSObject {
                 Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
                 return;
             }else{
-                print(Token)
                 self.userAccessToken = Token;
             }
         }

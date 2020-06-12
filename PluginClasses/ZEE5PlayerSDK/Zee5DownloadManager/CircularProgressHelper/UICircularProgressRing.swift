@@ -64,16 +64,8 @@ final public class UICircularProgressRing: UICircularRing {
     @IBInspectable public var value: CGFloat = 0 {
         didSet {
             if value < minValue {
-                #if DEBUG
-                print("Warning in: \(#file):\(#line)")
-                print("Attempted to set a value less than minValue, value has been set to minValue.\n")
-                #endif
                 ringLayer.value = minValue
             } else if value > maxValue {
-                #if DEBUG
-                print("Warning in: \(#file):\(#line)")
-                print("Attempted to set a value greater than maxValue, value has been set to maxValue.\n")
-                #endif
                 ringLayer.value = maxValue
             } else {
                 ringLayer.value = value

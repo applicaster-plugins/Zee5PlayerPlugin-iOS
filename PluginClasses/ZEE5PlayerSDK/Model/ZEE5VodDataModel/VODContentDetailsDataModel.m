@@ -102,7 +102,6 @@
                 if ([related.assetSubtype isEqualToString:@"trailer"])
                 {
                     self.trailerIdentifier = related.identifier;
-                    NSLog(@" Trailer id here %@", self.trailerIdentifier);
                 }
                 [relatedVideosArray addObject:related];
             }
@@ -126,19 +125,16 @@
             self.tvShowBuisnessType = [showDetail ValueForKeyWithNullChecking:@"business_type"];
             self.tvShowimgurl = [showDetail ValueForKeyWithNullChecking:@"image_url"];
             self.tvShowAssetSubtype = [showDetail ValueForKeyWithNullChecking:@"asset_subtype"];
+            self.tvShowId = [showDetail ValueForKeyWithNullChecking:@"id"];
+
             
             /// ********* Before TV Logic On PopUp Close ***************//////////////
               if (!([self.tvShowBuisnessType isEqualToString:@"premium"] || [self.tvShowBuisnessType isEqualToString:@"premium_downloadable"]) && ([self.buisnessType isEqualToString:@"premium"] || [self.buisnessType isEqualToString:@"premium_downloadable"]))
                   {
                       self.isBeforeTv = true;
                   }
-            
             self.showOriginalTitle = str;
-            
-            
-            
         }
-        
     }
     
     return self;

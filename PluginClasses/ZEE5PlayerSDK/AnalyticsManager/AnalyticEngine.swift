@@ -250,28 +250,29 @@ public class AnalyticEngine: NSObject {
     @objc public func SetupMixpanelAnalytics(with data: NSDictionary, tags: NSDictionary)
     {
         AllAnalyticsClass.shared.ADInitize(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADsDataModelContent(with: data, tags: tags)
     }
     
-    @objc public func AdSkipedAnlytics(with data: NSDictionary, tags: NSDictionary)
+    @objc public func AdSkipedAnlytics()
     {
-        AllAnalyticsClass.shared.ADSkiped(with: data, CustomTags: tags)
-        AllAnalyticsClass.shared.ADComplete(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADSkiped()
+        AllAnalyticsClass.shared.ADComplete()
     }
-    @objc public func AdCompleteAnalytics(with data: NSDictionary, tags: NSDictionary)
+    @objc public func AdCompleteAnalytics()
     {
-        AllAnalyticsClass.shared.ADComplete(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADComplete()
     }
-    @objc public func AdClickedAnalytics(with data: NSDictionary, tags: NSDictionary)
+    @objc public func AdClickedAnalytics()
     {
-        AllAnalyticsClass.shared.ADClicked(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADClicked()
     }
-    @objc public func AdWatchDurationAnalytics(with data: NSDictionary, tags: NSDictionary)
+    @objc public func AdWatchDurationAnalytics()
     {
-        AllAnalyticsClass.shared.ADWatchedDuration(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADWatchedDuration()
     }
-    @objc public func AdViewAnalytics(with data: NSDictionary, tags: NSDictionary)
+    @objc public func AdViewAnalytics()
     {
-        AllAnalyticsClass.shared.ADView(with: data, CustomTags: tags)
+        AllAnalyticsClass.shared.ADView()
     }
    
     

@@ -32,9 +32,6 @@ extension AllAnalyticsClass{
         let carrier = networkInfo.subscriberCellularProvider
         let carrierName = carrier?.carrierName ?? ""
         
-        print( "Carriar Name **** \(carrierName)")
-        
-    
         let LOTDuration = DictToString(with: "ContentDuration", value: Duration == "" ?notAppplicable:Duration)
         let LOTContentName = DictToString(with: "ContentName", value: contentName == "" ? notAppplicable:contentName)
         let LOTgenere = DictToString(with: "Genre", value: genereString  == "" ? notAppplicable : genereString)
@@ -82,13 +79,7 @@ extension AllAnalyticsClass{
         DMP.addBehaviorData("test_i_applicaster", forType: "genp")
         
         
-        DMP.sendBehaviorData(){
-            result in
-            if result.isSuccess{
-                print("Lotame Success \(String(describing: result))")
-            } else{
-                print("Lotame failure\(String(describing: result))")
-            }
+        DMP.sendBehaviorData() { result in
         }
     }
     
@@ -100,7 +91,6 @@ extension AllAnalyticsClass{
             return "\(key):\(value)"
         }) as Array).joined(separator: ";")
 
-        print(cookieHeader)
         return cookieHeader
     
     }

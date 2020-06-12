@@ -99,7 +99,6 @@
 {
     Zee5MenuModel *model = self.aryObjects[indexPath.row];
 
-    NSLog(@"|** didSelectRowAtIndexPath selectedMenuItem :: %@ **|", model.title);
     [[ZEE5PlayerManager sharedInstance] selectedMenuItem:model];
 }
 /*

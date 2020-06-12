@@ -96,10 +96,8 @@ fileprivate class PremiumHelper {
 //        }
         
        // let url = Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: contentId, beforeTV: nil).url
-        
         DispatchQueue.main.async {
-            //Zee5DeepLinkingManager.shared.openURL(withURL: url)
-            ZEE5PlayerManager .sharedInstance().hybridViewOpen()
+            ZEE5PlayerManager.sharedInstance().hybridViewOpen()
         }
     }
 }

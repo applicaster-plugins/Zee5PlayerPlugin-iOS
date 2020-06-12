@@ -55,7 +55,6 @@ static DevicemanageState DeviceState;
     }
 failureBlock:^(ZEE5SdkError * _Nullable error)
 {
-          NSLog(@"Failure Device Api");
     }
      ];
 }
@@ -97,7 +96,6 @@ failureBlock:^(ZEE5SdkError * _Nullable error)
      }
       failureBlock:^(ZEE5SdkError * _Nullable error)
     {
-        NSLog(@"Failure Device Api");
     }
      ];
     

@@ -63,8 +63,7 @@ static NetworkManager *sharedManager = nil;
     {
         full_Url_String = [[full_Url_String substringToIndex:[full_Url_String length] - 1] mutableCopy];
     }
-    NSLog(@"%@", full_Url_String);
-    
+        
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *escapedPath = [full_Url_String stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
@@ -226,7 +225,6 @@ static NetworkManager *sharedManager = nil;
     else
     {
         
-        NSLog(@"%ld", (long)[(NSHTTPURLResponse *)response statusCode]);
         switch ([(NSHTTPURLResponse *)response statusCode]) {
             case 200:
             {

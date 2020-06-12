@@ -7,49 +7,12 @@
 //
 
 import Foundation
-import ZappPlugins
-
-enum PlayerScreenMode: String, Equatable {
-    case inline = "Inline Player"
-    case fullscreen = "Full Screen Player"
-    
-    var key: String {
-        return "View"
-    }
-}
 
 private enum CustomConfiguration: String {
     case videoPlayErrorMessage = "General_Error_Message"
     case videoPlayErrorButtonText = "General_Error_Button"
     case connectivityErrorMessage = "Connectivity_Error_Message"
     case connectivityErrorButtonText = "Connectivity_Error_Button"
-}
-
-protocol PlayerViewBuilderProtocol {
-    var mode: PlayerScreenMode { get set }
-    var kalturaPlayerController: KalturaPlayerController? { get set }
-    var errorViewConfiguration: ErrorViewConfiguration? { get set }
-}
-
-class PlayerViewBuilder: PlayerViewBuilderProtocol
-{
-    var mode: PlayerScreenMode = .fullscreen
-    weak var kalturaPlayerController: KalturaPlayerController?
-    var errorViewConfiguration: ErrorViewConfiguration?
-}
-
-class ViewControllerFactory {
-    
-    public static func createPlayerViewController(videoItems: [ZPPlayable], errorViewConfig: ErrorViewConfiguration?) -> KalturaPlayerController {
-        
-        let builder = PlayerViewBuilder()
-        builder.errorViewConfiguration = errorViewConfig
-        let player = ZappZee5PlayerAdapter(items: videoItems)
-        let kalturaPlayerController = KalturaPlayerController(builder: builder, player: player)
-        builder.kalturaPlayerController = kalturaPlayerController
-        
-        return kalturaPlayerController
-    }
 }
 
 class ErrorViewConfiguration {

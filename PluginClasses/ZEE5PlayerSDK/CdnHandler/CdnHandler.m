@@ -58,7 +58,6 @@ static CdnHandler *sharedManager = nil;
 -(NSString*) CdnToCdnURl:(NSString*)URL
 {
     NSDictionary *Dict = self.CDN;
-    NSLog(@"%@",Dict);
     return [Dict valueForKey:URL];
 }
 
