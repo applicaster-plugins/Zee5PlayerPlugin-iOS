@@ -68,16 +68,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [self.player stop];
     }
 
-    NSString *contentStringURL = self.currentItem.hls_Url;
-//    if (self.currentItem.isDRM || [currentItem.asset_type isEqualToString:@"0"] || [currentItem.asset_type isEqualToString:@"9"] )
-//    {
-//        contentStringURL = self.currentItem.hls_Url;
-//    }
-//    else
-//    {
-//        contentStringURL = self.currentItem.hls_Full_Url;
-//    }
-    
+       NSString *contentStringURL = self.currentItem.hls_Url;
        PluginConfig *pluginConfig = [self createPluginConfig];
        self.player = [[PlayKitManager sharedInstance] loadPlayerWithPluginConfig:pluginConfig];
        self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
@@ -110,7 +101,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
 {
     NSMutableDictionary *pluginConfigDict = [NSMutableDictionary new];
     IMAConfig *imaConfig = [IMAConfig new];
-   // [self listSubviewsOfView:[UIApplication sharedApplication].keyWindow.parentViewController.view];
     NSString *vmapString = [self vmapTagBuilder];
     if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]]) {
 
@@ -293,7 +283,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
     else if (AdEvent.adSkipped)
     {
-     [engine AdSkipedAnlytics]
+        [engine AdSkipedAnlytics];
     }
     else if (AdEvent.adComplete)
     {
@@ -364,71 +354,51 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adLoaded block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adLog block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adMidpoint block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adPaused block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adResumed block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adTapped block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adThirdQuartile block:^(PKEvent * _Nonnull event) {
-        
     }];
     
-//    [self.player addObserver: self event: AdEvent.adDidProgressToTime block:^(PKEvent * _Nonnull event) {
-
-//    }];
-    
     [self.player addObserver: self event: AdEvent.adCuePointsUpdate block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
-        
     }];
     
     [self.player addObserver: self event: AdEvent.adPlaybackReady block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.requestTimedOut block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adsRequested block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.error block:^(PKEvent * _Nonnull event) {
-        
         [self ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error - "];
     }];
 }
@@ -468,7 +438,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%@",Platform];
     NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
     NSString *Message = [NSString stringWithFormat:@"%@",dict];
-
     [[AnalyticEngine shared]setupConvivvaErrorMsgWith:Message COSeverity:Severity];
 }
 
@@ -479,9 +448,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                        event:PlayerEvent.error
                        block:^(PKEvent * _Nonnull event) {
-
-        
-        
         // 7002 when i pass certificate Nil value
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
@@ -498,10 +464,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.errorLog]
                        block:^(PKEvent * _Nonnull event){
-
-        
-                /// Cheack Code here Why Its Getting Failed
-                       }];
+    }];
 }
 
 -(void)registerPlayerMetaData{
@@ -511,6 +474,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
                         
         [[AnalyticEngine new]VideoPlayAnalytics];
+        [[AnalyticEngine new]ConsumptionAnalyticEvents];
 
                        }];
 }
@@ -564,7 +528,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
                            PlayerState oldState = event.oldState;
                            PlayerState newState = event.newState;
-                                                      
+                           
+                           
                            if (newState == PlayerStateBuffering) {
                                
                                
@@ -637,7 +602,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
                       events:@[PlayerEvent.playbackStalled]
                        block:^(PKEvent * _Nonnull event) {
                            [[ZEE5PlayerManager sharedInstance] onBuffring];
-
                            [engine updatePlayerStateWithState: CONVIVA_BUFFERING];
                            [engine playerbufferStartAnalytics];
                        }];
@@ -714,7 +678,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *range =@"";
     if (self.currentItem.googleAds.count >0) {
     for (ZEE5AdModel *model in self.currentItem.googleAds) {
-      // NSInteger index = [self.currentItem.googleAds indexOfObject:model];
         if ([model.time.lowercaseString isEqualToString:@"pre"] && [model.tag_name containsString:@"bumper"]) {
             part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n<vmap:Extensions>\n<vmap:Extension type=\"bumper\" suppress_bumper=\"true\"/>\n</vmap:Extensions>\n</vmap:AdBreak>"];
         }

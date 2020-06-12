@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic)StreamType streamType;
 @property (strong, nonatomic) NSString* asset_type;
 @property (strong, nonatomic) NSString* asset_subtype;
+@property (strong, nonatomic) NSString* Showasset_subtype;
 @property (nonatomic)   NSInteger episode_number;
 @property (nonatomic, copy)   NSString *release_date;
 
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonnull) NSString *content_id;
 @property(strong, nonnull) NSString *SeasonId;
 @property(strong, nonnull) NSString *showId;
+
 @property(strong, nonnull) NSString *channel_Name;
 @property(strong, nonnull) NSString *showName;
 @property (strong, nonatomic) NSString *ageRate;

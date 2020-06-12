@@ -23,6 +23,13 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
     }
+    
+    @objc public func VideoStartTime(with time:String)
+    {
+        AllAnalyticsClass.shared.getVideoStartTime(Time: time)
+        
+        
+    }
 
    //MARK:- Conviva Player analytics
     
@@ -227,7 +234,7 @@ public class AnalyticEngine: NSObject {
            AllAnalyticsClass.shared.DownloadDelete(with: item)
        }
     
-    public func downloadClick (with item:DownloadItem)
+    public func downloadPlayClick (with item:DownloadItem)
     {
         AllAnalyticsClass.shared.DownloadPlayClick(with: item)
     }

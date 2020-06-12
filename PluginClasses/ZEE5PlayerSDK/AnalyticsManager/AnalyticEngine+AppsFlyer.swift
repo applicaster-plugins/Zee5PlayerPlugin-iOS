@@ -14,6 +14,20 @@ extension AnalyticEngine
     @objc public func AddtoWatchlistAnlytics()
     {
         AllAnalyticsClass.shared.addtoWatchlistEvent()
+        
+        if ZEE5PlayerSDK.getConsumpruionType() == Movie{
+            AllAnalyticsClass.shared.MovieAddToWatch()
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
+               AllAnalyticsClass.shared.TVShowAddToWatch()
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Original{
+            AllAnalyticsClass.shared.originalAddToWatch()
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Video{
+             AllAnalyticsClass.shared.VideoAddToWatch()
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
+            
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Music{
+            
+        }
     }
     
     @objc public func SubscribeCTAClicked()
@@ -67,23 +81,23 @@ extension AnalyticEngine
     }
     
     @objc public func ConsumptionAnalyticEvents(){
+        
         if ZEE5PlayerSDK.getConsumpruionType() == Live {
-            
             AllAnalyticsClass.shared.livePlayed()
-            
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Music{
-            
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Music{
              AllAnalyticsClass.shared.Musicplayed()
-            
         }else if ZEE5PlayerSDK.getConsumpruionType() == Movie{
-            
             AllAnalyticsClass.shared.MoviesPlayed()
-            
+             AllAnalyticsClass.shared.MovieSectionplayed()
         }else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
-            
              AllAnalyticsClass.shared.TvShowplayed()
             AllAnalyticsClass.shared.TvShowSectionplayed()
-            
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Original{
+            AllAnalyticsClass.shared.OriginalSectionplayed()
+        }else if ZEE5PlayerSDK.getConsumpruionType() == Video{
+            AllAnalyticsClass.shared.videoContentSectionplayed()
+            AllAnalyticsClass.shared.videoContentplayed()
         }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
             
         }

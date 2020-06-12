@@ -223,11 +223,6 @@ static ContentBuisnessType buisnessType;
         [self handleOrientations];
         [self handleTracks];
         
-        [[AnalyticEngine new]ConsumptionAnalyticEvents];
-//        //[[AddToWatchlist Shared]getWatchListwithCompletion:^(BOOL * _Nonnull isAddedWatclist) {
-//            self.isWatchlistAdded = isAddedWatclist;
-//        }];
-        
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
         {
              [[ReportingManager sharedInstance] getWatchHistory];
@@ -1162,6 +1157,7 @@ static ContentBuisnessType buisnessType;
     NSString *videoStartPoint = [Utility stringFromTimeInterval:duration];
     NSString *VideoEndpoint = [Utility stringFromTimeInterval:[[Zee5PlayerPlugin sharedInstance]getDuration]];
     NSDictionary *dict = @{@"videoStartPoint" : videoStartPoint,@"videoEndPoint":VideoEndpoint};
+    [[AnalyticEngine shared]VideoStartTimeWith:videoStartPoint];
     [self updateConvivaSessionWithMetadata: dict];
     
 }
@@ -2430,7 +2426,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-1-200439_782008633";//0-1-261984
+   // content_id = @"";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -2863,7 +2859,7 @@ static ContentBuisnessType buisnessType;
     {
         [self downLoadAddConfig:^(id result) {
 
-            if (ZEE5PlayerSDK.getConsumpruionType == Episode){
+            if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original ){
                 [self getNextEpisode];
             }else
             {
@@ -3252,7 +3248,7 @@ static ContentBuisnessType buisnessType;
           }];
         return;
     }
-    else if (self.TvShowModel.TrailersContentid != nil && ZEE5PlayerSDK.getConsumpruionType == Episode && _ModelValues.isBeforeTv == false)
+    else if (self.TvShowModel.TrailersContentid != nil && (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _ModelValues.isBeforeTv == false)
     {
         self.allowVideoContent = YES;
           [self playVODContent:self.TvShowModel.TrailersContentid country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {

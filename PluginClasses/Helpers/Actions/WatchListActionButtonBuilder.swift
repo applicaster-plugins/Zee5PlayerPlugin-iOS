@@ -176,6 +176,9 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
         self.isItemInWatchlist = itemIn
         self.actionBarUpdateHandler.setSelected(itemIn)
         Zee5ToastView.showToast(withMessage: toastMessage ?? "Unknwon Error")
+        if itemIn == true {
+            AnalyticEngine.shared.AddtoWatchlistAnlytics()
+        }
     }
     
 }
