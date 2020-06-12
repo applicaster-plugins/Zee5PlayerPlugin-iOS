@@ -2847,7 +2847,9 @@ static ContentBuisnessType buisnessType;
     self.currentItem.business_type = model.buisnessType;
     self.currentItem.language = model.Languages;
     self.currentItem.SeasonId = model.SeasonId;
+    self.currentItem.showId = model.tvShowId;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
+
 
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
       [self ContentidNotification:_currentItem.content_id];
@@ -3109,7 +3111,6 @@ static ContentBuisnessType buisnessType;
     self.currentItem.isDRM = model.isDRM;
     self.currentItem.hls_Full_Url = model.hlsFullURL;
     self.currentItem.showName = model.show_name;
- 
 //    [sharedManager playWithCurrentItem];
     if (_playerConfig.playerType == normalPlayer)
     {

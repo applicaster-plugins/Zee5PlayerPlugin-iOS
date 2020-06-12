@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(strong, nonnull) NSString *content_id;
 @property(strong, nonnull) NSString *SeasonId;
+@property(strong, nonnull) NSString *showId;
+
 @property(strong, nonnull) NSString *channel_Name;
 @property(strong, nonnull) NSString *showName;
 @property (strong, nonatomic) NSString *ageRate;

@@ -68,16 +68,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [self.player stop];
     }
 
-    NSString *contentStringURL = self.currentItem.hls_Url;
-//    if (self.currentItem.isDRM || [currentItem.asset_type isEqualToString:@"0"] || [currentItem.asset_type isEqualToString:@"9"] )
-//    {
-//        contentStringURL = self.currentItem.hls_Url;
-//    }
-//    else
-//    {
-//        contentStringURL = self.currentItem.hls_Full_Url;
-//    }
-    
+       NSString *contentStringURL = self.currentItem.hls_Url;
        PluginConfig *pluginConfig = [self createPluginConfig];
        self.player = [[PlayKitManager sharedInstance] loadPlayerWithPluginConfig:pluginConfig];
        self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
@@ -110,7 +101,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
 {
     NSMutableDictionary *pluginConfigDict = [NSMutableDictionary new];
     IMAConfig *imaConfig = [IMAConfig new];
-   // [self listSubviewsOfView:[UIApplication sharedApplication].keyWindow.parentViewController.view];
     NSString *vmapString = [self vmapTagBuilder];
     if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]]) {
 
@@ -190,9 +180,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 - (void)createConvivaAdSeesionWithAdEvent: (PKEvent*) event
 {
-    // currently do not need to send the analytics
-    return;
-    
     
     NSString *stremType = @"Unknown";
     if (self.currentItem.streamType == CONVIVA_STREAM_VOD) {
@@ -201,9 +188,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     else if (self.currentItem.streamType == CONVIVA_STREAM_LIVE) {
         stremType = @"Live";
     }
+
     NSDictionary *dict = [[NSDictionary alloc] init];
-    
-    
+        
     dict = @{
              @"assetName": event.adInfo.title,
              @"applicationName": Conviva_Application_Name,
@@ -214,7 +201,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
              @"adId": event.adInfo.adId,
              @"advertiserName":event.adInfo.advertiserName
              };
-
     
     /// Ad custom tags
     NSString *isLive = @"false";
@@ -281,9 +267,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
              @"c3.indiaexindia": countryAdCode    // "India = 21665149170", "ExIndia = 21800039520"
              };
 
-    
-   
-    
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
     if (AdEvent.adsRequested)
     {
@@ -294,21 +277,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
    else if (AdEvent.adStarted)
     {
         [engine setupConvivaAdSessionWith: dict customTags: tags];
-        [engine AdViewAnalyticsWith:dict tags:tags];
+        [engine SetupMixpanelAnalyticsWith:dict tags:tags];
+        [engine AdViewAnalytics];
       
     }
     else if (AdEvent.adSkipped)
     {
-        [engine AdSkipedAnlyticsWith:dict tags:tags];
+        [engine AdSkipedAnlytics];
     }
     else if (AdEvent.adComplete)
     {
-        //[engine AdCompleteAnalyticsWith:dict tags:tags];
-      
+        [engine AdCompleteAnalytics];
     }
     else if (AdEvent.adClicked)
     {
-        [engine AdClickedAnalyticsWith:dict tags:tags];
+        [engine AdClickedAnalytics];
     }
 }
 
@@ -321,6 +304,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
     {
+        
         // Setup Ad events
         [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
@@ -331,6 +315,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
+    
         [engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
         
         [engine attachVideoPlayer];
@@ -340,10 +325,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
+    
         [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
-        //MARK:- Temporary Comment Due to crash after Skipped.
-       // [weakSelf createConvivaAdSeesionWithAdEvent: event];
-        
         [engine attachVideoPlayer];
         [engine cleanupAdSession];
     }];
@@ -363,10 +346,11 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
+
     }];
     
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
-        [weakSelf createConvivaAdSeesionWithAdEvent: event];  // TT
+
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {
@@ -694,7 +678,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *range =@"";
     if (self.currentItem.googleAds.count >0) {
     for (ZEE5AdModel *model in self.currentItem.googleAds) {
-      // NSInteger index = [self.currentItem.googleAds indexOfObject:model];
         if ([model.time.lowercaseString isEqualToString:@"pre"] && [model.tag_name containsString:@"bumper"]) {
             part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n<vmap:Extensions>\n<vmap:Extension type=\"bumper\" suppress_bumper=\"true\"/>\n</vmap:Extensions>\n</vmap:AdBreak>"];
         }
