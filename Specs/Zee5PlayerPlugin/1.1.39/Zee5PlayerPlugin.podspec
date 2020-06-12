@@ -45,5 +45,4 @@ Pod::Spec.new do |s|
   s.dependency 'DownloadToGo'
   s.dependency 'SQLite.swift'
   s.dependency 'ZeeHomeScreen'
-
 end
