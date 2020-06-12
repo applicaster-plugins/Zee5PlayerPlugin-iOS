@@ -453,8 +453,4 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         return result
     }
-    
-    func addGesturePanDownHandler(_ handler: @escaping () -> ()) {
-        ZEE5PlayerManager.sharedInstance().setPanDownGestureHandler(handler);
-    }
 }

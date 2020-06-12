@@ -369,10 +369,7 @@ class HybridViewController: UIViewController {
     }
     
     private func addGestureRecognizerHandler() {
-        guard let playerManager = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
-            return
-        }
-        playerManager.addGesturePanDownHandler(closePlayer)
+        ZEE5PlayerManager.sharedInstance().setPanDownGestureHandler(closePlayer)
     }
 }
 
