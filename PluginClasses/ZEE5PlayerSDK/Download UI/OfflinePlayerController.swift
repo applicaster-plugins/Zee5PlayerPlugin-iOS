@@ -168,8 +168,8 @@ protocol OfflineVideoDurationDelegate: class {
             for settingDataModel in data {
                 if settingDataModel.key == "parental_control"{
                     if let dict = convertToDictionary(from: settingDataModel.value!) {
-                        Agerating = dict["age_rating"]!
-                        ParentalPin = dict["pin"]!
+                        Agerating = dict["age_rating"] ?? ""
+                        ParentalPin = dict["pin"] ?? ""
                         break
                     }
                   }
