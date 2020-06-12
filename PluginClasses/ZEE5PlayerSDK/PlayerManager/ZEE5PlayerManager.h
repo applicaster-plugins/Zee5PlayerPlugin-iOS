@@ -24,6 +24,7 @@ typedef void(^VODDataHandler)(VODContentDetailsDataModel * _Nullable result, NSS
 typedef void(^TokenSuccessHandler)(id _Nullable result);
 typedef void(^TokenFailureHandler)(ZEE5SdkError * _Nullable error);
 typedef void(^CIdHandler)(BOOL isSame, NSString * _Nullable customData);
+typedef void(^GestureHandler)(void);
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -184,6 +185,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showloaderOnPlayer;
 -(void)hideLoaderOnPlayer;
 -(void)ShowToastMessage:(NSString *)Message;
+-(void)startAd;
+-(void)endAd;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;
@@ -233,6 +236,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSArray<Track*>* offlineTextTracks;
 @property NSArray<Track*>* offlineLanguageTracks;
 @property (strong, nonatomic) id<Player> offlinePlayer;
+
+-(void)setPanDownGestureHandler:(GestureHandler)panDownGestureHandler;
 
 @end
 
