@@ -16,11 +16,13 @@ public class AllAnalyticsClass: NSObject {
     
     var contentName = ""
     var contentId = ""
+    var seasonId = ""
     var realeseDate = ""
     var PlayerVersion = ""
     var series = ""
     var Subtitles = [Any]()
     var audiolanguage = [Any]()
+    var contentlanguages = [Any]()
     var Charecters = [Any]()
     var cast = [Any]()
     var genre = [Genres]()
@@ -33,6 +35,10 @@ public class AllAnalyticsClass: NSObject {
     var assetSubtype = ""
     var Buisnesstype = ""
     var skipIntroTime = ""
+    var Imageurl = ""
+    var TvShowimagUrl = ""
+    var videoStarttime = ""
+    
     
     let Gender = analytics.getGender()   /// From Core SDK
     let Age = getAge()
@@ -41,7 +47,7 @@ public class AllAnalyticsClass: NSObject {
     
 
     public override init(){}
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String) {
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String,language:[Any],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String) {
         
         self.contentId = contentId
         self.contentName = contentName
@@ -62,6 +68,10 @@ public class AllAnalyticsClass: NSObject {
         self.Buisnesstype = buisnessType
         self.Charecters = actors
         self.skipIntroTime = skiptime
+        self.contentlanguages = language
+        self.Imageurl = image
+        self.TvShowimagUrl = Tvshowimgurl
+        self.seasonId = seasonID
         
     }
     
@@ -80,6 +90,10 @@ public class AllAnalyticsClass: NSObject {
                    assetSubtype = DataModel.asset_subtype
                    Buisnesstype = DataModel.business_type
                    skipIntroTime = DataModel.skipintrotime
+                   contentlanguages = DataModel.language
+                   Imageurl = DataModel.imageUrl
+                   TvShowimagUrl = DataModel.tvShowImgurl
+                   seasonId = DataModel.seasonId
         
                    if DataModel.charecters.count>0{
                        Charecters  = DataModel.charecters
@@ -90,11 +104,12 @@ public class AllAnalyticsClass: NSObject {
         
                if DataModel.audioLanguages.count>0{
                 audiolanguage = DataModel.audioLanguages
-                let audioString = DataModel.audioLanguages.map{$0}
                 }
                    PlayerVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "nil"
                   
     }
+    
+    
     
 }
 
@@ -124,7 +139,7 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.PAGE_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.DRM_VIDEO ~>> DrmVideo,
             Keys.AD_INITIALIZED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-            Keys.AD_INITIALIZED.CONTENT_ORIGINAL_LANGUAGE ~>> "",                                                // TT
+            Keys.AD_INITIALIZED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
             Keys.AD_INITIALIZED.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
             Keys.AD_INITIALIZED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
             Keys.AD_INITIALIZED.TAB_NAME ~>> notAppplicable,
@@ -173,7 +188,7 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.PAGE_NAME ~>> notAppplicable,
                Keys.AD_VIEW.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> "",                                                // TT
+               Keys.AD_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                Keys.AD_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
                Keys.AD_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.AD_VIEW.TAB_NAME ~>> notAppplicable,
@@ -216,7 +231,7 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.PAGE_NAME ~>> notAppplicable,
                Keys.AD_SKIP.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_SKIP.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_SKIP.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+               Keys.AD_SKIP.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                Keys.AD_SKIP.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
                Keys.AD_SKIP.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.AD_SKIP.TAB_NAME ~>> notAppplicable,
@@ -247,6 +262,8 @@ extension AllAnalyticsClass
     
     public func ADComplete(with data: NSDictionary , CustomTags:NSDictionary)
           {
+              
+              
               let parameter : Set = [
                   Keys.AD_FORCED_EXIT.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
@@ -264,7 +281,7 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.PAGE_NAME ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_FORCED_EXIT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-                  Keys.AD_FORCED_EXIT.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+                  Keys.AD_FORCED_EXIT.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                   Keys.AD_FORCED_EXIT.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
                   Keys.AD_FORCED_EXIT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                   Keys.AD_FORCED_EXIT.TAB_NAME ~>> notAppplicable,
@@ -309,7 +326,7 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.PAGE_NAME ~>> notAppplicable,
                Keys.AD_CLICK.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+               Keys.AD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                Keys.AD_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
                Keys.AD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                Keys.AD_CLICK.TAB_NAME ~>> notAppplicable,
@@ -341,6 +358,8 @@ extension AllAnalyticsClass
     
     public func ADWatchedDuration(with data: NSDictionary , CustomTags:NSDictionary)
           {
+              
+              
               let parameter : Set = [
                   Keys.AD_WATCH_DURATION.SOURCE ~>> data.value(forKey: "streamUrl") as? String ?? "No Source",
                   Keys.AD_WATCH_DURATION.TITLE ~>> data.value(forKey: "assetName") as? String ?? "No Title",
@@ -356,7 +375,7 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.PAGE_NAME ~>> "",
                   Keys.AD_WATCH_DURATION.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_WATCH_DURATION.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-                  Keys.AD_WATCH_DURATION.CONTENT_ORIGINAL_LANGUAGE ~>> "",
+                  Keys.AD_WATCH_DURATION.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                   Keys.AD_WATCH_DURATION.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
                   Keys.AD_WATCH_DURATION.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
                   Keys.AD_WATCH_DURATION.TAB_NAME ~>> notAppplicable,
@@ -404,6 +423,8 @@ func getAge() -> String {
 extension AllAnalyticsClass
 {
     
-    
+     public func getVideoStartTime(Time:String){
+        videoStarttime = Time
+    }
     
 }

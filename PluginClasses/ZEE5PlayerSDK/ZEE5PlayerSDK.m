@@ -117,7 +117,7 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
         consumprionType = Live;
     }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"trailer"] || [[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"promo"]){
         consumprionType = Trailer;
-    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"episode"]){
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"episode"] && [[ZEE5PlayerManager sharedInstance].currentItem.Showasset_subtype isEqualToString:@"tvshow"] ){
         consumprionType = Episode;
     }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"movie"]){
         consumprionType = Movie;
@@ -125,6 +125,8 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
         consumprionType = Music;
     }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"video"]){
         consumprionType = Video;
+    }else if ([[ZEE5PlayerManager sharedInstance].currentItem.asset_subtype isEqualToString:@"episode"] && [[ZEE5PlayerManager sharedInstance].currentItem.Showasset_subtype isEqualToString:@"original"] ){
+        consumprionType = Original;
     }
     else{
         consumprionType ;

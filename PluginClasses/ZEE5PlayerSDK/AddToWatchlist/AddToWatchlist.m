@@ -108,6 +108,9 @@ static AddToWatchlist *SharedInstance = nil;
 
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchList requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
     {
+        if ([[[result valueForKey:@"code"]stringValue] isEqualToString:@"1"]) {
+            [[AnalyticEngine shared]AddtoWatchlistAnlytics];
+        }
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {

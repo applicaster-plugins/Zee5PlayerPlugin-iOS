@@ -201,9 +201,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     else if (self.currentItem.streamType == CONVIVA_STREAM_LIVE) {
         stremType = @"Live";
     }
-
     NSDictionary *dict = [[NSDictionary alloc] init];
-        
+    
+    
     dict = @{
              @"assetName": event.adInfo.title,
              @"applicationName": Conviva_Application_Name,
@@ -321,7 +321,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
     {
-        
         // Setup Ad events
         [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
@@ -332,7 +331,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
-    
         [engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
         
         [engine attachVideoPlayer];
@@ -342,7 +340,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-    
         [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
         //MARK:- Temporary Comment Due to crash after Skipped.
        // [weakSelf createConvivaAdSeesionWithAdEvent: event];
@@ -366,81 +363,58 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
-
-        
         [weakSelf createConvivaAdSeesionWithAdEvent: event];  // TT
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adLoaded block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adLog block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adMidpoint block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adPaused block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adResumed block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adTapped block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adThirdQuartile block:^(PKEvent * _Nonnull event) {
-        
     }];
     
-//    [self.player addObserver: self event: AdEvent.adDidProgressToTime block:^(PKEvent * _Nonnull event) {
-
-//    }];
-    
     [self.player addObserver: self event: AdEvent.adCuePointsUpdate block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
-        
     }];
     
     [self.player addObserver: self event: AdEvent.adPlaybackReady block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.requestTimedOut block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.adsRequested block:^(PKEvent * _Nonnull event) {
-
     }];
     
     [self.player addObserver: self event: AdEvent.error block:^(PKEvent * _Nonnull event) {
-        
         [self ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error - "];
     }];
 }
@@ -480,7 +454,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%@",Platform];
     NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
     NSString *Message = [NSString stringWithFormat:@"%@",dict];
-
     [[AnalyticEngine shared]setupConvivvaErrorMsgWith:Message COSeverity:Severity];
 }
 
@@ -491,9 +464,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                        event:PlayerEvent.error
                        block:^(PKEvent * _Nonnull event) {
-
-        
-        
         // 7002 when i pass certificate Nil value
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
@@ -510,10 +480,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.errorLog]
                        block:^(PKEvent * _Nonnull event){
-
-        
-                /// Cheack Code here Why Its Getting Failed
-                       }];
+    }];
 }
 
 -(void)registerPlayerMetaData{
@@ -523,6 +490,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
                         
         [[AnalyticEngine new]VideoPlayAnalytics];
+        [[AnalyticEngine new]ConsumptionAnalyticEvents];
 
                        }];
 }
@@ -576,7 +544,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
                            PlayerState oldState = event.oldState;
                            PlayerState newState = event.newState;
-                                                      
+                           
+                           
                            if (newState == PlayerStateBuffering) {
                                
                                
@@ -649,7 +618,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
                       events:@[PlayerEvent.playbackStalled]
                        block:^(PKEvent * _Nonnull event) {
                            [[ZEE5PlayerManager sharedInstance] onBuffring];
-
                            [engine updatePlayerStateWithState: CONVIVA_BUFFERING];
                            [engine playerbufferStartAnalytics];
                        }];
