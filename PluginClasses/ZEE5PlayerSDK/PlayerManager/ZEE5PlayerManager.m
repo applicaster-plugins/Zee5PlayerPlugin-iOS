@@ -190,67 +190,41 @@ static ContentBuisnessType buisnessType;
 //MARK:- VideoPlayMethod
 
 - (void)playWithCurrentItem {
-
-    
-    if (!_allowVideoContent)
-    {
+    if (!_allowVideoContent) {
         return;
     }
-    else
-    {
-        
-    if (_isStreamoverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile){
+    
+    self.playbackView = [[PlayerView alloc] init];
+    [self.viewPlayer addSubview:self.playbackView];
+    
+    self.playbackView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.playbackView matchParent];
+    
+    if (_isStreamoverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
         [self ShowToastMessage:@"WiFi is not connected! You have selected stream over WiFi only"];
-            return;
-        }
-      
+        return;
+    }
+    
     [self getBase64StringwithCompletion:^(NSString *base64) {
-
+        if (self.playerConfig.showCustomPlayerControls) {
+            [self addCustomControls];
+            self.customControlView.buttonPlay.selected = true;
+        }
+        else {
+            [self addMuteViewToPlayer];
+        }
         
-        
-        if (self.playerConfig.showCustomPlayerControls)
-              {
-                  [self addCustomControls];
-                  self.customControlView.buttonPlay.selected = true;
-              }
-              else
-              {
-                  [self addMuteViewToPlayer];
-              }
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.playbackView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         
-        self.panGesture = [[UIPanGestureRecognizer alloc]init];
+        self.panGesture = [[UIPanGestureRecognizer alloc] init];
+        
         [self handleOrientations];
         [self handleTracks];
         
-        if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
-        {
-             [[ReportingManager sharedInstance] getWatchHistory];
+        if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
+            [[ReportingManager sharedInstance] getWatchHistory];
         }
-       
     }];
-  }
-}
-- (void)playWithCurrentItemWithURL : (NSString *)urlString playbacksession_id:(NSString *)playbacksession_id{
-    
-    
-    [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.playbackView andURL:urlString andToken:@"" playbacksession_id:playbacksession_id];
-   
-    self.panGesture = [[UIPanGestureRecognizer alloc]init];
-    
-    if (self.playerConfig.showCustomPlayerControls)
-    {
-        [self addCustomControls];
-        self.customControlView.buttonPlay.selected = true;
-    }
-    else
-    {
-        [self addMuteViewToPlayer];
-    }
-    
-    [self handleOrientations];
-    [self handleTracks];
-
 }
 
 //MARK:- Notification
@@ -2442,24 +2416,17 @@ static ContentBuisnessType buisnessType;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
     self.viewPlayer = playbackView;
-    self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
     
     [self setSeekTime:0];
-    
-    self.playbackView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    [self.viewPlayer addSubview:self.playbackView];
      
     [ZEE5UserDefaults settranslationLanguage:laguage];
     [ZEE5UserDefaults setContentId:content_id];
     //Clean up video Session
     [[AnalyticEngine new] cleanupVideoSesssion];
     
-    
     [self registerNotifications];
     self.playerConfig = playerConfig;
  
-    
     NSArray *array = [content_id componentsSeparatedByString:@"-"];
     NSString *contentType = array[1];
     
@@ -2616,24 +2583,6 @@ static ContentBuisnessType buisnessType;
     }];
     
 }
-- (void)playAESContent:(NSString*) content_id country:(NSString*)country translation:(NSString*) laguage platform_name:(NSString*)platform_name playbacksession_id:(NSString*)playbacksession_id playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView
-{
-    
-    _isStop = false;
-    self.viewPlayer = playbackView;
-    self.playbackView = [[PlayerView alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
-    
-    self.playbackView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    [self.viewPlayer addSubview:self.playbackView];
-    
-    [self registerNotifications];
-    self.playerConfig = playerConfig;
-    
-    self.isLive = NO;
-    [self playAESContent:content_id country:country translation:laguage platform_name:platform_name playbacksession_id:playbacksession_id];
-}
-
 
 -(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success{
     
@@ -2744,39 +2693,6 @@ static ContentBuisnessType buisnessType;
     
     self.startIntroTime = [[Utility secondsForTimeString:self.ModelValues.introStarttime]integerValue];
     self.endIntroTime =  [[Utility secondsForTimeString:self.ModelValues.introEndTime]integerValue];
-}
-
-//MARK:-   Play AES Content (using Playback Session ID)
-
-- (void)playAESContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage  platform_name:(NSString*)platform_name playbacksession_id:(NSString*)playbacksession_id
-{
-    self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
-    
-    if (self.previousDuration != 0)
-    {
-        [self watchDuration:self.currentItem.content_id];
-    }
-    self.isLive = NO;
-    
-    NSDictionary *param =@{@"content_id":content_id,@"country":country, @"translation":laguage,@"platform_name":platform_name,@"playbacksession_id":playbacksession_id};
-    
-
-   
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"x-playback-session-id" : playbacksession_id};
-    
-    [[NetworkManager sharedInstance] makeHttpGetRequest:BaseUrls.getndToken requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
-     {
-        
-         [self playWithCurrentItemWithURL:[result valueForKey:@"video_token"] playbacksession_id:playbacksession_id];
-        
-    }
-     
-    failureBlock:^(ZEE5SdkError *error) {
-        
-    
-        [self notifiyError:error];
-    }];
-    
 }
 
 -(void)getTokenAndCustomDataFromContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler:(DRMSuccessHandler)success andFailure:(DRMFailureHandler)failed

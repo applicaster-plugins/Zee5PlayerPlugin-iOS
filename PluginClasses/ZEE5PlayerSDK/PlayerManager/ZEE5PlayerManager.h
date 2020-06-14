@@ -106,17 +106,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 -(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success;
-/*!
- * @discussion This method used to play hls content with content id
- * @param content_id Need to pass content id of the video
- * @param country Need to pass user country id.
- * @param laguage Need to pass transaltion langauge id.
- * @param platform_name Need to pass name of platform.
- * @param playbacksession_id Need to pass plassback session id for analytics.
- * @param playerConfig Need to pass playerConfig file.
- * @param playbackView Need to pass the view where you want to play the video.
- */
-- (void)playAESContent:(NSString*) content_id country:(NSString*)country translation:(NSString*) laguage platform_name:(NSString*)platform_name playbacksession_id:(NSString*)playbacksession_id playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView;
 
 /*!
  * @discussion This method use to get the custom data and licence url with content id
@@ -224,7 +213,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnSubscribeButton;
 -(void)tapOnLoginButton;
 
-- (void)playWithCurrentItem ;
+- (void)playWithCurrentItem;
 
 -(void)showLangaugeActionSheet;
 -(void)showSubtitleActionSheet;
