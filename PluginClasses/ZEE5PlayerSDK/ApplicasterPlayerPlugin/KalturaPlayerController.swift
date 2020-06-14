@@ -14,29 +14,23 @@ import Alamofire
 
 
 internal enum PlayerViewDisplayMode : Int {
-    case unknown = 0
+    case hidden = 0
     case fullScreen = 1
     case inline = 2
     case mini = 3
 }
 
  class KalturaPlayerController: UIViewController {
-    var playerView: UIView!
     var contentId = "0-0-2464"
     var country = "IN"
     var translation = "en"
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
 
     
-    
-    // Current player display mode
-    var currentDisplayMode: PlayerViewDisplayMode?
-    var previousParentViewController: UIViewController?
-    var previousContainerView: UIView?
+    var currentDisplayMode: PlayerViewDisplayMode = .hidden
     let container = UIView()
     let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
     let Singleton:SingletonClass
-    
     
     var delegate: ZEE5PlayerDelegate?
     
@@ -45,8 +39,6 @@ internal enum PlayerViewDisplayMode : Int {
     required init() {
         self.Singleton = SingletonClass .sharedManager() as! SingletonClass
         super.init(nibName: nil, bundle: nil)
-        
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,11 +47,6 @@ internal enum PlayerViewDisplayMode : Int {
     
     override  func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Setup player view for applicaster
-        self.playerView = UIView()
-        self.view.addSubview(self.playerView)
-        self.playerView.matchParent()  // Applicaster
         
         ZEE5PlayerManager.sharedInstance().delegate = self
         
@@ -75,7 +62,7 @@ internal enum PlayerViewDisplayMode : Int {
         country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
         translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
         
-        ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: playerView) { (data,token) in
+        ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: self.view) { (data,token) in
             self.ShowIndicator()
         }
     }
@@ -100,7 +87,7 @@ internal enum PlayerViewDisplayMode : Int {
     
     
    @objc public func ShowIndicator()  {
-    ShowIndicator(onParent: playerView)
+    ShowIndicator(onParent: self.view)
    }
     
     @objc public func ShowIndicator(onParent view: UIView)  {
@@ -165,11 +152,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     }
     
     func didTaponMinimizeButton() {
-        guard let currentDisplayMode = self.currentDisplayMode else {
-            return
-        }
-    
-        if currentDisplayMode == .inline {
+        if self.currentDisplayMode == .inline {
             self.delegate?.didFinishPlaying?()
         }
         else {

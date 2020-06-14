@@ -124,7 +124,7 @@ class HybridViewController: UIViewController {
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
             switch newCollection.verticalSizeClass {
             case .compact:
-                playerViewController.changePlayer(displayMode: .fullScreen) {
+                playerViewController.changePlayer(displayMode: .fullScreen, parentViewController: self, viewContainer: self.playerView) {
                     DownloadHelper.shared.transition(to: playerViewController.view)
                     if let shareViwController = shareViwController {
                         playerViewController.present(shareViwController, animated: false)
@@ -132,7 +132,7 @@ class HybridViewController: UIViewController {
 
                 }
             default:
-                playerViewController.changePlayer(displayMode: .inline) {
+                playerViewController.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: self.playerView) {
                     DownloadHelper.shared.transition(to: self.view)
                     
                     if let shareViwController = shareViwController {
@@ -321,9 +321,7 @@ class HybridViewController: UIViewController {
                 return
         }
         
-        self.addChildViewController(playerVC , to: playerView)
-        self.kalturaPlayerController?.changePlayer(displayMode: .inline)
-        self.kalturaPlayerController?.currentDisplayMode = .inline
+        self.kalturaPlayerController?.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: self.playerView)
     }
     
     public func updatePlayerConfiguration() {

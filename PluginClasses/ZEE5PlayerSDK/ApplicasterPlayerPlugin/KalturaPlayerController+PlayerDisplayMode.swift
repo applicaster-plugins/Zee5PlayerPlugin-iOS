@@ -9,51 +9,52 @@ import Foundation
 import ApplicasterSDK
 
 extension KalturaPlayerController {
-    
-    func changePlayer(displayMode: PlayerViewDisplayMode, completion: (() -> Void)? = nil) {
-        if let currentDisplayMode = self.currentDisplayMode,
-            displayMode == currentDisplayMode {
-            APLoggerDebug("Trying to switch to same display mode as currently presented")
+    func changePlayer(displayMode: PlayerViewDisplayMode, parentViewController: UIViewController, viewContainer: UIView, completion: (() -> Void)? = nil) {
+        guard self.currentDisplayMode != displayMode else {
             return
         }
         
         switch displayMode {
         case .inline:
-            if previousParentViewController != nil {
-                self.currentDisplayMode = .inline
-                self.dismiss(animated: false, completion: {
-                    self.previousParentViewController?.addChildViewController(self, to: self.previousContainerView)
-                    self.previousParentViewController = nil
-                    self.previousContainerView = nil
+            if self.currentDisplayMode == .fullScreen {
+                parentViewController.dismiss(animated: false, completion: {
+                    parentViewController.addChildViewController(self, to: viewContainer)
+                    self.currentDisplayMode = .inline
                     completion?()
                 })
-            } else {
-                APLoggerError("No previous parent view controller - can't move to inline");
-                return;
             }
+            else {
+                parentViewController.addChildViewController(self, to: viewContainer)
+                self.currentDisplayMode = .inline
+                completion?()
+            }
+ 
             break
         case .fullScreen:
-            if self.currentDisplayMode == .inline {
-                self.previousParentViewController = self.parent
-                self.previousContainerView = self.view.superview
-                self.removeViewFromParentViewController()
-                self.currentDisplayMode = .fullScreen;
-                self.modalPresentationStyle = .fullScreen
-
-                ZAAppConnector.sharedInstance().navigationDelegate.topmostModal()?.present(self, animated: false, completion: {
-                    completion?()
-                    ZEE5PlayerManager.sharedInstance().play()
-                })
+            guard self.currentDisplayMode == .inline else {
+                completion?()
+                return
             }
+            
+            self.removeViewFromParentViewController()
+            
+            self.modalPresentationStyle = .fullScreen
+            
+            parentViewController.present(self, animated: false, completion: {
+                self.currentDisplayMode = .fullScreen
+                completion?()
+                ZEE5PlayerManager.sharedInstance().play()
+            })
             break
             
         case .mini:
             self.currentDisplayMode = .mini;
+            completion?()
             break
             
         default:
+            completion?()
             break
         }
     }
-    
 }
