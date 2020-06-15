@@ -14,19 +14,19 @@ public protocol ChromeCastDelegate {
     func didSelectMenuOption(with: ChromQueueMenu)
 }
 
-public class ChromeCastManager: NSObject {
-    
+@objcMembers public class ChromeCastManager: NSObject {
     public static let shared = ChromeCastManager()
+    
+    public var isCasting: Bool {
+         return GCKCastContext.sharedInstance().sessionManager.hasConnectedSession()
+    }
+    
     public var delegate: ChromeCastDelegate?
     private let appId = "E05C51D0"
     var CastDeviceName = ""
-    
-    public var currentSession: GCKSessionManager?
-    private var mediaClient: GCKRemoteMediaClient!
     private var addQueue: ChromeAddQueue!
     private var miniControllerView :ChromeMiniControllerView!
-    private var enableSDKLogging = true
-    
+        
     let bundle = Bundle(for: ChromeCastManager.self)
     
     @objc public func initializeCastOptions() {
@@ -77,19 +77,10 @@ public class ChromeCastManager: NSObject {
         GCKLogger.sharedInstance().delegate = self
     }
     
-    func closeCurrentSession() {
-        self.currentSession?.endSessionAndStopCasting(true)
-    }
-    
     @objc public func playSelectedItemRemotely() {
         self.loadSelectedItem(byAppending: false, with: nil, token: nil)
         GCKCastContext.sharedInstance().presentDefaultExpandedMediaControls()
         AnalyticEngine .shared .castingStartedAnalytics(with:CastDeviceName)
-    }
-    
-    @objc public func playTappedItemRemotely(with data: VODContentDetailsDataModel, token: String){
-        self.loadSelectedItem(byAppending: false, with: data, token: token)
-        GCKCastContext.sharedInstance().presentDefaultExpandedMediaControls()
     }
     
     @objc public func enqueueSelectedItemRemotely(with data: VODContentDetailsDataModel, token: String) {
@@ -97,83 +88,87 @@ public class ChromeCastManager: NSObject {
     }
     
     func loadSelectedItem(byAppending appending: Bool, with data: VODContentDetailsDataModel?, token: String?) {
+        guard
+            GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession(),
+            let mediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient else {
+                return
+        }
+        
         let mediaInfo: GCKMediaInformation!
-        if data == nil {
-            let customData: NSMutableDictionary = [:]
-            customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
-            customData["licenseUrl"] = "https://wv-keyos-aps1.licensekeyserver.com"
-            mediaInfo = self.getMediaInformation(with: customData)
+        
+        let customData: NSMutableDictionary = [:]
+        customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
+        customData["licenseUrl"] = "https://wv-keyos-aps1.licensekeyserver.com"
+        mediaInfo = self.getMediaInformation(with: customData)
+
+        let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
+        mediaQueueItemBuilder.mediaInformation = mediaInfo
+        mediaQueueItemBuilder.autoplay = true
+        let mediaQueueItem = mediaQueueItemBuilder.build()
+        
+
+        if appending {
+            let request = mediaClient.queueInsert(mediaQueueItem, beforeItemWithID: kGCKMediaQueueInvalidItemID)
+            request.delegate = self
         }
         else {
-            let customData: NSMutableDictionary = [:]
-            customData["licenseCustomData"] = token
-            customData["licenseUrl"] = "https://wv-keyos-aps1.licensekeyserver.com"
-            mediaInfo = self.getVODMediaInformation(with: data, customData: customData)
+            let queueDataBuilder = GCKMediaQueueDataBuilder(queueType: .generic)
+
+            queueDataBuilder.items = [mediaQueueItem]
+            queueDataBuilder.repeatMode = .off
+            
+            let requestDataBuilder = GCKMediaLoadRequestDataBuilder()
+            requestDataBuilder.queueData = queueDataBuilder.build()
+            
+            let request = mediaClient.loadMedia(with: requestDataBuilder.build())
+            request.delegate = self
         }
-        if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
-            if let mediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient {
-                let mediaQueue = GCKMediaQueueItemBuilder()
-                mediaQueue.mediaInformation = mediaInfo
-                mediaQueue.autoplay = true
-                let mediaItem = mediaQueue.build()
-                if appending {
-                    let request = mediaClient.queueInsert(mediaItem, beforeItemWithID: kGCKMediaQueueInvalidItemID)
-                    request.delegate = self
-                }
-                else {
-                    let request = mediaClient.loadMedia(mediaInfo, autoplay: true)
-                    request.delegate = self
-                }
-            }
-        }
+        
+        mediaClient.add(self)
     }
     
-    func getMediaInformation(with data: NSMutableDictionary) -> GCKMediaInformation {
+    func getMediaInformation(with data: NSMutableDictionary) -> GCKMediaInformation? {
         let currentItem = ZEE5PlayerManager.sharedInstance().currentItem
+        
+        let contentUrlValue = currentItem.hls_Url
+        
         var metadataType: GCKMediaMetadataType = .generic
         metadataType = currentItem.asset_type.lowercased() == "movie" ? .movie : .tvShow
         
-        let str = currentItem.asset_type == "1" ? currentItem.originalTitle : currentItem.asset_subtype
+        let subtitle = currentItem.asset_type == "1" ? currentItem.originalTitle : currentItem.asset_subtype
+        
         let metadata = GCKMediaMetadata(metadataType: metadataType)
-        metadata.setString(str, forKey: kGCKMetadataKeySubtitle)
+        metadata.setString(subtitle, forKey: kGCKMetadataKeySubtitle)
         metadata.setString(currentItem.channel_Name, forKey: kGCKMetadataKeyTitle)
         metadata.setString(currentItem.info, forKey: "description")
         metadata.setInteger(Int(currentItem.asset_type) ?? 0, forKey: "assetType")
         metadata.setInteger(currentItem.duration, forKey: "contentLength")
         
-        if let url = URL(string: currentItem.imageUrl) {
-            metadata.addImage(GCKImage(url: url, width: 480, height: 720))
-        }
-        return GCKMediaInformation(contentID: currentItem.hls_Url, streamType: .buffered, contentType: "mp4", metadata: metadata, streamDuration: TimeInterval(currentItem.duration), mediaTracks: nil, textTrackStyle: nil, customData: data)
-    }
-    
-    func getVODMediaInformation(with data: VODContentDetailsDataModel?, customData: NSMutableDictionary) -> GCKMediaInformation? {
-        guard let data = data else { return nil }
-        var metadaType: GCKMediaMetadataType = .generic
-        metadaType = data.assetType.lowercased() == "movie" ? .movie : .tvShow
-        
-        let str = data.assetType == "1" ? data.title : data.assetSubtype
-        let metadata = GCKMediaMetadata(metadataType: metadaType)
-        metadata.setString(data.title , forKey: kGCKMetadataKeyTitle)
-        metadata.setString(str, forKey: kGCKMetadataKeySubtitle)
-        metadata.setString(data.contentDescription, forKey: "description")
-        metadata.setInteger(Int(data.assetType) ?? 0, forKey: "assetType")
-        metadata.setInteger(data.duration, forKey: "contentLength")
-        
-        if let url = URL(string: data.imageUrl) {
-            metadata.addImage(GCKImage(url: url, width: 480, height: 720))
+        if let imageUrl = URL(string: currentItem.imageUrl) {
+            metadata.addImage(GCKImage(url: imageUrl, width: 480, height: 720))
         }
         
-        guard let url = URL(string: "https://zee5vod.akamaized.net" + data.hlsUrl) else {
-            return nil
-        }
+        let builder = GCKMediaInformationBuilder()
+        builder.contentID = contentUrlValue
+        builder.metadata = metadata
+        builder.streamDuration = currentItem.duration <= 0 ? 0 : TimeInterval(currentItem.duration)
         
-        let builder = GCKMediaInformationBuilder(contentURL: url)
-        builder.streamType = .buffered
-        builder.contentType = "mp4"
-        builder.metadata =  metadata
-        builder.streamDuration = TimeInterval(data.duration)
-        builder.customData = customData
+        builder.customData = data
+                
+        if contentUrlValue.contains(".m3u8") {
+            builder.contentType = "application/x-mpegURL"
+
+            if contentUrlValue.contains("/hls/") {
+                builder.streamType = .live
+            }
+            else {
+                builder.streamType = .buffered
+            }
+        }
+        else {
+            builder.contentType = "video/mp4"
+            builder.streamType = .buffered
+        }
         
         return builder.build()
     }
@@ -225,39 +220,77 @@ extension ChromeCastManager: ChromeQueueMenuDelegate {
 
 extension ChromeCastManager: GCKLoggerDelegate {
     public func logMessage(_ message: String, at _: GCKLoggerLevel, fromFunction function: String, location: String) {
-        if enableSDKLogging {
-            ZeeUtility.utility.console("Message from Chromecast *** \(location) :: \(function) :: \(message)")
-        }
     }
 }
 
 extension ChromeCastManager: GCKSessionManagerListener
 {
     public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
-        self.playSelectedItemRemotely()
-
+        ZEE5PlayerManager.sharedInstance().castCurrentItem()
     }
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
-//        guard String.isNotEmptyOrWhitespace(CastDeviceName) == true else {
-//            return
-//        }
-//
-//        AnalyticEngine .shared .castingEndAnalytics(with:CastDeviceName)
-
+        ZEE5PlayerManager.sharedInstance().playWithCurrentItem()
     }
     
     public func sessionManager(_ sessionManager: GCKSessionManager, session: GCKSession, didUpdate device: GCKDevice) {
         CastDeviceName = device.friendlyName ?? "Unable to get name"
     }
+    
+    public func sessionManager(_ sessionManager: GCKSessionManager, didSuspend session: GCKSession, with reason: GCKConnectionSuspendReason) {
+    }
 }
 
 
 extension ChromeCastManager: GCKRequestDelegate, GCKRemoteMediaClientListener {
+    public func remoteMediaClientDidUpdatePreloadStatus(_ client: GCKRemoteMediaClient) {
+    }
+        
+    public func remoteMediaClient(_: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
+        guard let mediaStatus = mediaStatus else {
+            return
+        }
+
+        let playerState: String
+        switch mediaStatus.playerState {
+        case .unknown:
+            playerState = "unknown"
+        case .idle:
+            playerState = "idle"
+        case .playing:
+            playerState = "playing"
+        case .paused:
+            playerState = "paused"
+        case .buffering:
+            playerState = "buffering"
+        case .loading:
+            playerState = "loading"
+        @unknown default:
+            playerState = "default"
+        }
+        
+        let idleReason: String
+        switch mediaStatus.idleReason {
+        case .error:
+            idleReason = "error"
+        case .interrupted:
+            idleReason = "interrupted"
+        case .cancelled:
+            idleReason = "cancelled"
+        case .none:
+            idleReason = "none"
+        case .finished:
+            idleReason = "finished"
+        @unknown default:
+            idleReason = "default"
+        }
+    }
+    
+    public func request(_ request: GCKRequest, didAbortWith abortReason: GCKRequestAbortReason) {
+    }
+    
     public func requestDidComplete(_ request: GCKRequest) {
-        ZeeUtility.utility.console("Completed request \(Int(request.requestID)) completed")
     }
     
     public func request(_ request: GCKRequest, didFailWithError error: GCKError) {
-        ZeeUtility.utility.console("Failed Error: request \(Int(request.requestID)) failed with error \(error)")
     }
 }

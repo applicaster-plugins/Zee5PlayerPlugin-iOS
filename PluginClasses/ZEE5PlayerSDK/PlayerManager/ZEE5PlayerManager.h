@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZEE5PlayerManager : NSObject
 @property CurrentItem *currentItem;
 @property (weak, nonatomic) id <ZEE5PlayerDelegate> delegate;
-@property(strong , nonatomic) PlayerView *playbackView;
+@property(strong , nonatomic, nullable) PlayerView *playbackView;
 @property(nonatomic) BOOL isStop;
 @property(nonatomic) BOOL isTelco;     //// Come From Partner App.
 @property(nonatomic) BOOL isAutoplay;
@@ -106,15 +106,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 -(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success;
-
-/*!
- * @discussion This method use to get the custom data and licence url with content id
- * @param content_id Need to pass content id of the video
- * @param country Need to pass user country id.
- * @param laguage Need to pass transaltion langauge id.
- */
-
--(void)getTokenAndCustomDataFromContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler:(DRMSuccessHandler)success andFailure:(DRMFailureHandler)failed;
 
 /*!
  * @discussion This method use to get the video content details with content id
@@ -214,6 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnLoginButton;
 
 - (void)playWithCurrentItem;
+- (void)castCurrentItem;
 
 -(void)showLangaugeActionSheet;
 -(void)showSubtitleActionSheet;

@@ -84,6 +84,7 @@
 @property comScoreAnalytics *comAnalytics;
 
 @property(strong , nonatomic) UIView *viewPlayer;
+@property(strong , nonatomic) UIImageView *posterImageView;
 
 @property(nonatomic) UIPanGestureRecognizer *panGesture;
 @property(nonatomic) UITapGestureRecognizer *tapGesture;
@@ -146,7 +147,6 @@
 @implementation ZEE5PlayerManager
 
 static ZEE5PlayerManager *sharedManager = nil;
-static ChromeCastManager *castManager;
 static SingletonClass *singleton;
 static ContentBuisnessType buisnessType;
 
@@ -161,9 +161,9 @@ static ContentBuisnessType buisnessType;
     
     dispatch_once(&t, ^{
         sharedManager = [[ZEE5PlayerManager alloc] init];
-        castManager = [[ChromeCastManager alloc] init];
         singleton = [SingletonClass sharedManager];
-        [castManager initializeCastOptions];
+        
+        [[ChromeCastManager shared] initializeCastOptions];
         
         //            imaSettings.enableOmidExperimentally = YES;
         AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -194,11 +194,22 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
+    if ([[ChromeCastManager shared] isCasting]) {
+        [self castCurrentItem];
+        return;
+    }
+    
+    if (self.playbackView != nil) {
+        [self.playbackView removeFromSuperview];
+    }
+    
     self.playbackView = [[PlayerView alloc] init];
     [self.viewPlayer addSubview:self.playbackView];
     
     self.playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.playbackView matchParent];
+    
+    self.posterImageView.image = nil;
     
     if (_isStreamoverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
         [self ShowToastMessage:@"WiFi is not connected! You have selected stream over WiFi only"];
@@ -225,6 +236,35 @@ static ContentBuisnessType buisnessType;
             [[ReportingManager sharedInstance] getWatchHistory];
         }
     }];
+}
+
+- (void)castCurrentItem {
+    [self hideLoaderOnPlayer];
+    
+    [self stop];
+    [self.playbackView removeFromSuperview];
+    self.playbackView = nil;
+    
+    NSURL *posterImageUrl = [[NSURL alloc] initWithString:self.currentItem.imageUrl];
+    if (posterImageUrl != nil) {
+        if (self.posterImageView == nil) {
+            self.posterImageView = [[UIImageView alloc] init];
+            
+            [self.viewPlayer insertSubview:self.posterImageView atIndex:0];
+            
+            self.posterImageView.translatesAutoresizingMaskIntoConstraints = NO;
+            [self.posterImageView matchParent];
+        }
+        
+        NSString *currentContentId = [self.currentItem.content_id copy];
+        [[[ZAAppConnector sharedInstance] imageDelegate] setImageWith:posterImageUrl placeholderImage:nil completion:^(UIImage *image, NSError *error) {
+            if ([currentContentId isEqualToString:self.currentItem.content_id]) {
+                self.posterImageView.image = image;
+            }
+        }];
+    }
+    
+    [[ChromeCastManager shared] playSelectedItemRemotely];
 }
 
 //MARK:- Notification
@@ -1032,6 +1072,9 @@ static ContentBuisnessType buisnessType;
 -(void)DestroyPlayer{
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
+    
+    self.posterImageView.image = nil;
+    
     [self.playbackView removeFromSuperview];
 }
 
@@ -2695,37 +2738,6 @@ static ContentBuisnessType buisnessType;
     self.endIntroTime =  [[Utility secondsForTimeString:self.ModelValues.introEndTime]integerValue];
 }
 
--(void)getTokenAndCustomDataFromContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler:(DRMSuccessHandler)success andFailure:(DRMFailureHandler)failed
-{
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.vodContentDetails, content_id];
-    NSDictionary *param =@{@"country":country, @"translation":laguage};
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken};
-    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result) {
-        
-        VODContentDetailsDataModel *model = [VODContentDetailsDataModel initFromJSONDictionary:result];
-
-        if (model.isDRM)
-        {
-            [self getDRMToken:model.identifier andDrmKey:model.drmKeyID withCompletionHandler:^(id  _Nullable result)
-             {
-                success(BaseUrls.drmLicenceUrl,[result valueForKey:@"drm"]);
-                
-            } failureBlock:^(ZEE5SdkError * _Nullable error) {
-                failed(error.message);
-            }];
-        }
-        else
-        {
-            failed(@"Error Message");
-
-        }
-
-    } failureBlock:^(ZEE5SdkError *error) {
-        [self notifiyError:error];
-    }];
-
-}
-
 // MARK:- Set Current Item Data(url,drmToken,Title)
 
 - (void)initilizePlayerWithVODContent:(VODContentDetailsDataModel*)model andDRMToken:(NSString*)token
@@ -3013,42 +3025,6 @@ static ContentBuisnessType buisnessType;
     [[AnalyticEngine new] updateMetadataWith:dict];
 
 }
-
-- (void)initilizePlayerWithEPGContent:(EpgContentDetailsDataModel*)model andDRMToken:(NSString*)token
-{
-    self.currentItem = [[CurrentItem alloc] init];
-    if (model.isDRM)
-    {
-        self.currentItem.hls_Url = [self.KcdnUrl stringByAppendingString:model.hlsUrl];
-    }
-    else
-    {
-        self.currentItem.hls_Url = model.hlsUrl;
-    }
-    self.currentItem.drm_token = token;
-    self.currentItem.drm_key = model.drmKeyID;
-    self.currentItem.subTitles = model.subtitleLanguages;
-    self.currentItem.streamType = CONVIVA_STREAM_VOD;
-    self.currentItem.content_id = model.identifier;
-    self.currentItem.channel_Name = model.channel_name;
-    self.currentItem.asset_type = model.assetType;
-    self.currentItem.asset_subtype = model.assetSubtype;
-    self.currentItem.geners = model.geners;
-    self.currentItem.isDRM = model.isDRM;
-    self.currentItem.hls_Full_Url = model.hlsFullURL;
-    self.currentItem.showName = model.show_name;
-//    [sharedManager playWithCurrentItem];
-    if (_playerConfig.playerType == normalPlayer)
-    {
-      //  [self downLoadAddConfig];
-    }
-    else
-    {
-        self.playerConfig.showCustomPlayerControls = false;
-        [self playWithCurrentItem];
-    }
-}
-
 
 //MARK:- Similar Content For Playback
 
@@ -3436,30 +3412,6 @@ static ContentBuisnessType buisnessType;
    [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
 }
 
--(void)getContentDetailForCastingItem:(NSString*)content_id country:(NSString*)country translation:(NSString*)language :(void (^)(VODContentDetailsDataModel* model, NSString* drmToken))success
-    {
-        NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.vodContentDetails, content_id];
-        NSDictionary *param =@{@"country":country, @"translation":language};
-        NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken};
-        [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result) {
-            VODContentDetailsDataModel *model = [VODContentDetailsDataModel initFromJSONDictionary:result];
-            
-            if (model.isDRM) {
-                [self getDRMToken:model.identifier andDrmKey:model.drmKeyID withCompletionHandler:^(id  _Nullable result) {
-                    NSString *drmToken = [result valueForKey:@"drm"];
-                
-                    success(model,drmToken);
-                }
-                     failureBlock:^(ZEE5SdkError * _Nullable error) {
-                         [self notifiyError:error];
-                        
-                }];
-            }
-        }
-        failureBlock:^(ZEE5SdkError *error) {
-            [self notifiyError:error];
-        }];
-    }
 //MARK:- Telco User checked;
 
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message{
