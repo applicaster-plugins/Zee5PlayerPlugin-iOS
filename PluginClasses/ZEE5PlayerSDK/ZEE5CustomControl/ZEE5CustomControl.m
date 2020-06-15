@@ -50,6 +50,7 @@
     _skipIntro.clipsToBounds = YES;
     _watchcretidStackview.hidden=YES;
     _watchcreditsTimeLbl.hidden=YES;
+    _downloadBtnOutlet.hidden = YES;
     
     _watchcreditShowView.layer.borderColor = [[UIColor whiteColor]CGColor];
     _watchcreditShowView.layer.borderWidth = 1.0f;
