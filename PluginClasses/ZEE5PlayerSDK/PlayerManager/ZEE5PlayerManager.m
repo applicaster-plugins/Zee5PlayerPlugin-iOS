@@ -581,10 +581,13 @@ static ContentBuisnessType buisnessType;
 
 -(void)onPlaying
 {
+    if (_videoCompleted == YES) {
+        [self pause];
+        return;
+    }
     self.customControlView.buttonPlay.selected = YES;
     _customControlView.sliderLive.userInteractionEnabled = NO;
     _videoCompleted = NO;
-
     [self showAllControls];
     [self hideLoaderOnPlayer];
     _customControlView.buttonPlay.hidden = NO;
@@ -792,11 +795,11 @@ static ContentBuisnessType buisnessType;
 - (void)onComplete
 {
     _isTelco = false;
+      [self pause];
     [self hideLoaderOnPlayer];
     if (ZEE5PlayerSDK.getConsumpruionType == Trailer && _isNeedToSubscribe == true)
     {
         _videoCompleted = YES;
-        [self pause];
          [self HybridViewOpen];
         [self hideUnHidetrailerEndView:false];
         return;
@@ -810,13 +813,12 @@ static ContentBuisnessType buisnessType;
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self setSeekTime:0];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
-            [self.delegate didFinishPlaying];
-        }
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
+//            [self.delegate didFinishPlaying];
+//        }
     }
     else
     {
-        [self pause];
         _customControlView.btnSkipNext.selected = false;
         if (_CreditTimer != nil) {
             return;
@@ -1095,6 +1097,7 @@ static ContentBuisnessType buisnessType;
 -(void)replay
 {
     [self showAllControls];
+    _videoCompleted = false;
     _customControlView.buttonPlay.hidden = NO;
     _customControlView.sliderDuration.value = 0.0;
     _customControlView.bufferProgress.progress = 0.0;

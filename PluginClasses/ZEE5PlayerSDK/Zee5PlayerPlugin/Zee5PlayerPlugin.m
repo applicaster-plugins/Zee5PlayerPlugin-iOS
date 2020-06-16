@@ -700,7 +700,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
     
     totalString = [NSString stringWithFormat:@"%@%@%@",part1,part2,part3];
-        
+        #if DEBUG
+            NSLog(@"**** VAST String **** %@",totalString);
+        #endif
     }else
     {
         totalString = @"";
