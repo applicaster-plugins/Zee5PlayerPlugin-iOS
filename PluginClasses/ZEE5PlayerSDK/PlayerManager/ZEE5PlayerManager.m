@@ -381,15 +381,18 @@ static ContentBuisnessType buisnessType;
     _customControlView.btnSkipPrev.hidden = true;
     _customControlView.btnSkipNext.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
-    [self hideUnHidetrailerEndView:true];
     _customControlView.adultView.hidden = YES;
     
     if (_ishybridViewOpen == true) {
+        if (_playbackView == nil) {
+             self.playbackView = [[PlayerView alloc] init];
+            [self.viewPlayer addSubview:self.playbackView];
+        }
         [self.playbackView addSubview:_customControlView];
        [self hideUnHidetrailerEndView:false];
         return;
     }
-    
+      [self hideUnHidetrailerEndView:true];
     
     if (_currentItem.related.count == 1)
     {
@@ -2453,7 +2456,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"";//0-1-261984
+   // content_id = @"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -3163,7 +3166,6 @@ static ContentBuisnessType buisnessType;
     }
     [self HybridViewOpen];
     [self addCustomControls];
-    
     
 }
 
