@@ -22,15 +22,15 @@ public protocol ChromeCastDelegate {
     }
     
     public var delegate: ChromeCastDelegate?
-    private let appId = "E05C51D0"
+    public static var appId = "E05C51D0"
     var CastDeviceName = ""
     private var addQueue: ChromeAddQueue!
     private var miniControllerView :ChromeMiniControllerView!
-        
+
     let bundle = Bundle(for: ChromeCastManager.self)
     
     @objc public func initializeCastOptions() {
-        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: self.appId)
+        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: ChromeCastManager.appId)
 
         let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
         options.physicalVolumeButtonsWillControlDeviceVolume = true
@@ -98,7 +98,7 @@ public protocol ChromeCastDelegate {
         
         let customData: NSMutableDictionary = [:]
         customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
-        customData["licenseUrl"] = "https://wv-keyos-aps1.licensekeyserver.com"
+        customData["licenseUrl"] = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
         mediaInfo = self.getMediaInformation(with: customData)
 
         let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
@@ -130,7 +130,23 @@ public protocol ChromeCastDelegate {
     func getMediaInformation(with data: NSMutableDictionary) -> GCKMediaInformation? {
         let currentItem = ZEE5PlayerManager.sharedInstance().currentItem
         
-        let contentUrlValue = currentItem.hls_Url
+        let builder = GCKMediaInformationBuilder()
+
+        let contentUrlValue: String?
+        
+        if currentItem.asset_type == "9" {
+            contentUrlValue = currentItem.hls_Url
+            builder.streamType = .live
+            builder.contentType = "application/x-mpegURL"
+        }
+        else if !currentItem.isDRM {
+            contentUrlValue = currentItem.hls_Url
+            builder.contentType = "mp4"
+        }
+        else {
+            contentUrlValue = currentItem.mpd_Url
+            builder.contentType = "application/x-mpegURL"
+        }
         
         var metadataType: GCKMediaMetadataType = .generic
         metadataType = currentItem.asset_type.lowercased() == "movie" ? .movie : .tvShow
@@ -148,27 +164,11 @@ public protocol ChromeCastDelegate {
             metadata.addImage(GCKImage(url: imageUrl, width: 480, height: 720))
         }
         
-        let builder = GCKMediaInformationBuilder()
         builder.contentID = contentUrlValue
         builder.metadata = metadata
         builder.streamDuration = currentItem.duration <= 0 ? 0 : TimeInterval(currentItem.duration)
         
         builder.customData = data
-                
-        if contentUrlValue.contains(".m3u8") {
-            builder.contentType = "application/x-mpegURL"
-
-            if contentUrlValue.contains("/hls/") {
-                builder.streamType = .live
-            }
-            else {
-                builder.streamType = .buffered
-            }
-        }
-        else {
-            builder.contentType = "video/mp4"
-            builder.streamType = .buffered
-        }
         
         return builder.build()
     }

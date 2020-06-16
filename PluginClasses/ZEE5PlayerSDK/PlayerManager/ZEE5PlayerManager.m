@@ -245,23 +245,33 @@ static ContentBuisnessType buisnessType;
     [self.playbackView removeFromSuperview];
     self.playbackView = nil;
     
-    NSURL *posterImageUrl = [[NSURL alloc] initWithString:self.currentItem.imageUrl];
-    if (posterImageUrl != nil) {
-        if (self.posterImageView == nil) {
-            self.posterImageView = [[UIImageView alloc] init];
-            
-            [self.viewPlayer insertSubview:self.posterImageView atIndex:0];
-            
-            self.posterImageView.translatesAutoresizingMaskIntoConstraints = NO;
-            [self.posterImageView matchParent];
-        }
-        
-        NSString *currentContentId = [self.currentItem.content_id copy];
-        [[[ZAAppConnector sharedInstance] imageDelegate] setImageWith:posterImageUrl placeholderImage:nil completion:^(UIImage *image, NSError *error) {
-            if ([currentContentId isEqualToString:self.currentItem.content_id]) {
-                self.posterImageView.image = image;
+    NSString *imageUrlValue = self.currentItem.imageUrl;
+    if (imageUrlValue == nil && self.LiveModelValues != nil) {
+        imageUrlValue = self.LiveModelValues.coverImage;
+    }
+    
+    if (imageUrlValue != nil && imageUrlValue.length > 0) {
+        NSURL *posterImageUrl = [[NSURL alloc] initWithString:imageUrlValue];
+        if (posterImageUrl != nil) {
+            if (self.posterImageView == nil) {
+                self.posterImageView = [[UIImageView alloc] init];
+                
+                [self.viewPlayer insertSubview:self.posterImageView atIndex:0];
+                
+                self.posterImageView.translatesAutoresizingMaskIntoConstraints = NO;
+                [self.posterImageView matchParent];
             }
-        }];
+            
+            NSString *currentContentId = [self.currentItem.content_id copy];
+            [[[ZAAppConnector sharedInstance] imageDelegate] setImageWith:posterImageUrl placeholderImage:nil completion:^(UIImage *image, NSError *error) {
+                if ([currentContentId isEqualToString:self.currentItem.content_id]) {
+                    self.posterImageView.image = image;
+                }
+            }];
+        }
+    }
+    else {
+        self.posterImageView.image = nil;
     }
     
     [[ChromeCastManager shared] playSelectedItemRemotely];
@@ -1075,6 +1085,7 @@ static ContentBuisnessType buisnessType;
 -(void)DestroyPlayer{
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
+    self.LiveModelValues = nil;
     
     self.posterImageView.image = nil;
     
@@ -2415,6 +2426,8 @@ static ContentBuisnessType buisnessType;
         self.showID = self.LiveModelValues.identifier;
         self.isStop = NO;
         
+        [self getBusinessType];
+        
         [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result) {
             NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
             
@@ -3137,6 +3150,7 @@ static ContentBuisnessType buisnessType;
                         }
                     }
                 }
+    
         [self playWithCurrentItem]; ////  Main call For Play item
 }
 

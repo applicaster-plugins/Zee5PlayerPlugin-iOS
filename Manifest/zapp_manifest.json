@@ -46,6 +46,12 @@
       "tooltip_text": "should use production env",
       "type": "checkbox",
       "default": 0
+    },
+    {
+      "key": "chromecast_app_id",
+      "tooltip_text": "override default cc app id",
+      "type": "text",
+      "default": ""
     }
   ],
   "assets": {

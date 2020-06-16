@@ -63,6 +63,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         Zee5DownloadManager.shared.initializeDownloadManger()
         
+        var chromecastAppId = "E05C51D0"
         var errorViewConfig: ErrorViewConfiguration?
         if let configuration = configurationJSON {
             errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
@@ -70,8 +71,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             if let isProdAdsEnvirnoment = configuration["is_ads_production"] as? Int {
                 ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
             }
+            
+            if let overrideChromecastAppId = configuration["chromecast_app_id"] as? String {
+                chromecastAppId = overrideChromecastAppId
+            }
         }
                 
+        ChromeCastManager.appId = chromecastAppId
+        
         let instance: Zee5PluggablePlayer
         
         // Hybrid presented
