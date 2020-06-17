@@ -395,10 +395,8 @@ static ContentBuisnessType buisnessType;
     
     if (_ishybridViewOpen == true) {
         if (_playbackView == nil) {
-             self.playbackView = [[PlayerView alloc] init];
+           [self.viewPlayer addSubview:self.customControlView];
         }
-        [self.viewPlayer addSubview:self.playbackView];
-        [self.playbackView addSubview:_customControlView];
        [self hideUnHidetrailerEndView:false];
         return;
     }
@@ -422,8 +420,6 @@ static ContentBuisnessType buisnessType;
     }
     if (self.isLive) {
         _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];
-
-
         _customControlView.sliderLive.userInteractionEnabled = NO;
         if (_endTime == 0) {
             [self refreshLabel];
@@ -432,7 +428,6 @@ static ContentBuisnessType buisnessType;
         {
            // _customControlView.labelLiveDuration.text = [Utility convertEpochToTime:_endTime];
         }
-        
     }
     else
     {
@@ -440,13 +435,10 @@ static ContentBuisnessType buisnessType;
         {
              _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.channel_Name];
         }
-
     }
     
     
     [self.playbackView addSubview:_customControlView];
-    
-
     _tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnPlayer)];
     _tapGesture.delegate = self;
     [_tapGesture setDelaysTouchesBegan : YES];
@@ -467,48 +459,43 @@ static ContentBuisnessType buisnessType;
   
     [self showAllControls];
     [self showloaderOnPlayer];
-    
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
-    {
-              _customControlView.adultView.hidden = NO;
-              [self stop];
-          [self hideLoaderOnPlayer];
-    }
-    
-    
     [self MoatViewAdd];
     [self LocalStorageArray];
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
 }
 
 -(void)MoatViewAdd{
-    if (_customControlView != nil ) {
+    if (_customControlView != nil && [singleton.ViewsArray containsObject:_customControlView]== false) {
         [singleton.ViewsArray addObject:_customControlView];
     }
-    if (_customControlView.viewTop != nil ) {
+    if (_customControlView.viewTop != nil && [singleton.ViewsArray containsObject:_customControlView.viewTop]== false) {
         [singleton.ViewsArray addObject:_customControlView.viewTop];
     }
-    if (_customControlView.viewVod != nil ) {
+    if (_customControlView.viewVod != nil && [singleton.ViewsArray containsObject:_customControlView.viewVod]== false ) {
         [singleton.ViewsArray addObject:_customControlView.viewVod];
     }
-    if (_customControlView.collectionView != nil ) {
+    if (_customControlView.collectionView != nil && [singleton.ViewsArray containsObject:_customControlView.collectionView]== false) {
         [singleton.ViewsArray addObject:_customControlView.collectionView];
     }
-    if (_customControlView.viewLive != nil ) {
+    if (_customControlView.viewLive != nil && [singleton.ViewsArray containsObject:_customControlView.viewLive]== false ) {
         [singleton.ViewsArray addObject:_customControlView.viewLive];
     }
-    if (_customControlView.stackLoginView != nil ) {
+    if (_customControlView.stackLoginView != nil && [singleton.ViewsArray containsObject:_customControlView.stackLoginView]== false) {
           [singleton.ViewsArray addObject:_customControlView.stackLoginView];
       }
-    if (_customControlView.watchcretidStackview != nil ) {
+    if (_customControlView.watchcretidStackview != nil && [singleton.ViewsArray containsObject:_customControlView.watchcretidStackview]== false ) {
              [singleton.ViewsArray addObject:_customControlView.watchcretidStackview];
          }
-    if (_customControlView.adultView != nil ) {
+    if (_customControlView.adultView != nil && [singleton.ViewsArray containsObject:_customControlView.adultView]== false) {
                 [singleton.ViewsArray addObject:_customControlView.adultView];
         }
-    if (_customControlView.playerControlView != nil ) {
+    if (_customControlView.playerControlView != nil && [singleton.ViewsArray containsObject:_customControlView.playerControlView]== false ) {
             [singleton.ViewsArray addObject:_customControlView.playerControlView];
     }
+    if (_viewPlayer != nil && [singleton.ViewsArray containsObject:_viewPlayer]== false ) {
+               [singleton.ViewsArray addObject:_viewPlayer];
+       }
+    
 }
 
 -(void)addMuteViewToPlayer
@@ -585,6 +572,16 @@ static ContentBuisnessType buisnessType;
         [self pause];
         return;
     }
+    
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
+        {
+            _customControlView.adultView.hidden = NO;
+            if (_playbackView == nil) {
+                     [self.viewPlayer addSubview:self.customControlView];
+                  }
+            [self stop];
+            return;
+        }
     self.customControlView.buttonPlay.selected = YES;
     _customControlView.sliderLive.userInteractionEnabled = NO;
     _videoCompleted = NO;
@@ -1146,7 +1143,7 @@ static ContentBuisnessType buisnessType;
 -(void)setSeekTime:(NSInteger)value
 {
     __weak __typeof(self) weakSelf = self;
-    [self showloaderOnPlayer];
+   // [self showloaderOnPlayer];
     
     int rounded = roundf([[Zee5PlayerPlugin sharedInstance] getDuration]);
     if(value == 0)
@@ -2474,7 +2471,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-    //content_id = @"0-0-dolafzonkikahani";//0-1-261984
+   // content_id = @"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
