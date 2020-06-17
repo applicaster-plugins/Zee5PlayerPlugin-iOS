@@ -115,6 +115,9 @@ internal enum PlayerViewDisplayMode : Int {
         if Singleton.viewsArray.contains(activityLoader) == false {
              Singleton.viewsArray.add(activityLoader)
         }
+        if Singleton.viewsArray.contains(view) == false {
+             Singleton.viewsArray.add(view)
+        }
      }
     
     @objc public func HideIndicator()  {
