@@ -396,8 +396,8 @@ static ContentBuisnessType buisnessType;
     if (_ishybridViewOpen == true) {
         if (_playbackView == nil) {
              self.playbackView = [[PlayerView alloc] init];
-            [self.viewPlayer addSubview:self.playbackView];
         }
+        [self.viewPlayer addSubview:self.playbackView];
         [self.playbackView addSubview:_customControlView];
        [self hideUnHidetrailerEndView:false];
         return;
@@ -2127,6 +2127,7 @@ static ContentBuisnessType buisnessType;
     [self HybridviewnotificationObserver];
     if (_ishybridViewOpen == false) {
          _ishybridViewOpen = true;
+        [self hideLoaderOnPlayer];
         if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
             [self pause];
         }
@@ -2428,6 +2429,7 @@ static ContentBuisnessType buisnessType;
         self.audioLanguageArr = self.LiveModelValues.languages;
         self.showID = self.LiveModelValues.identifier;
         self.isStop = NO;
+        self.videoCompleted = false;
         
         [self getBusinessType];
         
@@ -2472,7 +2474,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-dolafzonkikahani";//0-1-261984
+    //content_id = @"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -2546,6 +2548,7 @@ static ContentBuisnessType buisnessType;
     
         self.buisnessType = self.ModelValues.buisnessType;
         self.audioLanguageArr = self.ModelValues.audioLanguages;
+        self.videoCompleted = false;
         
        ///*Fetch Require Details     *////
         
