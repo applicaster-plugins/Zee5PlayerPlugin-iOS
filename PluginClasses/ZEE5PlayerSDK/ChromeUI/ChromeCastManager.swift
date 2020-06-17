@@ -22,7 +22,7 @@ public protocol ChromeCastDelegate {
     }
     
     public var delegate: ChromeCastDelegate?
-    public static var appId = "E05C51D0"
+    public var appId = "E05C51D0"
     var CastDeviceName = ""
     private var addQueue: ChromeAddQueue!
     private var miniControllerView :ChromeMiniControllerView!
@@ -30,7 +30,7 @@ public protocol ChromeCastDelegate {
     let bundle = Bundle(for: ChromeCastManager.self)
     
     @objc public func initializeCastOptions() {
-        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: ChromeCastManager.appId)
+        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: self.appId)
 
         let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
         options.physicalVolumeButtonsWillControlDeviceVolume = true
