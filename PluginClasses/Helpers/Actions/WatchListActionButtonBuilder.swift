@@ -99,6 +99,19 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
     }
             
     fileprivate func addToWatchlist() {
+        
+        // send guest user to login screen
+        if User.shared.getType() == .guest {
+            ZEE5PlayerManager.sharedInstance().showToastMessage("You must be logged in to perform this action.")
+            ZEE5PlayerDeeplinkManager.sharedMethod.NavigatetoLoginpage(Param: "Watclist") { (isSucceess) -> (Void) in
+                if isSucceess {
+                    ZEE5PlayerDeeplinkManager.sharedMethod.fetchUserdata()
+                }
+            }
+            ZEE5PlayerManager.sharedInstance().pause()
+            return
+        }
+        
         guard
             let itemId = self.playable.identifier as String?,
             let extensions = self.playable.extensionsDictionary,
