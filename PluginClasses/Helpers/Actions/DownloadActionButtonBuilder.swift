@@ -49,17 +49,7 @@ class DownloadActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder 
      }
     
     fileprivate func currentContentId() -> String? {
-        var result: String? = nil
-        
-        let playerItem = ZEE5PlayerManager.sharedInstance().currentItem as CurrentItem?
-        if playerItem == nil {
-            result = self.playable.identifier as String?
-        }
-        else {
-            result = playerItem?.content_id
-        }
-        
-        return result
+        return self.playable.identifier as String?
     }
     
     fileprivate func download() {
