@@ -24,7 +24,6 @@ public class DownloadRootController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         self.setupTopSgment()
-        
         //
         self.navigationController?.navigationBar.barStyle = .black
         self.navigationController?.navigationBar.backgroundColor = UIColor.clear
@@ -92,10 +91,10 @@ extension DownloadRootController: CarbonTabSwipeNavigationDelegate, ChangeDownlo
     }
     
     func changeCurrentTab() {
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-            self.selectedTabIndex += 1
-            self.selectedTabIndex = self.selectedTabIndex >= 3 ? 0 : self.selectedTabIndex
-            self.carbonNav.setCurrentTabIndex(self.selectedTabIndex, withAnimation: true)
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
+////            self.selectedTabIndex += 1
+////            self.selectedTabIndex = self.selectedTabIndex >= 3 ? 0 : self.selectedTabIndex
+////            self.carbonNav.setCurrentTabIndex(self.selectedTabIndex, withAnimation: true)
+//        }
     }
 }

@@ -2562,17 +2562,16 @@ static ContentBuisnessType buisnessType;
                     if (self.currentItem == nil) {
                         return ;
                     }
-                    
+                   
                     // Update video end point
                     NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
                     NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
                    
                     NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
                     [self updateConvivaSessionWithMetadata: dict];
-                    
                     [self stop];
-                
                     [self createConvivaSeesionWithMetadata];
+                    completionBlock(self.ModelValues,[result valueForKey:@"drm"]);
                     
                 } failureBlock:^(ZEE5SdkError * _Nullable error)
                  {

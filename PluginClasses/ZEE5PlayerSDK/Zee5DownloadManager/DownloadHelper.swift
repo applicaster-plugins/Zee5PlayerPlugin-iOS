@@ -133,18 +133,22 @@ public class DownloadHelper: NSObject {
     
     //
     @objc public func restoreExpiredContent(id: String, isExpired: @escaping ((Bool, String?) -> Void)) {
-        ZEE5PlayerManager.sharedInstance().getContentDetail(forCastingItem: id, country: "IN", translation: "en") { (data, customData) in
+//        ZEE5PlayerManager.sharedInstance().getContentDetail(forCastingItem: id, country: "IN", translation: "en") { (data, customData) in
+        ZEE5PlayerManager.sharedInstance().playVODContent(id, country: "IN", translation: "en") {
+            (data, customData) in
             
-            let zItem = self.setupContentForDownload(with: data, customData: customData)
-            do {
-                try Zee5DownloadManager.shared.renewExpiredContent(with: zItem)
-                isExpired(true, nil)
-            }
-            catch {
-                ZeeUtility.utility.console("Restore download Error: \(error.localizedDescription)")
-                isExpired(false, error.localizedDescription)
-                self.showToast("Restore download Error: \(error)")
-                
+            if let Voddata = data , let CustomeString = customData{
+                let zItem = self.setupContentForDownload(with: Voddata, customData:CustomeString)
+                           do {
+                               try Zee5DownloadManager.shared.renewExpiredContent(with: zItem)
+                               isExpired(true, nil)
+                           }
+                           catch {
+                               ZeeUtility.utility.console("Restore download Error: \(error.localizedDescription)")
+                               isExpired(false, error.localizedDescription)
+                               self.showToast("Restore download Error: \(error)")
+                               
+                           }
             }
         }
     }
