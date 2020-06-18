@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString *selectedplaybackRate;
 @property (weak, nonatomic) NSArray *companionAds;
 
+@property(nonatomic, assign) BOOL allowMinimizeDuringAds;
+
 @property(nonatomic, strong, readonly) UIViewController *_Nullable currentShareViewController;
 
 

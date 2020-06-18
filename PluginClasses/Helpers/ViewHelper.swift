@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension UIView {
+@objc extension UIView {
     public func fillParent() {
         guard let parent = self.superview else {
             return
@@ -85,6 +85,17 @@ extension UIView {
         self.trailingAnchor.constraint(lessThanOrEqualTo: view.leadingAnchor).isActive = true
     }
     
+    public func anchorToTopLeft(inset: CGFloat) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: parent.topAnchor, constant: inset).isActive = true
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: inset).isActive = true
+    }
+    
     public func centerInParent(size: CGSize) {
         guard let parent = self.superview else {
             return
@@ -109,5 +120,43 @@ extension UIView {
         self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
         self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
         self.trailingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    }
+}
+
+public typealias UIButtonHandler = () -> Void
+
+@objc extension UIButton {
+    private struct AssociatedKeys {
+        static var handler = "handler"
+    }
+    
+    private var handler: UIButtonHandler? {
+        get {
+            guard let handler = objc_getAssociatedObject(self, &AssociatedKeys.handler) as? UIButtonHandler else {
+                return nil
+            }
+            
+            return handler
+        }
+        set(newValue) {
+            guard let newValue = newValue else {
+                return
+            }
+            
+            objc_setAssociatedObject(self, &AssociatedKeys.handler, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    public func setTapHandler(handler: @escaping UIButtonHandler) {
+        self.handler = handler
+        self.addTarget(self, action: #selector(UIButton.handleTap), for: .touchUpInside)
+    }
+    
+    @objc func handleTap() {
+        guard let handler = handler else {
+            return
+        }
+        
+        handler()
     }
 }

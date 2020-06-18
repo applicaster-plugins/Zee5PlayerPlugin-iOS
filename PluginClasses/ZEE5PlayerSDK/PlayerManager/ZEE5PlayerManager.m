@@ -182,6 +182,7 @@ static ContentBuisnessType buisnessType;
         
         [[PlayKitManager sharedInstance] registerPlugin:IMAPlugin.self];
         
+        sharedManager.allowMinimizeDuringAds = NO;
     });
     
     return sharedManager;
@@ -205,6 +206,25 @@ static ContentBuisnessType buisnessType;
     
     self.playbackView = [[PlayerView alloc] init];
     [self.viewPlayer addSubview:self.playbackView];
+    
+    if (self.allowMinimizeDuringAds) { // For debug only
+        UIButton *skipAdsButton = [[UIButton alloc] init];
+        skipAdsButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.viewPlayer addSubview:skipAdsButton];
+        
+        [[skipAdsButton.heightAnchor constraintEqualToConstant:30] setActive:YES];
+        [[skipAdsButton.widthAnchor constraintEqualToConstant:100] setActive:YES];
+        [skipAdsButton anchorToTopLeftWithInset:10];
+
+        skipAdsButton.backgroundColor = UIColor.blackColor;
+        skipAdsButton.titleLabel.textColor = UIColor.whiteColor;
+        
+        [skipAdsButton setTitle:@"Minimize" forState:UIControlStateNormal];
+        
+        [skipAdsButton setTapHandlerWithHandler:^{
+            [self tapOnMinimizeButton];
+        }];
+    }
     
     self.playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.playbackView matchParent];

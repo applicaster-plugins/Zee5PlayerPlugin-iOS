@@ -22,13 +22,21 @@ class AdBanner: UIView {
     fileprivate let adHelper = AdHelper()
 
     func setupAds(playable: ZPPlayable?) {
-        self.observer = NotificationCenter.default.addObserver(forName: .companionAdsUpdated, object: nil, queue: nil,using: handleCompanionAdsUpdated)
-
+        if self.observer == nil {
+            self.observer = NotificationCenter.default.addObserver(forName: .companionAdsUpdated, object: nil, queue: nil,using: handleCompanionAdsUpdated)
+        }
+        
         adHelper.setupAdsBanner(self, playable: playable)
     }
     
     func handleCompanionAdsUpdated(notification: Notification) {
         self.adHelper.updateAdBanner(self)
+    }
+    
+    deinit {
+        if let observer = self.observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 }
 
@@ -155,28 +163,20 @@ class AdHelper {
         guard let tag = adData["ad_tag"] as? String else {
             return nil
         }
-
-        var unitId = tag
         
         if let targets = adData["ad_targeting"] as? [JSON], targets.count > 0 {
-            var queryItems = [URLQueryItem]()
-            
             for target in targets {
-                guard let targetKey = target["key"] as? String, let targetParam = target["value"] else {
-                    continue
+                guard
+                    let targetKey = target["key"] as? String,
+                    let targetParam = target["value"] else {
+                        continue
                 }
-                
-                let queryItem = URLQueryItem(name: targetKey, value: String(describing: targetParam))
-                queryItems.append(queryItem)
-            }
             
-            var urlComponents = URLComponents()
-            urlComponents.queryItems = queryItems
-            
-            if let query = urlComponents.query {
-                unitId = tag + "?" + query
+
             }
         }
+        
+        let unitId = tag
         
         return ZPAdConfig(adUnitId: unitId, inlineBannerSize: "NATIVE_SMALL")
     }
