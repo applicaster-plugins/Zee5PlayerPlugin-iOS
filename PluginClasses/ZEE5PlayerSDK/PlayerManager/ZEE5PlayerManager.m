@@ -3161,7 +3161,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)playTrailer
 {
-    _isNeedToSubscribe = true;
+    _isNeedToSubscribe = ZEE5PlayerSDK.getUserTypeEnum == Premium ? NO : YES;
     if (_isLive == false && self.ModelValues.trailerIdentifier!=nil)
     {
         self.allowVideoContent = YES;
@@ -3181,7 +3181,10 @@ static ContentBuisnessType buisnessType;
     if (_ModelValues.isBeforeTv == true) {
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
-    [self HybridViewOpen];
+    
+    if (_isNeedToSubscribe == YES) {
+        [self HybridViewOpen];
+    }
     [self addCustomControls];
     
 }

@@ -68,12 +68,9 @@
 }
 + (NSString *)getSubscribedPack
 {
-    id SubscribeDict =[[NSUserDefaults standardUserDefaults]valueForKey:@"SubscribePack"];
-    if (SubscribeDict!=nil || [SubscribeDict isKindOfClass:[NSData class]])
-    {
-        return SubscribeDict;
-    }
-    return @"";
+    NSString *subscriptions = [[[ZAAppConnector sharedInstance] storageDelegate] localStorageValueFor:@"user_subscriptions" namespace:@"zee5localstorage"];
+    
+    return subscriptions != nil ? subscriptions : @"";
 }
 + (void)setUserSettingData:(NSString *)UserSetting;
 {

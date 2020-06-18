@@ -94,18 +94,55 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 }
 
 
-+ (Usertype)getUserTypeEnum{
-    NSString *Usertype = [ZEE5UserDefaults getUserType];
-    if ([Usertype isEqualToString:@"guest"]){
-        usertype = Guest;
-    }else if ([Usertype isEqualToString:@"registered"]){
-        usertype = Registered;
-    }else if ([Usertype isEqualToString:@"premium"]){
-        usertype = Premium;
-    }else{
-        usertype = Guest;
++ (Usertype)getUserTypeEnum {
+    
+    Usertype value = Guest;
+    
+    NSString
+     *isLoggedInUserString = [[[ZAAppConnector sharedInstance] storageDelegate] localStorageValueFor:@"userLoginStatus" namespace:@"zee5localstorage"];
+    BOOL isLoggedInUser = [ZEE5PlayerSDK getBoolValueFrom:isLoggedInUserString];
+    if (isLoggedInUser == YES) {
+        value = Registered;
     }
-    return usertype;
+    
+    BOOL isSubscribed = NO;
+    NSString *subscriptions = [ZEE5UserDefaults getSubscribedPack];
+    NSMutableArray *subscriptionsArray = [[NSMutableArray alloc] init];
+    NSData *subscriptionsData = [subscriptions dataUsingEncoding:NSUTF8StringEncoding];
+    id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:subscriptionsData options:0 error:nil];
+    
+    for (NSDictionary *dict in resultData) {
+        SubscriptionModel *model = [[SubscriptionModel alloc] initWithDictionary:dict];
+        [subscriptionsArray addObject:model];
+    }
+
+    NSMutableArray *activePlans = [[NSMutableArray alloc] init];
+    for (SubscriptionModel *model in subscriptionsArray) {
+        if ([model.state isEqualToString:@"activated"]) {
+            [activePlans addObject:model];
+        }
+    }
+    
+    for (SubscriptionModel *model in activePlans) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+        NSString *subscriptionEndDate = model.subscriptionEnd != nil ? model.subscriptionEnd : @"";
+        NSDate *date = [formatter dateFromString:subscriptionEndDate];
+        NSInteger interval = [date timeIntervalSinceDate:[NSDate new]];
+        if (interval > 0) {
+            isSubscribed = YES;
+        }
+    }
+    
+    if (isLoggedInUser == YES && isSubscribed == YES) {
+        value = Premium;
+    }
+    return value;
+}
+
++ (BOOL)getBoolValueFrom:(NSString *)value {
+    NSArray *trueValues = @[@"true", @"yes", @"1"];
+    return [trueValues containsObject:[value lowercaseString]];
 }
 
 +(ConsumptionType)getConsumpruionType{
