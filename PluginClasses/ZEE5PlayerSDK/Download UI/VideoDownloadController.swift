@@ -27,12 +27,13 @@ class VideoDownloadController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.getDownloadedItems()
-        //
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshDownloadData), name: AppNotification.editDownload, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateDownloadState(_:)), name: AppNotification.stateUpdate, object: nil)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+           self.getDownloadedItems()
+       }
     
     @objc func updateDownloadState(_ notification: Notification) {
         if let data = notification.object as? [String: Any] {
