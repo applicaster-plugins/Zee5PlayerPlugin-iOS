@@ -1459,7 +1459,7 @@ static ContentBuisnessType buisnessType;
     self.customControlView.buttonFullScreen.selected = YES;
     self.customControlView.buttonLiveFull.selected = YES;
     
-    if(!_videoCompleted)
+    if(!_videoCompleted && _isLive == false)
     {
         _customControlView.btnSkipNext.hidden = NO;
         _customControlView.btnSkipPrev.hidden = NO;
@@ -1492,7 +1492,6 @@ static ContentBuisnessType buisnessType;
     }
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
     [self updateConvivaSessionWithMetadata: dict];
-    UIView *View = [[UIApplication sharedApplication].keyWindow.subviews lastObject];
 }
 
 -(void)hideFullScreen
@@ -1503,8 +1502,6 @@ static ContentBuisnessType buisnessType;
     
     self.customControlView.buttonFullScreen.selected = NO;
     self.customControlView.buttonLiveFull.selected = NO;
-   // _customControlView.btnSkipNext.hidden = YES;
-   // _customControlView.btnSkipPrev.hidden = YES;
     _customControlView.skipIntro.hidden = YES;
     _customControlView.lableSubTitle.hidden = YES;
     
