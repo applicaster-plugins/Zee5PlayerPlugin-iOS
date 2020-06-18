@@ -109,12 +109,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }else
     {
         NSArray *VideoMimetypes = [[NSArray alloc]initWithObjects:@"application/x-mpegURL",@"application/dash+xml",@"video/mp4", nil];
-           PlayKitManager.logLevel = PKLogLevelVerbose;
+           PlayKitManager.logLevel = PKLogLevelWarning;
            imaConfig.adsResponse = vmapString;
            imaConfig.requestTimeoutInterval = 10;
            imaConfig.videoMimeTypes = VideoMimetypes;
            imaConfig.alwaysStartWithPreroll = true;
-           imaConfig.enableDebugMode = true;
+         //  imaConfig.enableDebugMode = true;
            imaConfig.videoControlsOverlays = [[SingletonClass sharedManager]ViewsArray];
     }
     pluginConfigDict[IMAPlugin.pluginName] = imaConfig;
