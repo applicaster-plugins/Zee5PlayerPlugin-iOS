@@ -223,53 +223,68 @@ extension AllAnalyticsClass
            
        }
     
-//    // MARK:- AdView 3
-//       public func ADView3()
-//       {
-//
-//           let parameter : Set = [
-//               Keys.ad.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
-//               Keys.AD_VIEW.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
-//               Keys.AD_VIEW.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
-//               Keys.AD_VIEW.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
-//               Keys.AD_VIEW.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
-//               Keys.AD_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
-//               Keys.AD_VIEW.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
-//               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,                                                           // TT
-//               Keys.AD_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
-//               Keys.AD_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
-//               Keys.AD_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
-//               Keys.AD_VIEW.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-//               Keys.AD_VIEW.PREVIEW_STATUS ~>> "",                                                         // TT
-//               Keys.AD_VIEW.PAGE_NAME ~>> notAppplicable,
-//               Keys.AD_VIEW.DRM_VIDEO ~>> DrmVideo,
-//               Keys.AD_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-//               Keys.AD_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-//               Keys.AD_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-//               Keys.AD_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
-//               Keys.AD_VIEW.TAB_NAME ~>> notAppplicable,
-//               Keys.AD_VIEW.CAST_TO ~>> notAppplicable,
-//               Keys.AD_VIEW.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-//               Keys.AD_VIEW.PROVIDER_ID ~>> notAppplicable,
-//               Keys.AD_VIEW.PROVIDER_NAME ~>> notAppplicable,
-//               Keys.AD_VIEW.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-//               Keys.AD_VIEW.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? "Kaltura Player",
-//               Keys.AD_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-//               Keys.AD_VIEW.AD_PROVIDER ~>> "",
-//               Keys.AD_VIEW.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
-//               Keys.AD_VIEW.AD_CATEGORY ~>> "",
-//               Keys.AD_VIEW.AD_LOCATION ~>> "",
-//               Keys.AD_VIEW.AD_CUE_TIME ~>> "",
-//               Keys.AD_VIEW.AD_DESTINATION_URL ~>> "",
-//               Keys.AD_VIEW.CDN ~>> "",
-//               Keys.AD_VIEW.DNS ~>> notAppplicable,
-//               Keys.AD_VIEW.CAROUSAL_NAME ~>> notAppplicable,
-//               Keys.AD_VIEW.CAROUSAL_ID ~>> notAppplicable,
-//
-//           ]
-//           analytics.track(Events.AD_VIEW, trackedProperties: parameter)
-//
-//       }
+    // MARK:- AdView 3
+       public func ADView3()
+       {
+
+           let parameter : Set = [
+            Keys.AD_VIEW_3.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+            Keys.AD_VIEW_3.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+            Keys.AD_VIEW_3.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+            Keys.AD_VIEW_3.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
+            Keys.AD_VIEW_3.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.AD_VIEW_3.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
+             Keys.AD_VIEW_3.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.AD_VIEW_3.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+            
+            Keys.AD_VIEW_3.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            
+            Keys.AD_VIEW_3.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+           ]
+           analytics.track(Events.AD_VIEW_3, trackedProperties: parameter)
+
+       }
+    
+    // MARK:- AdView 5
+       public func ADView5()
+       {
+
+           let parameter : Set = [
+            Keys.AD_VIEW_5.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+            Keys.AD_VIEW_5.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+            Keys.AD_VIEW_5.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+            Keys.AD_VIEW_5.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
+            Keys.AD_VIEW_5.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.AD_VIEW_5.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
+             Keys.AD_VIEW_5.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.AD_VIEW_5.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+            
+            Keys.AD_VIEW_5.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            
+            Keys.AD_VIEW_5.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+           ]
+           analytics.track(Events.AD_VIEW_5, trackedProperties: parameter)
+       }
+  
+    // MARK:- AdView 10
+    public func ADView10()
+    {
+
+        let parameter : Set = [
+         Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+         Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+         Keys.AD_VIEW_10.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+         Keys.AD_VIEW_10.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
+         Keys.AD_VIEW_10.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+         Keys.AD_VIEW_10.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
+          Keys.AD_VIEW_10.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+         Keys.AD_VIEW_10.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+         Keys.AD_VIEW_10.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+         Keys.AD_VIEW_10.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+        ]
+        analytics.track(Events.AD_VIEW_10, trackedProperties: parameter)
+    }
+    
     
 // MARK:- AdSkiped
     
@@ -316,47 +331,19 @@ extension AllAnalyticsClass
   // MARK:- AdComplete
     public func ADComplete()
           {
-//              let parameter : Set = [
-//                  Keys.AD_FORCED_EXIT.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
-//                  Keys.AD_FORCED_EXIT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
-//                  Keys.AD_FORCED_EXIT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-//                  Keys.AD_FORCED_EXIT.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
-//                  Keys.AD_FORCED_EXIT.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
-//                  Keys.AD_FORCED_EXIT.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
-//                  Keys.AD_FORCED_EXIT.SERIES ~>> series == "" ? notAppplicable:series,
-//                  Keys.AD_FORCED_EXIT.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-//                  Keys.AD_FORCED_EXIT.PREVIEW_STATUS ~>> "",
-//                  Keys.AD_FORCED_EXIT.PAGE_NAME ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.DRM_VIDEO ~>> DrmVideo,
-//                  Keys.AD_FORCED_EXIT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-//                  Keys.AD_FORCED_EXIT.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-//                  Keys.AD_FORCED_EXIT.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-//                  Keys.AD_FORCED_EXIT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
-//                  Keys.AD_FORCED_EXIT.TAB_NAME ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.CAST_TO ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-//                  Keys.AD_FORCED_EXIT.PROVIDER_ID ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.PROVIDER_NAME ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-//                  Keys.AD_FORCED_EXIT.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-//                  Keys.AD_FORCED_EXIT.AD_PROVIDER ~>> "",
-//                  Keys.AD_FORCED_EXIT.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-//                  Keys.AD_FORCED_EXIT.AD_LOCATION ~>> "",
-//                  Keys.AD_FORCED_EXIT.AD_CUE_TIME ~>> "",
-//                  Keys.AD_FORCED_EXIT.AD_DESTINATION_URL ~>> "",
-//                  Keys.AD_FORCED_EXIT.CDN ~>> "",
-//                  Keys.AD_FORCED_EXIT.DNS ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.CAROUSAL_NAME ~>> notAppplicable,
-//                  Keys.AD_FORCED_EXIT.CAROUSAL_ID ~>> notAppplicable,
-//
-//              ]
-           // analytics.track(Events.AD_FORCED_EXIT, trackedProperties: set)
-              
+             let parameter : Set = [
+               Keys.AD_VIEW_COMPLETE.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+               Keys.AD_VIEW_COMPLETE.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
+               Keys.AD_VIEW_COMPLETE.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
+               Keys.AD_VIEW_COMPLETE.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
+               Keys.AD_VIEW_COMPLETE.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+               Keys.AD_VIEW_COMPLETE.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
+                Keys.AD_VIEW_COMPLETE.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+               Keys.AD_VIEW_COMPLETE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+               Keys.AD_VIEW_COMPLETE.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_VIEW_COMPLETE.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+              ]
+              analytics.track(Events.AD_VIEW_COMPLETE, trackedProperties: parameter)
        }
     
      // MARK:- AdClicked

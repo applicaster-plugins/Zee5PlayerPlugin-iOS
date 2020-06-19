@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSString *Direction;  ///   Use In analytics when Seekbar chnaged
 @property (nonatomic) int PlayerStartTime;          ///   Use In analytics when Seekbar chnaged
 @property (nonatomic) int PlayerEndTime;            ///   Use In analytics when Seekbar chnaged
+@property (nonatomic) int adCount;
 
 
 
@@ -62,6 +63,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 {
     self.fairplayProvider = [[FormPostFairPlayLicenseProvider alloc] init];
     self.currentItem = currentItem;
+    _adCount = 0;
 
     if (self.player)
     {
@@ -193,12 +195,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
     NSDictionary *dict = [[NSDictionary alloc] init];
         
+    
     dict = @{
              @"assetName": event.adInfo.title,
              @"applicationName": Conviva_Application_Name,
              @"streamType": stremType,
              @"duration": @"NA",
-             @"streamUrl": @"NA" ,
+             @"streamUrl":@"NA" ,
              @"adPosition":[NSString stringWithFormat:@"%ld",(long)event.adInfo.adPosition],
              @"adId": event.adInfo.adId,
              @"advertiserName":event.adInfo.advertiserName
@@ -274,26 +277,10 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         [engine setupConvivaAdSessionWith: dict customTags: tags];
         [engine SetupMixpanelAnalyticsWith:dict tags:tags];
+         [engine AdViewAnalytics];
+        _adCount++;
+        [engine AdViewNumberWithAdNo:_adCount];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
-    }
-   else if (AdEvent.adStarted)
-    {
-        [engine setupConvivaAdSessionWith: dict customTags: tags];
-        [engine SetupMixpanelAnalyticsWith:dict tags:tags];
-        [engine AdViewAnalytics];
-      
-    }
-    else if (AdEvent.adSkipped)
-    {
-        [engine AdSkipedAnlytics];
-    }
-    else if (AdEvent.adComplete)
-    {
-        [engine AdCompleteAnalytics];
-    }
-    else if (AdEvent.adClicked)
-    {
-        [engine AdClickedAnalytics];
     }
 }
 
@@ -346,14 +333,15 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.allAdsCompleted block:^(PKEvent * _Nonnull event) {
+             [engine AdCompleteAnalytics];
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
+         [engine AdCompleteAnalytics];
 
     }];
-    
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
-
+              [engine AdClickedAnalytics];
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {
@@ -375,6 +363,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
+                [engine AdSkipedAnlytics];
     }];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event) {
