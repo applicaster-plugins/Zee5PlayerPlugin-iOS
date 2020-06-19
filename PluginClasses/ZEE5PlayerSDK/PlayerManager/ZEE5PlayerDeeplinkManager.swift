@@ -47,14 +47,12 @@ var CompletionHandler:((Bool)->(Void))?
         Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.myDownload.url)
      }
     
-    @objc public func Hybridpackview(completion:@escaping((Bool)->(Void)))
-    {
-     Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.showUpgradePopUp.url)
-        User.shared.refreshViewAfterloginOrRegistration = { [] in
-                                 completion(true)
-                             }
+    @objc public func NavigateHybridViewOpen(Completion:@escaping((Bool)->(Void))){
+        Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.showUpgradePopUp.url)
+        User.shared.refreshViewAfterloginOrRegistration = {[] in
+            Completion(true)
+        }
     }
-    
     @objc public func NavigatetoHomeScreen()
     {
     let value = UIInterfaceOrientation.portrait.rawValue

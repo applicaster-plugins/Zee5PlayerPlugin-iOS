@@ -274,6 +274,17 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.ADView()
     }
+    @objc public func AdViewNumber(AdNo : NSInteger)
+       {
+        if AdNo == 3 {
+            AllAnalyticsClass .shared .ADView3()
+        }else if AdNo == 5{
+             AllAnalyticsClass .shared .ADView5()
+        }else if AdNo == 10{
+             AllAnalyticsClass .shared .ADView10()
+        }else{
+        }
+       }
    
     
 }

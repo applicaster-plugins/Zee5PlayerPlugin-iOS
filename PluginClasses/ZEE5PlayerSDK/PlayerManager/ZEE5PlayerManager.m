@@ -2145,15 +2145,12 @@ static ContentBuisnessType buisnessType;
         if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
             [self pause];
         }
-           [[ZEE5PlayerDeeplinkManager sharedMethod]HybridpackviewWithCompletion:^(BOOL isSuccess) {
-              if (isSuccess) {
-                  [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
-                 [self RefreshViewNotification];
-             }
-         }];
-        
+        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateHybridViewOpenWithCompletion:^(BOOL isSuccees) {
+            if (isSuccees) {
+                [self RefreshViewNotification];
+            }
+        }];
     }
- 
 }
 -(void)HybridviewnotificationObserver{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"upgradePopupDissmiss" object:nil];
