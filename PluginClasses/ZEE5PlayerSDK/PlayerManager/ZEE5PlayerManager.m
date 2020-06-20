@@ -308,7 +308,7 @@ static ContentBuisnessType buisnessType;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption) name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LogoutDone) name:@"ZPLoginProviderLoggedOut" object:nil];
     
@@ -327,13 +327,16 @@ static ContentBuisnessType buisnessType;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadConsumption" object:nil userInfo:nil];
 }
 
--(void)onAudioInterruption
+-(void)onAudioInterruption:(NSNotification *)notification
 {
-    _customControlView.buttonPlay.hidden = NO;
-    [self hideUnHideTopView:NO];
-
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self pause];
+    if ([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
+        _customControlView.buttonPlay.hidden = NO;
+        [self hideUnHideTopView:NO];
+        
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self pause];
+    } else {
+    }
 }
 
 -(void)didEnterForGround
