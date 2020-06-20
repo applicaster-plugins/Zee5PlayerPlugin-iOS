@@ -211,7 +211,7 @@ static ContentBuisnessType buisnessType;
         UIButton *skipAdsButton = [[UIButton alloc] init];
         skipAdsButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.viewPlayer addSubview:skipAdsButton];
-        
+            
         [[skipAdsButton.heightAnchor constraintEqualToConstant:30] setActive:YES];
         [[skipAdsButton.widthAnchor constraintEqualToConstant:100] setActive:YES];
         [skipAdsButton anchorToTopLeftWithInset:10];
@@ -832,10 +832,6 @@ static ContentBuisnessType buisnessType;
         [self hideUnHideTopView:NO];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self setSeekTime:0];
-        
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
-//            [self.delegate didFinishPlaying];
-//        }
     }
     else
     {
@@ -1587,7 +1583,7 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)ShowToastMessage:(NSString *)Message{
-    [[ZEE5PlayerDeeplinkManager new]ShowtoastWithMessage:Message];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]ShowtoastWithMessage:Message];
    
 }
 
@@ -2157,9 +2153,16 @@ static ContentBuisnessType buisnessType;
 }
 -(void)HybridviewnotificationObserver{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"upgradePopupDissmiss" object:nil];
-      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DismissHybridView) name:@"upgradePopupDissmiss" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DismissHybridView) name:@"upgradePopupDissmiss" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"sign_in_or_successfully" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LoginSuccess) name:@"sign_in_or_successfully" object:nil];
 }
-
+-(void)LoginSuccess{
+    [self hideUnHidetrailerEndView:true];
+    [self RefreshViewNotification];
+    
+     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"sign_in_or_successfully" object:nil];
+}
 -(void)DismissHybridView{
     
      _ishybridViewOpen = false;
@@ -2317,15 +2320,12 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnSubscribeButton                  /// Navigate To Subscription Page
 {
      [self stop];    ///*** Player Stop First Here***//
-    [_GuestuserPopView removeFromSuperview];
-    _GuestuserPopView = nil;
-    [self hideUnHidetrailerEndView:true];
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
              [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:true Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees){
-            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self RefreshViewNotification];
         }
     }];
@@ -2333,7 +2333,7 @@ static ContentBuisnessType buisnessType;
         }
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
                 if (isSuccees) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
             }
                 }];
@@ -2341,7 +2341,7 @@ static ContentBuisnessType buisnessType;
     }else{
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_LiveModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
             }
         }];
@@ -2351,11 +2351,10 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnLoginButton                      /// Navigate To Login Screen
 {
      [self stop];    ///*** Player Stop First Here***//
-     [self removeSubview];
-    [self hideUnHidetrailerEndView:true];
-    [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
+    [self removeSubview];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
-            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self RefreshViewNotification];
             
         }
@@ -2369,7 +2368,7 @@ static ContentBuisnessType buisnessType;
 {
     [self setFullScreen: NO];
     [[Zee5PlayerPlugin sharedInstance].player pause];
-    [[ZEE5PlayerDeeplinkManager new]NavigatetoDownloads];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoDownloads];
     
 }
 
@@ -2488,7 +2487,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-dolafzonkikahani";//0-1-261984
+    //content_id = @"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -2822,6 +2821,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.SeasonId = model.SeasonId;
     self.currentItem.showId = model.tvShowId;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
+    self.currentItem.showchannelName = model.tvShowChannelname;
 
 
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
@@ -2881,6 +2881,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.audioLanguages = Livemodel.languages;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
+    self.currentItem.showchannelName = Livemodel.showOriginalTitle;
     
     if (![ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id]) {
         [self ContentidNotification:_currentItem.content_id];
@@ -3409,12 +3410,10 @@ static ContentBuisnessType buisnessType;
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         [self pause];
-        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
+        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
             if (isSuccess) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
-               
-               // [self StartDownload];
             }
         }];
         return;

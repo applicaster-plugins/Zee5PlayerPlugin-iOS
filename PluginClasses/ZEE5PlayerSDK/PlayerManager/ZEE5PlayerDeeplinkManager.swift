@@ -48,9 +48,7 @@ var CompletionHandler:((Bool)->(Void))?
      }
     
     @objc public func NavigateHybridViewOpen(Completion:@escaping((Bool)->(Void))){
-        Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.showUpgradePopUp.url)
-        User.shared.refreshViewAfterloginOrRegistration = {[] in
-            Completion(true)
+        Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.showUpgradePopUp.url) { (isSuccees) in
         }
     }
     @objc public func NavigatetoHomeScreen()

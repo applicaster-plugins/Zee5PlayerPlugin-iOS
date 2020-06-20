@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (nonatomic, copy)NSString* skipintrotime;
+@property (nonatomic, copy)NSString* showchannelName;
 
 @end
 

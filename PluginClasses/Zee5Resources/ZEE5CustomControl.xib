@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
@@ -28,19 +28,20 @@
                     <rect key="frame" x="0.0" y="0.0" width="547" height="276"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uL1-sI-kCh">
-                            <rect key="frame" x="54" y="15" width="200" height="0.0"/>
+                            <rect key="frame" x="70" y="15" width="330" height="0.0"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="200" id="rba-Cb-nin"/>
+                                <constraint firstAttribute="width" constant="200" id="rba-Cb-nin">
+                                    <variation key="heightClass=compact-widthClass=compact" constant="330"/>
+                                    <variation key="heightClass=compact-widthClass=regular" constant="330"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                                </constraint>
                             </constraints>
                             <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cca-iE-Ak3">
-                            <rect key="frame" x="50" y="22" width="260" height="0.0"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="260" id="A1m-wR-h35"/>
-                            </constraints>
+                            <rect key="frame" x="70" y="22" width="330" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -49,9 +50,10 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="cca-iE-Ak3" firstAttribute="top" secondItem="uL1-sI-kCh" secondAttribute="bottom" constant="7" id="RLg-gT-4qT"/>
-                        <constraint firstItem="uL1-sI-kCh" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="54" id="bdt-tP-Oda"/>
+                        <constraint firstItem="uL1-sI-kCh" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="70" id="bdt-tP-Oda"/>
+                        <constraint firstItem="cca-iE-Ak3" firstAttribute="width" secondItem="uL1-sI-kCh" secondAttribute="width" id="w9c-NG-Ocf"/>
                         <constraint firstItem="uL1-sI-kCh" firstAttribute="top" secondItem="Ih4-4v-ast" secondAttribute="top" constant="15" id="zVO-GM-dFe"/>
-                        <constraint firstItem="cca-iE-Ak3" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="50" id="zh3-tf-RVw"/>
+                        <constraint firstItem="cca-iE-Ak3" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="70" id="zh3-tf-RVw"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXD-zP-Fnc">
@@ -502,10 +504,10 @@
                             <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnk-yP-IpZ">
-                            <rect key="frame" x="223" y="106.5" width="100" height="25"/>
+                            <rect key="frame" x="223" y="96.5" width="100" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="100" id="C7G-4h-Ugj"/>
-                                <constraint firstAttribute="height" constant="25" id="cDv-vg-x1N"/>
+                                <constraint firstAttribute="height" constant="35" id="cDv-vg-x1N"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
                             <state key="normal" title="Subscribe Now">
@@ -516,7 +518,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCR-ep-QzZ">
-                            <rect key="frame" x="149.5" y="63" width="200" height="28"/>
+                            <rect key="frame" x="173" y="63.5" width="200" height="33"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="8Ec-em-dcD"/>
                             </constraints>
@@ -527,8 +529,7 @@ watch this video</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Csr-5M-reu">
-                            <rect key="frame" x="169.5" y="127" width="160" height="45"/>
-
+                            <rect key="frame" x="189.5" y="142.5" width="167.5" height="55"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a Premium member? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQN-Ss-Uo3">
                                     <rect key="frame" x="0.0" y="0.0" width="167.5" height="15"/>
@@ -540,9 +541,9 @@ watch this video</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uI-wW-vOh">
-                                    <rect key="frame" x="0.0" y="20" width="167.5" height="25"/>
+                                    <rect key="frame" x="0.0" y="20" width="167.5" height="35"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="25" id="8yN-qf-eRd"/>
+                                        <constraint firstAttribute="height" constant="35" id="8yN-qf-eRd"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="12"/>
                                     <state key="normal" title="Login">
@@ -555,7 +556,7 @@ watch this video</string>
                             </subviews>
                         </stackView>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="FEd-Ab-oWE" firstAttribute="centerY" secondItem="Zfz-bG-2t7" secondAttribute="centerY" id="3MV-7E-MIO"/>
                         <constraint firstItem="bnk-yP-IpZ" firstAttribute="centerX" secondItem="Zfz-bG-2t7" secondAttribute="centerX" id="6W1-9b-DFc"/>
@@ -595,7 +596,7 @@ watch this video</string>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="grw-mV-yQs" firstAttribute="centerX" secondItem="orD-Ja-xQR" secondAttribute="centerX" id="Ktx-tV-Hbf"/>
                         <constraint firstItem="CpA-LS-wPV" firstAttribute="centerX" secondItem="orD-Ja-xQR" secondAttribute="centerX" id="WcS-QB-JfB"/>
@@ -604,11 +605,11 @@ watch this video</string>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p8M-q7-7S1">
-                    <rect key="frame" x="5" y="5" width="50" height="45"/>
+                    <rect key="frame" x="0.0" y="5" width="60" height="60"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="45" id="cFk-Go-dqB"/>
-                        <constraint firstAttribute="width" constant="50" id="hqU-6Z-Rho"/>
+                        <constraint firstAttribute="height" constant="60" id="cFk-Go-dqB"/>
+                        <constraint firstAttribute="width" constant="60" id="hqU-6Z-Rho"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" image="Back"/>
@@ -704,7 +705,7 @@ watch this video</string>
                 <constraint firstAttribute="trailing" secondItem="7CG-57-Izx" secondAttribute="trailing" id="ssC-me-myO"/>
                 <constraint firstItem="XXD-zP-Fnc" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="tza-NC-F7p"/>
                 <constraint firstItem="7CG-57-Izx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="v7w-7w-MC1"/>
-                <constraint firstItem="p8M-q7-7S1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="yAT-lU-Ma9"/>
+                <constraint firstItem="p8M-q7-7S1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="yAT-lU-Ma9"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="pfO-AE-4HQ" secondAttribute="bottom" constant="5" id="z0d-V4-ntP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
