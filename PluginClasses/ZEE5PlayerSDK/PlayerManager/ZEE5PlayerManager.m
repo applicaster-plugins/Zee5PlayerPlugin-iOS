@@ -261,7 +261,9 @@ static ContentBuisnessType buisnessType;
 - (void)castCurrentItem {
     [self hideLoaderOnPlayer];
     
-    [self stop];
+    [[ChromeCastManager shared] playSelectedItemRemotely];
+    
+    [self pause];
     [self.playbackView removeFromSuperview];
     self.playbackView = nil;
     
@@ -293,8 +295,6 @@ static ContentBuisnessType buisnessType;
     else {
         self.posterImageView.image = nil;
     }
-    
-    [[ChromeCastManager shared] playSelectedItemRemotely];
 }
 
 //MARK:- Notification

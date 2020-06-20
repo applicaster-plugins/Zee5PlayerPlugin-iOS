@@ -71,15 +71,14 @@ public class ActionBarView: UIView {
             customButton.backgroundColor = .clear
             
             container.button = customButton
-            container.button.isHidden = true
         }
         else {
             container.button = UIButton(type: .custom)
-            
-            container.button.setTapHandler {
-                if container.progressView == nil {
-                    buttonData.action()
-                }
+        }
+
+        container.button.setTapHandler {
+            if container.progressView == nil {
+                buttonData.action()
             }
         }
         
