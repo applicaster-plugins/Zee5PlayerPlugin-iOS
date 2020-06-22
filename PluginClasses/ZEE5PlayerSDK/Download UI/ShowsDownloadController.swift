@@ -32,9 +32,11 @@ class ShowsDownloadController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.getDownloadedItems()
-        //
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshDownloadData), name: AppNotification.editDownload, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.getDownloadedItems()
     }
     
     @objc func refreshDownloadData() {

@@ -182,6 +182,7 @@ static ContentBuisnessType buisnessType;
         
         [[PlayKitManager sharedInstance] registerPlugin:IMAPlugin.self];
         
+        sharedManager.allowMinimizeDuringAds = NO;
     });
     
     return sharedManager;
@@ -205,6 +206,25 @@ static ContentBuisnessType buisnessType;
     
     self.playbackView = [[PlayerView alloc] init];
     [self.viewPlayer addSubview:self.playbackView];
+    
+    if (self.allowMinimizeDuringAds) { // For debug only
+        UIButton *skipAdsButton = [[UIButton alloc] init];
+        skipAdsButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.viewPlayer addSubview:skipAdsButton];
+            
+        [[skipAdsButton.heightAnchor constraintEqualToConstant:30] setActive:YES];
+        [[skipAdsButton.widthAnchor constraintEqualToConstant:100] setActive:YES];
+        [skipAdsButton anchorToTopLeftWithInset:10];
+
+        skipAdsButton.backgroundColor = UIColor.blackColor;
+        skipAdsButton.titleLabel.textColor = UIColor.whiteColor;
+        
+        [skipAdsButton setTitle:@"Minimize" forState:UIControlStateNormal];
+        
+        [skipAdsButton setTapHandlerWithHandler:^{
+            [self tapOnMinimizeButton];
+        }];
+    }
     
     self.playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.playbackView matchParent];
@@ -241,7 +261,9 @@ static ContentBuisnessType buisnessType;
 - (void)castCurrentItem {
     [self hideLoaderOnPlayer];
     
-    [self stop];
+    [[ChromeCastManager shared] playSelectedItemRemotely];
+    
+    [self pause];
     [self.playbackView removeFromSuperview];
     self.playbackView = nil;
     
@@ -273,8 +295,6 @@ static ContentBuisnessType buisnessType;
     else {
         self.posterImageView.image = nil;
     }
-    
-    [[ChromeCastManager shared] playSelectedItemRemotely];
 }
 
 //MARK:- Notification
@@ -288,7 +308,7 @@ static ContentBuisnessType buisnessType;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption) name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LogoutDone) name:@"ZPLoginProviderLoggedOut" object:nil];
     
@@ -307,13 +327,16 @@ static ContentBuisnessType buisnessType;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadConsumption" object:nil userInfo:nil];
 }
 
--(void)onAudioInterruption
+-(void)onAudioInterruption:(NSNotification *)notification
 {
-    _customControlView.buttonPlay.hidden = NO;
-    [self hideUnHideTopView:NO];
-
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self pause];
+    if ([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
+        _customControlView.buttonPlay.hidden = NO;
+        [self hideUnHideTopView:NO];
+        
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self pause];
+    } else {
+    }
 }
 
 -(void)didEnterForGround
@@ -809,10 +832,6 @@ static ContentBuisnessType buisnessType;
         [self hideUnHideTopView:NO];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self setSeekTime:0];
-        
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishPlaying)]) {
-//            [self.delegate didFinishPlaying];
-//        }
     }
     else
     {
@@ -1459,7 +1478,7 @@ static ContentBuisnessType buisnessType;
     self.customControlView.buttonFullScreen.selected = YES;
     self.customControlView.buttonLiveFull.selected = YES;
     
-    if(!_videoCompleted)
+    if(!_videoCompleted && _isLive == false)
     {
         _customControlView.btnSkipNext.hidden = NO;
         _customControlView.btnSkipPrev.hidden = NO;
@@ -1492,7 +1511,6 @@ static ContentBuisnessType buisnessType;
     }
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
     [self updateConvivaSessionWithMetadata: dict];
-    UIView *View = [[UIApplication sharedApplication].keyWindow.subviews lastObject];
 }
 
 -(void)hideFullScreen
@@ -1503,8 +1521,6 @@ static ContentBuisnessType buisnessType;
     
     self.customControlView.buttonFullScreen.selected = NO;
     self.customControlView.buttonLiveFull.selected = NO;
-   // _customControlView.btnSkipNext.hidden = YES;
-   // _customControlView.btnSkipPrev.hidden = YES;
     _customControlView.skipIntro.hidden = YES;
     _customControlView.lableSubTitle.hidden = YES;
     
@@ -1567,7 +1583,7 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)ShowToastMessage:(NSString *)Message{
-    [[ZEE5PlayerDeeplinkManager new]ShowtoastWithMessage:Message];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]ShowtoastWithMessage:Message];
    
 }
 
@@ -2128,21 +2144,25 @@ static ContentBuisnessType buisnessType;
         if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
             [self pause];
         }
-           [[ZEE5PlayerDeeplinkManager sharedMethod]HybridpackviewWithCompletion:^(BOOL isSuccess) {
-              if (isSuccess) {
-                  [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
-                 [self RefreshViewNotification];
-             }
-         }];
-        
+        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateHybridViewOpenWithCompletion:^(BOOL isSuccees) {
+            if (isSuccees) {
+                [self RefreshViewNotification];
+            }
+        }];
     }
- 
 }
 -(void)HybridviewnotificationObserver{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"upgradePopupDissmiss" object:nil];
-      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DismissHybridView) name:@"upgradePopupDissmiss" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DismissHybridView) name:@"upgradePopupDissmiss" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"sign_in_or_successfully" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LoginSuccess) name:@"sign_in_or_successfully" object:nil];
 }
-
+-(void)LoginSuccess{
+    [self hideUnHidetrailerEndView:true];
+    [self RefreshViewNotification];
+    
+     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"sign_in_or_successfully" object:nil];
+}
 -(void)DismissHybridView{
     
      _ishybridViewOpen = false;
@@ -2300,15 +2320,12 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnSubscribeButton                  /// Navigate To Subscription Page
 {
      [self stop];    ///*** Player Stop First Here***//
-    [_GuestuserPopView removeFromSuperview];
-    _GuestuserPopView = nil;
-    [self hideUnHidetrailerEndView:true];
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
              [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:true Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees){
-            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self RefreshViewNotification];
         }
     }];
@@ -2316,7 +2333,7 @@ static ContentBuisnessType buisnessType;
         }
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
                 if (isSuccees) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
             }
                 }];
@@ -2324,7 +2341,7 @@ static ContentBuisnessType buisnessType;
     }else{
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_LiveModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
             }
         }];
@@ -2334,11 +2351,10 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnLoginButton                      /// Navigate To Login Screen
 {
      [self stop];    ///*** Player Stop First Here***//
-     [self removeSubview];
-    [self hideUnHidetrailerEndView:true];
-    [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
+    [self removeSubview];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
-            [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+            [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self RefreshViewNotification];
             
         }
@@ -2352,7 +2368,7 @@ static ContentBuisnessType buisnessType;
 {
     [self setFullScreen: NO];
     [[Zee5PlayerPlugin sharedInstance].player pause];
-    [[ZEE5PlayerDeeplinkManager new]NavigatetoDownloads];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoDownloads];
     
 }
 
@@ -2471,7 +2487,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-dolafzonkikahani";//0-1-261984
+    //content_id = @"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -2565,17 +2581,16 @@ static ContentBuisnessType buisnessType;
                     if (self.currentItem == nil) {
                         return ;
                     }
-                    
+                   
                     // Update video end point
                     NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
                     NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
                    
                     NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
                     [self updateConvivaSessionWithMetadata: dict];
-                    
                     [self stop];
-                
                     [self createConvivaSeesionWithMetadata];
+                    completionBlock(self.ModelValues,[result valueForKey:@"drm"]);
                     
                 } failureBlock:^(ZEE5SdkError * _Nullable error)
                  {
@@ -2806,6 +2821,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.SeasonId = model.SeasonId;
     self.currentItem.showId = model.tvShowId;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
+    self.currentItem.showchannelName = model.tvShowChannelname;
 
 
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
@@ -2865,6 +2881,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.audioLanguages = Livemodel.languages;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
+    self.currentItem.showchannelName = Livemodel.showOriginalTitle;
     
     if (![ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id]) {
         [self ContentidNotification:_currentItem.content_id];
@@ -3396,12 +3413,10 @@ static ContentBuisnessType buisnessType;
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         [self pause];
-        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
+        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
             if (isSuccess) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
                 [self RefreshViewNotification];
-               
-               // [self StartDownload];
             }
         }];
         return;

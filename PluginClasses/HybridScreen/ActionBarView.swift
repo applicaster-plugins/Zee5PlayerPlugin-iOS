@@ -71,15 +71,14 @@ public class ActionBarView: UIView {
             customButton.backgroundColor = .clear
             
             container.button = customButton
-            container.button.isHidden = true
         }
         else {
             container.button = UIButton(type: .custom)
-            
-            container.button.setTapHandler {
-                if container.progressView == nil {
-                    buttonData.action()
-                }
+        }
+
+        container.button.setTapHandler {
+            if container.progressView == nil {
+                buttonData.action()
             }
         }
         
@@ -191,40 +190,3 @@ class ButtonViewContainer {
     var progressView: UIView?
 }
 
-typealias UIButtonHandler = () -> Void
-
-extension UIButton {
-    private struct AssociatedKeys {
-        static var handler = "handler"
-    }
-    
-    private var handler: UIButtonHandler? {
-        get {
-            guard let handler = objc_getAssociatedObject(self, &AssociatedKeys.handler) as? UIButtonHandler else {
-                return nil
-            }
-            
-            return handler
-        }
-        set(newValue) {
-            guard let newValue = newValue else {
-                return
-            }
-            
-            objc_setAssociatedObject(self, &AssociatedKeys.handler, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-    
-    func setTapHandler(handler: @escaping UIButtonHandler) {
-        self.handler = handler
-        self.addTarget(self, action: #selector(UIButton.handleTap), for: .touchUpInside)
-    }
-    
-    @objc func handleTap() {
-        guard let handler = handler else {
-            return
-        }
-        
-        handler()
-    }
-}

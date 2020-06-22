@@ -40,5 +40,8 @@ class CastActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
     }
     
     fileprivate func cast() {
+        if ChromeCastManager.shared.isCasting && !ChromeCastManager.shared.isPlaying {
+            ZEE5PlayerManager.sharedInstance().castCurrentItem()
+        }
     }
 }

@@ -21,6 +21,16 @@ public protocol ChromeCastDelegate {
          return GCKCastContext.sharedInstance().sessionManager.hasConnectedSession()
     }
     
+    public var isPlaying: Bool {
+        guard
+            let mediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient,
+            let mediaStatus = mediaClient.mediaStatus else {
+                return false
+        }
+        
+        return mediaStatus.playerState == .playing
+    }
+    
     public var delegate: ChromeCastDelegate?
     public var appId = "E05C51D0"
     var CastDeviceName = ""
@@ -94,19 +104,21 @@ public protocol ChromeCastDelegate {
                 return
         }
         
+        let currentItem = ZEE5PlayerManager.sharedInstance().currentItem
+        
         let mediaInfo: GCKMediaInformation!
         
         let customData: NSMutableDictionary = [:]
         customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
         customData["licenseUrl"] = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
-        mediaInfo = self.getMediaInformation(with: customData)
+        mediaInfo = self.getMediaInformation(for: currentItem, with: customData)
 
         let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
         mediaQueueItemBuilder.mediaInformation = mediaInfo
         mediaQueueItemBuilder.autoplay = true
+        mediaQueueItemBuilder.startTime = TimeInterval(ZEE5PlayerManager.sharedInstance().getCurrentDuration())
         let mediaQueueItem = mediaQueueItemBuilder.build()
         
-
         if appending {
             let request = mediaClient.queueInsert(mediaQueueItem, beforeItemWithID: kGCKMediaQueueInvalidItemID)
             request.delegate = self
@@ -127,9 +139,7 @@ public protocol ChromeCastDelegate {
         mediaClient.add(self)
     }
     
-    func getMediaInformation(with data: NSMutableDictionary) -> GCKMediaInformation? {
-        let currentItem = ZEE5PlayerManager.sharedInstance().currentItem
-        
+    func getMediaInformation(for currentItem: CurrentItem, with customData: NSMutableDictionary) -> GCKMediaInformation? {
         let builder = GCKMediaInformationBuilder()
 
         let contentUrlValue: String?
@@ -168,7 +178,7 @@ public protocol ChromeCastDelegate {
         builder.metadata = metadata
         builder.streamDuration = currentItem.duration <= 0 ? 0 : TimeInterval(currentItem.duration)
         
-        builder.customData = data
+        builder.customData = customData
         
         return builder.build()
     }
