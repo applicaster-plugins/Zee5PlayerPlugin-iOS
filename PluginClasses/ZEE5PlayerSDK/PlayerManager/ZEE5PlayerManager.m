@@ -1491,8 +1491,6 @@ static ContentBuisnessType buisnessType;
     self.panGesture.enabled = (self.customControlView.buttonLiveFull.selected && !_customControlView.topView.hidden && [AppConfigManager sharedInstance].config.isSimilarVideos);
     self.customControlView.collectionView.hidden = ![AppConfigManager sharedInstance].config.isSimilarVideos;
     _customControlView.con_top_collectionView.constant = 10;
-   
-    _customControlView.Stackview_top.constant = 0;
     
     CGRect frame = [UIScreen mainScreen].bounds;
     _customControlView.forwardButton.frame = CGRectMake(frame.size.width - 200, 0, 200, frame.size.height);
@@ -1538,6 +1536,7 @@ static ContentBuisnessType buisnessType;
     if (_isTelco == true)
     {
         _customControlView.backtoPartnerView.hidden = false;
+        _customControlView.partnerLblTxt.text = _TelcoMsg;
     }
 
     
@@ -3453,7 +3452,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message{
     _isTelco = istelco;
-    _customControlView.partnerLblTxt.text = [NSString stringWithFormat: @"< %@",Message];
+    _TelcoMsg = [NSString stringWithFormat:@"< %@",Message];
 }
 
 // MARK:- Offline content Methods
