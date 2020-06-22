@@ -284,7 +284,7 @@
 
 - (IBAction)bactoPartnetAppAction:(id)sender {
     [[ZEE5PlayerManager sharedInstance]pause];
-    //[ZEE5PlayerDeeplinkManager];
+    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateToPartnerApp];
 }
 
 - (IBAction)upNextAction:(id)sender {

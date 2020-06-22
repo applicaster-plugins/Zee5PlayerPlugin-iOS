@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong , nonatomic, nullable) PlayerView *playbackView;
 @property(nonatomic) BOOL isStop;
 @property(nonatomic) BOOL isTelco;     //// Come From Partner App.
+@property(nonatomic) NSString *TelcoMsg;
 @property(nonatomic) BOOL isAutoplay;
 @property(nonatomic) BOOL isStreamoverWifi;
 @property(nonatomic) BOOL isdownloadOverWifi;

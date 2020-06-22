@@ -336,13 +336,13 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         var message = NSAttributedString(string: "")
         
         if (param["partner"] ?? "").lowercased().contains("vodafone") {
-            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughVodafone_Text".localized(hashMap: [:]))
+            message = NSAttributedString(string: "BIStrings_CTA_BackToVodafonePlay_Button".localized(hashMap: [:]))
         }
         else if (param["partner"] ?? "").lowercased().contains("airtel") {
-            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughAirtel_Text".localized(hashMap: [:]))
+            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToAirtelTv_Text".localized(hashMap: [:]))
         }
         else if (param["partner"] ?? "").lowercased().contains("idea") {
-            message = NSAttributedString(string: "BIStrings_Body_LaunchThroughIdea_Text".localized(hashMap: [:]))
+            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToIdeaMovies_Text".localized(hashMap: [:]))
         }
 
         ZEE5PlayerManager.sharedInstance().telcouser(true, param: message.string)
