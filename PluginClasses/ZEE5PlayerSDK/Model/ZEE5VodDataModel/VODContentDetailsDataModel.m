@@ -129,7 +129,8 @@
             NSArray *Channls = [showDetail ValueForKeyWithNullChecking:@"channels"];
             if (Channls.count > 0)
             {
-                _tvShowChannelname = [Channls valueForKey:@"original_title"];
+                _tvShowChannelname = [[Channls valueForKey:@"original_title"]componentsJoinedByString:@""];
+                
             }
             
             /// ********* Before TV Logic On PopUp Close ***************//////////////
@@ -139,9 +140,6 @@
                   }
             
             self.showOriginalTitle = str;
-            
-            
-            
         }
         
     }

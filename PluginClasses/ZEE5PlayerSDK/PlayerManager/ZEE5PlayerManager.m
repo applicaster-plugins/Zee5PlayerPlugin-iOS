@@ -1208,7 +1208,7 @@ static ContentBuisnessType buisnessType;
     NSString *videoStartPoint = [Utility stringFromTimeInterval:duration];
     NSString *VideoEndpoint = [Utility stringFromTimeInterval:[[Zee5PlayerPlugin sharedInstance]getDuration]];
     NSDictionary *dict = @{@"videoStartPoint" : videoStartPoint,@"videoEndPoint":VideoEndpoint};
-    [[AnalyticEngine shared]VideoStartTimeWith:videoStartPoint];
+    [[AnalyticEngine shared]VideoStartTimeWith:duration];
     [self updateConvivaSessionWithMetadata: dict];
     
 }
@@ -1659,7 +1659,7 @@ static ContentBuisnessType buisnessType;
             // Extract Text Tracks
             if (event.tracks.textTracks)
             {
-                         strongSelf.textTracks = event.tracks.textTracks;
+                strongSelf.textTracks = event.tracks.textTracks;
             }
             
             // Extract Audio Tracks
@@ -1668,7 +1668,9 @@ static ContentBuisnessType buisnessType;
                 
                 // Set Defualt array for Picker View
                 strongSelf.selectedTracks = strongSelf.audioTracks;
-
+                for (Track *track in strongSelf.selectedTracks) {
+                    NSLog(@"%@",track.language);
+                }
             }
         }
         else if ([event isKindOfClass:PlayerEvent.textTrackChanged])
@@ -1680,10 +1682,10 @@ static ContentBuisnessType buisnessType;
         else if ([event isKindOfClass:PlayerEvent.audioTrackChanged])
         {
             self.CurrentAudioTrack = event.selectedTrack.title;
+            [[AnalyticEngine shared]AudioLanguageWith:self.CurrentAudioTrack];
         }
     }];
 }
-
 -(void)GetAudioLanguage
 {
     self.selectedString = LANGUAGE;
@@ -2486,12 +2488,14 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-    //content_id = @"0-0-dolafzonkikahani";//0-1-261984
+   // content_id = @"0-0-2431"; //@"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
     self.viewPlayer = playbackView;
+    [[AnalyticEngine shared]VideoStartTimeWith:0];
+    [[AnalyticEngine shared]AudioLanguageWith:@""];
     
     [self setSeekTime:0];
      
@@ -2881,6 +2885,9 @@ static ContentBuisnessType buisnessType;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
     self.currentItem.showchannelName = Livemodel.showOriginalTitle;
+    self.currentItem.geners = Livemodel.geners;
+    self.currentItem.imageUrl = [NSString stringWithFormat:@"https://akamaividz.zee5.com/resources/%@/list/270x152/%@",Livemodel.identifier,Livemodel.Image];
+    
     
     if (![ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id]) {
         [self ContentidNotification:_currentItem.content_id];

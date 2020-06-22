@@ -24,11 +24,13 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
     }
     
-    @objc public func VideoStartTime(with time:String)
+    @objc public func VideoStartTime(with time:NSInteger)
     {
         AllAnalyticsClass.shared.getVideoStartTime(Time: time)
-        
-        
+    }
+    @objc public func AudioLanguage(with Audio:String)
+    {
+        AllAnalyticsClass.shared.getcurrentAudio(Audio: Audio)
     }
 
    //MARK:- Conviva Player analytics
