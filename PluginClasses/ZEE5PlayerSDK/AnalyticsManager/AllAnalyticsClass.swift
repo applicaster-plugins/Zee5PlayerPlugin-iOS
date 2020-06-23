@@ -38,7 +38,9 @@ public class AllAnalyticsClass: NSObject {
     var skipIntroTime = ""
     var Imageurl = ""
     var TvShowimagUrl = ""
-    var videoStarttime = ""
+    var videoStarttime = 0
+    var TvshowChannelName = ""
+    var CurrentAudioLanguage = ""
     var AdDict = NSDictionary()
     var AdTag = NSDictionary()
 
@@ -51,7 +53,7 @@ public class AllAnalyticsClass: NSObject {
 
     public override init(){}
 
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String,language:[Any],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String,tvshowid:String,addict:NSDictionary,adtag:NSDictionary) {
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String,language:[Any],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String,tvshowid:String,addict:NSDictionary,adtag:NSDictionary,tvchannelname:String) {
 
         
         self.contentId = contentId
@@ -80,6 +82,7 @@ public class AllAnalyticsClass: NSObject {
         self.TvShowId = tvshowid
         self.AdDict = addict
         self.AdTag = adtag
+        self.TvshowChannelName = tvchannelname
         
     }
     
@@ -90,7 +93,7 @@ public class AllAnalyticsClass: NSObject {
                    genre = DataModel.geners
                    duration = Zee5PlayerPlugin.sharedInstance().getDuration()
                    currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
-                   series = DataModel.channel_Name  // TT  // For Live only we have to pass
+                   series = DataModel.channel_Name  
                    episodeNumber = DataModel.episode_number
                    DrmVideo = DataModel.isDRM
                    Subtitles = DataModel.subTitles
@@ -103,6 +106,7 @@ public class AllAnalyticsClass: NSObject {
                    TvShowimagUrl = DataModel.tvShowImgurl
                    seasonId = DataModel.seasonId
                    TvShowId = DataModel.showId
+                   TvshowChannelName = DataModel.showchannelName
 
                    if DataModel.charecters.count>0{
                        Charecters  = DataModel.charecters
@@ -154,7 +158,7 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.TAB_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.CAST_TO ~>> notAppplicable,
             Keys.AD_INITIALIZED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == "" ? "0":videoStarttime,
+            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? 0:videoStarttime,
             Keys.AD_INITIALIZED.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? "Kaltura Player",
             Keys.AD_INITIALIZED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
             Keys.AD_INITIALIZED.AD_PROVIDER ~>> "",
@@ -505,8 +509,12 @@ func getAge() -> String {
 extension AllAnalyticsClass
 {
     
-     public func getVideoStartTime(Time:String){
+     public func getVideoStartTime(Time:NSInteger){
         videoStarttime = Time
+    }
+    
+    public func getcurrentAudio(Audio:String){
+        CurrentAudioLanguage = Audio
     }
     
 }

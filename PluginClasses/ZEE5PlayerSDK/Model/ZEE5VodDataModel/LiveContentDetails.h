@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *coverImage;
 @property (nonatomic, copy)   NSDictionary *Licence;
 @property (nonatomic, copy)   NSString *buisnessType;
+@property (nonatomic, copy)   NSString *Image;
 
 @property (nonatomic, copy) NSArray<RelatedVideos *> *relatedVideos;
 + (instancetype)initFromJSONDictionary:(NSDictionary *)dict;

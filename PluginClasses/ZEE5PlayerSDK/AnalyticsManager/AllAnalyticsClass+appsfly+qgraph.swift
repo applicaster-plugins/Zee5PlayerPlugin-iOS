@@ -36,7 +36,7 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
         Keys.ADD_TO_WATCHLIST.TAB_NAME ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.TV_CATEGORY ~>> notAppplicable,
-        Keys.ADD_TO_WATCHLIST.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.ADD_TO_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.ADD_TO_WATCHLIST.CAROUSAL_NAME ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
@@ -125,8 +125,8 @@ extension AllAnalyticsClass{
                  Keys.LIVE_CHANNEL_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
                  Keys.LIVE_CHANNEL_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
                  Keys.LIVE_CHANNEL_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-                 Keys.LIVE_CHANNEL_PLAYED.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
-                 Keys.LIVE_CHANNEL_PLAYED.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+                 Keys.LIVE_CHANNEL_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+                 Keys.LIVE_CHANNEL_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                  Keys.LIVE_CHANNEL_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                  Keys.LIVE_CHANNEL_PLAYED.BILLING_COUNTRY ~>> ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
                  Keys.LIVE_CHANNEL_PLAYED.BILLING_STATE ~>> ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
@@ -176,8 +176,7 @@ extension AllAnalyticsClass{
             Keys.MOVIESSECTION_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.MOVIESSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
             Keys.MOVIESSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
-            Keys.MOVIESSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-            Keys.MOVIESSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+            Keys.MOVIESSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
             Keys.MOVIESSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
             Keys.MOVIESSECTION_PLAYED.BILLING_STATE ~>> ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
             Keys.MOVIESSECTION_PLAYED.BILLING_COUNTRY ~>> ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
@@ -211,9 +210,10 @@ extension AllAnalyticsClass{
                Keys.TVSHOWSSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
                Keys.TVSHOWSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
                Keys.TVSHOWSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.TVSHOWSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+               Keys.TVSHOWSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
                Keys.TVSHOWSSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                Keys.TVSHOWSSECTION_PLAYED.BILLING_STATE ~>> ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
+               Keys.TVSHOWSSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                Keys.TVSHOWSSECTION_PLAYED.BILLING_COUNTRY ~>> ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
                    ]
            analytics.track(Events.TVSHOWSSECTION_PLAYED, trackedProperties: parameter)
@@ -243,10 +243,9 @@ extension AllAnalyticsClass{
             Keys.VIDEOSECTION_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
             Keys.VIDEOSECTION_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.VIDEOSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-            Keys.VIDEOSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
-            Keys.VIDEOSECTION_PLAYED.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.VIDEOSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+            Keys.VIDEOSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
             Keys.VIDEOSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
-            Keys.VIDEOSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
             Keys.VIDEOSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
             Keys.VIDEOSECTION_PLAYED.BILLING_COUNTRY ~>> ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
             Keys.VIDEOSECTION_PLAYED.BILLING_STATE ~>> ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState()
@@ -261,8 +260,8 @@ extension AllAnalyticsClass{
         Keys.ORIGINALSSECTION_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
         Keys.ORIGINALSSECTION_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
         Keys.ORIGINALSSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-        Keys.ORIGINALSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
-        Keys.ORIGINALSSECTION_PLAYED.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.ORIGINALSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.ORIGINALSSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.ORIGINALSSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
@@ -309,7 +308,7 @@ extension AllAnalyticsClass{
              Keys.DOWNLOAD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
              Keys.DOWNLOAD_CLICK.TAB_NAME ~>> notAppplicable,
              Keys.DOWNLOAD_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-             Keys.DOWNLOAD_CLICK.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+             Keys.DOWNLOAD_CLICK.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_NAME ~>>  contentName == "" ? notAppplicable:contentName,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_EXPIRY_DATE ~>>  notAppplicable,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_NO_OF_DAYS_TO_EXPIRY ~>>  notAppplicable,
@@ -336,7 +335,7 @@ extension AllAnalyticsClass{
              Keys.DD1ST_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
              Keys.DD1ST_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
              Keys.DD1ST_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-             Keys.DD1ST_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+             Keys.DD1ST_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
              Keys.DD1ST_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD1ST_VIDEO_CLICK, trackedProperties: parameter)
@@ -354,7 +353,7 @@ extension AllAnalyticsClass{
            Keys.DD3RD_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count>0 ? contentlanguages.description:notAppplicable,
            Keys.DD3RD_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
            Keys.DD3RD_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-           Keys.DD3RD_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+           Keys.DD3RD_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
            Keys.DD3RD_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                 ]
                  analytics.track(Events.DD3RD_VIDEO_CLICK, trackedProperties: parameter)
@@ -373,7 +372,7 @@ extension AllAnalyticsClass{
         Keys.DD5TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.DD5TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.DD5TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD5TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+        Keys.DD5TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
         Keys.DD3RD_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD5TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -392,7 +391,7 @@ extension AllAnalyticsClass{
         Keys.DD7TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.DD7TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.DD7TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD7TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+        Keys.DD7TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
         Keys.DD7TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD7TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -411,7 +410,7 @@ extension AllAnalyticsClass{
         Keys.DD10TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.DD10TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.DD10TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD10TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+        Keys.DD10TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
         Keys.DD10TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD10TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -430,7 +429,7 @@ extension AllAnalyticsClass{
         Keys.DD15TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.DD15TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.DD15TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD15TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+        Keys.DD15TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
         Keys.DD15TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD15TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -449,7 +448,7 @@ extension AllAnalyticsClass{
         Keys.DD20TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
         Keys.DD20TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
         Keys.DD20TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD20TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+        Keys.DD20TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
         Keys.DD20TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD20TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -475,9 +474,11 @@ extension AllAnalyticsClass{
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
+           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.BILLING_COUNTRY ~>>  ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
+           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.BILLING_STATE ~>>  ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
            ]
             analytics.track(Events.VIDEOSECTION_ADDED_TO_WATCH_LATER, trackedProperties: parameter)
        }
@@ -488,11 +489,14 @@ extension AllAnalyticsClass{
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.BILLING_COUNTRY ~>>  ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.BILLING_STATE ~>>  ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
+             Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
+             Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+             Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
               ]
               analytics.track(Events.ORIGINALSSECTION_ADDED_TO_WATCH_LATER, trackedProperties:parameter)
           }
@@ -505,11 +509,14 @@ extension AllAnalyticsClass{
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.BILLING_COUNTRY ~>>  ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.BILLING_STATE ~>>  ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
+             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
+             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+            Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
              ]
                analytics.track(Events.TVSHOWSSECTION_ADDED_TO_WATCH_LATER, trackedProperties:parameter)
          }
@@ -519,13 +526,12 @@ extension AllAnalyticsClass{
           {
            let parameter : Set = [
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
-              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> contentName == "" ? notAppplicable:contentName,
+              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == "" ? notAppplicable:videoStarttime,
+              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
-              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.BILLING_COUNTRY ~>>  ZEE5UserDefaults.getCountry() == "" ? notAppplicable:ZEE5UserDefaults.getCountry(),
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.BILLING_STATE ~>>  ZEE5UserDefaults.getState() == "" ? notAppplicable:ZEE5UserDefaults.getState(),
               ]

@@ -35,6 +35,7 @@
         self.Tags = [dict ValueForKeyWithNullChecking:@"tags"];
         self.buisnessType = [dict ValueForKeyWithNullChecking:@"business_type"];
         self.coverImage = [dict ValueForKeyWithNullChecking:@"cover_image"];
+        self.Image = [dict valueForKey:@"list_image"];
         
         if ([[dict ValueForKeyWithNullChecking:@"licensing"] isKindOfClass:NSDictionary.class]) {
                    self.Licence = [dict ValueForKeyWithNullChecking:@"licensing"];
@@ -47,9 +48,9 @@
 
         NSMutableArray <Genres*>*genreArray = [[NSMutableArray alloc] init];
         
-        if ([[dict ValueForKeyWithNullChecking:@"genre"] isKindOfClass:NSArray.class]) {
+        if ([[dict ValueForKeyWithNullChecking:@"genres"] isKindOfClass:NSArray.class]) {
             
-            for (NSDictionary *genreDict in [dict ValueForKeyWithNullChecking:@"genre"]) {
+            for (NSDictionary *genreDict in [dict ValueForKeyWithNullChecking:@"genres"]) {
                 
                 Genres *genre = [[Genres alloc] init];
                 genre.identifier = [genreDict ValueForKeyWithNullChecking:@"id"];
