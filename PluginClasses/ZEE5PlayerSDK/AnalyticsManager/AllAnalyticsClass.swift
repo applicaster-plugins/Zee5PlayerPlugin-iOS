@@ -107,6 +107,7 @@ public class AllAnalyticsClass: NSObject {
                    seasonId = DataModel.seasonId
                    TvShowId = DataModel.showId
                    TvshowChannelName = DataModel.showchannelName
+                   audiolanguage = DataModel.audioLanguages
 
                    if DataModel.charecters.count>0{
                        Charecters  = DataModel.charecters
@@ -115,8 +116,11 @@ public class AllAnalyticsClass: NSObject {
                   genereString = value.joined(separator: ",")
         
                if DataModel.audioLanguages.count>0{
-                audiolanguage = DataModel.audioLanguages
-                }
+                for Audio in DataModel.audioLanguages {
+                    let AudioStr = Utility .getLanguageString(fromId: Audio as! String)
+                  audiolanguage .append(AudioStr)
+                   }
+               }
                    PlayerVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "nil"
                   
     }
