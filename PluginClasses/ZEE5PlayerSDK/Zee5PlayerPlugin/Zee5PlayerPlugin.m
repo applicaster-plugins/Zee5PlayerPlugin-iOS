@@ -84,7 +84,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
     FairPlayDRMParams* fairplayParams = [[FairPlayDRMParams alloc] initWithLicenseUri:licence base64EncodedCertificate:cerificate];
 
-    PKMediaSource* source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:@[fairplayParams] mediaFormat:MediaFormatHls];
+    MediaFormat mediaFormat = MediaFormatHls;
+
+    if (!currentItem.isDRM) {
+        if ([contentStringURL containsString:@".mp3"]) {
+            mediaFormat = MediaFormatMp3;
+        }
+        else if ([contentStringURL containsString:@".mp4"]) {
+            mediaFormat = MediaFormatMp4;
+        }
+        else if ([contentStringURL containsString:@".wvm"]) {
+            mediaFormat = MediaFormatWvm;
+        }
+    }
+    
+    PKMediaSource* source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:@[fairplayParams] mediaFormat:mediaFormat];
 
     PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
 
