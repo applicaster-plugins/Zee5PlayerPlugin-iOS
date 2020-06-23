@@ -840,18 +840,18 @@ static ContentBuisnessType buisnessType;
             return;
         }
         RelatedVideos *Model;
-        for (RelatedVideos *Object in self.currentItem.related) {
-             if ([_PreviousContentArray containsObject:Object.identifier])
-            {
-            }
-             else{
-                 Model = Object;
-                 break;
-             }
-        }
-        if (self.currentItem.related.count == 1) {
+//        for (RelatedVideos *Object in self.currentItem.related) {
+//             if ([_PreviousContentArray containsObject:Object.identifier])
+//            {
+//            }
+//             else{
+//                 Model = Object;
+//                 break;
+//             }
+//        }
+//        if (self.currentItem.related.count == 1) {
             Model = self.currentItem.related[0];
-        }
+        //}
        
         [[ZEE5PlayerManager sharedInstance] playSimilarEvent:Model.identifier];
         [[ZEE5PlayerManager sharedInstance]playVODContent:Model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
@@ -1675,7 +1675,6 @@ static ContentBuisnessType buisnessType;
         }
         else if ([event isKindOfClass:PlayerEvent.textTrackChanged])
         {
-            
             self.selectedSubtitle = event.selectedTrack.title;
             self.CurrenttextTrack = event.selectedTrack.title;
         }
@@ -2488,7 +2487,7 @@ static ContentBuisnessType buisnessType;
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
 {
 
-   // content_id = @"0-0-2431"; //@"0-0-dolafzonkikahani";//0-1-261984
+   // content_id = @"0-0-160315"; //@"0-0-dolafzonkikahani";//0-1-261984
     
     _isStop = false;
     _isNeedToSubscribe = false;
@@ -2779,7 +2778,6 @@ static ContentBuisnessType buisnessType;
 
 - (void)initilizePlayerWithVODContent:(VODContentDetailsDataModel*)model andDRMToken:(NSString*)token
 {
-
     self.currentItem = [[CurrentItem alloc] init];
     if (model.isDRM)
     {
@@ -2788,14 +2786,9 @@ static ContentBuisnessType buisnessType;
         self.currentItem.hls_Url = [model.hlsUrl stringByAppendingString:token];
     }
     
-    if (![self.currentItem.hls_Url containsString:@"https"])
+    if (![self.currentItem.hls_Url containsString:@"https://"])
     {
-        self.currentItem.hls_Url = [self.currentItem.hls_Url stringByReplacingOccurrencesOfString:@"http" withString:@"https"];
-    }
-
-    if ([model.mpdUrl containsString:@"mpd"])
-    {
-          self.currentItem.mpd_Url = [self.KcdnUrl stringByAppendingString:model.mpdUrl] ;
+        self.currentItem.hls_Url = [self.currentItem.hls_Url stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
     }
 
     self.currentItem.drm_token = token;
@@ -2825,7 +2818,23 @@ static ContentBuisnessType buisnessType;
     self.currentItem.showId = model.tvShowId;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
-
+    //self.currentItem.VTT = model.ExternalSubtitle;
+    
+//     NSMutableArray <PKExternalSubtitle*>*subtitleArray = [[NSMutableArray alloc] init];
+//    for (NSString * Subtitle in _currentItem.subTitles) {
+//
+//        if ([self.currentItem.VTT containsString:@"/thumbnails/index.vtt"])
+//           {
+//               self.currentItem.VTT =[self.currentItem.VTT stringByReplacingOccurrencesOfString:@"/thumbnails/index.vtt" withString:@""];
+//
+//               self.currentItem.VTT = [NSString stringWithFormat:@"%@/manifest-%@.vtt",self.currentItem.VTT,Subtitle];
+//
+//               PKExternalSubtitle *SubTitleArray = [[PKExternalSubtitle alloc]initWithId:@"" name:@"" language:Subtitle vttURLString:self.currentItem.VTT duration:self.currentItem.duration isDefault:false autoSelect:false forced:false characteristics:@""];
+//
+//               [subtitleArray addObject:SubTitleArray];
+//           }
+//    }
+//    self.currentItem.ExternalSubtitle = subtitleArray;
 
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
       [self ContentidNotification:_currentItem.content_id];
