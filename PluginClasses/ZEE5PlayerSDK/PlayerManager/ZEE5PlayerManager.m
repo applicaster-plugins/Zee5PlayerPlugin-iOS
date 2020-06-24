@@ -1946,7 +1946,7 @@ static ContentBuisnessType buisnessType;
    
     }
 }
--(void)ParntalViewPlay{
+-(void)ParentalViewPlay{
     [self parentalControlshow];
    
 }
