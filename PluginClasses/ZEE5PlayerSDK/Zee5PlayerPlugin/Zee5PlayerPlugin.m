@@ -15,6 +15,7 @@
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
 #import <ConvivaSDK/ConvivaSDK-iOS-umbrella.h>
 #import "SingletonClass.h"
+#import "Utility.h"
 
 
 #define Conviva_Application_Name @"ZEE5-iOS App"
@@ -99,9 +100,14 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
     
     PKMediaSource* source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:@[fairplayParams] mediaFormat:mediaFormat];
-
+    
     PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
-
+    
+    // Can set external subtitles only when the duration is known
+    if (currentItem.duration > 0) {
+        mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
+    }
+    
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
 
@@ -180,7 +186,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     NSString *entryId = self.currentItem.content_id;
     
-    PKMediaSource* source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:nil mediaFormat:MediaFormatMp4];
+    PKMediaSource *source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:nil mediaFormat:MediaFormatMp4];
     
     PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
     
@@ -712,6 +718,36 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
 
     return totalString;
+}
+
+// MARK: Subtitles
+
+- (nullable NSArray<PKExternalSubtitle *> *)externalSubtitlesFrom:(NSArray *)subtitles vttThumbnailsUrl:(NSString *)vttThumbnailsUrl duration:(NSTimeInterval)duration {
+    NSMutableArray<PKExternalSubtitle *> *result = [[NSMutableArray alloc] init];
+        
+    if (![vttThumbnailsUrl containsString:@"/thumbnails/index.vtt"]) {
+        return nil;
+    }
+    
+    NSString *baseUrl = [vttThumbnailsUrl stringByReplacingOccurrencesOfString:@"/thumbnails/index.vtt" withString:@""];
+
+    for (NSString *subtitle in subtitles) {
+        NSString *vttUrl = [NSString stringWithFormat:@"%@/manifest-%@.vtt", baseUrl, subtitle];
+        
+        PKExternalSubtitle *externalSubtitle = [[PKExternalSubtitle alloc] initWithId:[subtitle stringByAppendingString:@"_vtt"]
+                                                                                 name:[Utility getLanguageStringFromId:subtitle]
+                                                                             language:subtitle
+                                                                         vttURLString:vttUrl
+                                                                             duration:duration
+                                                                            isDefault:false
+                                                                           autoSelect:false
+                                                                               forced:false
+                                                                      characteristics:@""];
+        
+        [result addObject:externalSubtitle];
+    }
+    
+    return result;
 }
 
 @end

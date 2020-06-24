@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString* skipintrotime;
 @property (nonatomic, copy)NSString* showchannelName;
 
+@property (strong, nonnull) NSString *vttThumbnailsUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

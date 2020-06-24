@@ -69,6 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *SeasonId;
 
 
+@property (nonatomic, copy) NSString *vttThumbnailsUrl;
 
 
 + (instancetype)initFromJSONDictionary:(NSDictionary *)dict;

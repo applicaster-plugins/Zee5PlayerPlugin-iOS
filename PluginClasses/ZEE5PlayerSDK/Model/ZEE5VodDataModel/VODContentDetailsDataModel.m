@@ -142,6 +142,10 @@
             self.showOriginalTitle = str;
         }
         
+        if ([[dict ValueForKeyWithNullChecking:@"video_details"] isKindOfClass: NSDictionary.class]) {
+            NSDictionary *videoDetails = [dict ValueForKeyWithNullChecking:@"video_details"];
+            _vttThumbnailsUrl = [videoDetails ValueForKeyWithNullChecking:@"vtt_thumbnail_url"];
+        }
     }
     
     return self;
