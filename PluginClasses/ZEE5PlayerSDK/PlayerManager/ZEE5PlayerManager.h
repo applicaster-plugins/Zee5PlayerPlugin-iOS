@@ -198,6 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)handleHLSError;
 
 -(void)checkParentalPin:(NSString *)Pin;
+-(void)ParentalViewPlay;
 -(void)parentalgesture:(BOOL)isKeypadShow;
 -(void)deleteAllDevice:(NSString *)SenderAction;
 -(void)upgradeSubscribePack:(NSString *)SubscribePack;

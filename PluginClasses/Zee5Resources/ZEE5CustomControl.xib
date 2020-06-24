@@ -638,6 +638,38 @@ watch this video</string>
                         <constraint firstItem="CpA-LS-wPV" firstAttribute="top" secondItem="grw-mV-yQs" secondAttribute="bottom" constant="5" id="jiY-2E-s0B"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pve-ci-rSh">
+                    <rect key="frame" x="0.0" y="0.0" width="547" height="276"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parental Control Validation  failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K2K-d9-LaW">
+                            <rect key="frame" x="166.5" y="109" width="214.5" height="18"/>
+                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="13"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtP-46-AsK">
+                            <rect key="frame" x="253.5" y="132" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="40" id="ZyB-fb-k9g"/>
+                                <constraint firstAttribute="height" constant="40" id="l7q-3F-yH6"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="ZEE5_Player" family="ZEE5_Player" pointSize="23"/>
+                            <state key="normal" title="2">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="parentalPlayBtn:" destination="iN0-l3-epB" eventType="touchUpInside" id="any-ZS-Fd4"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="K2K-d9-LaW" firstAttribute="centerX" secondItem="pve-ci-rSh" secondAttribute="centerX" id="V6N-NX-0Ij"/>
+                        <constraint firstItem="mtP-46-AsK" firstAttribute="centerX" secondItem="K2K-d9-LaW" secondAttribute="centerX" id="at8-Fd-VnN"/>
+                        <constraint firstItem="mtP-46-AsK" firstAttribute="top" secondItem="K2K-d9-LaW" secondAttribute="bottom" constant="5" id="dtz-D5-oDt"/>
+                        <constraint firstItem="K2K-d9-LaW" firstAttribute="centerY" secondItem="pve-ci-rSh" secondAttribute="centerY" constant="-20" id="pRI-YY-XJS"/>
+                    </constraints>
+                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p8M-q7-7S1">
                     <rect key="frame" x="0.0" y="5" width="60" height="60"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -695,15 +727,19 @@ watch this video</string>
                 <constraint firstItem="32F-Kd-DAn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cjH-Vc-5XM"/>
                 <constraint firstAttribute="trailing" secondItem="pfO-AE-4HQ" secondAttribute="trailing" constant="10" id="csF-i9-ASE"/>
                 <constraint firstItem="orD-Ja-xQR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="goz-NM-urW"/>
+                <constraint firstAttribute="bottom" secondItem="pve-ci-rSh" secondAttribute="bottom" id="gsw-zI-S9O"/>
                 <constraint firstAttribute="trailing" secondItem="Ih4-4v-ast" secondAttribute="trailing" id="hN2-dA-XkV"/>
                 <constraint firstItem="32F-Kd-DAn" firstAttribute="top" secondItem="p4i-9L-w3V" secondAttribute="bottom" constant="5" id="hgn-d9-8tD"/>
                 <constraint firstItem="Rhx-bt-hUm" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="jrl-fc-ZbP"/>
+                <constraint firstItem="pve-ci-rSh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lRC-yn-OUS"/>
                 <constraint firstAttribute="trailing" secondItem="p4i-9L-w3V" secondAttribute="trailing" constant="5" id="p84-sn-kvy"/>
                 <constraint firstAttribute="bottom" secondItem="Zfz-bG-2t7" secondAttribute="bottom" constant="1" id="pZR-1X-cNH"/>
                 <constraint firstAttribute="bottom" secondItem="32F-Kd-DAn" secondAttribute="bottom" id="pwQ-yp-hJZ"/>
                 <constraint firstAttribute="bottom" secondItem="orD-Ja-xQR" secondAttribute="bottom" constant="1" id="sEK-E0-56h"/>
                 <constraint firstAttribute="trailing" secondItem="7CG-57-Izx" secondAttribute="trailing" id="ssC-me-myO"/>
+                <constraint firstItem="pve-ci-rSh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="v7L-UC-tMI"/>
                 <constraint firstItem="7CG-57-Izx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="v7w-7w-MC1"/>
+                <constraint firstAttribute="trailing" secondItem="pve-ci-rSh" secondAttribute="trailing" id="vKg-Nb-Fij"/>
                 <constraint firstItem="p8M-q7-7S1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="yAT-lU-Ma9"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="pfO-AE-4HQ" secondAttribute="bottom" constant="5" id="z0d-V4-ntP"/>
             </constraints>
@@ -733,6 +769,7 @@ watch this video</string>
                 <outlet property="lableTitle" destination="uL1-sI-kCh" id="gDB-F4-WeJ"/>
                 <outlet property="nextEpisodeImg" destination="Jv0-Zl-75u" id="OcZ-d9-tCr"/>
                 <outlet property="nextEpisodename" destination="qvX-6L-cZA" id="Qqc-wh-vgd"/>
+                <outlet property="parentalDismissView" destination="pve-ci-rSh" id="OOi-D7-bSO"/>
                 <outlet property="partnerLblTxt" destination="lSo-wd-ZW7" id="B7L-Ar-0jP"/>
                 <outlet property="playerControlView" destination="bGG-Kh-eme" id="55k-Mi-XYC"/>
                 <outlet property="showcreditTimelbl" destination="Vcy-gP-1Ex" id="dVO-vM-UEc"/>

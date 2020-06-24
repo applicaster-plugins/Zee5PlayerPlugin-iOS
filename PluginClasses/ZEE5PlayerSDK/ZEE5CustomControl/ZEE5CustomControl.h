@@ -88,7 +88,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *backtoPartnerView;
 @property (weak, nonatomic) IBOutlet UILabel *partnerLblTxt;
 - (IBAction)bactoPartnetAppAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *parentalDismissView;
 
+- (IBAction)parentalPlayBtn:(UIButton *)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerControlView;
 - (IBAction)upNextAction:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *adultView;

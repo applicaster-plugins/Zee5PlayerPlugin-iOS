@@ -290,4 +290,7 @@
 - (IBAction)upNextAction:(id)sender {
     [[ZEE5PlayerManager sharedInstance]tapOnUpNext];
 }
+- (IBAction)parentalPlayBtn:(UIButton *)sender {
+    [[ZEE5PlayerManager sharedInstance]ParentalViewPlay];
+}
 @end
