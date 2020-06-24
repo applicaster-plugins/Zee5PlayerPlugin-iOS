@@ -1106,6 +1106,12 @@ static ContentBuisnessType buisnessType;
 -(void)DestroyPlayer{
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
+    
+    _textTracks = nil;
+    _offlineTextTracks = nil;
+    _audioTracks = nil;
+    _offlineLanguageTracks = nil;
+    
     self.LiveModelValues = nil;
     
     self.posterImageView.image = nil;
