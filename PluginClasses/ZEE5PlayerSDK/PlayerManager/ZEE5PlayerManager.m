@@ -1604,10 +1604,14 @@ static ContentBuisnessType buisnessType;
 
 -(void)startAd {
     [self.panDownGestureHandlerHelper startAd];
+     singleton.isAdPause = FALSE;
 }
 
 -(void)endAd {
     [self.panDownGestureHandlerHelper endAd];
+}
+-(void)pauseAd {
+    singleton.isAdPause = TRUE;
 }
 
 -(void)ShowToastMessage:(NSString *)Message{
@@ -3436,10 +3440,12 @@ static ContentBuisnessType buisnessType;
     self.selectedString = @"";
 }
 
+
 //MARK:-  Download Start Method
 -(void)StartDownload
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+        
         [self pause];
         [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
             if (isSuccess) {
