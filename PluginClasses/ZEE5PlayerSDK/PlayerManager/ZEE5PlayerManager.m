@@ -191,10 +191,20 @@ static ContentBuisnessType buisnessType;
 //MARK:- VideoPlayMethod
 
 - (void)playWithCurrentItem {
+    
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
+    {
+        [self CustomControlViewNew];
+        return;
+    }
+    if (_parentalControl == true) {
+         [self hideLoaderOnPlayer];
+          [self parentalControlshow];
+        return;
+    }
     if (!_allowVideoContent) {
         return;
     }
-    
     if ([[ChromeCastManager shared] isCasting]) {
         [self castCurrentItem];
         return;
@@ -415,14 +425,8 @@ static ContentBuisnessType buisnessType;
     _customControlView.btnSkipNext.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
     _customControlView.adultView.hidden = YES;
-    
-    if (_ishybridViewOpen == true) {
-        if (_playbackView == nil) {
-           [self.viewPlayer addSubview:self.customControlView];
-        }
-       [self hideUnHidetrailerEndView:false];
-        return;
-    }
+    _customControlView.parentalDismissView.hidden = YES;
+
       [self hideUnHidetrailerEndView:true];
     
     if (_currentItem.related.count == 1)
@@ -487,6 +491,40 @@ static ContentBuisnessType buisnessType;
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
 }
 
+
+-(void)CustomControlViewNew{
+    NSBundle *bundel = [NSBundle bundleForClass:self.class];
+    [self hideLoaderOnPlayer];
+    if (self.playbackView != nil) {
+             [self.playbackView removeFromSuperview];
+         }
+    if(_customControlView == nil)
+       {
+           _customControlView = [[bundel loadNibNamed:@"ZEE5CustomControl" owner:self options:nil] objectAtIndex:0];
+       }
+       _customControlView.frame = CGRectMake(0, 0, self.viewPlayer.frame.size.width, self.viewPlayer.frame.size.height);
+       _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.viewPlayer addSubview:self.customControlView];
+    
+    _customControlView.parentalDismissView.hidden = true;
+    _customControlView.adultView.hidden = true;
+    _customControlView.trailerEndView.hidden = true;
+
+   if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
+            {
+                _customControlView.adultView.hidden = NO;
+                return;
+            }
+    if (_parentalControl == YES) {
+        _customControlView.parentalDismissView.hidden = false;
+    }
+    
+    if (_isNeedToSubscribe == true) {
+       [self hideUnHidetrailerEndView:false];
+        return;
+    }
+}
+
 -(void)MoatViewAdd{
     if (_customControlView != nil && [singleton.ViewsArray containsObject:_customControlView]== false) {
         [singleton.ViewsArray addObject:_customControlView];
@@ -512,6 +550,9 @@ static ContentBuisnessType buisnessType;
     if (_customControlView.adultView != nil && [singleton.ViewsArray containsObject:_customControlView.adultView]== false) {
                 [singleton.ViewsArray addObject:_customControlView.adultView];
         }
+    if (_customControlView.parentalDismissView != nil && [singleton.ViewsArray containsObject:_customControlView.parentalDismissView]== false) {
+                   [singleton.ViewsArray addObject:_customControlView.parentalDismissView];
+           }
     if (_customControlView.playerControlView != nil && [singleton.ViewsArray containsObject:_customControlView.playerControlView]== false ) {
             [singleton.ViewsArray addObject:_customControlView.playerControlView];
     }
@@ -595,16 +636,6 @@ static ContentBuisnessType buisnessType;
         [self pause];
         return;
     }
-    
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
-        {
-            _customControlView.adultView.hidden = NO;
-            if (_playbackView == nil) {
-                     [self.viewPlayer addSubview:self.customControlView];
-                  }
-            [self stop];
-            return;
-        }
     self.customControlView.buttonPlay.selected = YES;
     _customControlView.sliderLive.userInteractionEnabled = NO;
     _videoCompleted = NO;
@@ -615,12 +646,6 @@ static ContentBuisnessType buisnessType;
     if (!_customControlView.topView.hidden) {
         [self perfomAction];
     }
-    
-    if (_parentalControl == YES) {
-        [self pause];
-        [self parentalControlshow];
-    }
-
 }
 
 -(void)onDurationUpdate:(PKEvent *)event
@@ -1076,11 +1101,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)play
 {
-    if (_parentalControl == YES) {
-        [self parentalControlshow];
-        [self pause];
-        return;
-    }
     NSInteger rounded = roundf(_customControlView.sliderDuration.maximumValue);
     if (rounded == _customControlView.sliderDuration.value && rounded != 0)
     {
@@ -1113,9 +1133,8 @@ static ContentBuisnessType buisnessType;
     _offlineLanguageTracks = nil;
     
     self.LiveModelValues = nil;
-    
     self.posterImageView.image = nil;
-    
+    [_customControlView  removeFromSuperview];
     [self.playbackView removeFromSuperview];
 }
 
@@ -1336,6 +1355,7 @@ static ContentBuisnessType buisnessType;
         [self hideFullScreen];
     }else{
          [self stop];
+        [_customControlView removeFromSuperview];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
@@ -1911,7 +1931,7 @@ static ContentBuisnessType buisnessType;
                 }
                 _parentalControl =NO;
                 _allowVideoContent =YES;
-                [self play];
+                [self playWithCurrentItem];
                 
             }
             return;
@@ -1925,6 +1945,10 @@ static ContentBuisnessType buisnessType;
     {
    
     }
+}
+-(void)ParntalViewPlay{
+    [self parentalControlshow];
+   
 }
 
 //MARK:- Delete Device For User Login
@@ -2289,6 +2313,7 @@ static ContentBuisnessType buisnessType;
         [_devicePopView removeFromSuperview];
         _devicePopView = nil;
     }else if (_parentalView != nil){
+        [self CustomControlViewNew];
         [_parentalView removeFromSuperview];
         _parentalView = nil;
     }
@@ -2827,7 +2852,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
-    
+
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
       [self ContentidNotification:_currentItem.content_id];
     }
@@ -3205,11 +3230,7 @@ static ContentBuisnessType buisnessType;
     if (_ModelValues.isBeforeTv == true) {
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
-    
-    if (_isNeedToSubscribe == YES) {
-        [self HybridViewOpen];
-    }
-    [self addCustomControls];
+    [self CustomControlViewNew];
     
 }
 
