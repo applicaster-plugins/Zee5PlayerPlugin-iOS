@@ -803,10 +803,13 @@ static ContentBuisnessType buisnessType;
         _customControlView.bufferProgress.progress = range.duration/100;
         if([_customControlView.labelTotalDuration.text isEqualToString:@"00:00"])
         {
-            _customControlView.sliderDuration.maximumValue = [[Zee5PlayerPlugin sharedInstance] getDuration];
-            _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
-            [_customControlView.sliderDuration setMarkerAtPosition:100.0/_customControlView.sliderDuration.maximumValue];
-            [_customControlView.sliderDuration setMarkerAtPosition:200.0/_customControlView.sliderDuration.maximumValue];
+            NSTimeInterval duration = [[Zee5PlayerPlugin sharedInstance] getDuration];
+            if (duration > 0) {
+                _customControlView.sliderDuration.maximumValue = duration;
+                _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
+                [_customControlView.sliderDuration setMarkerAtPosition:100.0/_customControlView.sliderDuration.maximumValue];
+                [_customControlView.sliderDuration setMarkerAtPosition:200.0/_customControlView.sliderDuration.maximumValue];
+            }
         }
     }
 
@@ -1103,6 +1106,12 @@ static ContentBuisnessType buisnessType;
 -(void)DestroyPlayer{
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
+    
+    _textTracks = nil;
+    _offlineTextTracks = nil;
+    _audioTracks = nil;
+    _offlineLanguageTracks = nil;
+    
     self.LiveModelValues = nil;
     
     self.posterImageView.image = nil;
@@ -1798,7 +1807,6 @@ static ContentBuisnessType buisnessType;
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
     
 }
-
 
 //MARK:-Prepare POP UP Views
 
@@ -2818,24 +2826,8 @@ static ContentBuisnessType buisnessType;
     self.currentItem.showId = model.tvShowId;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
-    //self.currentItem.VTT = model.ExternalSubtitle;
+    self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
     
-//     NSMutableArray <PKExternalSubtitle*>*subtitleArray = [[NSMutableArray alloc] init];
-//    for (NSString * Subtitle in _currentItem.subTitles) {
-//
-//        if ([self.currentItem.VTT containsString:@"/thumbnails/index.vtt"])
-//           {
-//               self.currentItem.VTT =[self.currentItem.VTT stringByReplacingOccurrencesOfString:@"/thumbnails/index.vtt" withString:@""];
-//
-//               self.currentItem.VTT = [NSString stringWithFormat:@"%@/manifest-%@.vtt",self.currentItem.VTT,Subtitle];
-//
-//               PKExternalSubtitle *SubTitleArray = [[PKExternalSubtitle alloc]initWithId:@"" name:@"" language:Subtitle vttURLString:self.currentItem.VTT duration:self.currentItem.duration isDefault:false autoSelect:false forced:false characteristics:@""];
-//
-//               [subtitleArray addObject:SubTitleArray];
-//           }
-//    }
-//    self.currentItem.ExternalSubtitle = subtitleArray;
-
     if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
       [self ContentidNotification:_currentItem.content_id];
     }
