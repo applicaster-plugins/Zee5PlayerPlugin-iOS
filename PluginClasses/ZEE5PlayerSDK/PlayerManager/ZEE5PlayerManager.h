@@ -170,6 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)ShowToastMessage:(NSString *)Message;
 -(void)startAd;
 -(void)endAd;
+-(void)pauseAd;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;
