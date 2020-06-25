@@ -59,23 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (ZEE5PlayerManager *)sharedInstance;
-
-/*!
- * @discussion This method used to play live catch up and live dvr
- * @param channel_id Need to pass channel id
- * @param show_id Need to pass show id.
- * @param startTime Need to pass start time of catch up.
- * @param end_time Need to pass end time of catch up.
- * @param episode_no Need to pass episode number.
- * @param season_nun Need to pass season number.
- * @param category Need to pass category.
- * @param laguage Need to pass transaltion langauge id.
- * @param playerConfig Need to pass playerConfig file.
- * @param playbackView Need to pass the view where you want to play the video.
- */
-
-- (void)playLiveContent:(NSString *)channel_id showId:(NSString *)show_id startTime:(NSTimeInterval)startTime endtime:(NSTimeInterval)end_time episodNumber:(NSString *)episode_no seasonNumber:(NSString *)season_nun category:(NSString *)category translation:(NSString *)laguage playerConfig:(ZEE5PlayerConfig *)playerConfig playbackView:(PlayerView *)playbackView;
-
 /*!
  * @discussion This method used to play vod content with content id
  * @param content_id Need to pass content id of the video
@@ -90,32 +73,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock;
 
 /*!
- * @discussion This method used to play vod content with json
- * @param playerConfig Need to pass playerConfig file.
- * @param playbackView Need to pass the view where you want to play the video.
+ * @discussion This method used to play vod content with content_id
+ * @param country Need to pass Country
+ * @param laguage Need to pass Translation
  */
-
-- (void)playVODWithJson:(NSDictionary *)dict playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull PlayerView *)playbackView;
-
-/*!
- * @discussion This method used to play vod content with url
- * @param playerConfig Need to pass playerConfig file.
- * @param playbackView Need to pass the view where you want to play the video.
- */
-
-- (void)playVODWithURL:(NSString*)urlString playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull PlayerView *)playbackView;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 
 
 -(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success;
-
-/*!
- * @discussion This method use to get the video content details with content id
- * @param content_id Need to pass content id of the video
- * @param country Need to pass user country id.
- */
--(void)getContentDetailForCastingItem:(NSString*)content_id country:(NSString*)country translation:(NSString*)language : (void (^)(VODContentDetailsDataModel *model, NSString *result))success ;
 
 /*!
  * @discussion This method used to stop the video
@@ -202,7 +168,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)ParentalViewPlay;
 -(void)parentalgesture:(BOOL)isKeypadShow;
 -(void)deleteAllDevice:(NSString *)SenderAction;
--(void)upgradeSubscribePack:(NSString *)SubscribePack;
 -(ContentBuisnessType)getBusinessType;
 
 

@@ -105,9 +105,7 @@ typedef NS_ENUM(NSUInteger, ZEEConvivaPlayerState) {
 #import <Zee5PlayerPlugin/BaseUrls.h>
 #import <Zee5PlayerPlugin/Zee5MenuView.h>
 #import <Zee5PlayerPlugin/CurrentItem.h>
-#import <Zee5PlayerPlugin/BeforeTvcontentView.h>
 #import <Zee5PlayerPlugin/RelatedVideos.h>
-#import <Zee5PlayerPlugin/InternationlguestUser.h>
 #import <Zee5PlayerPlugin/SubscriptionModel.h>
 #import <Zee5PlayerPlugin/NSDictionary+Extra.h>
 #import <Zee5PlayerPlugin/AppConfigManager.h>

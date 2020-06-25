@@ -317,10 +317,10 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7CG-57-Izx">
-                    <rect key="frame" x="337" y="10" width="210" height="40"/>
+                    <rect key="frame" x="327" y="10" width="220" height="40"/>
                     <subviews>
                         <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2pg-hI-O1j">
-                            <rect key="frame" x="165" y="0.0" width="45" height="40"/>
+                            <rect key="frame" x="170" y="0.0" width="45" height="40"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LmD-UB-YBZ">
                                     <rect key="frame" x="0.0" y="0.0" width="45" height="40"/>
@@ -404,10 +404,10 @@
                         <constraint firstAttribute="bottom" secondItem="TUp-fa-oIU" secondAttribute="bottom" id="DP4-W1-KnT"/>
                         <constraint firstItem="2pg-hI-O1j" firstAttribute="top" secondItem="7CG-57-Izx" secondAttribute="top" id="VoF-es-jfw"/>
                         <constraint firstAttribute="height" constant="40" id="X9W-JJ-u0Z"/>
-                        <constraint firstItem="2pg-hI-O1j" firstAttribute="leading" secondItem="TUp-fa-oIU" secondAttribute="trailing" id="bEz-gb-n4f"/>
+                        <constraint firstItem="2pg-hI-O1j" firstAttribute="leading" secondItem="TUp-fa-oIU" secondAttribute="trailing" constant="5" id="bEz-gb-n4f"/>
                         <constraint firstAttribute="bottom" secondItem="2pg-hI-O1j" secondAttribute="bottom" id="eUd-Et-Jr6"/>
                         <constraint firstItem="TUp-fa-oIU" firstAttribute="top" secondItem="7CG-57-Izx" secondAttribute="top" id="kAQ-D9-v7K"/>
-                        <constraint firstAttribute="trailing" secondItem="2pg-hI-O1j" secondAttribute="trailing" id="qoq-oT-rO4"/>
+                        <constraint firstAttribute="trailing" secondItem="2pg-hI-O1j" secondAttribute="trailing" constant="5" id="qoq-oT-rO4"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Starts in 10 Seconds." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XW3-Dd-FYa">
@@ -461,7 +461,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UP NEXT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lof-fF-7cJ">
-                                    <rect key="frame" x="131" y="8" width="45" height="15"/>
+                                    <rect key="frame" x="131" y="8" width="46" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="1sX-c4-Ixo"/>
                                     </constraints>
@@ -552,7 +552,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCR-ep-QzZ">
-                            <rect key="frame" x="173" y="63.5" width="200" height="33"/>
+                            <rect key="frame" x="173" y="68.5" width="200" height="28"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="8Ec-em-dcD"/>
                             </constraints>
@@ -563,10 +563,10 @@ watch this video</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Csr-5M-reu">
-                            <rect key="frame" x="189.5" y="142.5" width="167.5" height="55"/>
+                            <rect key="frame" x="193" y="142.5" width="160" height="55"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a Premium member? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQN-Ss-Uo3">
-                                    <rect key="frame" x="0.0" y="0.0" width="167.5" height="15"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="NIY-oj-YjN"/>
                                     </constraints>
@@ -575,7 +575,7 @@ watch this video</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uI-wW-vOh">
-                                    <rect key="frame" x="0.0" y="20" width="167.5" height="35"/>
+                                    <rect key="frame" x="0.0" y="20" width="160" height="35"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="35" id="8yN-qf-eRd"/>
                                     </constraints>
@@ -642,13 +642,13 @@ watch this video</string>
                     <rect key="frame" x="0.0" y="0.0" width="547" height="276"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parental Control Validation  failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K2K-d9-LaW">
-                            <rect key="frame" x="166.5" y="109" width="214.5" height="18"/>
+                            <rect key="frame" x="177.5" y="110.5" width="192.5" height="15.5"/>
                             <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtP-46-AsK">
-                            <rect key="frame" x="253.5" y="132" width="40" height="40"/>
+                            <rect key="frame" x="253.5" y="131" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="ZyB-fb-k9g"/>
                                 <constraint firstAttribute="height" constant="40" id="l7q-3F-yH6"/>
@@ -671,10 +671,10 @@ watch this video</string>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p8M-q7-7S1">
-                    <rect key="frame" x="0.0" y="5" width="60" height="60"/>
+                    <rect key="frame" x="0.0" y="0.0" width="60" height="55"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="60" id="cFk-Go-dqB"/>
+                        <constraint firstAttribute="height" constant="55" id="cFk-Go-dqB"/>
                         <constraint firstAttribute="width" constant="60" id="hqU-6Z-Rho"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -711,7 +711,7 @@ watch this video</string>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9Y7-r1-Wce"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="10" id="9sp-0y-Lsl"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="XW3-Dd-FYa" secondAttribute="bottom" constant="5" id="BB1-Rf-ep1"/>
-                <constraint firstItem="p8M-q7-7S1" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="EE6-Uv-nmg"/>
+                <constraint firstItem="p8M-q7-7S1" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="EE6-Uv-nmg"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="GD1-NY-Ifr"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="Gdr-Tw-PXi"/>
                 <constraint firstItem="Ih4-4v-ast" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Hpx-5K-5qs"/>
