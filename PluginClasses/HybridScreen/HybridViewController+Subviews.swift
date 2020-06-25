@@ -171,7 +171,9 @@ extension HybridViewController {
                         return
                     }
                                         
-                    ActionBarHelper.setup(playable: playable, consumptionFeedType: consumptionFeedType, actionBarView: actionBarView)
+                    let buisnessType = ZEE5PlayerManager.sharedInstance().getBusinessType()
+                    
+                    ActionBarHelper.setup(playable: playable, consumptionFeedType: consumptionFeedType, buisnessType: buisnessType,   actionBarView: actionBarView)
                     return
                 }
                 
