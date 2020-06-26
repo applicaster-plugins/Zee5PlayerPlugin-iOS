@@ -86,14 +86,8 @@
                             </connections>
                         </view>
                         <view hidden="YES" tag="880" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nd1-en-ZoC" customClass="AdBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="0.0"/>
                             <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="60" id="0Pi-Mw-viI"/>
-                            </constraints>
-                            <connections>
-                                <outlet property="heightConstraint" destination="0Pi-Mw-viI" id="Twn-7U-7P8"/>
-                            </connections>
                         </view>
                     </subviews>
                     <userDefinedRuntimeAttributes>

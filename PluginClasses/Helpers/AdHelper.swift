@@ -11,19 +11,25 @@ import Foundation
 import ZappPlugins
 import Zee5CoreSDK
 
+import GoogleMobileAds
+
 fileprivate extension Notification.Name {
     static let companionAdsUpdated = Notification.Name("CompanionAds")
 }
 
 class AdBanner: UIView {
-    @IBOutlet fileprivate var heightConstraint: NSLayoutConstraint!
-    
     fileprivate var observer: NSObjectProtocol?
     fileprivate let adHelper = AdHelper()
-
+    fileprivate var googleAdLoaderDelegate: GoogleAdLoaderDelegate!
+    fileprivate var adView: GADUnifiedNativeAdView?
+    
     func setupAds(playable: ZPPlayable?) {
         if self.observer == nil {
             self.observer = NotificationCenter.default.addObserver(forName: .companionAdsUpdated, object: nil, queue: nil,using: handleCompanionAdsUpdated)
+        }
+        
+        if self.googleAdLoaderDelegate == nil {
+            self.googleAdLoaderDelegate = GoogleAdLoaderDelegate(parentView: self)
         }
         
         adHelper.setupAdsBanner(self, playable: playable)
@@ -40,27 +46,80 @@ class AdBanner: UIView {
     }
 }
 
-extension AdBanner: ZPAdViewProtocol {
-    func adLoaded(view: UIView?) {
-        guard let view = view else {
+fileprivate class GoogleAdLoaderDelegate: NSObject, GADUnifiedNativeAdLoaderDelegate {
+    weak var parentView: AdBanner!
+    
+    init(parentView: AdBanner) {
+        self.parentView = parentView
+    }
+    
+    func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADUnifiedNativeAd) {
+        guard let parentView = self.parentView else {
             return
         }
         
-        view.translatesAutoresizingMaskIntoConstraints = false
+        parentView.isHidden = false
+
+        let bundle = Bundle(for: AdHelper.self)
+        guard
+            let xib = bundle.loadNibNamed("GoogleNativeAd", owner: nil, options: nil),
+            let nativeAdView = xib.first as? GADUnifiedNativeAdView else {
+                return
+        }
+            
+        parentView.addSubview(nativeAdView)
         
-        self.heightConstraint.constant = view.height
-        self.backgroundColor = view.backgroundColor
-        self.addSubview(view)
+        parentView.translatesAutoresizingMaskIntoConstraints = false
+        nativeAdView.fillParent()
+    
+        parentView.adView = nativeAdView
+
+        if  let callToAction = nativeAd.callToAction,
+            let callToActionButton = nativeAdView.callToActionView as? UIButton {
+            
+            callToActionButton.setTitle(callToAction, for: .normal)
+            callToActionButton.layer.borderColor = UIColor.white.cgColor
+
+            callToActionButton.isHidden = false
+        }
+        else {
+            nativeAdView.callToActionView?.isHidden = true
+        }
+                    
+        if  let icon = nativeAd.icon,
+            let iconView = nativeAdView.iconView as? UIImageView {
+            
+            iconView.image = icon.image
+            iconView.isHidden = false
+        }
+        else {
+            nativeAdView.iconView?.isHidden = true
+        }
+
+        if  let advertiser = nativeAd.advertiser,
+            let advertiserView = nativeAdView.advertiserView as? UILabel {
+            
+            advertiserView.text = advertiser
+            advertiserView.isHidden = false
+        }
+        else {
+            nativeAdView.advertiserView?.isHidden = true
+        }
         
-        view.fillParent()
-        
-        self.isHidden = false
+        if  let headline = nativeAd.headline,
+            let headlineView = nativeAdView.headlineView as? UILabel {
+            
+            headlineView.text = headline
+            headlineView.isHidden = false
+        }
+        else {
+            nativeAdView.headlineView?.isHidden = true
+        }
+                
+        nativeAdView.nativeAd = nativeAd
     }
     
-    func stateChanged(adViewState: ZPAdViewState) {
-    }
-    
-    func adLoadFailed(error: Error) {
+    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: GADRequestError) {
     }
 }
 
@@ -69,6 +128,8 @@ class AdHelper {
     fileprivate var playable: ZPPlayable!
 
     typealias JSON = [String: Any]
+    
+    fileprivate var adLoader: GADAdLoader!
     
     fileprivate func setupAdsBanner(_ banner: AdBanner, playable: ZPPlayable?) {
         banner.isHidden = true
@@ -83,9 +144,7 @@ class AdHelper {
             return
         }
         
-        guard
-            let pluginModel = ZPPluginManager.pluginModelById("Zee5Ads"), let plugin = ZPPluginManager.adapter(pluginModel) as? ZPAdPluginProtocol,
-            let playable = self.playable else {
+        guard let playable = self.playable else {
             return
         }
         
@@ -106,10 +165,19 @@ class AdHelper {
                 return
         }
         
-        let adPresenter = plugin.createAdPresenter(adView: banner, parentVC: banner.parentViewController())
-        self.adPresenter = adPresenter
+        self.adLoader = GADAdLoader(adUnitID: adConfig.adUnitId,
+                                    rootViewController: nil,
+                                    adTypes: [.unifiedNative],
+                                    options: nil)
         
-        adPresenter.load(adConfig: adConfig)
+        self.adLoader.delegate = banner.googleAdLoaderDelegate
+        
+        let request = GADRequest()
+        #if DEBUG
+        request.testDevices = [ kGADSimulatorID ]
+        #endif
+        
+        self.adLoader.load(request)
     }
     
     fileprivate func downloadAdConfig(_ contentId: String, userType: UserType, completion: @escaping (_ ad: ZPAdConfig?) -> Void) {
