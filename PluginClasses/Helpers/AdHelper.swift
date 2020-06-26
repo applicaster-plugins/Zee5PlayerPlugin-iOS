@@ -165,14 +165,10 @@ class AdHelper {
                 return
         }
         
-        let videoOptions = GADVideoOptions()
-        videoOptions.startMuted = true
-        videoOptions.customControlsRequested = true
-        
         self.adLoader = GADAdLoader(adUnitID: adConfig.adUnitId,
                                     rootViewController: nil,
                                     adTypes: [.unifiedNative],
-                                    options: [videoOptions])
+                                    options: nil)
         
         self.adLoader.delegate = banner.googleAdLoaderDelegate
         
