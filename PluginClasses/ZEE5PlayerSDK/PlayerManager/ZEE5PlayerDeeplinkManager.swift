@@ -28,12 +28,16 @@ var CompletionHandler:((Bool)->(Void))?
     }
     
     @objc public func NavigatetoLoginpage(Param : String , completion:@escaping((Bool)->(Void))){
-         let value = UIInterfaceOrientation.portrait.rawValue
-                UIDevice.current.setValue(value, forKey: "orientation")
-                User.shared.refreshViewAfterloginOrRegistration = { [] in
-                    completion(true)
-                }
-               Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+        let value = UIInterfaceOrientation.portrait.rawValue
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            User.shared.refreshViewAfterloginOrRegistration = { [] in
+                completion(true)
+            }
+            Zee5DeepLinkingManager.shared.openURL(withURL: Zee5DeepLinkingManager.URLs.login.url)
+        }
+        UIDevice.current.setValue(value, forKey: "orientation")
+        CATransaction.commit()
     }
     @objc public func NavigatetoParentalViewPage()
     {
