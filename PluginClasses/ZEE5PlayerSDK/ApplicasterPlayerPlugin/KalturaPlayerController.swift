@@ -80,13 +80,13 @@ internal enum PlayerViewDisplayMode : Int {
     
     @objc private func wentBackground() {
         if self.view.window != nil {
-            ZEE5PlayerManager.sharedInstance().pause()
+            Zee5PlayerPlugin.sharedInstance().player.pause()
         }
     }
     
     @objc private func wentForeground() {
         if self.view.window != nil {
-            ZEE5PlayerManager.sharedInstance().play()
+            Zee5PlayerPlugin.sharedInstance().player.play()
         }
     }
     
