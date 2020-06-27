@@ -3001,7 +3001,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)playTrailer
 {
-    _isNeedToSubscribe = ZEE5PlayerSDK.getUserTypeEnum == Premium ? NO : YES;
+    _isNeedToSubscribe = true;
     if (_isLive == false && self.ModelValues.trailerIdentifier!=nil)
     {
         self.allowVideoContent = YES;
