@@ -91,7 +91,7 @@ protocol OfflineVideoDurationDelegate: class {
     @IBAction func actionBack(_ sender: Any) {
         playerOffline.stop()
         playerOffline.destroy()
-        self.dismissViewController(withAnimation: true);
+        self.dismissViewController(withAnimation: true)
     }
     
     func hideUnHindeTopView(isHidden: Bool) {
@@ -247,10 +247,12 @@ protocol OfflineVideoDurationDelegate: class {
         self.updateVideoDurationToServer()
         self.playerOffline.stop()
         self.RemoveNotification()
+        viewPlayer .removeFromSuperview()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        if self.isMovingFromParent == true {
-    UIDevice.current.setValue(Int(UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
-        }
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        
+
     }
     
     @objc public func canRotate() -> Void {}
