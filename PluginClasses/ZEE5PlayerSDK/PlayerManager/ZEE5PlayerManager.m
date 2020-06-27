@@ -3249,7 +3249,7 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && _isNeedToSubscribe == true) {
         [self pause];
         [self HybridViewOpen];
         return;
