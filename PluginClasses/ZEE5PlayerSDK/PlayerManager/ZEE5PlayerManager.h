@@ -137,6 +137,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)startAd;
 -(void)endAd;
 -(void)pauseAd;
+-(void)SliderReset;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;

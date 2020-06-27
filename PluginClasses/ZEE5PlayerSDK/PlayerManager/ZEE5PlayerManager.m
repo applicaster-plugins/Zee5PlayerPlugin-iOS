@@ -415,6 +415,7 @@ static ContentBuisnessType buisnessType;
     _customControlView.related = self.currentItem.related;
     _customControlView.adultView.hidden = YES;
     _customControlView.parentalDismissView.hidden = YES;
+    [self SliderReset];
 
       [self hideUnHidetrailerEndView:true];
     
@@ -472,7 +473,6 @@ static ContentBuisnessType buisnessType;
     _customControlView.backtoPartnerView.hidden = YES;
     
     [_customControlView forwardAndRewindActions];
-  
    // [self showAllControls];
     [self showloaderOnPlayer];
     [self MoatViewAdd];
@@ -616,7 +616,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)playSimilarEvent:(NSString *)content_id
 {
-    [self setSeekTime:0];
+    [self SliderReset];
 }
 
 -(void)onPlaying
@@ -842,7 +842,7 @@ static ContentBuisnessType buisnessType;
         _customControlView.buttonReplay.hidden = NO;
         [self hideUnHideTopView:NO];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
-        [self setSeekTime:0];
+        [self SliderReset];
     }
     else
     {
@@ -1336,7 +1336,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)tapOnUpNext
 {
-    [self setSeekTime:0];
+    [self SliderReset];
     [self.CreditTimer invalidate];
     _CreditTimer = nil;
     _customControlView.watchcreditsTimeLbl.hidden=YES;
@@ -1356,6 +1356,11 @@ static ContentBuisnessType buisnessType;
     {
         [self.delegate didTaponLiveButton:self.showID];
     }
+}
+
+-(void)SliderReset{
+    _customControlView.sliderDuration.value = 0;
+    _customControlView.labelCurrentTime.text = @"00:00";
 }
 
 -(void)tapOnGoLiveButton
@@ -2328,8 +2333,7 @@ static ContentBuisnessType buisnessType;
     self.viewPlayer = playbackView;
     [[AnalyticEngine shared]VideoStartTimeWith:0];
     [[AnalyticEngine shared]AudioLanguageWith:@""];
-    
-    [self setSeekTime:0];
+    [self SliderReset];
      
     [ZEE5UserDefaults settranslationLanguage:laguage];
     [ZEE5UserDefaults setContentId:content_id];
@@ -2366,9 +2370,7 @@ static ContentBuisnessType buisnessType;
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock
 {
-    
-       _watchCtreditSeconds = 10;
-    [self setSeekTime:0];
+    _watchCtreditSeconds = 10;
     
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
     
