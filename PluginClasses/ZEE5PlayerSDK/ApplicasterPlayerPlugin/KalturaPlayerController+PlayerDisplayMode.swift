@@ -43,7 +43,7 @@ extension KalturaPlayerController {
             parentViewController.present(self, animated: false, completion: {
                 self.currentDisplayMode = .fullScreen
                 completion?()
-                ZEE5PlayerManager.sharedInstance().play()
+               // ZEE5PlayerManager.sharedInstance().play()
             })
             break
             

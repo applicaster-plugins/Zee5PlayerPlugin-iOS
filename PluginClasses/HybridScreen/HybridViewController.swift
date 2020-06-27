@@ -119,6 +119,7 @@ class HybridViewController: UIViewController {
         let shareViwController = ZEE5PlayerManager.sharedInstance().currentShareViewController
         if let shareViwController = shareViwController {
             shareViwController.dismiss(animated: false)
+             ZEE5PlayerManager .sharedInstance().pause()
         }
         
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
