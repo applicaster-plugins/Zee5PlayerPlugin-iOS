@@ -104,9 +104,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
     
     // Can set external subtitles only when the duration is known
-    if (currentItem.duration > 0) {
-        mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
-    }
+//    if (currentItem.duration > 0) {
+//        mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
+//    }
     
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
