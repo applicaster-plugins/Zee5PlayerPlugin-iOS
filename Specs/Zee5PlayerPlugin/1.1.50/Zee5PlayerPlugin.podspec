@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
       'ENABLE_BITCODE' => 'YES',
       'SWIFT_VERSION' => '5.1',
       'OTHER_CFLAGS'  => '-fembed-bitcode',
-      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast"',
+      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast" -framework "GoogleMobileAds"',
       'GCC_SYMBOLS_PRIVATE_EXTERN' => 'YES'
   }
 
@@ -45,4 +45,6 @@ Pod::Spec.new do |s|
   s.dependency 'DownloadToGo'
   s.dependency 'SQLite.swift'
   s.dependency 'ZeeHomeScreen'
+  s.dependency 'Google-Mobile-Ads-SDK', '~> 7.39.0'
+
 end
