@@ -74,4 +74,8 @@ import ZappPlugins
         
         return (font, color)
     }
+    
+    public static func localizedText(for key: String) -> String? {
+        return key.localized(hashMap: [:])
+    }
 }

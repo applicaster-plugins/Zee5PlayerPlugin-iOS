@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4D9F31622436352200C30A5A /* Zee5VideoLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F2F172436352000C30A5A /* Zee5VideoLoadingView.xib */; };
-		4D9F31632436352200C30A5A /* Zee5PluggablePlayer+HyBridViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F182436352000C30A5A /* Zee5PluggablePlayer+HyBridViewControllerDelegate.swift */; };
 		4D9F31642436352200C30A5A /* HybridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F1A2436352000C30A5A /* HybridViewController.swift */; };
 		4D9F31652436352200C30A5A /* HybridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F2F1B2436352000C30A5A /* HybridViewController.xib */; };
 		4D9F31662436352200C30A5A /* HybridViewController+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F1C2436352000C30A5A /* HybridViewController+Subviews.swift */; };
@@ -484,17 +483,16 @@
 		71006176246845F900623D5C /* DownloadActionButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100616F246845F900623D5C /* DownloadActionButtonBuilder.swift */; };
 		71006177246845F900623D5C /* WatchListActionButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71006170246845F900623D5C /* WatchListActionButtonBuilder.swift */; };
 		71006179246857AF00623D5C /* ActionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71006178246857AF00623D5C /* ActionBarView.swift */; };
-		7148D2882455E3C300DC1EB4 /* ActionBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */; };
 		71580A922443222A00A6CF0C /* PremiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A912443222A00A6CF0C /* PremiumHelper.swift */; };
 		71580A972446683D00A6CF0C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A962446683D00A6CF0C /* Consts.swift */; };
 		716ECD1B24409BA000917E13 /* AdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716ECD1A24409BA000917E13 /* AdHelper.swift */; };
+		71BABDC224AA16280028BC1A /* TranslationTrackSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 71BABDC124AA16280028BC1A /* TranslationTrackSelectionView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4D9F2EFE2436320E00C30A5A /* Zee5PlayerPlugin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zee5PlayerPlugin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D9F2F0F2436321000C30A5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D9F2F172436352000C30A5A /* Zee5VideoLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Zee5VideoLoadingView.xib; sourceTree = "<group>"; };
-		4D9F2F182436352000C30A5A /* Zee5PluggablePlayer+HyBridViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Zee5PluggablePlayer+HyBridViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		4D9F2F1A2436352000C30A5A /* HybridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HybridViewController.swift; sourceTree = "<group>"; };
 		4D9F2F1B2436352000C30A5A /* HybridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HybridViewController.xib; sourceTree = "<group>"; };
 		4D9F2F1C2436352000C30A5A /* HybridViewController+Subviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HybridViewController+Subviews.swift"; sourceTree = "<group>"; };
@@ -1028,10 +1026,10 @@
 		7100616F246845F900623D5C /* DownloadActionButtonBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadActionButtonBuilder.swift; sourceTree = "<group>"; };
 		71006170246845F900623D5C /* WatchListActionButtonBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchListActionButtonBuilder.swift; sourceTree = "<group>"; };
 		71006178246857AF00623D5C /* ActionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionBarView.swift; sourceTree = "<group>"; };
-		7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBarViewController.swift; sourceTree = "<group>"; };
 		71580A912443222A00A6CF0C /* PremiumHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumHelper.swift; sourceTree = "<group>"; };
 		71580A962446683D00A6CF0C /* Consts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		716ECD1A24409BA000917E13 /* AdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdHelper.swift; sourceTree = "<group>"; };
+		71BABDC124AA16280028BC1A /* TranslationTrackSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TranslationTrackSelectionView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1076,7 +1074,6 @@
 			children = (
 				71580A932443223B00A6CF0C /* Helpers */,
 				4D9F2F162436352000C30A5A /* VideoLoading */,
-				4D9F2F182436352000C30A5A /* Zee5PluggablePlayer+HyBridViewControllerDelegate.swift */,
 				4D9F2F192436352000C30A5A /* HybridScreen */,
 				4D9F2F1E2436352000C30A5A /* StylesHelper */,
 				4D9F2F202436352000C30A5A /* ZEE5PlayerSDK */,
@@ -1099,12 +1096,11 @@
 		4D9F2F192436352000C30A5A /* HybridScreen */ = {
 			isa = PBXGroup;
 			children = (
+				71BABDC024AA159B0028BC1A /* Xibs */,
 				71006178246857AF00623D5C /* ActionBarView.swift */,
 				4D9F2F1A2436352000C30A5A /* HybridViewController.swift */,
-				4D9F2F1B2436352000C30A5A /* HybridViewController.xib */,
 				4D9F2F1C2436352000C30A5A /* HybridViewController+Subviews.swift */,
 				4D9F2F1D2436352000C30A5A /* HybridViewTitleSubtitleCell.swift */,
-				7148D2872455E3C300DC1EB4 /* ActionBarViewController.swift */,
 			);
 			path = HybridScreen;
 			sourceTree = "<group>";
@@ -2137,6 +2133,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		71BABDC024AA159B0028BC1A /* Xibs */ = {
+			isa = PBXGroup;
+			children = (
+				4D9F2F1B2436352000C30A5A /* HybridViewController.xib */,
+				71BABDC124AA16280028BC1A /* TranslationTrackSelectionView.xib */,
+			);
+			path = Xibs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2496,6 +2501,7 @@
 				4D9F329D2436352200C30A5A /* kolhamusicasmall.png in Resources */,
 				4D9F32DC2436352200C30A5A /* hinoohit.png in Resources */,
 				4D9F32412436352200C30A5A /* 33big.png in Resources */,
+				71BABDC224AA16280028BC1A /* TranslationTrackSelectionView.xib in Resources */,
 				4D9F31802436352200C30A5A /* Info.plist in Resources */,
 				4D9F32F52436352200C30A5A /* makanbig@2x.png in Resources */,
 				4D9F330A2436352200C30A5A /* 88small@3x.png in Resources */,
@@ -2636,7 +2642,6 @@
 				4D9F31662436352200C30A5A /* HybridViewController+Subviews.swift in Sources */,
 				4D9F33352436352200C30A5A /* Zee5ResourceHelper.m in Sources */,
 				4D9F319A2436352200C30A5A /* DownloadTableCell.swift in Sources */,
-				4D9F31632436352200C30A5A /* Zee5PluggablePlayer+HyBridViewControllerDelegate.swift in Sources */,
 				4D9F31BB2436352200C30A5A /* ChrmoeMediaController.swift in Sources */,
 				4D9F318C2436352200C30A5A /* AllAnalyticsClass+PlayerEvents.swift in Sources */,
 				4D9F31912436352200C30A5A /* Zee5PlayerPlugin.m in Sources */,
@@ -2680,7 +2685,6 @@
 				4D9F31CA2436352200C30A5A /* userSettingDataModel.m in Sources */,
 				4D9F316F2436352200C30A5A /* UICircularRing.swift in Sources */,
 				4D9F31D72436352200C30A5A /* Zee5Slider.m in Sources */,
-				7148D2882455E3C300DC1EB4 /* ActionBarViewController.swift in Sources */,
 				4D9F316A2436352200C30A5A /* ZEE5SdkError.m in Sources */,
 				4D9F31A22436352200C30A5A /* VideoDownloadController.swift in Sources */,
 				4D9F317B2436352200C30A5A /* ZeeManifestAdapter.swift in Sources */,

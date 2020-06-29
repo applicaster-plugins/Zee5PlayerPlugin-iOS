@@ -83,9 +83,6 @@ extension HybridViewController {
                 case ItemTag.Label.consumptionTitleLabel:
                     label.text = self.currentPlayableItem?.playableName()
                     label.isHidden = label.text == nil
-                case ItemTag.Label.consumptionMainInfoLabel:
-                    label.text = consumptionMainInfoLabel()
-                    label.isHidden = label.text == nil
                 case ItemTag.Label.consumptionIMDBRatingLabel:
                     guard
                         self.consumptionFeedType != .live,
@@ -196,7 +193,7 @@ extension HybridViewController {
                     bannerView.backgroundColor = .clear
                     bannerView.setupAds(playable: self.currentPlayableItem)
 
-                case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection, ItemTag.View.consumptionLanguagesSubtitlesCollection:
+                case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection:
                     if let tmpView = view as? UICollectionView {
                         
                         tmpView.delegate = self
@@ -211,7 +208,7 @@ extension HybridViewController {
                         setupDataSources()
                         tmpView.reloadData()
                     }
-                case ItemTag.View.consumptionCastCollectionStackView, ItemTag.View.consumptionCreatorCollectionStackView, ItemTag.View.consumptionLanguagesSubtitlesCollectionStackView:
+                case ItemTag.View.consumptionCastCollectionStackView, ItemTag.View.consumptionCreatorCollectionStackView:
                     
                     guard self.currentPlayableItem != nil else {
                         return
@@ -227,11 +224,6 @@ extension HybridViewController {
                     case ItemTag.View.consumptionCreatorCollectionStackView:
                         //remove creators collection view from the stack view if it is empty
                         if creatorsDataSource == nil || creatorsDataSource?.count == 0 {
-                            (view as! UIStackView).removeFromSuperview()
-                        }
-                    case ItemTag.View.consumptionLanguagesSubtitlesCollectionStackView:
-                        //remove languages & subtitles collection view from the stack view if it is empty
-                        if languagesSubtitlesDataSource == nil || languagesSubtitlesDataSource?.count == 0 {
                             (view as! UIStackView).removeFromSuperview()
                         }
                     default: break
@@ -272,89 +264,6 @@ extension HybridViewController {
             
             self.mainCollectionViewController?.invalidateLayout()
         }
-
-        //MARK: main info sting
-        
-        private func consumptionMainInfoLabel() -> String? {
-            
-            guard self.currentPlayableItem != nil, let extensions = self.currentPlayableItem!.extensionsDictionary else {
-                return nil
-            }
-            
-            var mainInfostring: String = String()
-            
-            var release: String?
-            if let extraData: [String: Any] = (extensions[ExtensionsKey.extraData] as? [String: Any]) {
-                release = extraData[ExtensionsKey.releaseYear] as? String
-            }
-            if release == nil {
-                release = extensions[ExtensionsKey.releaseYear] as? String
-            }
-            let duration: String? = extensions[ExtensionsKey.duration] as? String
-            var genre: String?
-            if let mainGenre: [String: Any] = (extensions[ExtensionsKey.mainGenre] as? [String: Any]) {
-                genre = mainGenre["value"] as? String
-            }
-            if genre == nil {
-                if let genres = (extensions[ExtensionsKey.genres] as? [[String: Any]]), genres.count > 0 {
-                    genre = genres.first!["value"] as? String
-                }
-            }
-            let age: String? = extensions[ExtensionsKey.ageRating] as? String
-            
-            var rating: String?
-            if let ratingNumber: NSNumber = extensions[ExtensionsKey.rating] as? NSNumber {
-                rating = ratingNumber.stringValue
-            }
-            var episodeNumber: String?
-            var totalEpisodes: String?
-            if let seasonDetails: [String: Any] = (extensions[ExtensionsKey.seasonDetails] as? [String: Any]) {
-                episodeNumber = seasonDetails[ExtensionsKey.currentEpisode] as? String
-                totalEpisodes = seasonDetails[ExtensionsKey.totalEpisodes] as? String
-            }
-            let owner: String? = extensions[ExtensionsKey.contentOwner] as? String
-            let primaryCategory: String? = extensions[ExtensionsKey.primaryCategory] as? String
-            
-            if let feedType = consumptionFeedType {
-                switch feedType {
-                case .movie, .trailer, .show, .original, .video:
-                    mainInfostring = "\(feedType.rawValue) • " + createInfoString(with: [release, duration, genre, age])
-                case .episode:
-                    mainInfostring = (totalEpisodes != nil ? "\(totalEpisodes!) Episodes • " : "Episode • ") + createInfoString(with: [release, genre, age])
-                case .news:
-                    mainInfostring = createInfoString(with: [owner, genre, release, duration])
-                case .music:
-                    mainInfostring = "Videos • " + createInfoString(with: [duration, genre, age])
-                case .live:
-                    mainInfostring = "Episode • " + createInfoString(with: [episodeNumber])
-                case .channel:
-                    return nil
-                }
-                if rating != nil {
-                    mainInfostring.append(mainInfostring.isEmptyOrWhitespace() ? "IMDb" : " • IMDb")
-                }
-            } else {
-                mainInfostring = createInfoString(with: [primaryCategory, release, duration, genre, age])
-            }
-            
-            return mainInfostring
-        }
-        
-        private func createInfoString(with array: [String?]) -> String {
-            var tmpString = String()
-            
-            for item in array {
-                if let item = item {
-                    if tmpString.isEmptyOrWhitespace() {
-                        tmpString.append("\(item)")
-                    } else {
-                        tmpString.append(" • \(item)")
-                    }
-                }
-            }
-            return tmpString
-        }
-    
     
     private func handleRelatedContent() {
         guard
@@ -393,19 +302,19 @@ extension HybridViewController {
         mainCollectionViewController.load(atomFeed, staticView: self.metadataViewContainer)
     }
 }
-    
+
     //MARK: extension
     
     extension HybridViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            let type = self.consumptionFeedType
+            
             switch collectionView.tag {
             case ItemTag.View.consumptionCastCollection:
                 return castDataSource?.count ?? 0
             case ItemTag.View.consumptionCreatorCollection:
                 return creatorsDataSource?.count ?? 0
-            case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                return languagesSubtitlesDataSource?.count ?? 0
             default:
                 break
             }
@@ -428,16 +337,11 @@ extension HybridViewController {
             case ItemTag.View.consumptionCreatorCollection:
                 dataSource = creatorsDataSource
                 textAlignment = .left
-                
-            case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                dataSource = languagesSubtitlesDataSource
-                textAlignment = .left
             default:
                 break
             }
-
+            
             if dataSource != nil {
-                
                 let model = dataSource![indexPath.row]
                 
                 cell.data = model
@@ -455,14 +359,6 @@ extension HybridViewController {
                     cell.subtitleLabel.font = indicatorStyle.font
                     cell.titleLabel.text = model.title
                     cell.subtitleLabel.text = model.description
-                case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                    
-                    let title = NSMutableAttributedString(string: model.title ?? String(), attributes: [NSAttributedString.Key.foregroundColor: descriptionStyle.color, NSAttributedString.Key.font: descriptionStyle.font])
-                    let subtitle = NSAttributedString.init(string: model.subtitle ?? String(), attributes: [NSAttributedString.Key.foregroundColor: indicatorStyle.color, NSAttributedString.Key.font: indicatorStyle.font])
-                    title.append(subtitle)
-                    cell.titleLabel.attributedText = title
-                    cell.subtitleLabel.textColor = visibilityStyle.color
-                    cell.subtitleLabel.font = visibilityStyle.font
                 default:
                     break
                 }
@@ -483,8 +379,6 @@ extension HybridViewController {
                 return CGSize(width: screen/3, height: collectionView.frame.size.height)
             case ItemTag.View.consumptionCreatorCollection:
                 return CGSize(width: screen/3, height: collectionView.frame.size.height)
-            case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                return CGSize(width: screen/2, height: collectionView.frame.size.height)
             default: break
             }
             return CGSize.zero
@@ -503,16 +397,6 @@ extension HybridViewController {
         }
         
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            switch collectionView.tag {
-            case ItemTag.View.consumptionLanguagesSubtitlesCollection:
-                if languagesSubtitlesDataSource![indexPath.row] == languagesSubtitlesDataSource!.first! {
-                    ZEE5PlayerManager.sharedInstance().getAudioLanguage()
-                } else {
-                    ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
-                }
-                break
-            default: break
-            }
         }
     }
     

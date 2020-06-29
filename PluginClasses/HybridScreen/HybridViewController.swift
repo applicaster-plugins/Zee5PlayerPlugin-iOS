@@ -28,12 +28,15 @@ class HybridViewController: UIViewController {
     
     @IBOutlet var playerView: UIView!
     @IBOutlet var activityIndicator: UIActivityIndicatorView?
+    
     @IBOutlet var buttonsViewCollection: [UIButton]!
     @IBOutlet var viewCollection: [UIView]!
     @IBOutlet var labelsCollection: [UILabel]!
     
     @IBOutlet var itemNameLabel: UILabel!
     @IBOutlet var itemDescriptionLabel: UILabel!
+    @IBOutlet var infoLabel: UILabel!
+    @IBOutlet var streamTranslationsView: StreamTranslationsView!
     
     @IBOutlet var backgroundView: UIView!
     @IBOutlet var mainCollectionViewContainer: UIView!
@@ -45,6 +48,8 @@ class HybridViewController: UIViewController {
     var castDataSource: [(title: String?, subtitle: String?, description: String?)]?
     var creatorsDataSource: [(title: String?, subtitle: String?, description: String?)]?
     var languagesSubtitlesDataSource: [(title: String?, subtitle: String?, description: String?)]?
+    
+    var playable: ZeePlayable!
     
     var currentPlayableItem: ZPPlayable? {
         willSet(newValue) {
@@ -87,13 +92,15 @@ class HybridViewController: UIViewController {
         }
         
         didSet {
-            guard self.isViewLoaded else {
-                return
+            guard
+                self.isViewLoaded,
+                let currentPlayableItem = self.currentPlayableItem,
+                let extensions = currentPlayableItem.extensionsDictionary as? ZeePlayable.Extensions else {
+                    return
             }
             
-            if self.currentPlayableItem != nil {
-                self.commonInit()
-            }
+            self.playable = ZeePlayable(extensions)
+            self.commonInit()
         }
     }
     
@@ -186,6 +193,8 @@ class HybridViewController: UIViewController {
         self.itemDescriptionLabel.isHidden = false
         
         setupModel()
+        self.configureForType()
+        
         setupButtons()
         setupLabels()
         setupViews()
@@ -263,43 +272,6 @@ class HybridViewController: UIViewController {
                         creatorsDataSource!.append((title: key, subtitle: nil, description: value))
                     })
                 })
-            }
-            
-            //populate languages & subtitles data source
-            languagesSubtitlesDataSource = []
-            if let languages: [String] = exta[ExtensionsKey.languages] as? [String] {
-                
-                //setup languages info
-                let title: String = "MoviesConsumption_MovieDetails_AudioLanguage_Text".localized(hashMap: [:])
-                let subtitle: String = " \(languages.count > 0 ? languages.first! : "MoviesConsumption_SubtitlesSelection_Off_Selection".localized(hashMap: [:]))"
-                
-                var description: String = String()
-                if languages.count == 1 || languages.count == 0  {
-                    description = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
-                        "count": "\(languages.count)"])
-                } else if languages.count > 1 {
-                    description = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
-                        "count": "\(languages.count)"])
-                }
-                
-                languagesSubtitlesDataSource!.append((title: title, subtitle: subtitle, description: description))
-            }
-            
-            if let subtitles: [String] = exta[ExtensionsKey.subtitleLanguages] as? [String] {
-                
-                let title: String = "MoviesConsumption_MovieDetails_Subtitles_Text".localized(hashMap: [:])
-                let subtitle: String = " \(subtitles.count > 0 ? subtitles.first! : "MoviesConsumption_SubtitlesSelection_Off_Selection".localized(hashMap: [:]))"
-                
-                var description: String = String()
-                if subtitles.count == 1 || subtitles.count == 0  {
-                    description = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
-                        "count": "\(subtitles.count)"])
-                } else if subtitles.count > 1 {
-                    description = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
-                        "count": "\(subtitles.count)"])
-                }
-                
-                languagesSubtitlesDataSource!.append((title: title, subtitle: subtitle, description: description))
             }
         }
     }

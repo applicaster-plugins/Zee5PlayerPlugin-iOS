@@ -17,7 +17,7 @@ public enum ConsumptionFeedType: String, CaseIterable {
     case show = "Show"
     case original = "Original"
     case video = "Video"
-    case channel = "channel"
+    case channel = "Channel"
 
     init?(type: ConsumptionType) {
         switch type {
@@ -79,6 +79,7 @@ public struct ExtensionsKey {
     static let relatedContent = "relatedContent"
     static let shareLink = "share_link"
     static let businessType = "business_type"
+    static let published = "published"
 }
 
 public struct ItemTag {
@@ -112,8 +113,6 @@ public struct ItemTag {
         static let consumptionCastCollectionStackView = 828
         static let consumptionCreatorCollection = 830
         static let consumptionCreatorCollectionStackView = 831
-        static let consumptionLanguagesSubtitlesCollection = 855
-        static let consumptionLanguagesSubtitlesCollectionStackView = 856
         static let consumptionVideoContainerView = 857
         
         static let consumptionContentView = 870
@@ -133,7 +132,6 @@ public struct ItemTag {
         static let timeFromToLabel = 122
         
         static let consumptionTitleLabel = 800
-        static let consumptionMainInfoLabel = 801
         static let consumptionIMDBRatingLabel = 802
         static let consumptionAvailableInLabel = 803
         static let consumptionDescriptionLabel = 825

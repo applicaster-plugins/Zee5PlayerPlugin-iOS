@@ -11,25 +11,24 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HybridViewController" customModule="Zee5PlayerPlugin" customModuleProvider="target">
             <connections>
                 <outlet property="backgroundView" destination="f9J-hD-RRU" id="j7L-Bw-oMm"/>
+                <outlet property="infoLabel" destination="6b6-h1-Zud" id="6Tv-I2-RK2"/>
                 <outlet property="itemDescriptionLabel" destination="l3k-on-PqU" id="Zrm-rm-1CS"/>
                 <outlet property="itemNameLabel" destination="wjd-rP-I2u" id="YDC-qK-rjF"/>
                 <outlet property="mainCollectionViewContainer" destination="svd-1z-rSB" id="jrl-3k-y1o"/>
                 <outlet property="metadataViewContainer" destination="0eM-EZ-T0J" id="D2X-SI-bqV"/>
                 <outlet property="playerView" destination="YWE-fi-K7N" id="7tk-hi-ban"/>
+                <outlet property="streamTranslationsView" destination="97X-cI-tGl" id="xfk-bM-iix"/>
                 <outlet property="view" destination="iN0-l3-epB" id="o1d-Gp-gHL"/>
                 <outletCollection property="viewCollection" destination="fgH-rX-aeW" collectionClass="NSMutableArray" id="7Xd-b3-7VJ"/>
                 <outletCollection property="viewCollection" destination="Nd1-en-ZoC" collectionClass="NSMutableArray" id="Fmj-LU-khU"/>
                 <outletCollection property="labelsCollection" destination="wjd-rP-I2u" collectionClass="NSMutableArray" id="WbM-1v-bJf"/>
                 <outletCollection property="labelsCollection" destination="5pR-Ho-7MC" collectionClass="NSMutableArray" id="P1N-IW-62U"/>
                 <outletCollection property="labelsCollection" destination="62G-sS-Qim" collectionClass="NSMutableArray" id="uj6-qt-i0T"/>
-                <outletCollection property="viewCollection" destination="s13-AK-H7Y" collectionClass="NSMutableArray" id="eN9-E7-4od"/>
                 <outletCollection property="labelsCollection" destination="l3k-on-PqU" collectionClass="NSMutableArray" id="bLM-ZU-t3A"/>
                 <outletCollection property="viewCollection" destination="Wn3-ik-VTi" collectionClass="NSMutableArray" id="law-de-1Kr"/>
                 <outletCollection property="labelsCollection" destination="1Em-7i-KVc" collectionClass="NSMutableArray" id="TfC-bd-7O2"/>
                 <outletCollection property="labelsCollection" destination="Nh3-lZ-otx" collectionClass="NSMutableArray" id="SRh-Pr-L7j"/>
-                <outletCollection property="labelsCollection" destination="6b6-h1-Zud" collectionClass="NSMutableArray" id="uja-Tl-0rx"/>
                 <outletCollection property="viewCollection" destination="3Rd-Uk-v6A" collectionClass="NSMutableArray" id="XSL-QH-K0a"/>
-                <outletCollection property="viewCollection" destination="PDd-AU-oJQ" collectionClass="NSMutableArray" id="ZYF-6j-mr5"/>
                 <outletCollection property="buttonsViewCollection" destination="1RJ-94-jKa" collectionClass="NSMutableArray" id="Csx-vc-FZp"/>
                 <outletCollection property="viewCollection" destination="7uk-KD-PL0" collectionClass="NSMutableArray" id="GGi-ek-w0t"/>
                 <outletCollection property="viewCollection" destination="5bL-Xu-N4J" collectionClass="NSMutableArray" id="Y4H-Wx-clZ"/>
@@ -116,7 +115,7 @@
                                         <stackView opaque="NO" tag="2" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="pau-kc-MOj">
                                             <rect key="frame" x="10" y="43" width="361" height="17"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="801" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6b6-h1-Zud">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6b6-h1-Zud">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.52156862749999999" green="0.49019607840000001" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -166,26 +165,26 @@
                                         <constraint firstAttribute="height" constant="60" id="mM6-R8-fTB"/>
                                     </constraints>
                                 </view>
-                                <stackView opaque="NO" tag="856" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="PDd-AU-oJQ" userLabel="Additional Info View">
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="97X-cI-tGl" customClass="StreamTranslationsView" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="140" width="414" height="60"/>
                                     <subviews>
-                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="855" contentMode="scaleToFill" directionalLockEnabled="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="s13-AK-H7Y">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XCU-xi-h5Y" customClass="TranslationTrackSelectionView" customModule="Zee5PlayerPlugin" customModuleProvider="target">
+                                            <rect key="frame" x="10" y="0.0" width="197" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="60" id="3Sb-20-ct0"/>
-                                            </constraints>
-                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="I3J-PZ-Zbv">
-                                                <size key="itemSize" width="50" height="50"/>
-                                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                            </collectionViewFlowLayout>
-                                        </collectionView>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNc-pV-Vzq" customClass="TranslationTrackSelectionView" customModule="Zee5PlayerPlugin" customModuleProvider="target">
+                                            <rect key="frame" x="207" y="0.0" width="197" height="60"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="WUI-bT-KCe"/>
+                                        <constraint firstAttribute="height" constant="60" id="Fv3-pB-NpQ"/>
                                     </constraints>
+                                    <edgeInsets key="layoutMargins" top="0.0" left="10" bottom="0.0" right="10"/>
+                                    <connections>
+                                        <outlet property="audioSelectionView" destination="XCU-xi-h5Y" id="x3p-el-hIP"/>
+                                        <outlet property="textSelectionView" destination="PNc-pV-Vzq" id="GCC-9G-e0a"/>
+                                    </connections>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uM-dJ-8ZJ" userLabel="Description View">
                                     <rect key="frame" x="0.0" y="210" width="414" height="20"/>

@@ -1735,10 +1735,10 @@ static ContentBuisnessType buisnessType;
     model1.isSelected = false;
     [models addObject:model1];
     
-    for (Track *track in self.textTracks)
+    for (NSString *subtitle in self.currentItem.subTitles)
     {
         Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
-        if ([self.selectedSubtitle isEqualToString:[Utility getLanguageStringFromId:track.title]]){;    //[Utility getLanguageStringFromId:str]])
+        if ([self.selectedSubtitle isEqualToString:subtitle]) {
             model.imageName = @"t";
             model.isSelected = true;
         }
@@ -1748,15 +1748,13 @@ static ContentBuisnessType buisnessType;
             model.isSelected = false;
         }
 
-        model.title =track.title;
+        model.title =  subtitle;
         model.type = 2;
-        model.idValue = track.id;
         [models addObject:model];
     }
     
     [_customMenu reloadDataWithObjects:models : true];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
-
 }
 
 -(void)GetPlayBackRate
