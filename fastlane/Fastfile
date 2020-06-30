@@ -1,0 +1,28 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Publish new plugin version"
+  lane :publish_plugin do
+    commit = last_git_commit
+    user = commit[:author]
+    email = commit[:author_email]
+
+    manifest = "#{ENV['PWD']}/Manifest/zapp_manifest.json"
+
+    version = version_bump_podspec(path: "Zee5PlayerPlugin.podspec", bump_type: "patch")
+
+    sh("mkdir", "-p", "#{ENV['PWD']}/Specs/#{version}")
+    sh("cp", "#{ENV['PWD']}/Zee5PlayerPlugin.podspec", "#{ENV['PWD']}/Specs/#{version}/Zee5PlayerPlugin.podspec")
+
+    sh("#{ENV['PWD']}/fastlane/scripts/update_manifest.sh", "#{version}", "#{user}", "#{email}", "#{manifest}")
+
+    sh("git", "add", "#{ENV['PWD']}/Specs/#{version}")
+    sh("git", "commit", "-a", "-m", "Update version")
+
+    add_git_tag(tag: "#{version}")
+    
+    sh("git", "push")
+
+    sh("#{ENV['PWD']}/fastlane/scripts/publish_manifest.sh #{manifest}")
+  end
+end
