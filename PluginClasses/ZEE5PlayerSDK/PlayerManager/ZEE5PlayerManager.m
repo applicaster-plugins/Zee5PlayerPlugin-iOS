@@ -2619,6 +2619,11 @@ static ContentBuisnessType buisnessType;
     {
         self.currentItem.hls_Url = [self.currentItem.hls_Url stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
     }
+    
+    if ([model.mpdUrl containsString:@"mpd"])
+    {
+        self.currentItem.mpd_Url = [self.KcdnUrl stringByAppendingString:model.mpdUrl] ;
+    }
 
     self.currentItem.drm_token = token;
     self.currentItem.drm_key = model.drmKeyID;
