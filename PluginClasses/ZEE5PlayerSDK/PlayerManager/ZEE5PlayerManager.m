@@ -260,7 +260,8 @@ static ContentBuisnessType buisnessType;
 - (void)castCurrentItem {
     [self hideLoaderOnPlayer];
     
-    [[ChromeCastManager shared] playSelectedItemRemotely];
+    NSTimeInterval startTime = _customControlView.sliderDuration.value;
+    [[ChromeCastManager shared] playSelectedItemRemotelyWithStartTime:startTime];
     
     [self pause];
     [self.playbackView removeFromSuperview];

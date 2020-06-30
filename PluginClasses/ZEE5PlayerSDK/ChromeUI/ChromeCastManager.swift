@@ -87,8 +87,8 @@ public protocol ChromeCastDelegate {
         GCKLogger.sharedInstance().delegate = self
     }
     
-    @objc public func playSelectedItemRemotely() {
-        self.loadSelectedItem(byAppending: false, with: nil, token: nil)
+    @objc public func playSelectedItemRemotely(startTime: TimeInterval = 0) {
+        self.loadSelectedItem(byAppending: false, with: nil, token: nil, startTime: startTime)
         GCKCastContext.sharedInstance().presentDefaultExpandedMediaControls()
         AnalyticEngine .shared .castingStartedAnalytics(with:CastDeviceName)
     }
@@ -97,7 +97,7 @@ public protocol ChromeCastDelegate {
         self.loadSelectedItem(byAppending: true, with: data, token: token)
     }
     
-    func loadSelectedItem(byAppending appending: Bool, with data: VODContentDetailsDataModel?, token: String?) {
+    func loadSelectedItem(byAppending appending: Bool, with data: VODContentDetailsDataModel?, token: String?, startTime: TimeInterval = 0) {
         guard
             GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession(),
             let mediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient else {
@@ -112,11 +112,13 @@ public protocol ChromeCastDelegate {
         customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
         customData["licenseUrl"] = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
         mediaInfo = self.getMediaInformation(for: currentItem, with: customData)
+    
 
         let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
         mediaQueueItemBuilder.mediaInformation = mediaInfo
         mediaQueueItemBuilder.autoplay = true
-        mediaQueueItemBuilder.startTime = TimeInterval(ZEE5PlayerManager.sharedInstance().getCurrentDuration())
+        mediaQueueItemBuilder.startTime = startTime
+        
         let mediaQueueItem = mediaQueueItemBuilder.build()
         
         if appending {
@@ -124,15 +126,11 @@ public protocol ChromeCastDelegate {
             request.delegate = self
         }
         else {
-            let queueDataBuilder = GCKMediaQueueDataBuilder(queueType: .generic)
-
-            queueDataBuilder.items = [mediaQueueItem]
-            queueDataBuilder.repeatMode = .off
+            let options = GCKMediaQueueLoadOptions()
+            options.repeatMode = .off
+            options.playPosition = startTime
             
-            let requestDataBuilder = GCKMediaLoadRequestDataBuilder()
-            requestDataBuilder.queueData = queueDataBuilder.build()
-            
-            let request = mediaClient.loadMedia(with: requestDataBuilder.build())
+            let request = mediaClient.queueLoad([mediaQueueItem], with: options)
             request.delegate = self
         }
         
