@@ -8,17 +8,18 @@ platform :ios do
     email = commit[:author_email]
 
     manifest = "#{ENV['PWD']}/Manifest/zapp_manifest.json"
-
     version = version_bump_podspec(path: "Zee5PlayerPlugin.podspec", bump_type: "patch")
 
-    sh("mkdir", "-p", "#{ENV['PWD']}/Specs/#{version}")
-    sh("cp", "#{ENV['PWD']}/Zee5PlayerPlugin.podspec", "#{ENV['PWD']}/Specs/#{version}/Zee5PlayerPlugin.podspec")
+    spec_name = "Zee5PlayerPlugin.podspec"
+    new_spec_path = "#{ENV['PWD']}/Specs/Zee5PlayerPlugin/#{version}"
+
+    sh("mkdir", "-p", "#{new_spec_path}")
+    sh("cp", "#{ENV['PWD']}/#{spec_name}", "#{new_spec_path}/#{spec_name}")
 
     sh("#{ENV['PWD']}/fastlane/scripts/update_manifest.sh", "#{version}", "#{user}", "#{email}", "#{manifest}")
 
-    sh("git", "add", "#{ENV['PWD']}/Specs/#{version}")
+    sh("git", "add", "#{new_spec_path}")
     sh("git", "commit", "-a", "-m", "Update version")
-
     add_git_tag(tag: "#{version}")
     
     sh("git", "push")
