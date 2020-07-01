@@ -608,6 +608,7 @@ static ContentBuisnessType buisnessType;
 {
     _customControlView.trailerEndView.hidden = isHidden;
     _customControlView.stackLoginView.hidden = isHidden;
+    [self stop];
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest== false) {
         _customControlView.stackLoginView.hidden = true;
     }
@@ -1129,7 +1130,6 @@ static ContentBuisnessType buisnessType;
 
 - (void)stop
 {
-    [[Zee5PlayerPlugin sharedInstance].player pause];
     [[Zee5PlayerPlugin sharedInstance].player stop];
     [[AnalyticEngine new] cleanupVideoSesssion];
    
@@ -2135,7 +2135,7 @@ static ContentBuisnessType buisnessType;
 -(void)DismissHybridView{
     
      _ishybridViewOpen = false;
-    if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded) {
+    if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden == YES) {
         [self play];
         return;
     }
