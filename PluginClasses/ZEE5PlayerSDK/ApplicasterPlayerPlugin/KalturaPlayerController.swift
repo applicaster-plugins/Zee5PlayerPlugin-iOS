@@ -56,9 +56,7 @@ internal enum PlayerViewDisplayMode : Int {
         checkForReachability()
     }
     override func viewWillAppear(_ animated: Bool) {
-        if Singleton.isAdPause == true {
-            Zee5PlayerPlugin.sharedInstance() .player .play()
-        }
+        ZEE5PlayerManager.sharedInstance().playbackcheck()
     }
     
     public func play() {
