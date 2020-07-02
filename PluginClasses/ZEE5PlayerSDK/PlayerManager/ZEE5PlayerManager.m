@@ -830,12 +830,18 @@ static ContentBuisnessType buisnessType;
     _isTelco = false;
       [self pause];
     [self hideLoaderOnPlayer];
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && _isNeedToSubscribe == true)
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
     {
         _videoCompleted = YES;
          [self HybridViewOpen];
         [self hideUnHidetrailerEndView:false];
         return;
+    }
+    if (_isNeedToSubscribe == true) {
+         _videoCompleted = YES;
+                [self HybridViewOpen];
+               [self hideUnHidetrailerEndView:false];
+               return;
     }
     if (_isAutoplay == false && _customControlView.btnSkipNext.selected == false)
     {
@@ -1084,6 +1090,23 @@ static ContentBuisnessType buisnessType;
         self.customControlView.buttonPlay.selected = YES;
         [[Zee5PlayerPlugin sharedInstance].player play];
         [[ReportingManager sharedInstance] startReportingWatchHistory];
+    }
+}
+
+-(void)Playbackcheck
+{
+    if (singleton.isAdPause == true) {
+        [[Zee5PlayerPlugin sharedInstance].player play];
+        return;
+          }
+    if (_customControlView.trailerEndView.hidden == true && _customControlView.adultView.hidden == true && [Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded ) {
+        _ishybridViewOpen = false;
+        [self showloaderOnPlayer];
+        
+   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+       [self hideLoaderOnPlayer];
+       [self play];
+    });
     }
 }
 
@@ -3255,10 +3278,15 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && _isNeedToSubscribe == true) {
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
         [self pause];
         [self HybridViewOpen];
         return;
+    }
+    if (_isNeedToSubscribe == true) {
+         [self pause];
+         [self HybridViewOpen];
+          return;
     }
     
     if (_isdownloadOverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
