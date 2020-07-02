@@ -168,7 +168,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
         }
         
         let headers = [
-            "Authorization": accessToken
+            "Authorization": accessToken,
+            "X-Z5-AppPlatform": "mobile_ios"
         ]
         
         self.actionBarUpdateHandler.setDisabled(true)
