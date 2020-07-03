@@ -46,6 +46,7 @@ public class DownloadQualityMenu: UIView {
     @IBAction func actionStartDownload(_ sender: Any) {
         if let idx = self.tableView.indexPathForSelectedRow {
             DownloadHelper.shared.removeDownloadOptionMenu()
+            AnalyticEngine.shared.PopUpCTAPressed(with: "Download QualityPopup", POpUpCTAName: "Start DownloadCTA")
             let option = self.downloadOption[idx.row]
             if let bitrate = option.bitrate {
                 DownloadHelper.shared.selectedVideoResolution(videoBitrate: bitrate, data: self.currentDownloadItem)

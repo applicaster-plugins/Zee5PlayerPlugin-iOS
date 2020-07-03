@@ -126,6 +126,9 @@
             self.tvShowimgurl = [showDetail ValueForKeyWithNullChecking:@"image_url"];
             self.tvShowAssetSubtype = [showDetail ValueForKeyWithNullChecking:@"asset_subtype"];
             self.tvShowId = [showDetail ValueForKeyWithNullChecking:@"id"];
+            if ([[dict ValueForKeyWithNullChecking:@"actors"] isKindOfClass:NSArray.class]) {
+                    self.charecters = [showDetail ValueForKeyWithNullChecking:@"actors"];
+                   }
             NSArray *Channls = [showDetail ValueForKeyWithNullChecking:@"channels"];
             if (Channls.count > 0)
             {

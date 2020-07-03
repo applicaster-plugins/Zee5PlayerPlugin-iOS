@@ -658,7 +658,7 @@ static ContentBuisnessType buisnessType;
 {
     CGFloat floored = floor([event.currentTime doubleValue]);
     NSInteger totalSeconds = (NSInteger) floored;
-    [[AnalyticEngine new]VideoWatchPercentCalcWith:@"Forward"];
+    [[AnalyticEngine shared]VideoWatchPercentCalcWith:@"Forward"];
     
     if (self.isLive)
     {
@@ -1099,15 +1099,15 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance].player play];
         return;
           }
-    if (_customControlView.trailerEndView.hidden == true && _customControlView.adultView.hidden == true && [Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded ) {
-        _ishybridViewOpen = false;
-        [self showloaderOnPlayer];
-        
-   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-       [self hideLoaderOnPlayer];
-       [self play];
-    });
-    }
+//    if (_customControlView.trailerEndView.hidden == true && _customControlView.adultView.hidden == true && [Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded ) {
+//        _ishybridViewOpen = false;
+//        [self showloaderOnPlayer];
+//
+//   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//       [self hideLoaderOnPlayer];
+//       [self play];
+//    });
+//    }
 }
 
 -(void)pause
@@ -1144,7 +1144,7 @@ static ContentBuisnessType buisnessType;
     _customControlView.sliderDuration.value = 0.0;
     _customControlView.bufferProgress.progress = 0.0;
     _customControlView.labelCurrentTime.text = @"00:00";
-     [[AnalyticEngine new]ReplayVideo];
+     [[AnalyticEngine shared]ReplayVideo];
     [self hideLoaderOnPlayer];
     
     [self play];
@@ -1154,7 +1154,7 @@ static ContentBuisnessType buisnessType;
 - (void)stop
 {
     [[Zee5PlayerPlugin sharedInstance].player stop];
-    [[AnalyticEngine new] cleanupVideoSesssion];
+    [[AnalyticEngine shared] cleanupVideoSesssion];
    
     self.isStop = YES;
     [[Zee5FanAdManager sharedInstance] stopFanAd];
@@ -1354,7 +1354,7 @@ static ContentBuisnessType buisnessType;
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
-        [[AnalyticEngine new]VideoExitAnalytics];
+       
     }
 }
 
@@ -1535,6 +1535,7 @@ static ContentBuisnessType buisnessType;
         self.parentalView.hidden =YES;
     }
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
+    [[AnalyticEngine shared]PlayerViewChangedWith:@"Portrait" newView:@"Landscape"];
     [self updateConvivaSessionWithMetadata: dict];
 }
 
@@ -1577,6 +1578,7 @@ static ContentBuisnessType buisnessType;
       {
           self.devicePopView.hidden =NO;
       }
+    [[AnalyticEngine shared]PlayerViewChangedWith:@"Landscape" newView:@"Portrait"];
 }
 
 //MARK:- Player Loader
@@ -1597,10 +1599,12 @@ static ContentBuisnessType buisnessType;
 -(void)startAd {
     [self.panDownGestureHandlerHelper startAd];
      singleton.isAdPause = FALSE;
+     singleton.isAdStarted = TRUE;
 }
 
 -(void)endAd {
     [self.panDownGestureHandlerHelper endAd];
+     singleton.isAdStarted = FALSE;
 }
 -(void)pauseAd {
     singleton.isAdPause = TRUE;
@@ -1613,6 +1617,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)forward:(NSInteger)value
 {
+    NSLog(@" Seeked %ld",(long)value);
     NSInteger currentTime = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
     NSInteger seekValue = currentTime + value;
     if(seekValue > [[Zee5PlayerPlugin sharedInstance] getDuration])
@@ -1621,8 +1626,7 @@ static ContentBuisnessType buisnessType;
     }
     [self setSeekTime:seekValue];
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
-    [engine AutoSeekAnalyticsWith:@"forward" time:value];
-    
+    [engine AutoSeekAnalyticsWith:@"Forward" Starttime:currentTime Endtime:seekValue];
 }
 -(void)rewind:(NSInteger)value
 {
@@ -1635,7 +1639,7 @@ static ContentBuisnessType buisnessType;
     }
     [self setSeekTime:seekValue];
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
-    [engine AutoSeekAnalyticsWith:@"rewind" time:value];
+    [engine AutoSeekAnalyticsWith:@"Rewind" Starttime:currentTime Endtime:seekValue];
 }
 
 -(void)setAudioTrack:(NSString *)audioID Title:(NSString *)AudioTitle
@@ -1664,6 +1668,9 @@ static ContentBuisnessType buisnessType;
 {
     [[Zee5PlayerPlugin sharedInstance].player selectTrackWithTrackId:subTitleID];
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
+    if ([self.CurrenttextTrack isEqualToString:@""]) {
+        self.CurrenttextTrack = @"English";
+    }
     [engine subtitlelangChangeAnalyticsWith:self.CurrenttextTrack newSubtitle:SubtitleTitle Mode:@"Online"];
 }
 
@@ -1842,7 +1849,6 @@ static ContentBuisnessType buisnessType;
 {
     [self preparePopView];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_devicePopView];
-    
 }
 
 -(void)preparePopView
@@ -1867,6 +1873,7 @@ static ContentBuisnessType buisnessType;
 {
     [self prepareParentalView];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_parentalView];
+    [[AnalyticEngine shared]PopUpLaunchWith:@"ParentalPopUp"];
     
 }
 
@@ -1906,6 +1913,7 @@ static ContentBuisnessType buisnessType;
 {
     if(_parentalView != nil)
 {
+    [[AnalyticEngine shared]PopUpCTAPressedWith:@"Continue" POpUpCTAName:@"ParentalPopUp"];
     if ([Pin isEqualToString:self.parentalPin])
     {
        if (_parentalView.superview != nil)
@@ -2360,7 +2368,7 @@ static ContentBuisnessType buisnessType;
     [ZEE5UserDefaults settranslationLanguage:laguage];
     [ZEE5UserDefaults setContentId:content_id];
     //Clean up video Session
-    [[AnalyticEngine new] cleanupVideoSesssion];
+    [[AnalyticEngine shared] cleanupVideoSesssion];
     
     [self registerNotifications];
     self.playerConfig = playerConfig;
@@ -2709,7 +2717,7 @@ static ContentBuisnessType buisnessType;
         self.playerConfig.showCustomPlayerControls = false;
     }
     
-    [[AnalyticEngine new]CurrentItemDataWith:self.currentItem];
+    [[AnalyticEngine shared]CurrentItemDataWith:self.currentItem];
 }
 
 // MARK:- Set Current Item For Live Data(url,drmToken,Title)
@@ -2756,7 +2764,7 @@ static ContentBuisnessType buisnessType;
     else {
         self.playerConfig.showCustomPlayerControls = false;
     }
-    [[AnalyticEngine new] CurrentItemDataWith:self.currentItem];
+    [[AnalyticEngine shared] CurrentItemDataWith:self.currentItem];
 }
 
 
@@ -2789,7 +2797,7 @@ static ContentBuisnessType buisnessType;
              @"viewerId": ZEE5PlayerSDK.getUserId
              };
  
-    [[AnalyticEngine new] setupConvivaSessionWith:dict];
+    [[AnalyticEngine shared] setupConvivaSessionWith:dict];
     
    
     [self comScoreMetadata];
@@ -2862,6 +2870,15 @@ static ContentBuisnessType buisnessType;
     if (_ModelValues.isBeforeTv) {
         AutoPlay = @"N";
     }
+    NSMutableArray *LanguageArr = [[NSMutableArray alloc]init];
+    NSString *LanguageStr;
+    for (NSString *language in item.language) {
+       NSString *lan = [Utility getLanguageStringFromId:language];
+        [LanguageArr addObject:lan];
+    }
+    if (LanguageArr .count >0) {
+        LanguageStr = [LanguageArr componentsJoinedByString:@"'"];
+    }
     
     NSString *NA = @"NA";
     
@@ -2890,7 +2907,7 @@ static ContentBuisnessType buisnessType;
              @"autoplay": AutoPlay,  // "False"
              @"videoStartPoint": videoStartPoint,
              @"playbackQuality": @"Auto",
-             @"originalLanguage": [item.language componentsJoinedByString:@","]?:NA,
+             @"originalLanguage": LanguageStr?:NA,
              
              @"isan": NA,
              @"rootID": item.content_id,
@@ -2910,7 +2927,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)updateConvivaSessionWithMetadata:(NSDictionary *)dict
 {
-    [[AnalyticEngine new] updateMetadataWith:dict];
+    [[AnalyticEngine shared] updateMetadataWith:dict];
 
 }
 
@@ -3302,7 +3319,7 @@ static ContentBuisnessType buisnessType;
       return;
     }
     
-   [[AnalyticEngine new]DownloadCTAClicked];
+   [[AnalyticEngine shared]DownloadCTAClicked];
    [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
 }
 

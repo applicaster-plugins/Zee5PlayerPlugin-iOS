@@ -127,9 +127,9 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.VideoViewEvent()
       
        }
-    @objc public func AutoSeekAnalytics(with Direction: NSString, time :NSInteger)
+    @objc public func AutoSeekAnalytics(with Direction: NSString, Starttime :NSInteger, Endtime :NSInteger)
       {
-        AllAnalyticsClass.shared.AutoseekChanged(with: Direction, Value: time)
+        AllAnalyticsClass.shared.AutoseekChanged(with: Direction, EndValue: Endtime, startvalue: Starttime)
       }
     
     @objc public func ReplayVideo()
@@ -158,7 +158,7 @@ public class AnalyticEngine: NSObject {
      }
     @objc public func playerResumeAnalytics()
      {
-        AllAnalyticsClass.shared.PLayEvent()
+        AllAnalyticsClass.shared.PlayResumeEvent()
      }
     @objc public func seekValueChangeAnalytics(with Direction: NSString, Starttime :NSInteger, EndTime :NSInteger)
      {
@@ -182,6 +182,12 @@ public class AnalyticEngine: NSObject {
      {
          AllAnalyticsClass.shared.VideoExit()
      }
+    @objc public func PopUpLaunch(with PopUpName:String){
+        AllAnalyticsClass.shared.PopUpLaunch(with: PopUpName)
+    }
+    @objc public func PopUpCTAPressed(with PopUpName:String , POpUpCTAName:String){
+        AllAnalyticsClass.shared.PopUpCTApressed(with: POpUpCTAName, PopUpName: PopUpName)
+      }
     
     @objc public func PlayBackError (with ErrorMessage:String)
     {
@@ -226,9 +232,9 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.DownloadStart(with: Quality)
     }
     
-    @objc public func downloadCompleteOrFail ()
+    public func downloadCompleteOrFail (with item: DownloadItem)
     {
-        AllAnalyticsClass.shared.DownloadCompleteOrFail()
+        AllAnalyticsClass.shared.DownloadCompleteOrFail(with: item)
     }
     
     public func downloadDelete (with item: DownloadItem)

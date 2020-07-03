@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) NSMutableArray *ViewsArray;
 @property(nonatomic) BOOL isAdPause;
+@property(nonatomic) BOOL isAdStarted;
 
 + (id)sharedManager;
 
