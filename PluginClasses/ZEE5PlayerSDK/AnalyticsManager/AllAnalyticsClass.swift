@@ -200,7 +200,8 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
                Keys.AD_VIEW.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
-               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,                                                           // TT
+               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+               Keys.AD_VIEW.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable: Buisnesstype,
                Keys.AD_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                Keys.AD_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
@@ -222,6 +223,7 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_VIEW.AD_PROVIDER ~>> "IMA",
                Keys.AD_VIEW.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
+               Keys.AD_VIEW.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
                Keys.AD_VIEW.AD_LOCATION ~>> "Instream",
                Keys.AD_VIEW.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
                Keys.AD_VIEW.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
@@ -233,6 +235,10 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.CAROUSAL_ID ~>> notAppplicable,
                Keys.AD_VIEW.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                Keys.AD_VIEW.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_VIEW.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+               Keys.AD_VIEW.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
+               Keys.AD_VIEW.AD_PERCENT_COMPLETE ~>>  "0" ,
+               
 
            ]
            analytics.track(Events.AD_VIEW, trackedProperties: parameter)
@@ -253,6 +259,8 @@ extension AllAnalyticsClass
              Keys.AD_VIEW_3.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
             Keys.AD_VIEW_3.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
             Keys.AD_VIEW_3.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            Keys.AD_VIEW_3.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+            Keys.AD_VIEW_3.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
            ]
            analytics.track(Events.AD_VIEW_3, trackedProperties: parameter)
 
@@ -272,6 +280,8 @@ extension AllAnalyticsClass
              Keys.AD_VIEW_5.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
             Keys.AD_VIEW_5.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
             Keys.AD_VIEW_5.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            Keys.AD_VIEW_5.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+            Keys.AD_VIEW_5.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
            ]
            analytics.track(Events.AD_VIEW_5, trackedProperties: parameter)
        }
@@ -282,7 +292,6 @@ extension AllAnalyticsClass
 
         let parameter : Set = [
          Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-         Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
          Keys.AD_VIEW_10.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
          Keys.AD_VIEW_10.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
          Keys.AD_VIEW_10.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
@@ -290,6 +299,8 @@ extension AllAnalyticsClass
           Keys.AD_VIEW_10.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
          Keys.AD_VIEW_10.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
          Keys.AD_VIEW_10.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+         Keys.AD_VIEW_10.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+         Keys.AD_VIEW_10.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
         ]
         analytics.track(Events.AD_VIEW_10, trackedProperties: parameter)
     }
@@ -363,6 +374,8 @@ extension AllAnalyticsClass
                 Keys.AD_VIEW_COMPLETE.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
                Keys.AD_VIEW_COMPLETE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
                Keys.AD_VIEW_COMPLETE.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_VIEW_COMPLETE.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+               Keys.AD_VIEW_COMPLETE.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
               ]
               analytics.track(Events.AD_VIEW_COMPLETE, trackedProperties: parameter)
        }

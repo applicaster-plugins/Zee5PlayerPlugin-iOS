@@ -41,6 +41,7 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
         Keys.VIDEO_VIEW.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.VIDEO_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+        Keys.VIDEO_VIEW.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
         Keys.VIDEO_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
         Keys.VIDEO_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
         Keys.VIDEO_VIEW.TITLE ~>> contentName == "" ? notAppplicable:contentName,
