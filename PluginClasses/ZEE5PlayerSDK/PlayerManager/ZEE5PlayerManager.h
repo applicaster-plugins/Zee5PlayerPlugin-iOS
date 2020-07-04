@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZEE5PlayerManager : NSObject
 @property CurrentItem *currentItem;
 @property (weak, nonatomic) id <ZEE5PlayerDelegate> delegate;
-@property(strong , nonatomic, nullable) PlayerView *playbackView;
 @property(nonatomic) BOOL isStop;
 @property(nonatomic) BOOL isTelco;     //// Come From Partner App.
 @property(nonatomic) NSString *TelcoMsg;
@@ -139,6 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)pauseAd;
 -(void)SliderReset;
 -(void)Playbackcheck;
+-(void)setPlaybackView:(UIView *)playbackView;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;

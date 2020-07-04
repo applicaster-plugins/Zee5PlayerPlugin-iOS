@@ -73,7 +73,8 @@
 @property ZEE5PlayerConfig *playerConfig;
 @property comScoreAnalytics *comAnalytics;
 
-@property(strong , nonatomic) UIView *viewPlayer;
+@property(strong , nonatomic, nullable) PlayerView *kalturaPlayerView;
+@property(strong , nonatomic, nullable) UIView *parentPlaybackView;
 @property(strong , nonatomic) UIImageView *posterImageView;
 
 @property(nonatomic) UIPanGestureRecognizer *panGesture;
@@ -186,30 +187,33 @@ static ContentBuisnessType buisnessType;
         [self CustomControlViewNew];
         return;
     }
+    
     if (_parentalControl == true) {
          [self hideLoaderOnPlayer];
           [self parentalControlshow];
         return;
     }
+    
     if (!_allowVideoContent) {
         return;
     }
+    
     if ([[ChromeCastManager shared] isCasting]) {
         [self castCurrentItem];
         return;
     }
     
-    if (self.playbackView != nil) {
-        [self.playbackView removeFromSuperview];
+    if (self.kalturaPlayerView != nil) {
+        [self.kalturaPlayerView removeFromSuperview];
     }
     
-    self.playbackView = [[PlayerView alloc] init];
-    [self.viewPlayer addSubview:self.playbackView];
+    self.kalturaPlayerView = [[PlayerView alloc] init];
+    [self.parentPlaybackView addSubview:self.kalturaPlayerView];
     
     if (self.allowMinimizeDuringAds) { // For debug only
         UIButton *skipAdsButton = [[UIButton alloc] init];
         skipAdsButton.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.viewPlayer addSubview:skipAdsButton];
+        [self.parentPlaybackView addSubview:skipAdsButton];
             
         [[skipAdsButton.heightAnchor constraintEqualToConstant:30] setActive:YES];
         [[skipAdsButton.widthAnchor constraintEqualToConstant:100] setActive:YES];
@@ -225,8 +229,8 @@ static ContentBuisnessType buisnessType;
         }];
     }
     
-    self.playbackView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.playbackView matchParent];
+    self.kalturaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.kalturaPlayerView matchParent];
     
     self.posterImageView.image = nil;
     
@@ -244,7 +248,7 @@ static ContentBuisnessType buisnessType;
             [self addMuteViewToPlayer];
         }
         
-        [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.playbackView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
+        [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         
         self.panGesture = [[UIPanGestureRecognizer alloc] init];
         
@@ -264,8 +268,8 @@ static ContentBuisnessType buisnessType;
     [[ChromeCastManager shared] playSelectedItemRemotelyWithStartTime:startTime];
     
     [self pause];
-    [self.playbackView removeFromSuperview];
-    self.playbackView = nil;
+    [self.kalturaPlayerView removeFromSuperview];
+    self.parentPlaybackView = nil;
     
     NSString *imageUrlValue = self.currentItem.imageUrl;
     if (imageUrlValue == nil && self.LiveModelValues != nil) {
@@ -278,7 +282,7 @@ static ContentBuisnessType buisnessType;
             if (self.posterImageView == nil) {
                 self.posterImageView = [[UIImageView alloc] init];
                 
-                [self.viewPlayer insertSubview:self.posterImageView atIndex:0];
+                [self.parentPlaybackView insertSubview:self.posterImageView atIndex:0];
                 
                 self.posterImageView.translatesAutoresizingMaskIntoConstraints = NO;
                 [self.posterImageView matchParent];
@@ -403,7 +407,7 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView = [[bundel loadNibNamed:@"ZEE5CustomControl" owner:self options:nil] objectAtIndex:0];
     }
-    _customControlView.frame = CGRectMake(0, 0, self.viewPlayer.frame.size.width, self.viewPlayer.frame.size.height);
+    _customControlView.frame = CGRectMake(0, 0, self.parentPlaybackView.frame.size.width, self.parentPlaybackView.frame.size.height);
     _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _customControlView.playerControlView.hidden = YES;
     _customControlView.viewLive.hidden = !self.isLive;
@@ -454,7 +458,7 @@ static ContentBuisnessType buisnessType;
     }
     
     
-    [self.playbackView addSubview:_customControlView];
+    [self.kalturaPlayerView addSubview:_customControlView];
     _tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnPlayer)];
     _tapGesture.delegate = self;
     [_tapGesture setDelaysTouchesBegan : YES];
@@ -483,16 +487,16 @@ static ContentBuisnessType buisnessType;
 -(void)CustomControlViewNew{
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
     [self hideLoaderOnPlayer];
-    if (self.playbackView != nil) {
-             [self.playbackView removeFromSuperview];
+    if (self.kalturaPlayerView != nil) {
+             [self.kalturaPlayerView removeFromSuperview];
          }
     if(_customControlView == nil)
        {
            _customControlView = [[bundel loadNibNamed:@"ZEE5CustomControl" owner:self options:nil] objectAtIndex:0];
        }
-       _customControlView.frame = CGRectMake(0, 0, self.viewPlayer.frame.size.width, self.viewPlayer.frame.size.height);
+       _customControlView.frame = CGRectMake(0, 0, self.parentPlaybackView.frame.size.width, self.parentPlaybackView.frame.size.height);
        _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.viewPlayer addSubview:self.customControlView];
+        [self.parentPlaybackView addSubview:self.customControlView];
     
     _customControlView.parentalDismissView.hidden = true;
     _customControlView.adultView.hidden = true;
@@ -544,8 +548,8 @@ static ContentBuisnessType buisnessType;
     if (_customControlView.playerControlView != nil && [singleton.ViewsArray containsObject:_customControlView.playerControlView]== false ) {
             [singleton.ViewsArray addObject:_customControlView.playerControlView];
     }
-    if (_viewPlayer != nil && [singleton.ViewsArray containsObject:_viewPlayer]== false ) {
-               [singleton.ViewsArray addObject:_viewPlayer];
+    if (_parentPlaybackView != nil && [singleton.ViewsArray containsObject:_parentPlaybackView]== false ) {
+               [singleton.ViewsArray addObject:_parentPlaybackView];
        }
     
 }
@@ -1142,7 +1146,7 @@ static ContentBuisnessType buisnessType;
     self.allowVideoContent = false;
     
     [_customControlView  removeFromSuperview];
-    [self.playbackView removeFromSuperview];
+    [self.kalturaPlayerView removeFromSuperview];
     [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
 }
 
@@ -1419,7 +1423,7 @@ static ContentBuisnessType buisnessType;
 
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-    activityVC.popoverPresentationController.sourceView = self.viewPlayer;
+    activityVC.popoverPresentationController.sourceView = self.parentPlaybackView;
   
     [activityVC setCompletionWithItemsHandler:^(UIActivityType  _Nullable activityType, BOOL completed, NSArray * _Nullable returnedItems, NSError * _Nullable activityError)
      {
@@ -1561,8 +1565,8 @@ static ContentBuisnessType buisnessType;
     self.customControlView.collectionView.hidden = YES;
     _customControlView.con_top_collectionView.constant = 10;
 
-    _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 150, 0, 150, self.playbackView.frame.size.height);
-    _customControlView.rewindButton.frame = CGRectMake(0, 0, 150, self.playbackView.frame.size.height);
+    _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 150, 0, 150, self.kalturaPlayerView.frame.size.height);
+    _customControlView.rewindButton.frame = CGRectMake(0, 0, 150, self.kalturaPlayerView.frame.size.height);
     
     
     if (_isTelco == true)
@@ -2365,7 +2369,9 @@ static ContentBuisnessType buisnessType;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
     _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
-    self.viewPlayer = playbackView;
+    
+    self.parentPlaybackView = playbackView;
+
     [[AnalyticEngine shared]VideoStartTimeWith:0];
     [[AnalyticEngine shared]AudioLanguageWith:@""];
     [self SliderReset];
