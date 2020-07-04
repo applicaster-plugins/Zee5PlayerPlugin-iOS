@@ -24,6 +24,7 @@ var CompletionHandler:((Bool)->(Void))?
         User.shared.refreshViewAfterloginOrRegistration = { [] in
                            completion(true)
                        }
+        AnalyticEngine.shared.SubscribeCTAClicked()
         Zee5DeepLinkingManager.shared.openURL(withURL:Zee5DeepLinkingManager.URLs.buySubscriptions(assetID: Assetid, beforeTV: beforetv).url)
     }
     
