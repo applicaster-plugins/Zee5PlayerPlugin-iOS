@@ -12,7 +12,6 @@ import ApplicasterSDK
 import Zee5CoreSDK
 import Alamofire
 
-
 internal enum PlayerViewDisplayMode : Int {
     case hidden = 0
     case fullScreen = 1
@@ -20,13 +19,9 @@ internal enum PlayerViewDisplayMode : Int {
     case mini = 3
 }
 
- class KalturaPlayerController: UIViewController {
-    var contentId = "0-0-2464"
-    var country = "IN"
-    var translation = "en"
+class KalturaPlayerController: UIViewController {
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
 
-    
     var currentDisplayMode: PlayerViewDisplayMode = .hidden
     let container = UIView()
     let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
@@ -55,24 +50,13 @@ internal enum PlayerViewDisplayMode : Int {
         
         checkForReachability()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         ZEE5PlayerManager.sharedInstance().playbackcheck()
     }
-    
-    public func play() {
-        // Initialize Zee5Player
-        let config = ZEE5PlayerConfig()
-        country = Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse().country
-        translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
         
-        ZEE5PlayerManager.sharedInstance().playVODContent(contentId, country: country, translation: translation, playerConfig: config, playbackView: self.view) { (data,token) in
-            self.ShowIndicator()
-        }
-    }
-    
     private func addNotifiactonObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(wentForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
@@ -88,48 +72,47 @@ internal enum PlayerViewDisplayMode : Int {
         }
     }
     
-    
-   @objc public func ShowIndicator()  {
-    ShowIndicator(onParent: self.view)
-   }
-    
-    @objc public func ShowIndicator(onParent view: UIView)  {
-      HideIndicator()
-      container.frame = view.bounds
-      container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
-      let loadingView: UIView = UIView()
-      loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-      loadingView.center = container.center
-      loadingView.clipsToBounds = true
-      loadingView.layer.cornerRadius = 20
-      activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
-      loadingView.addSubview(activityLoader)
-      container.addSubview(loadingView)
-      view.addSubview(container)
-      activityLoader.startAnimating()
-      checkForReachability()
-
+    public func showIndicator()  {
+        guard self.container.superview == nil else {
+            return
+        }
+        
+        container.frame = view.bounds
+        container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
+        
+        let loadingView: UIView = UIView()
+        loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+        loadingView.center = container.center
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 20
+        activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
+        loadingView.addSubview(activityLoader)
+        container.addSubview(loadingView)
+        view.addSubview(container)
+        
+        activityLoader.startAnimating()
+        checkForReachability()
+        
         if Singleton.viewsArray.contains(container) == false {
             Singleton.viewsArray.add(container)
         }
         if Singleton.viewsArray.contains(loadingView) == false {
-             Singleton.viewsArray.add(loadingView)
+            Singleton.viewsArray.add(loadingView)
         }
         if Singleton.viewsArray.contains(activityLoader) == false {
-             Singleton.viewsArray.add(activityLoader)
+            Singleton.viewsArray.add(activityLoader)
         }
         if Singleton.viewsArray.contains(view) == false {
-             Singleton.viewsArray.add(view)
+            Singleton.viewsArray.add(view)
         }
-     }
-    
-    @objc public func HideIndicator()  {
-     container .removeFromSuperview()
-     activityLoader.stopAnimating()
-    
     }
     
-  @objc public func checkForReachability() {
+    public func hideIndicator()  {
+        container.removeFromSuperview()
+        activityLoader.stopAnimating()
+    }
+    
+    @objc public func checkForReachability() {
         self.networkReachabilityManager?.listener = { status in
             switch status {
             case .notReachable:
@@ -144,7 +127,7 @@ internal enum PlayerViewDisplayMode : Int {
                 break;
             }
         }
-
+        
         self.networkReachabilityManager?.startListening()
     }
 }
@@ -153,7 +136,7 @@ internal enum PlayerViewDisplayMode : Int {
 
 extension KalturaPlayerController: ZEE5PlayerDelegate {
     func didFinishPlaying() {
-        self.HideIndicator()
+        self.hideIndicator()
         self.delegate?.didFinishPlaying?()
     }
     
@@ -175,7 +158,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     func playerData(_ dict: [AnyHashable : Any]) {
     }
     
-   func didFinishWithError(_ error: ZEE5SdkError) {
+    func didFinishWithError(_ error: ZEE5SdkError) {
     }
     
     func availableAudioTracks(_ aryModels: [Any]) {
@@ -187,7 +170,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     func didTaponNextButton() {
     }
     
-   func didTaponPrevButton() {
+    func didTaponPrevButton() {
     }
     
     func getPlayerEvent(_ event:PlayerEvent) {
@@ -195,11 +178,11 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     }
     
     func hidePlayerLoader() {
-        self.HideIndicator()
+        self.hideIndicator()
               
     }
-    func showPlayerLoader() {
-        self.ShowIndicator()
-    }
     
+    func showPlayerLoader() {
+        self.showIndicator()
+    }
 }

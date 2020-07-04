@@ -9,21 +9,21 @@ import Foundation
 
 import ZappPlugins
 
-public protocol ActionButtonBuilder {
-    init(_ playable: ZPAtomEntryPlayableProtocol, _ consumptionFeedType: ConsumptionFeedType)
+protocol ActionButtonBuilder {
+    init(_ playable: ZeePlayable)
     func build() -> ActionBarView.ButtonData?
     func setActionBarUpdateHandler(_ handler: ActionBarUpdateHandler)
     func fetchInitialState()
 }
 
-public class BaseActionButtonBuilder {
-    public let playable: ZPAtomEntryPlayableProtocol
+class BaseActionButtonBuilder {
+    public let playable: ZeePlayable
     public let consumptionFeedType: ConsumptionFeedType
     public var actionBarUpdateHandler: ActionBarUpdateHandler!
 
-    required public init(_ playable: ZPAtomEntryPlayableProtocol, _ consumptionFeedType: ConsumptionFeedType) {
+    required public init(_ playable: ZeePlayable) {
         self.playable = playable
-        self.consumptionFeedType = consumptionFeedType
+        self.consumptionFeedType = playable.consumptionType
     }
     
     public func setActionBarUpdateHandler(_ handler: ActionBarUpdateHandler) {

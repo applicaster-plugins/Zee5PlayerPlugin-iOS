@@ -49,7 +49,7 @@ class DownloadActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder 
      }
     
     fileprivate func currentContentId() -> String? {
-        return self.playable.identifier as String?
+        return self.playable.contentId
     }
     
     fileprivate func download() {

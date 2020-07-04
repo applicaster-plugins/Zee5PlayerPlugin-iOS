@@ -33,7 +33,7 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 
 @implementation ZEE5PlayerSDK
 
-+ (void)initializeWithContentID:(NSString*)content_id and:(NSString*)userId;
++ (void)initializeWith:(NSString*)userId;
 {
     id Dict;
     user_id = userId;

@@ -20,10 +20,7 @@ extension HybridViewController {
             guard let buttonViewCollection = self.buttonsViewCollection else {
                 return
             }
-            
-            let buttonStyle = stylesFor(key: "consumption_button_text")
-            let indicatorStyle = stylesFor(key: "consumption_text_indicator")
-            
+
             buttonViewCollection.forEach { (button) in
                 if let tmpButton = button as? CAButton {
                     tmpButton.removeTarget(tmpButton, action: #selector(CAButton.handleElementAction(_:)), for: .touchUpInside)
@@ -45,8 +42,7 @@ extension HybridViewController {
         func setupLabels() {
             guard
                 let labelsViewCollection = self.labelsCollection,
-                let playable = self.currentPlayableItem,
-                let extensions = playable.extensionsDictionary else {
+                let playable = self.playable else {
                     return
             }
             
@@ -56,13 +52,13 @@ extension HybridViewController {
                     label.text = "Upcoming_Body_StoryLine_Text".localized(hashMap: [:])
                     
                 case ItemTag.Label.releasingOnLabel:
-                    
                     var releasingString: String = "Upcoming_Body_ReleasingOn_Text".localized(hashMap: ["release_date": String()]) + ""
                     
-                    guard let atom = self.currentPlayableItem, let date: String = atom.extensionsDictionary?[ExtensionsKey.releaseDate] as? String, !date.isEmptyOrWhitespace() else {
+                    guard let date = playable.releaseYear, !date.isEmptyOrWhitespace() else {
                         label.text = releasingString
                         return
                     }
+                    
                     var releaseString: String?
                     //create date from string
                     let dateFormatter = DateFormatter.init()
@@ -76,77 +72,41 @@ extension HybridViewController {
                     label.text = releasingString
                     
                 case ItemTag.Label.numberTagLabel:
-                    guard let atom = self.currentPlayableItem, let numberText: Int = atom.extensionsDictionary?[ExtensionsKey.numberTagText] as? Int else {
+                    guard let numberText = playable.numberTag else {
                         return
                     }
+                    
                     label.text = "\(numberText)"
                 case ItemTag.Label.consumptionTitleLabel:
-                    label.text = self.currentPlayableItem?.playableName()
+                    label.text = playable.title
                     label.isHidden = label.text == nil
+                    
                 case ItemTag.Label.consumptionIMDBRatingLabel:
                     guard
-                        self.consumptionFeedType != .live,
-                        let rating = extensions[ExtensionsKey.rating] as? NSNumber else {
+                        playable.consumptionType != .live,
+                        let rating = playable.rating else {
                             label.isHidden = true
                             return
                     }
                     
-                    label.text = rating.stringValue
+                    label.text = rating
                     label.layer.cornerRadius = 3
                     label.isHidden = false
          
                 case ItemTag.Label.consumptionAvailableInLabel:
                     label.text = "MoviesConsumption_MovieDetails_AvailableVideoTechnology_Text".localized(hashMap: ["video_technology": String()])
+                
                 case ItemTag.Label.consumptionDescriptionLabel:
                     let descriptionStyle = stylesFor(key: "consumption_text_description")
                     label.textColor = descriptionStyle.color
                     label.font = descriptionStyle.font
-                    break
+
                 case ItemTag.Label.consumptionCastLabel:
                     label.text = "     " + "MoviesConsumption_MovieDetails_Cast_Link".localized(hashMap: [:])
                     
                 case ItemTag.Label.consumptionCreatorsLabel:
                     label.text = "     " + "MoviesConsumption_MovieDetails_Creators_Text".localized(hashMap: [:])
-                case ItemTag.Label.upNextLabel:
-                    //setup up next label
                     
-                    guard let atom = self.currentPlayableItem, let upNext = atom.extensionsDictionary?[ExtensionsKey.upNext] as? String  else {
-                        return
-                    }
-                    label.text = "Up next: \(upNext)" //TODO: add translation for "Up next"
-                case ItemTag.Label.timeLeftLabel:
-                    
-                    guard let atom = self.currentPlayableItem, let timeLeft = atom.extensionsDictionary?[ExtensionsKey.leftDuration] as? Int else {
-                        return
-                    }
-                    
-                    //setup left duration
-                    let (h,m,s) = secondsToHoursMinutesSeconds(seconds: timeLeft)
-                    
-                    var timeString = String()
-                    if h != nil {
-                        timeString.append("\(h!)h ")
-                    }
-                    if m != nil {
-                        timeString.append("\(m!)m ")
-                    }
-                    if s != nil {
-                        timeString.append("\(s!)s ")
-                    }
-                    
-                    if h != nil || m != nil || s != nil {
-                        timeString.append(contentsOf: "left") //TODO: add translation for "left"
-                    }
-                    label.text = timeString
-                    
-                case ItemTag.Label.timeFromToLabel:
-                    
-                    guard let atom = self.currentPlayableItem, let durationString = atom.extensionsDictionary?[ExtensionsKey.durationDate] as? String else {
-                        return
-                    }
-                    
-                    //setup time from - to label
-                    label.text = durationString
                 default:
                     break
                 }
@@ -156,34 +116,26 @@ extension HybridViewController {
         func setupViews() {
             self.handleRelatedContent()
             
-            guard let viewsViewCollection = self.viewCollection else {
-                return
+            guard
+                let viewsViewCollection = self.viewCollection,
+                let playable = self.playable else {
+                    return
             }
             
             viewsViewCollection.forEach { (view) in
                 if let actionBarView = view as? ActionBarView {
-                    guard
-                        let playable = self.currentPlayableItem as? ZPAtomEntryPlayableProtocol,
-                        let consumptionFeedType = self.consumptionFeedType else {
-                        return
-                    }
-                                        
-                    let buisnessType = ZEE5PlayerManager.sharedInstance().getBusinessType()
-                    
-                    ActionBarHelper.setup(playable: playable, consumptionFeedType: consumptionFeedType, buisnessType: buisnessType,   actionBarView: actionBarView)
+                    ActionBarHelper.setup(playable: playable, actionBarView: actionBarView)
                     return
                 }
-                
-                let index = viewsViewCollection.firstIndex{$0 as? UIView === view as? UIView }
-                
-                switch (view as! UIView).tag {
+                                
+                switch view.tag {
                 case ItemTag.View.premiumBanner:
                     guard let bannerView = view as? PremiumBanner else {
                         return
                     }
                     
                     bannerView.backgroundColor = .clear
-                    bannerView.setupBanner(playable: self.currentPlayableItem)
+                    bannerView.setupBanner(playable: playable)
 
                 case ItemTag.View.adsBanner:
                     guard let bannerView = view as? AdBanner else {
@@ -191,36 +143,29 @@ extension HybridViewController {
                     }
                     
                     bannerView.backgroundColor = .clear
-                    bannerView.setupAds(playable: self.currentPlayableItem)
+                    bannerView.setupAds(playable: playable)
 
                 case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection:
                     if let tmpView = view as? UICollectionView {
-                        
                         tmpView.delegate = self
                         tmpView.dataSource = self
                         
                         tmpView.register(HybridViewTitleSubtitleCell.self, forCellWithReuseIdentifier: "HybridViewTitleSubtitleCell")
                         
-                        guard self.currentPlayableItem != nil else {
-                            return
-                        }
-                        
                         setupDataSources()
                         tmpView.reloadData()
                     }
-                case ItemTag.View.consumptionCastCollectionStackView, ItemTag.View.consumptionCreatorCollectionStackView:
                     
-                    guard self.currentPlayableItem != nil else {
-                        return
-                    }
+                case ItemTag.View.consumptionCastCollectionStackView, ItemTag.View.consumptionCreatorCollectionStackView:
                     setupDataSources()
                     
-                    switch (view as! UIView).tag {
+                    switch view.tag {
                     case ItemTag.View.consumptionCastCollectionStackView:
                         //remove cast collection view from the stack view if it is empty
                         if castDataSource == nil || castDataSource?.count == 0 {
                             (view as! UIStackView).removeFromSuperview()
                         }
+                        
                     case ItemTag.View.consumptionCreatorCollectionStackView:
                         //remove creators collection view from the stack view if it is empty
                         if creatorsDataSource == nil || creatorsDataSource?.count == 0 {
@@ -230,7 +175,6 @@ extension HybridViewController {
                     }
                     
                 case ItemTag.View.consumptionButtonsView:
-                    
                     guard let buttonsBackgroundStyle = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: "consumption_bg_buttons"),
                         let color = buttonsBackgroundStyle["color"] as? UIColor else {
                             return
@@ -244,11 +188,6 @@ extension HybridViewController {
         }
         
         //MARK:
-        
-        private func secondsToHoursMinutesSeconds (seconds : Int) -> (Int?, Int?, Int?) {
-            return ((seconds / 3600) > 1 ? (seconds / 3600) : nil, ((seconds % 3600) / 60) > 1 ? ((seconds % 3600) / 60) : nil, ((seconds % 3600) % 60) > 1 ? ((seconds % 3600) % 60) : nil)
-        }
-        
         
         private func stylesFor(key: String) -> (font: UIFont, color: UIColor) {
             return StylesHelper.style(for: key) ?? (font: UIFont.systemFont(ofSize: 14), color: UIColor.white)
@@ -266,16 +205,37 @@ extension HybridViewController {
         }
     
     private func handleRelatedContent() {
-        guard
-            let url = self.currentPlayableItem?.extensionsDictionary?[ExtensionsKey.relatedContent] as? String,
-            let atomFeed = APAtomFeed(url: url) else {
-                if self.metadataViewContainer.superview != self.mainCollectionViewContainer {
-                    self.mainCollectionViewContainer.addSubview(self.metadataViewContainer)
-                    
-                    self.metadataViewContainer.removeConstraints(self.metadataViewContainer.constraints)
-                    self.metadataViewContainer.anchorToTop()
-                }
+        func resetMetadataContainer() {
+            if self.metadataViewContainer.superview != self.mainCollectionViewContainer {
+                self.mainCollectionViewContainer.addSubview(self.metadataViewContainer)
                 
+                self.metadataViewContainer.removeConstraints(self.metadataViewContainer.constraints)
+                self.metadataViewContainer.anchorToTop()
+            }
+        }
+        
+        guard
+            let playable = self.playable,
+            let contentId = playable.contentId else {
+                resetMetadataContainer()
+                return
+        }
+                
+        let queryItems = [
+            URLQueryItem(name: "type", value: "RelatedContent"),
+            URLQueryItem(name: "id", value: contentId),
+            URLQueryItem(name: "feed_type", value: String(describing: playable.consumptionType))
+        ]
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "zee5"
+        urlComponents.host = "fetchData"
+        urlComponents.queryItems = queryItems
+
+        guard
+            let url = urlComponents.url?.absoluteString,
+            let atomFeed = APAtomFeed(url: url) else {
+                resetMetadataContainer()
                 return
         }
         
@@ -306,10 +266,7 @@ extension HybridViewController {
     //MARK: extension
     
     extension HybridViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-        
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            let type = self.consumptionFeedType
-            
             switch collectionView.tag {
             case ItemTag.View.consumptionCastCollection:
                 return castDataSource?.count ?? 0
@@ -350,7 +307,7 @@ extension HybridViewController {
                 
                 let descriptionStyle = stylesFor(key: "consumption_text_description")
                 let indicatorStyle = stylesFor(key: "consumption_text_indicator")
-                let visibilityStyle = stylesFor(key: "consumption_visibility_text")
+
                 switch collectionView.tag {
                 case ItemTag.View.consumptionCastCollection, ItemTag.View.consumptionCreatorCollection:
                     cell.titleLabel.textColor = descriptionStyle.color
@@ -413,110 +370,6 @@ extension HybridViewController {
         }
     }
     
-    extension CAButton {
-        
-        enum ImageTitleRelativeLocation {
-            case imageUpTitleDown
-            case imageDownTitleUp
-            case imageLeftTitleRight
-            case imageRightTitleLeft
-        }
-        func centerContentRelativeLocation(_ relativeLocation:
-            ImageTitleRelativeLocation,
-                                           spacing: CGFloat = 0) {
-            assert(contentVerticalAlignment == .center,
-                   "only works with contentVerticalAlignment = .center !!!")
-            
-            guard (title(for: .normal) != nil) || (attributedTitle(for: .normal) != nil) else {
-                //assert(false, "TITLE IS NIL! SET TITTLE FIRST!")
-                return
-            }
-            
-            guard let imageSize = self.currentImage?.size else {
-                //assert(false, "IMGAGE IS NIL! SET IMAGE FIRST!!!")
-                return
-            }
-            guard let titleSize = titleLabel?
-                .systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) else {
-                    //assert(false, "TITLELABEL IS NIL!")
-                    return
-            }
-            
-            let horizontalResistent: CGFloat
-            // extend contenArea in case of title is shrink
-            if frame.width < titleSize.width + imageSize.width {
-                horizontalResistent = titleSize.width + imageSize.width - frame.width
-            } else {
-                horizontalResistent = 0
-            }
-            
-            var adjustImageEdgeInsets: UIEdgeInsets = .zero
-            var adjustTitleEdgeInsets: UIEdgeInsets = .zero
-            var adjustContentEdgeInsets: UIEdgeInsets = .zero
-            
-            let verticalImageAbsOffset = abs((titleSize.height + spacing) / 2)
-            let verticalTitleAbsOffset = abs((imageSize.height + spacing) / 2)
-            
-            switch relativeLocation {
-            case .imageUpTitleDown:
-                
-                adjustImageEdgeInsets.top = -verticalImageAbsOffset
-                adjustImageEdgeInsets.bottom = verticalImageAbsOffset
-                adjustImageEdgeInsets.left = titleSize.width / 2 + horizontalResistent / 2
-                adjustImageEdgeInsets.right = -titleSize.width / 2 - horizontalResistent / 2
-                
-                adjustTitleEdgeInsets.top = verticalTitleAbsOffset
-                adjustTitleEdgeInsets.bottom = -verticalTitleAbsOffset
-                adjustTitleEdgeInsets.left = -imageSize.width / 2 + horizontalResistent / 2
-                adjustTitleEdgeInsets.right = imageSize.width / 2 - horizontalResistent / 2
-                
-                adjustContentEdgeInsets.top = spacing
-                adjustContentEdgeInsets.bottom = spacing
-                adjustContentEdgeInsets.left = -horizontalResistent
-                adjustContentEdgeInsets.right = -horizontalResistent
-            case .imageDownTitleUp:
-                adjustImageEdgeInsets.top = verticalImageAbsOffset
-                adjustImageEdgeInsets.bottom = -verticalImageAbsOffset
-                adjustImageEdgeInsets.left = titleSize.width / 2 + horizontalResistent / 2
-                adjustImageEdgeInsets.right = -titleSize.width / 2 - horizontalResistent / 2
-                
-                adjustTitleEdgeInsets.top = -verticalTitleAbsOffset
-                adjustTitleEdgeInsets.bottom = verticalTitleAbsOffset
-                adjustTitleEdgeInsets.left = -imageSize.width / 2 + horizontalResistent / 2
-                adjustTitleEdgeInsets.right = imageSize.width / 2 - horizontalResistent / 2
-                
-                adjustContentEdgeInsets.top = spacing
-                adjustContentEdgeInsets.bottom = spacing
-                adjustContentEdgeInsets.left = -horizontalResistent
-                adjustContentEdgeInsets.right = -horizontalResistent
-            case .imageLeftTitleRight:
-                adjustImageEdgeInsets.left = -spacing / 2
-                adjustImageEdgeInsets.right = spacing / 2
-                
-                adjustTitleEdgeInsets.left = spacing / 2
-                adjustTitleEdgeInsets.right = -spacing / 2
-                
-                adjustContentEdgeInsets.left = spacing
-                adjustContentEdgeInsets.right = spacing
-            case .imageRightTitleLeft:
-                adjustImageEdgeInsets.left = titleSize.width + spacing / 2
-                adjustImageEdgeInsets.right = -titleSize.width - spacing / 2
-                
-                adjustTitleEdgeInsets.left = -imageSize.width - spacing / 2
-                adjustTitleEdgeInsets.right = imageSize.width + spacing / 2
-                
-                adjustContentEdgeInsets.left = spacing
-                adjustContentEdgeInsets.right = spacing
-            }
-            
-            imageEdgeInsets = adjustImageEdgeInsets
-            titleEdgeInsets = adjustTitleEdgeInsets
-            contentEdgeInsets = adjustContentEdgeInsets
-            
-            setNeedsLayout()
-        }
-    }
-    
     extension UIStackView {
         func addBackground(color: UIColor) {
             let subView = UIView(frame: bounds)
@@ -524,6 +377,4 @@ extension HybridViewController {
             subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             insertSubview(subView, at: 0)
         }
-        
-        
 }

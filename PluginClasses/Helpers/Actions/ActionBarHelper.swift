@@ -9,10 +9,13 @@ import Foundation
 
 import ZappPlugins
 
-public class ActionBarHelper {
-    public static func setup(playable: ZPAtomEntryPlayableProtocol, consumptionFeedType: ConsumptionFeedType, buisnessType: ContentBuisnessType, actionBarView: ActionBarView) {
+class ActionBarHelper {
+    static func setup(playable: ZeePlayable, actionBarView: ActionBarView) {
         actionBarView.resetButtons()
-                
+        
+        let consumptionFeedType = playable.consumptionType
+        let buisnessType = playable.businessType
+        
         var builders: [ActionButtonBuilder.Type] = []
         
         builders.append(ShareActionButtonBuilder.self)
@@ -23,7 +26,7 @@ public class ActionBarHelper {
         
         builders.append(CastActionButtonBuilder.self)
 
-        if (consumptionFeedType == .movie || consumptionFeedType == .show || consumptionFeedType == .music) && (buisnessType == premium_downloadable || buisnessType == free_downloadable || buisnessType == advertisement_downloadable) {
+        if (consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .show || consumptionFeedType == .original || consumptionFeedType == .music) && (buisnessType == .premiumDownloadable || buisnessType == .freeDownloadable || buisnessType == .advertisementDownloadable) {
             builders.append(DownloadActionButtonBuilder.self)
         }
         
@@ -32,7 +35,7 @@ public class ActionBarHelper {
         }
         
         for builder in builders {
-            let instance = builder.init(playable, consumptionFeedType)
+            let instance = builder.init(playable)
             
             guard let button = instance.build() else {
                 continue

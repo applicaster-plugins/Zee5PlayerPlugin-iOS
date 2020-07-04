@@ -62,6 +62,10 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 -(void)initializePlayer : (PlayerView *)playbackView andItem :(CurrentItem *)currentItem andLicenceURI:(NSString *)licence  andBase64Cerificate:(NSString *)cerificate
 {
+    if (currentItem == nil) {
+        return;
+    }
+    
     self.fairplayProvider = [[FormPostFairPlayLicenseProvider alloc] init];
     self.currentItem = currentItem;
     _adCount = 0;
@@ -71,14 +75,19 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [self.player stop];
     }
 
-       NSString *contentStringURL = self.currentItem.hls_Url;
-       PluginConfig *pluginConfig = [self createPluginConfig];
-       self.player = [[PlayKitManager sharedInstance] loadPlayerWithPluginConfig:pluginConfig];
-       self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
-
-       [self registerPlayerEvents];
-
-       self.player.view = playbackView;
+    NSString *contentStringURL = self.currentItem.hls_Url;
+    
+    if (contentStringURL == nil || [contentStringURL length] == 0) {
+        return;
+    }
+    
+    PluginConfig *pluginConfig = [self createPluginConfig];
+    self.player = [[PlayKitManager sharedInstance] loadPlayerWithPluginConfig:pluginConfig];
+    self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
+    
+    [self registerPlayerEvents];
+    
+    self.player.view = playbackView;
 
     NSURL *contentURL = [[NSURL alloc] initWithString:contentStringURL];
     NSString *entryId = self.currentItem.content_id;

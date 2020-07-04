@@ -9,9 +9,13 @@ import Foundation
 
 extension HybridViewController {
     func configureForType() {
-        let type = self.consumptionFeedType
+        guard let playable = self.playable else {
+            return
+        }
         
-        self.infoLabel.text = InfoTextBuilder().build(type: self.consumptionFeedType ?? .video, playable: self.playable)
+        let type = playable.consumptionType
+        
+        self.infoLabel.text = InfoTextBuilder().build(type: type, playable: playable)
         self.infoLabel.isHidden = self.infoLabel.text == nil
         
         if type == .live || type == .news || type == .channel {
@@ -37,7 +41,7 @@ class InfoTextBuilder {
             add(playable.age)
 
         case .episode:
-            if let seasonDetails = playable.seasonDetails, let totalEpisodes = seasonDetails.totalEpisodes {
+            if let seasonDetails = playable.parentSeasonDetails, let totalEpisodes = seasonDetails.totalEpisodes {
                 add("\(totalEpisodes) Episodes")
             }
             else {
@@ -63,7 +67,7 @@ class InfoTextBuilder {
         case .live:
             add("Episode")
             
-            if let seasonDetails = playable.seasonDetails {
+            if let seasonDetails = playable.parentSeasonDetails {
                 add(seasonDetails.episodeNumber)
             }
             

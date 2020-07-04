@@ -122,7 +122,7 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 @interface ZEE5PlayerSDK : NSObject
 
 
-+ (void)initializeWithContentID:(NSString*)content_id and:(NSString *)userId;
++ (void)initializeWith:(NSString *)userId;
 + (NSString *)getUserId;
 + (void)setDevEnvirnoment:(DevelopmentEnvironment)Servertype;
 + (DevelopmentEnvironment)getDevEnvironment;

@@ -42,64 +42,31 @@ class HybridViewController: UIViewController {
     @IBOutlet var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
     var mainCollectionViewController: StaticViewCollectionViewController?
-
-    var consumptionFeedType: ConsumptionFeedType?
     
-    var castDataSource: [(title: String?, subtitle: String?, description: String?)]?
-    var creatorsDataSource: [(title: String?, subtitle: String?, description: String?)]?
-    var languagesSubtitlesDataSource: [(title: String?, subtitle: String?, description: String?)]?
-    
-    var playable: ZeePlayable!
-    
-    var currentPlayableItem: ZPPlayable? {
+    typealias CellItem = (title: String?, subtitle: String?, description: String?)
+    var castDataSource: [CellItem]?
+    var creatorsDataSource: [CellItem]?
+        
+    var playable: ZeePlayable? {
         willSet(newValue) {
             guard self.isViewLoaded else {
                 return
             }
             
-            if self.currentPlayableItem !== newValue || newValue == nil {
-                self.itemNameLabel?.text = nil
-                self.itemDescriptionLabel?.text = nil
-                
-                self.castDataSource = nil
-                self.creatorsDataSource = nil
-                self.languagesSubtitlesDataSource = nil
-                
-                self.labelsCollection.forEach { (label) in
-                    label.text = nil
-                    label.isHidden = true
-                }
-                
-                self.viewCollection.forEach { (view) in
-                    if let actionBarView = view as? ActionBarView {
-                        actionBarView.resetButtons()
-                    }
-                    else if let metaDataCollectionView = view as? UICollectionView {
-                        metaDataCollectionView.reloadData()
-                    }
-                    else if let adBanner = view as? AdBanner {
-                        adBanner.isHidden = true
-                    }
-                    else if let premiumBanner = view as? PremiumBanner {
-                        premiumBanner.isHidden = true
-                    }
-                }
-                
-                self.mainCollectionViewContainer.removeAllSubviews()
-                
-                self.metadataViewContainer.isHidden = true
+            guard self.playable !== newValue else {
+                return
             }
+            
+            self.resetContent()
         }
         
         didSet {
             guard
                 self.isViewLoaded,
-                let currentPlayableItem = self.currentPlayableItem,
-                let extensions = currentPlayableItem.extensionsDictionary as? ZeePlayable.Extensions else {
+                self.playable != nil else {
                     return
             }
             
-            self.playable = ZeePlayable(extensions)
             self.commonInit()
         }
     }
@@ -186,18 +153,21 @@ class HybridViewController: UIViewController {
     }
     
     func commonInit() {
+        guard let playable = self.playable else {
+            return
+        }
+        
         self.stylesConfiguration()
         
-        self.itemNameLabel?.text = self.currentPlayableItem?.playableName()
-        self.itemDescriptionLabel?.text = self.currentPlayableItem?.playableDescription()
-        self.itemDescriptionLabel.isHidden = false
+        self.itemNameLabel.text = playable.title
+        self.itemDescriptionLabel.text = playable.description
+        self.itemDescriptionLabel.isHidden = self.itemDescriptionLabel.text == nil
         
-        setupModel()
         self.configureForType()
         
-        setupButtons()
-        setupLabels()
-        setupViews()
+        self.setupButtons()
+        self.setupLabels()
+        self.setupViews()
         
         self.metadataViewContainer.isHidden = false
     }
@@ -231,48 +201,35 @@ class HybridViewController: UIViewController {
     
     // MARK:
     
-    func setupModel() {
-        //setup feed type of consumption model
-        if let atom = self.currentPlayableItem {
-            if let type: String = atom.extensionsDictionary?["consumption_feed_type"] as? String {
-                consumptionFeedType = ConsumptionFeedType.allCases.filter({ (feedType) -> Bool in
-                    return feedType.rawValue.lowercased() == type
-                }).first
-            }
-        }
-    }
-    
     func setupDataSources() {
-        if castDataSource == nil && creatorsDataSource == nil && languagesSubtitlesDataSource == nil {
-            
-            guard let extensions = self.currentPlayableItem?.extensionsDictionary, let extaData = extensions[ExtensionsKey.extraData], let exta = extaData as? [String: Any] else {
+        guard let playable = self.playable else {
+            return
+        }
+        
+        func setupCast() {
+            guard self.castDataSource == nil, let cast = playable.cast else {
                 return
             }
             
-            //populate cast data source
-            castDataSource = []
-            if let cast: [String: Any] = exta[ExtensionsKey.cast] as? [String : Any] {
-                let allKeys = cast.keys
-                allKeys.forEach({ (key) in
-                    let values: [String] = cast[key] as! [String]
-                    values.forEach({ (value) in
-                        let components: [String] = value.components(separatedBy: ":")
-                        castDataSource!.append((title: components.last, subtitle: nil, description: components.first))
-                    })
-                })
+            var castDataSource = [CellItem]()
+            cast.forEach { (castMember) in
+                castDataSource.append((title: castMember.character, subtitle: nil, description: castMember.actor))
             }
             
-            //populate creators data source
-            creatorsDataSource = []
-            if let creators: [String: Any] = exta[ExtensionsKey.creators] as? [String : Any] {
-                let allKeys = creators.keys
-                allKeys.forEach({ (key) in
-                    let values: [String] = creators[key] as! [String]
-                    values.forEach({ (value) in
-                        creatorsDataSource!.append((title: key, subtitle: nil, description: value))
-                    })
-                })
+            self.castDataSource = castDataSource
+        }
+        
+        func setupCreators() {
+            guard self.creatorsDataSource == nil, let creators = playable.creators else {
+                return
             }
+            
+            var creatorsDataSource = [CellItem]()
+            creators.forEach { (creator) in
+                creatorsDataSource.append((title: creator.title, subtitle: nil, description: creator.name))
+            }
+            
+            self.creatorsDataSource = creatorsDataSource
         }
     }
     
@@ -288,12 +245,13 @@ class HybridViewController: UIViewController {
     
     
     public func kalturaPlayerConfiguration() {
-        guard let playerView = self.playerView,
-            let playerVC = self.kalturaPlayerController else {
+        guard
+            let playerView = self.playerView,
+            let kalturaPlayerController = self.kalturaPlayerController else {
                 return
         }
         
-        self.kalturaPlayerController?.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: self.playerView)
+        kalturaPlayerController.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: playerView)
     }
     
     public func updatePlayerConfiguration() {
@@ -338,6 +296,38 @@ class HybridViewController: UIViewController {
         self.mainCollectionViewContainer.layer.sublayers?.removeAll()
     }
     
+    fileprivate func resetContent() {
+        self.itemNameLabel?.text = nil
+        self.itemDescriptionLabel?.text = nil
+        
+        self.castDataSource = nil
+        self.creatorsDataSource = nil
+        
+        self.labelsCollection.forEach { (label) in
+            label.text = nil
+            label.isHidden = true
+        }
+        
+        self.viewCollection.forEach { (view) in
+            if let actionBarView = view as? ActionBarView {
+                actionBarView.resetButtons()
+            }
+            else if let metaDataCollectionView = view as? UICollectionView {
+                metaDataCollectionView.reloadData()
+            }
+            else if let adBanner = view as? AdBanner {
+                adBanner.isHidden = true
+            }
+            else if let premiumBanner = view as? PremiumBanner {
+                premiumBanner.isHidden = true
+            }
+        }
+        
+        self.mainCollectionViewContainer.removeAllSubviews()
+        
+        self.metadataViewContainer.isHidden = true
+    }
+    
     private func addGestureRecognizerHandler() {
         ZEE5PlayerManager.sharedInstance().setPanDownGestureHandler(closePlayer)
     }
@@ -346,15 +336,5 @@ class HybridViewController: UIViewController {
 extension HybridViewController: ZEE5PlayerDelegate {
     func didFinishPlaying() {
         self.closePlayer()
-    }
-}
-
-extension HybridViewController {
-    func showLoadingActivityIndicator() {
-        kalturaPlayerController?.ShowIndicator(onParent: view)
-    }
-    
-    func hideLoadingActivityIndicator() {
-        kalturaPlayerController?.HideIndicator()
     }
 }

@@ -20,7 +20,7 @@ class AdBanner: UIView {
     fileprivate var observer: NSObjectProtocol?
     fileprivate let adHelper = AdHelper()
     
-    func setupAds(playable: ZPPlayable?) {
+    func setupAds(playable: ZeePlayable?) {
         if self.observer == nil {
             self.observer = NotificationCenter.default.addObserver(forName: .companionAdsUpdated, object: nil, queue: nil,using: handleCompanionAdsUpdated)
         }
@@ -42,10 +42,10 @@ class AdBanner: UIView {
 
 
 class AdHelper {
-    fileprivate var playable: ZPPlayable!
+    fileprivate var playable: ZeePlayable!
     fileprivate var adLoader: CompanionAdBannerLoader!
     
-    fileprivate func setupAdsBanner(_ banner: AdBanner, playable: ZPPlayable?) {
+    fileprivate func setupAdsBanner(_ banner: AdBanner, playable: ZeePlayable?) {
         banner.isHidden = true
         banner.removeAllSubviews()
         
@@ -62,15 +62,13 @@ class AdHelper {
             return
         }
         
-        if let extensions = playable.extensionsDictionary as? [String: Any] {
-            let subtype = extensions[ExtensionsKey.assetSubtype] as? String
-            guard subtype != "trailer" else {
-                return
-            }
-            
-            guard ExtensionsHelper.isPlaybleFree(extensions) else {
-                return
-            }
+        let subtype = playable.assetSubtype
+        guard subtype != "trailer" else {
+            return
+        }
+        
+        guard playable.isFree else {
+            return
         }
         
         guard let adResponse = ZEE5PlayerManager.sharedInstance().companionAds as? AdResponse else {

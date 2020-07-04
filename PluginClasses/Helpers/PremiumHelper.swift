@@ -25,7 +25,7 @@ class PremiumBanner: UIView {
     
     fileprivate var originalHeightValue = CGFloat(0)
     
-    func setupBanner(playable: ZPPlayable?) {
+    func setupBanner(playable: ZeePlayable) {
         self.originalHeightValue = 60.0
         
         self.observer = NotificationCenter.default.addObserver(forName: .subscriptionFinished, object: nil, queue: nil,using: handleSubscription)
@@ -45,23 +45,19 @@ class PremiumBanner: UIView {
 }
 
 fileprivate class PremiumHelper {
-    fileprivate var playable: ZPPlayable?
+    fileprivate var playable: ZeePlayable!
 
-    func setupPremiumBanner(_ banner: PremiumBanner, playable: ZPPlayable?) {
+    func setupPremiumBanner(_ banner: PremiumBanner, playable: ZeePlayable) {
         // all items are assumed as free by default, so the premium banner should be hidden
         banner.heightConstraint.constant = 0
-        
-        guard let playable = playable, let extensions = playable.extensionsDictionary as? [String: Any] else {
-            return
-        }
         
         guard User.shared.getType() != .premium else {
             return
         }
         
-        let subtype = extensions[ExtensionsKey.assetSubtype] as? String
+        let subtype = playable.assetSubtype
         if subtype != "trailer" {
-            guard !ExtensionsHelper.isPlaybleFree(extensions) else {
+            guard !playable.isFree else {
                 return
             }
         }

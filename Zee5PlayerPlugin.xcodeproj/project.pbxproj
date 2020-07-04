@@ -485,6 +485,7 @@
 		71006179246857AF00623D5C /* ActionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71006178246857AF00623D5C /* ActionBarView.swift */; };
 		71580A922443222A00A6CF0C /* PremiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A912443222A00A6CF0C /* PremiumHelper.swift */; };
 		71580A972446683D00A6CF0C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A962446683D00A6CF0C /* Consts.swift */; };
+		715A762524ACBA92007ADA28 /* ZeePlayerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715A762424ACBA92007ADA28 /* ZeePlayerAdapter.swift */; };
 		716ECD1B24409BA000917E13 /* AdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716ECD1A24409BA000917E13 /* AdHelper.swift */; };
 		71BABDC224AA16280028BC1A /* TranslationTrackSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 71BABDC124AA16280028BC1A /* TranslationTrackSelectionView.xib */; };
 /* End PBXBuildFile section */
@@ -1028,6 +1029,7 @@
 		71006178246857AF00623D5C /* ActionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionBarView.swift; sourceTree = "<group>"; };
 		71580A912443222A00A6CF0C /* PremiumHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumHelper.swift; sourceTree = "<group>"; };
 		71580A962446683D00A6CF0C /* Consts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
+		715A762424ACBA92007ADA28 /* ZeePlayerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeePlayerAdapter.swift; sourceTree = "<group>"; };
 		716ECD1A24409BA000917E13 /* AdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdHelper.swift; sourceTree = "<group>"; };
 		71BABDC124AA16280028BC1A /* TranslationTrackSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TranslationTrackSelectionView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1101,6 +1103,7 @@
 				4D9F2F1A2436352000C30A5A /* HybridViewController.swift */,
 				4D9F2F1C2436352000C30A5A /* HybridViewController+Subviews.swift */,
 				4D9F2F1D2436352000C30A5A /* HybridViewTitleSubtitleCell.swift */,
+				715A762424ACBA92007ADA28 /* ZeePlayerAdapter.swift */,
 			);
 			path = HybridScreen;
 			sourceTree = "<group>";
@@ -2621,6 +2624,7 @@
 				4D9F318A2436352200C30A5A /* EventManager.swift in Sources */,
 				4D9F317D2436352200C30A5A /* ZeeHLSParser.swift in Sources */,
 				4D9F31862436352200C30A5A /* Zee5iOSPlayerPlugin.swift in Sources */,
+				715A762524ACBA92007ADA28 /* ZeePlayerAdapter.swift in Sources */,
 				4D9F31B52436352200C30A5A /* ChromeAddQueue.swift in Sources */,
 				4D9F31B42436352200C30A5A /* ChromePlayerController.swift in Sources */,
 				4D9F317F2436352200C30A5A /* ZeeDownloadUtility.swift in Sources */,

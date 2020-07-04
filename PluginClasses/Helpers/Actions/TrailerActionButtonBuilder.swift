@@ -8,24 +8,18 @@
 import Foundation
 
 class TrailerActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
-    fileprivate var trailerUrl: URL!
+    fileprivate var trailerContentId: String!
     
     func build() -> ActionBarView.ButtonData? {
         guard
-            let extensions = self.playable.extensionsDictionary,
-            let trailerLink = extensions[ExtensionsKey.trailerDeeplink] as? String,
-            let trailerUrl = URL(string: trailerLink) else {
-                return nil
-        }
-        
-        self.trailerUrl = trailerUrl
-        
-        guard
+            let trailerContentId = self.playable.trailerContentId,
             let image = self.image(for: "consumption_play"),
             let title = self.localizedText(for: "MoviesConsumption_MovieDetails_WatchTrailer_Button"),
             let style = self.style(for: "consumption_button_text") else {
                 return nil
         }
+        
+        self.trailerContentId = trailerContentId
                 
         return ActionBarView.ButtonData(
             image: image,
@@ -43,6 +37,10 @@ class TrailerActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
     }
     
     fileprivate func play() {
-        UIApplication.shared.open(self.trailerUrl, options: [:], completionHandler: nil)
+        guard let player = Zee5PluggablePlayer.lastActiveInstance() else {
+            return
+        }
+        
+        player.updateContent(self.trailerContentId)
     }
 }

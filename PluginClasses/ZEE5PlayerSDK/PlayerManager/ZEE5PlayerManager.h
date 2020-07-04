@@ -16,7 +16,6 @@
 #import "VODContentDetailsDataModel.h"
 
 
-
 typedef void(^DRMSuccessHandler)(NSString* _Nullable licenceURL, NSString* _Nullable customData);
 typedef void(^DRMFailureHandler)(NSString* _Nullable error);
 
@@ -32,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ZEE5PlayerConfig;
 @class DownloadRootController;
 @class KalturaPlayerController;
-
+@class LiveContentDetails;
 
 @interface ZEE5PlayerManager : NSObject
 @property CurrentItem *currentItem;
@@ -78,9 +77,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 - (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
-
-
--(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success;
+- (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
+- (void)playLiveContentWithModel:(LiveContentDetails *)model;
 
 /*!
  * @discussion This method used to stop the video

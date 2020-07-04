@@ -38,7 +38,7 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
     }
     
     func fetchInitialState() {
-        guard let itemId = self.playable.identifier as String? else {
+        guard let itemId = self.playable.contentId else {
             return
         }
         
@@ -113,10 +113,9 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
         }
         
         guard
-            let itemId = self.playable.identifier as String?,
-            let extensions = self.playable.extensionsDictionary,
-            let assetType = extensions[ExtensionsKey.assetType] as? Int,
-            let duration = extensions[ExtensionsKey.duration] as? Int else {
+            let itemId = self.playable.contentId,
+            let assetType = self.playable.assetType,
+            let duration = self.playable.duration else {
                 return
         }
         
@@ -143,9 +142,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
     
     fileprivate func deleteFromWatchlist() {
         guard
-            let itemId = self.playable.identifier as String?,
-            let extensions = self.playable.extensionsDictionary,
-            let assetType = extensions[ExtensionsKey.assetType] as? Int else {
+            let itemId = self.playable.contentId,
+            let assetType = self.playable.assetType else {
                 return
         }
                 

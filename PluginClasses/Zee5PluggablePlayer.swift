@@ -11,7 +11,7 @@ import Zee5CoreSDK
 
 fileprivate extension Notification.Name {
     static let contentIdUpdatedNotification = Notification.Name("ContentIdUpdatedNotification")
-    static let refreshRequiredNotification = Notification.Name("ReloadConsumption")
+    static let setInitialContentIdNotification = Notification.Name("ReloadCurrentContentIdNotification")
     static let subscriptionEnabledNotification = Notification.Name(Zee5CoreSDKPluginConstants.BUY_SUBSCRIPTION_COMPLETE)
 }
 
@@ -19,28 +19,27 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     public var pluginStyles: [String : Any]?
     
     var hybridViewController: HybridViewController?
-    var currentPlayableItem: ZPPlayable?
+    var initialPlayableItem: ZPPlayable?
     
-    var kalturaPlayerController: KalturaPlayerController?
     private var pluginModel: ZPPluginModel?
     private var screenModel: ZLScreenModel?
     private var dataSourceModel: NSObject?
+    private var playerAdapter = ZeePlayerAdapter()
     
     fileprivate var contentIdNotificationToken: Any?
-    fileprivate var refreshRequiredNotificationToken: Any?
-    fileprivate var refreshRequiredNotificationTokenLogin: Any?
+    fileprivate var setInitialContentIdNotificationToken: Any?
+    fileprivate var subscriptionEnabledNotificationToken: Any?
 
-    fileprivate var initialContentId: String? = nil
-    fileprivate var contentId: String? = nil
-    
     // MARK: - Lifecycle
     
     public required init?(pluginModel: ZPPluginModel, screenModel: ZLScreenModel, dataSourceModel: NSObject?) {
         self.pluginModel = pluginModel
         self.screenModel = screenModel
         self.dataSourceModel = dataSourceModel
-        
+                
         super.init()
+        
+        self.playerAdapter.delegate = self
     }
     
     deinit {
@@ -48,11 +47,12 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             NotificationCenter.default.removeObserver(contentIdNotificationToken)
         }
         
-        if let refreshRequiredNotificationToken = self.refreshRequiredNotificationToken {
-            NotificationCenter.default.removeObserver(refreshRequiredNotificationToken)
+        if let setInitialContentIdNotificationToken = self.setInitialContentIdNotificationToken {
+            NotificationCenter.default.removeObserver(setInitialContentIdNotificationToken)
         }
-        if let refreshRequiredNotificationTokenLogin = self.refreshRequiredNotificationTokenLogin {
-            NotificationCenter.default.removeObserver(refreshRequiredNotificationTokenLogin)
+        
+        if let subscriptionEnabledNotificationToken = self.subscriptionEnabledNotificationToken {
+            NotificationCenter.default.removeObserver(subscriptionEnabledNotificationToken)
         }
     }
     
@@ -63,11 +63,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         Zee5DownloadManager.shared.initializeDownloadManger()
         
-        var errorViewConfig: ErrorViewConfiguration?
-        
         if let configuration = configurationJSON {
-            errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
-            //prepare ads envirnoment from the plugin configurations
+//            let errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
+
             if let isProdAdsEnvirnoment = configuration["is_ads_production"] as? Int {
                 ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
             }
@@ -80,24 +78,23 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         let instance: Zee5PluggablePlayer
         
-        // Hybrid presented
         if let lastActiveInstance = Zee5PluggablePlayer.lastActiveInstance() {
             instance = lastActiveInstance
         }
         else {
             instance = Zee5PluggablePlayer()
+            instance.playerAdapter.delegate = instance
+            
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
             
             let playerViewController = KalturaPlayerController()
             instance.hybridViewController?.kalturaPlayerController = playerViewController
-            
-            instance.kalturaPlayerController = playerViewController
-            
+                        
             instance.addPlayerObservers()
         }
         
         instance.configurationJSON = configurationJSON
-        instance.currentPlayableItem = playable
+        instance.initialPlayableItem = playable
         instance.hybridViewController?.configurationJSON = configurationJSON
         
         if let screenModel = ZAAppConnector.sharedInstance().layoutComponentsDelegate.componentsManagerGetScreenComponentforPluginID(pluginID: "zee_player"),
@@ -106,9 +103,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.hybridViewController?.pluginStyles = style.object
             instance.pluginStyles = instance.hybridViewController?.pluginStyles
         }
-
-        instance.initialContentId = playable.identifier as String?
-        instance.contentId = nil
         
         return instance
     }
@@ -118,15 +112,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     public func pluggablePlayerCurrentPlayableItem() -> ZPPlayable? {
-        return self.currentPlayableItem
+        return self.initialPlayableItem
     }
     
     public override func pluggablePlayerFirstPlayableItem() -> ZPPlayable? {
-        return self.currentPlayableItem
+        return self.initialPlayableItem
     }
     
     public func pluggablePlayerCurrentUrl() -> NSURL? {
-        let item = self.currentPlayableItem
+        let item = self.initialPlayableItem
         let urlString = item?.contentVideoURLPath() ?? ""
         return NSURL(string: urlString)
     }
@@ -139,36 +133,37 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     public override func pluggablePlayerRemoveInline() {
     }
     
-    
     // MARK: - Fullscreen playback
     
-    public override func presentPlayerFullScreen(_ rootViewController:    UIViewController, configuration: ZPPlayerConfiguration?) {
-        self.presentPlayerFullScreen(rootViewController, configuration: configuration) {
-            self.playContent()
-        }
+    public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
+        self.presentPlayerFullScreen(rootViewController, configuration: configuration, completion: nil)
     }
     
     public override func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?, completion: (() -> Void)?) {
         guard
-            self.kalturaPlayerController != nil,
-            self.currentPlayableItem != nil,
+            let hybridViewController = self.hybridViewController,
+            let initialPlayableItem = self.initialPlayableItem,
+            let contentId = initialPlayableItem.identifier as String?,
             let topmostViewController = rootViewController.topmostModal() else {
                 return
         }
 
-        let animated: Bool = configuration?.animated ?? true
-
-        if let playerVC = self.pluggablePlayerViewController() as? HybridViewController{
-            if topmostViewController is HybridViewController {
-                playerVC.updatePlayerConfiguration()
-                self.playContent()
-            } else {
-                playerVC.modalPresentationStyle = .fullScreen
-                topmostViewController.present(playerVC, animated:animated, completion: completion)
-
+        let animated = configuration?.animated ?? true
+        
+        if topmostViewController is HybridViewController {
+            hybridViewController.updatePlayerConfiguration()
+            self.updateContent(contentId, force: true)
+            
+            completion?()
+        }
+        else {
+            hybridViewController.modalPresentationStyle = .fullScreen
+            
+            topmostViewController.present(hybridViewController, animated:animated) {
+                self.updateContent(contentId, force: true)
+                
+                completion?()
             }
-        } else {
-            APLoggerError("Failed creating player view controller for Kaltura player")
         }
     }
     
@@ -198,18 +193,15 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     public func stopAndDismiss() {
-        ZEE5PlayerManager.sharedInstance().stop()
-        ZEE5PlayerManager.sharedInstance().destroyPlayer()
-        AnalyticEngine.shared.VideoExitAnalytics()
+        self.playerAdapter.endSession()
         
         func resetContent() {
-            self.currentPlayableItem = nil
-            self.contentId = nil
+            self.initialPlayableItem = nil
         }
         
-        if let playerViewController = self.hybridViewController {
-            playerViewController.dismiss(animated: true) {
-                playerViewController.currentPlayableItem = nil
+        if let hybridViewController = self.hybridViewController {
+            hybridViewController.dismiss(animated: true) {
+                hybridViewController.playable = nil
                 resetContent()
             }
         }
@@ -223,7 +215,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     static func lastActiveInstance() -> Zee5PluggablePlayer? {
         guard
             let lastActiveInstance = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer,
-            lastActiveInstance.kalturaPlayerController != nil,
             lastActiveInstance.hybridViewController != nil else {
                 return nil
         }
@@ -235,18 +226,20 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         self.stopAndDismiss()
         
         self.hybridViewController = nil
-        self.kalturaPlayerController = nil
     }
     
-    func updateContent(shouldPlay: Bool) {
+    func updateContent(_ contentId: String, force: Bool = false) {
+        guard force || !self.playerAdapter.sessionHasEqual(contentId: contentId) else {
+            return
+        }
+        
         func play() {
-            guard
-                shouldPlay,
-                let kalturaPlayerController = self.kalturaPlayerController else {
-                    return
+            guard let playbackView = self.hybridViewController?.kalturaPlayerController?.view else {
+                return
             }
             
-            kalturaPlayerController.play()
+            ZEE5PlayerManager.sharedInstance().setPlaybackView(playbackView)
+            self.playerAdapter.startSession(contentId)
         }
         
         func continueAfterUserInfoResponse() {
@@ -292,45 +285,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             }
         }
         
-        func initContent(_ contentId: String) {
-            guard
-                let hybridViewController = self.hybridViewController,
-                let kalturaPlayerController = self.kalturaPlayerController else {
-                    return
-            }
-                        
-            ZEE5PlayerSDK.initialize(withContentID: contentId, and:User.shared.getUserId() )
-            kalturaPlayerController.contentId = contentId
-            
-            hybridViewController.currentPlayableItem = self.currentPlayableItem
-            
-            prepareUserData()
-        }
-        
-        guard
-            let playable = self.currentPlayableItem else {
-            return
-        }
-        
-        let playbleId = playable.identifier as String?
-        
-        if let contentId = self.contentId, playbleId == contentId, playable.extensionsDictionary?[ExtensionsKey.relatedContent] != nil {
-            initContent(contentId)
-        }
-        else {
-            self.loadExtendedData() {
-                guard let contentId = self.contentId else {
-                    self.clearInstance()
-                    return
-                }
-                
-                initContent(contentId)
-            }
-        }
-    }
-    
-    func playContent() {
-        self.updateContent(shouldPlay: true)
+        prepareUserData()
     }
     
     func handleTelcoData(param:[String: String])  {
@@ -350,114 +305,37 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     func addPlayerObservers() {
+        let setInitialContentId = { [weak self] (notification: Notification) -> () in
+            guard
+                let self = self,
+                let initialContentId = self.initialPlayableItem?.identifier as String? else {
+                return
+            }
+            
+            self.updateContent(initialContentId, force: true)
+        }
+        
+        
         self.contentIdNotificationToken = NotificationCenter.default.addObserver(forName: .contentIdUpdatedNotification, object: nil, queue: nil) { [weak self] (notification) in
-            guard let self = self else {
+            guard let contentId = notification.userInfo?["contentId"] as? String else {
                 return
             }
             
-            let newContentId = ZEE5PlayerManager.sharedInstance().currentItem.content_id
-            if self.contentId != newContentId {
-                self.contentId = newContentId
-                self.updateContent(shouldPlay: false)
-            }
+            self?.updateContent(contentId)
         }
         
-        self.refreshRequiredNotificationToken = NotificationCenter.default.addObserver(forName: .subscriptionEnabledNotification, object: nil, queue: nil) { (notification) in
-            guard let initialContentId = self.initialContentId else {
-                return
-            }
-            
-            self.contentId = initialContentId
-            self.playContent()
-        }
-        
-        self.refreshRequiredNotificationTokenLogin = NotificationCenter.default.addObserver(forName: .refreshRequiredNotification, object: nil, queue: nil) { (notification) in
-            guard let initialContentId = self.initialContentId else {
-                return
-            }
-            
-            self.contentId = initialContentId
-            self.playContent()
-        }
+        self.setInitialContentIdNotificationToken = NotificationCenter.default.addObserver(forName: .setInitialContentIdNotification, object: nil, queue: nil, using: setInitialContentId)
+        self.subscriptionEnabledNotificationToken = NotificationCenter.default.addObserver(forName: .subscriptionEnabledNotification, object: nil, queue: nil, using: setInitialContentId)
     }
-    
-    func loadExtendedData(completion: @escaping () -> Void) {
+}
+
+extension Zee5PluggablePlayer: ZeePlayerAdapterDelegate {
+    func playerAdapterDidLoadPlayable(_ playable: ZeePlayable) {
         guard
-            let dsUrl = self.dsUrlForExtentedData(),
-            let atomFeed = APAtomFeed(url: dsUrl) else {
-                completion()
+            let hybridViewController = self.hybridViewController else {
                 return
         }
         
-        func handleLoadedItem(_ extendedAtomFeed: APAtomFeed) {
-            guard
-                let entry = extendedAtomFeed.entries?.first as? APAtomFeed,
-                let pipes = entry.pipesObject as? [String: Any] else {
-                    completion()
-                    return
-            }
-          
-            atomFeed.pipesObject["type"] = ["value": "video"]
-            let atomEntry = APAtomEntry(pipesObject: atomFeed.pipesObject)
-            
-            guard let loadedPlayable = atomEntry?.playable() else {
-                completion()
-                return
-            }
-                      
-            self.currentPlayableItem = loadedPlayable
-            self.contentId = loadedPlayable.identifier
-            
-            guard
-                var extensions = loadedPlayable.extensionsDictionary,
-                let content = pipes["content"] as? [String: Any],
-                let relatedContentUrl = content["src"] else {
-                    completion()
-                    return
-            }
-            
-            extensions[ExtensionsKey.relatedContent] = relatedContentUrl
-            loadedPlayable.extensionsDictionary = extensions
-            
-            completion()
-        }
-        
-        hybridViewController?.showLoadingActivityIndicator()
-        APAtomFeedLoader.loadPipes(model: atomFeed) { (success, atomFeed) in
-            defer { self.hybridViewController?.hideLoadingActivityIndicator() }
-            guard let atomFeed = atomFeed else {
-                completion()
-                return
-            }
-            
-            handleLoadedItem(atomFeed)
-        }
-    }
-    
-    func dsUrlForExtentedData() -> String? {
-        var result: String? = nil
-        
-        if let contentId = self.contentId {
-            var queryItems = [
-                URLQueryItem(name: "type", value: "ItemDetails"),
-                URLQueryItem(name: "id", value: contentId)
-            ]
-            
-            if let contentType = ConsumptionFeedType(type:  ZEE5PlayerSDK.getConsumpruionType()) {
-                queryItems.append(URLQueryItem(name: "feed_type", value: String(describing: contentType)))
-            }
-            
-            var urlComponents = URLComponents()
-            urlComponents.scheme = "zee5"
-            urlComponents.host = "fetchData"
-            urlComponents.queryItems = queryItems
-            
-            result = urlComponents.url?.absoluteString
-        }
-        else if let playable = self.currentPlayableItem {
-           result = playable.extensionsDictionary?["item_details_url"] as? String
-        }
-        
-        return result
+        hybridViewController.playable = playable
     }
 }

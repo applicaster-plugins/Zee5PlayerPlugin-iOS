@@ -18,29 +18,14 @@ public enum ConsumptionFeedType: String, CaseIterable {
     case original = "Original"
     case video = "Video"
     case channel = "Channel"
+}
 
-    init?(type: ConsumptionType) {
-        switch type {
-        case Movie:
-            self = .movie
-        case Episode:
-            self = .episode
-        case Shows:
-            self = .show
-        case Trailer:
-            self = .trailer
-        case Live:
-            self = .live
-        case Music:
-            self = .music
-        case Original:
-            self = .original
-        case Video:
-            self = .video
-        default:
-            return nil
-        }
-    }
+public enum PlayableBusinessType: String, CaseIterable {
+    case premiumDownloadable = "premium_downloadable"
+    case advertisementDownloadable = "advertisement_downloadable"
+    case freeDownloadable = "free_downloadable"
+    case premium = "premium"
+    case advertisement = "advertisement"
 }
 
 public struct ExtensionsKey {
@@ -59,6 +44,7 @@ public struct ExtensionsKey {
     static let mainGenre = "main_genre"
     static let genres = "genres"
     static let ageRating = "age_rating"
+    static let seasons = "seasons"
     static let seasonDetails = "season_details"
     static let currentEpisode = "current_episode"
     static let totalEpisodes = "total_episodes"
@@ -67,7 +53,7 @@ public struct ExtensionsKey {
     static let numberTagText = "numberTagText"
     static let upNext = "upNext"
     static let openWithPluginId = "open_with_plugin_id"
-    static let cast = "cast"
+    static let actors = "actors"
     static let creators = "creators"
     static let languages = "languages"
     static let subtitleLanguages = "subtitle_languages"
@@ -77,9 +63,13 @@ public struct ExtensionsKey {
     static let screenName = "screen_name"
     static let itemDetailsUrl = "item_details_url"
     static let relatedContent = "relatedContent"
+    static let related = "related"
     static let shareLink = "share_link"
     static let businessType = "business_type"
     static let published = "published"
+    static let title = "title"
+    static let description = "description"
+    static let contentId = "id"
 }
 
 public struct ItemTag {
@@ -126,10 +116,7 @@ public struct ItemTag {
         static let searchBarErrorLabel = 837
         
         static let numberTagLabel = 115
-        static let timeLeftLabel = 119
         static let episodeNumberAndDateLabel = 120
-        static let upNextLabel = 121
-        static let timeFromToLabel = 122
         
         static let consumptionTitleLabel = 800
         static let consumptionIMDBRatingLabel = 802
@@ -140,17 +127,5 @@ public struct ItemTag {
         
         static let releasingOnLabel = 835
         static let storyLineLabel = 836
-    }
-}
-
-public class ExtensionsHelper {
-    public static func isPlaybleFree(_ extensions: [String: Any]) -> Bool {
-        var result = true
-        
-        if let isFreeValue = extensions[ExtensionsKey.isFree] as? Bool {
-            result = isFreeValue
-        }
-        
-        return result
     }
 }

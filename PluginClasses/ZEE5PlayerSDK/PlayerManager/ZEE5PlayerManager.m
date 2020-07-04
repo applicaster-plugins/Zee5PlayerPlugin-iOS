@@ -181,9 +181,11 @@ static ContentBuisnessType buisnessType;
 //MARK:- VideoPlayMethod
 
 - (void)playWithCurrentItem {
+    if (self.currentItem == nil) {
+        return;
+    }
     
-    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
-    {
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
         [self CustomControlViewNew];
         return;
     }
@@ -248,6 +250,10 @@ static ContentBuisnessType buisnessType;
             [self addMuteViewToPlayer];
         }
         
+        if (self.currentItem == nil) {
+            return;
+        }
+        
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         
         self.panGesture = [[UIPanGestureRecognizer alloc] init];
@@ -269,7 +275,7 @@ static ContentBuisnessType buisnessType;
     
     [self pause];
     [self.kalturaPlayerView removeFromSuperview];
-    self.parentPlaybackView = nil;
+    self.kalturaPlayerView = nil;
     
     NSString *imageUrlValue = self.currentItem.imageUrl;
     if (imageUrlValue == nil && self.LiveModelValues != nil) {
@@ -320,13 +326,12 @@ static ContentBuisnessType buisnessType;
 -(void)LogoutDone{
     //Here If any Method Called After Logout Then Use this Function
 }
--(void)ContentidNotification:(NSString *)ContentId{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
+-(void)postContentIdShouldUpdateNotification:(NSString *)ContentId {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:nil userInfo:@{@"contentId": ContentId}];
 }
 
--(void)RefreshViewNotification{
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"ReloadConsumption" object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadConsumption" object:nil userInfo:nil];
+-(void)postReloadCurrentContentIdNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadCurrentContentIdNotification" object:nil userInfo:nil];
 }
 
 -(void)onAudioInterruption:(NSNotification *)notification
@@ -876,11 +881,8 @@ static ContentBuisnessType buisnessType;
 
        
         [[ZEE5PlayerManager sharedInstance] playSimilarEvent:Model.identifier];
-        [[ZEE5PlayerManager sharedInstance]playVODContent:Model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-            
-        }];
+        [self postContentIdShouldUpdateNotification:Model.identifier];
     }
-    
 }
 
 
@@ -1112,16 +1114,7 @@ static ContentBuisnessType buisnessType;
     if (singleton.isAdPause == true) {
         [[Zee5PlayerPlugin sharedInstance].player play];
         return;
-          }
-//    if (_customControlView.trailerEndView.hidden == true && _customControlView.adultView.hidden == true && [Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded ) {
-//        _ishybridViewOpen = false;
-//        [self showloaderOnPlayer];
-//
-//   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//       [self hideLoaderOnPlayer];
-//       [self play];
-//    });
-//    }
+    }
 }
 
 -(void)pause
@@ -1134,6 +1127,9 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)DestroyPlayer{
+    [self hideLoaderOnPlayer];
+    [self.panDownGestureHandlerHelper endAd];
+
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
     
@@ -1283,12 +1279,12 @@ static ContentBuisnessType buisnessType;
                 if ([_currentItem.content_id isEqualToString:cId] && i != 0)
                 {
                     cId = [_PreviousContentArray objectAtIndex:i-1];
+
                     if (i == 1) {
                         _customControlView.btnSkipPrev.selected = false;
                     }
-                    [[ZEE5PlayerManager sharedInstance]playVODContent:cId country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                                   
-                               }];
+                    
+                    [self postContentIdShouldUpdateNotification:cId];
                     break;
                 }
             }
@@ -1968,16 +1964,7 @@ static ContentBuisnessType buisnessType;
                 [self DevicePopupShow];
                 break;
           case DeviceAdded:
-                if (_isLive)
-                {
-                    [self playLiveContent:_LiveModelValues.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation];
-                }
-                else
-                {
-                   [self playVODContent:_ModelValues.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation  withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                        
-                   }];
-                }
+                [self postReloadCurrentContentIdNotification];
           default:
             break;
             };
@@ -2173,17 +2160,15 @@ static ContentBuisnessType buisnessType;
 }
 -(void)DismissHybridView{
     
-     _ishybridViewOpen = false;
+    _ishybridViewOpen = false;
     if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden == YES) {
         [self play];
         return;
     }
     if (_ModelValues.isBeforeTv == true && self.TvShowModel.Episodes.count > 0) {
-           NSString *ContentId = self.TvShowModel.Episodes[1].episodeId;
-           
-           [self playVODContent:ContentId country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                          }];
-       }
+        NSString *ContentId = self.TvShowModel.Episodes[1].episodeId;
+        [self postContentIdShouldUpdateNotification:ContentId];
+    }
     
 }
 
@@ -2498,6 +2483,126 @@ static ContentBuisnessType buisnessType;
     
 }
 
+- (void)playVODContentWithModel:(VODContentDetailsDataModel *)model {
+    _isStop = false;
+    _isNeedToSubscribe = false;
+    _ishybridViewOpen = false;
+        
+    [[AnalyticEngine shared] VideoStartTimeWith:0];
+    [[AnalyticEngine shared] AudioLanguageWith:@""];
+    [self SliderReset];
+    
+    [ZEE5UserDefaults setContentId:model.identifier];
+
+    [[AnalyticEngine new] cleanupVideoSesssion];
+    
+    [self registerNotifications];
+    self.playerConfig = [[ZEE5PlayerConfig alloc] init];
+    
+    NSArray *array = [model.identifier componentsSeparatedByString:@"-"];
+    NSString *contentType = array[1];
+    
+    [ZEE5UserDefaults setassetType:contentType];
+    
+    self.ModelValues = model;
+    
+    if ([self.ModelValues.watchCreditTime containsString:@"NULL"]== false) {
+        self.watchCreditsTime = [[Utility secondsForTimeString:self.ModelValues.watchCreditTime]integerValue];
+    }
+    
+    self.buisnessType = self.ModelValues.buisnessType;
+    self.audioLanguageArr = self.ModelValues.audioLanguages;
+    self.videoCompleted = false;
+    
+    [self getBusinessType];
+    [self getskipandWatchcredit];
+    [self getUserSettings];
+    
+    [self showloaderOnPlayer];
+    
+    if (self.ModelValues.isDRM) {
+        [[CdnHandler sharedInstance] getKCDNUrl:self.ModelValues.identifier withCompletion:^(id  _Nullable result, NSString * _Nonnull CDN) {
+            self.KcdnUrl = CDN;
+            
+            [self getDRMToken:self.ModelValues.identifier andDrmKey:self.ModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
+                [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
+                
+                // Update video end point
+                NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
+                NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
+                
+                NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
+                [self updateConvivaSessionWithMetadata: dict];
+                [self stop];
+                [self createConvivaSeesionWithMetadata];
+                
+            } failureBlock:^(ZEE5SdkError * _Nullable error) {
+                [self notifiyError:error];
+            }];
+            
+        } andFailure:^(ZEE5SdkError * _Nullable error) {
+        }];
+    }
+    else {
+        [self getVodToken:^(NSString *vodToken) {
+            [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
+        }];
+    }
+}
+
+- (void)playLiveContentWithModel:(LiveContentDetails *)model {
+    _isStop = false;
+    _isNeedToSubscribe = false;
+    _ishybridViewOpen = false;
+
+    [[AnalyticEngine shared]VideoStartTimeWith:0];
+    [[AnalyticEngine shared]AudioLanguageWith:@""];
+    [self SliderReset];
+    
+    //Clean up video Session
+    [[AnalyticEngine new] cleanupVideoSesssion];
+    
+    [self registerNotifications];
+    self.playerConfig = [[ZEE5PlayerConfig alloc] init];
+
+    NSArray *array = [model.identifier componentsSeparatedByString:@"-"];
+    NSString *contentType = array[1];
+    
+    [ZEE5UserDefaults setassetType:contentType];
+    
+    self.isLive = YES;
+    
+    self.LiveModelValues = model;
+    self.buisnessType = self.LiveModelValues.buisnessType;
+    self.audioLanguageArr = self.LiveModelValues.languages;
+    self.showID = self.LiveModelValues.identifier;
+    self.isStop = NO;
+    self.videoCompleted = false;
+    
+    [self getBusinessType];
+    
+    [self getVideotoken:model.identifier andCountry:ZEE5UserDefaults.getCountry withCompletionhandler:^(id result) {
+        NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
+        
+        if (self.LiveModelValues.isDRM) {
+            [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
+                [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken];
+            } failureBlock:^(ZEE5SdkError * _Nullable error) {
+                [self notifiyError:error];
+            }];
+        }
+        else {
+            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
+        }
+    } faillureblock:^(ZEE5SdkError *error) {
+        [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
+    }];
+}
+
+- (void)setPlaybackView:(UIView *)playbackView {
+    self.parentPlaybackView = playbackView;
+    [self addCustomControls];
+}
 
 -(void)getVodToken:(void (^)(NSString *))completion
 {
@@ -2540,16 +2645,6 @@ static ContentBuisnessType buisnessType;
         [self notifiyError:error];
     }];
     
-}
-
--(void)contentIdChanged:(NSString *)content_id withCompletionHandler:(CIdHandler)success{
-    
-    if ([_currentItem.content_id isKindOfClass:[NSNull class]] == false)
-    {
-        if ([_currentItem.content_id isEqualToString:content_id]==false) {
-            success(YES,_currentItem.content_id);
-        }
-    }
 }
 
 // MARK:- Download Ad Config
@@ -2699,10 +2794,6 @@ static ContentBuisnessType buisnessType;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
-
-    if ([ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id] == false) {
-      [self ContentidNotification:_currentItem.content_id];
-    }
     
     if (_playerConfig.playerType == normalPlayer)
     {
@@ -2759,11 +2850,6 @@ static ContentBuisnessType buisnessType;
     self.currentItem.showchannelName = Livemodel.showOriginalTitle;
     self.currentItem.geners = Livemodel.geners;
     self.currentItem.imageUrl = [NSString stringWithFormat:@"https://akamaividz.zee5.com/resources/%@/list/270x152/%@",Livemodel.identifier,Livemodel.Image];
-    
-    
-    if (![ZEE5UserDefaults.getContentID isEqualToString:_currentItem.content_id]) {
-        [self ContentidNotification:_currentItem.content_id];
-    }
     
     if (_playerConfig.playerType == normalPlayer)
     {
@@ -3062,27 +3148,21 @@ static ContentBuisnessType buisnessType;
 -(void)playTrailer
 {
     _isNeedToSubscribe = true;
-    if (_isLive == false && self.ModelValues.trailerIdentifier!=nil)
-    {
-        self.allowVideoContent = YES;
-          [self playVODContent:self.ModelValues.trailerIdentifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-              
-          }];
+    
+    if (_isLive == false && self.ModelValues.trailerIdentifier != nil) {
+        [self postContentIdShouldUpdateNotification: self.ModelValues.trailerIdentifier];
         return;
     }
-    else if (self.TvShowModel.TrailersContentid != nil && (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _ModelValues.isBeforeTv == false)
-    {
-        self.allowVideoContent = YES;
-          [self playVODContent:self.TvShowModel.TrailersContentid country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-              
-          }];
+    else if (self.TvShowModel.TrailersContentid != nil && (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _ModelValues.isBeforeTv == false) {
+        [self postContentIdShouldUpdateNotification: self.TvShowModel.TrailersContentid];
         return;
     }
+    
     if (_ModelValues.isBeforeTv == true) {
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
-    [self CustomControlViewNew];
     
+    [self CustomControlViewNew];
 }
 
 //MARK:- Get User Setting

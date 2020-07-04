@@ -8,16 +8,94 @@
 import Foundation
 
 class ZeePlayable {
-    typealias Extensions = [String: Any]
+    typealias Extensions = [AnyHashable: Any]
     typealias DefaultDict = [String: Any]
-    typealias SeasonDetails = (episodeNumber: String?, totalEpisodes: String?)
+    typealias Episode = (contentId: String?, title: String?)
+    typealias ParentSeasonDetails = (episodeNumber: String?, totalEpisodes: String?)
+    typealias Season = (contentId: String?, episodes: [Episode]?)
     typealias AudioTrack = String
     typealias TextTrack = String
+    typealias CastMember = (actor: String, character: String)
+    typealias Creator = (name: String, title: String)
 
     let extensions: Extensions
     
     init(_ extensions: Extensions) {
         self.extensions = extensions
+    }
+    
+    public var contentId: String? {
+        return self.extensions[ExtensionsKey.contentId] as? String
+    }
+    
+    public var title: String? {
+        return self.extensions[ExtensionsKey.title] as? String
+    }
+   
+    public var description: String? {
+        return self.extensions[ExtensionsKey.description] as? String
+    }
+    
+    public var assetType: Int? {
+        return self.extensions[ExtensionsKey.assetType] as? Int
+    }
+    
+    public var assetSubtype: String? {
+        return self.extensions[ExtensionsKey.assetSubtype] as? String
+    }
+    
+    public var consumptionType: ConsumptionFeedType {
+        guard let subtype = self.assetSubtype else {
+            return .video
+        }
+        
+        switch subtype {
+        case "9":
+            return .live
+            
+        case "trailer", "promo":
+            return .trailer
+            
+        case "movie":
+            return .movie
+            
+        case "episode":
+            if let showDetails = self.extensions["tvshow_details"] as? DefaultDict, let showType = showDetails["asset_subtype"] as? String {
+                if showType == "tvshow" {
+                    return .episode
+                }
+                
+                if showType == "original" {
+                    return .original
+                }
+            }
+
+            return .video
+
+        case "video":
+            if let genres = self.extensions[ExtensionsKey.genres] as? [DefaultDict] {
+                for genre in genres {
+                    if let value = genre["value"] as? String, value.lowercased() == "music" {
+                        return .music
+                    }
+                }
+            }
+            
+            return .video
+            
+        default:
+            return .video
+        }
+    }
+    
+    public var isFree: Bool {
+        var result = true
+        
+        if let isFreeValue = self.extensions[ExtensionsKey.isFree] as? Bool {
+            result = isFreeValue
+        }
+        
+        return result
     }
     
     public var releaseYear: String? {
@@ -45,7 +123,7 @@ class ZeePlayable {
     public var genre: String? {
         var result: String? = nil
         
-        if let mainGenre = self.extensions[ExtensionsKey.mainGenre] as? Extensions {
+        if let mainGenre = self.extensions[ExtensionsKey.mainGenre] as? DefaultDict {
             result = mainGenre["value"] as? String
         }
         
@@ -72,17 +150,48 @@ class ZeePlayable {
         return result
     }
     
-    public var seasonDetails: SeasonDetails? {
-        var result: SeasonDetails? = nil
+    public var parentSeasonDetails: ParentSeasonDetails? {
+        var result: ParentSeasonDetails? = nil
         
-        if let seasonDetails = self.extensions[ExtensionsKey.seasonDetails] as? Extensions {
-            result = SeasonDetails(
+        if let seasonDetails = self.extensions[ExtensionsKey.seasonDetails] as? DefaultDict {
+            result = ParentSeasonDetails(
                 seasonDetails[ExtensionsKey.currentEpisode] as? String,
                 seasonDetails[ExtensionsKey.totalEpisodes] as? String
             )
         }
         
         return result
+    }
+    
+    public var firstEpisode: Episode? {
+        guard let seasons = self.extensions[ExtensionsKey.seasons] as? [DefaultDict] else {
+            return nil
+        }
+        
+        for season in seasons {
+            guard season["index"] as? Int == 1 else {
+                continue
+            }
+            
+            if let episodes = season["episodes"] as? [DefaultDict] {
+                for episode in episodes {
+                    if episode["index"]  as? Int == 1 {
+                        return Episode(contentId: episode["id"] as? String, title: episode["title"] as? String)
+                    }
+                }
+            }
+        }
+        
+        return nil
+
+    }
+    
+    public var releaseDate: String? {
+        return self.extensions[ExtensionsKey.releaseDate] as? String
+    }
+    
+    public var numberTag: Int? {
+        return self.extensions[ExtensionsKey.numberTagText] as? Int
     }
     
     public var owner: String? {
@@ -99,5 +208,55 @@ class ZeePlayable {
     
     public var textTracks: [TextTrack]? {
         return self.extensions[ExtensionsKey.subtitleLanguages] as? [TextTrack]
+    }
+    
+    public var cast: [CastMember]? {
+        guard let cast = self.extensions[ExtensionsKey.actors] as? [String] else {
+            return nil
+        }
+        
+        var result = [CastMember]()
+        
+        for castMember in cast {
+            let values = castMember.components(separatedBy: ":")
+            guard values.count > 1 else {
+                continue
+            }
+            
+            result.append(CastMember(values[0], values[1]))
+        }
+        
+        return result
+    }
+    
+    public var creators: [Creator]? {
+        return self.extensions[ExtensionsKey.creators] as? [Creator]
+    }
+    
+    public var trailerContentId: String? {
+        guard let relatedItems = self.extensions[ExtensionsKey.related] as? [DefaultDict] else {
+            return nil
+        }
+        
+        for item in relatedItems {
+            guard
+                let assetSubtype = item["asset_subtype"] as? String,
+                assetSubtype == "trailer",
+                let contentId = item["id"] as? String else {
+                    continue
+            }
+            
+            return contentId
+        }
+        
+        return nil
+    }
+    
+    public var businessType: PlayableBusinessType? {
+        guard let value = self.extensions["business_type"] as? String else {
+            return .freeDownloadable
+        }
+        
+        return PlayableBusinessType(rawValue: value) ?? .freeDownloadable
     }
 }
