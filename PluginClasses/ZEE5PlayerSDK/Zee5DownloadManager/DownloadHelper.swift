@@ -135,8 +135,7 @@ public class DownloadHelper: NSObject {
     
     //
     @objc public func restoreExpiredContent(id: String, isExpired: @escaping ((Bool, String?) -> Void)) {
-//        ZEE5PlayerManager.sharedInstance().getContentDetail(forCastingItem: id, country: "IN", translation: "en") { (data, customData) in
-        ZEE5PlayerManager.sharedInstance().playVODContent(id, country: "IN", translation: "en") {
+        ZEE5PlayerManager.sharedInstance().downloadVODContent(id, country: "IN", translation: "en") {
             (data, customData) in
             
             if let Voddata = data , let CustomeString = customData{

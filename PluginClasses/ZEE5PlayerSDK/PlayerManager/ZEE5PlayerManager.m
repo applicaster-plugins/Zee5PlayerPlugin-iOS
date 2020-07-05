@@ -2287,200 +2287,40 @@ static ContentBuisnessType buisnessType;
     [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
 }
 
-//MARK:- Play LiveContent Method.
-
-- (void)playLiveContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage {
-    self.isLive = YES;
-    
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.liveContentDetails, content_id];
-    NSDictionary *param =@{@"country":country, @"translation":laguage};
-    
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
-    
-    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result) {
-        self.LiveModelValues = [LiveContentDetails initFromJSONDictionary:result];
-        self.buisnessType = self.LiveModelValues.buisnessType;
-        self.audioLanguageArr = self.LiveModelValues.languages;
-        self.showID = self.LiveModelValues.identifier;
-        self.isStop = NO;
-        self.videoCompleted = false;
-        
-        [self getBusinessType];
-        
-        [self getVideotoken:content_id andCountry:country withCompletionhandler:^(id result) {
-            NSString * VideoToken = [result valueForKey:@"video_token"];  //// Fetch Video token here
-            
-            if (self.LiveModelValues.isDRM) {
-                [self getDRMToken:self.LiveModelValues.identifier andDrmKey:self.LiveModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
-                    [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:[result valueForKey:@"drm"] VideoToken:VideoToken];
-                    if (self.currentItem == nil) {
-                        return ;
-                    }
-                    
-                    [self stop];
-                    
-                } failureBlock:^(ZEE5SdkError * _Nullable error) {
-                    [self notifiyError:error];
-                }];
-            }
-            else {
-                [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:VideoToken];
-                
-                if (self.currentItem == nil) {
-                    return ;
-                }
-            }
-            
-        } faillureblock:^(ZEE5SdkError *error) {
-            [self initilizePlayerWithLiveContent:self.LiveModelValues andDRMToken:@"" VideoToken:@""];
-            
-            if (self.currentItem == nil) {
-                return ;
-            }
-        }];
-    } failureBlock:^(ZEE5SdkError *error) {
-        [self notifiyError:error];
-    }];
-}
-
-//MARK:-  Applicaster Call Method. (ContentId.Country,Language)
-
-- (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock
-{
-
-   // content_id = @"0-0-160315"; //@"0-0-dolafzonkikahani";//0-1-261984
-    
-    _isStop = false;
-    _isNeedToSubscribe = false;
-    _ishybridViewOpen = false;
-    _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
-    
-    self.parentPlaybackView = playbackView;
-
-    [[AnalyticEngine shared]VideoStartTimeWith:0];
-    [[AnalyticEngine shared]AudioLanguageWith:@""];
-    [self SliderReset];
-     
-    [ZEE5UserDefaults settranslationLanguage:laguage];
-    [ZEE5UserDefaults setContentId:content_id];
-    //Clean up video Session
-    [[AnalyticEngine shared] cleanupVideoSesssion];
-    
-    [self registerNotifications];
-    self.playerConfig = playerConfig;
- 
-    NSArray *array = [content_id componentsSeparatedByString:@"-"];
-    NSString *contentType = array[1];
-    
-    [ZEE5UserDefaults setassetType:contentType];
-    
-    if ([contentType isEqualToString:@"6"])
-    {
-        [self fetchTvShow:content_id country:country translation:laguage];
-    }
-    else if ([contentType isEqualToString:@"9"])
-    {
-        [self playLiveContent:content_id country:country translation:laguage];
-    }
-    else
-    {
-         [_PreviousContentArray addObject:content_id];
-        [self playVODContent:content_id country:country translation:laguage withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-            completionBlock(result, customData);
-        }];
-    }
-    
-}
-
-
 //MARK:- Content Details API
 
-- (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock
-{
-    _watchCtreditSeconds = 10;
-    
-    self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
-    
-    
-    if (self.previousDuration != 0)
-    {
-        [self watchDuration:self.currentItem.content_id];
-    }
-    
-    self.isLive = NO;
+- (void)downloadVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock {
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.vodContentDetails, content_id];
-    NSDictionary *param =@{@"country":country, @"translation":laguage};
     
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
+    NSDictionary *param =@{
+        @"country":country,
+        @"translation":laguage
+    };
     
+    NSDictionary *headers = @{
+        @"Content-Type": @"application/json",
+        @"X-Access-Token": ZEE5UserDefaults.getPlateFormToken
+    };
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
-    {
-        self.ModelValues = [VODContentDetailsDataModel initFromJSONDictionary:result];
+    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result) {
+        VODContentDetailsDataModel *vodModel = [VODContentDetailsDataModel initFromJSONDictionary:result];
         
-        if ([self.ModelValues.watchCreditTime containsString:@"NULL"]== false)
-        {
-             self.watchCreditsTime = [[Utility secondsForTimeString:self.ModelValues.watchCreditTime]integerValue];
-         
-        }
-    
-        self.buisnessType = self.ModelValues.buisnessType;
-        self.audioLanguageArr = self.ModelValues.audioLanguages;
-        self.videoCompleted = false;
-        
-       ///*Fetch Require Details     *////
-        
-        [self getBusinessType];
-        [self getskipandWatchcredit];
-        [self getUserSettings];
-    
-        if (self.ModelValues.isDRM)
-        {
-            [[CdnHandler sharedInstance]getKCDNUrl:self.ModelValues.identifier withCompletion:^(id  _Nullable result, NSString * _Nonnull CDN) {
-                
-                self.KcdnUrl = CDN;
-                
-                [self getDRMToken:self.ModelValues.identifier andDrmKey:self.ModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result)
-                 {
-                    [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
-                    if (self.currentItem == nil) {
-                        return ;
-                    }
-                   
-                    // Update video end point
-                    NSTimeInterval vEndPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
-                    NSString *videoEndPoint = [Utility stringFromTimeInterval: vEndPoint];
-                   
-                    NSDictionary *dict = @{@"videoEndPoint" : videoEndPoint};
-                    [self updateConvivaSessionWithMetadata: dict];
-                    [self stop];
-                    [self createConvivaSeesionWithMetadata];
-                    completionBlock(self.ModelValues,[result valueForKey:@"drm"]);
-                    
-                } failureBlock:^(ZEE5SdkError * _Nullable error)
-                 {
-                    [self notifiyError:error];
-                   
+        if (vodModel.isDRM) {
+            [[CdnHandler sharedInstance]getKCDNUrl:vodModel.identifier withCompletion:^(id  _Nullable result, NSString * _Nonnull CDN) {                
+                [self getDRMToken:vodModel andDrmKey:vodModel.drmKeyID withCompletionHandler:^(id  _Nullable result) {
+                    completionBlock(vodModel, [result valueForKey:@"drm"]);
+                } failureBlock:^(ZEE5SdkError * _Nullable error) {
+                    completionBlock(nil, nil);
                 }];
-                
             } andFailure:^(ZEE5SdkError * _Nullable error) {
-                
             }];
-        }else
-        {
-           [self getVodToken:^(NSString *vodToken) {
-                [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
-               if (self.currentItem == nil) {
-                return ;
-                }
-           }];
         }
-    } failureBlock:^(ZEE5SdkError *error)
-     {
-        [self notifiyError:error];
-         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:@"001" severityCode:0 andErrorMsg:@"Content Detail API Failure -"];
+        else {
+            completionBlock(nil, nil);
+        }
+    } failureBlock:^(ZEE5SdkError *error) {
+        completionBlock(nil, nil);
     }];
-    
 }
 
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model {

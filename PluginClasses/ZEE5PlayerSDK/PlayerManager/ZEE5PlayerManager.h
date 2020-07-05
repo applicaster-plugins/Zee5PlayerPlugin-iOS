@@ -57,26 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (ZEE5PlayerManager *)sharedInstance;
-/*!
- * @discussion This method used to play vod content with content id
- * @param content_id Need to pass content id of the video
- * @param country Need to pass user country id.
- * @param laguage Need to pass transaltion langauge id.
- * @param playerConfig Need to pass playerConfig file.
- * @param playbackView Need to pass the view where you want to play the video.
- */
 
-//- (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(UIView*)playbackView;
-
-- (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage playerConfig:(ZEE5PlayerConfig*)playerConfig playbackView:(nonnull UIView *)playbackView withCompletionHandler: (VODDataHandler)completionBlock;
-
-/*!
- * @discussion This method used to play vod content with content_id
- * @param country Need to pass Country
- * @param laguage Need to pass Translation
- */
-
-- (void)playVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
+- (void)downloadVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
 - (void)playLiveContentWithModel:(LiveContentDetails *)model;
 
