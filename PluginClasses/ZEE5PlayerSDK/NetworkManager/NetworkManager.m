@@ -42,6 +42,17 @@ static NetworkManager *sharedManager = nil;
     return self;
 }
 
+- (void)cancelAllRequests {
+    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        if (!dataTasks || !dataTasks.count) {
+            return;
+        }
+        for (NSURLSessionTask *task in dataTasks) {
+            [task cancel];
+        }
+    }];
+}
+
 - (void)authenticateWithServer:(NSString *)app_id userId:(NSString *)user_id andSDK_key:(NSString *)key withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure
 {
 

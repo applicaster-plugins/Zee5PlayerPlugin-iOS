@@ -1127,6 +1127,8 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)DestroyPlayer{
+    [[NetworkManager sharedInstance] cancelAllRequests];
+    
     [self hideLoaderOnPlayer];
     [self.panDownGestureHandlerHelper endAd];
 
@@ -2857,6 +2859,8 @@ static ContentBuisnessType buisnessType;
 //MARK:- Similar Content For Playback
 
 - (void)getVodSimilarContent:(void (^)(void))completion {
+    NSString *contentId = self.currentItem.content_id;
+
     NSDictionary *param = @{
         @"user_type": ZEE5UserDefaults.getUserType,
         @"page":@"1",
@@ -2872,7 +2876,11 @@ static ContentBuisnessType buisnessType;
         @"Cache-Control":@"no-cache"
     };
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls. vodSimilarContent,_currentItem.content_id] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result) {
+    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@", BaseUrls.vodSimilarContent, contentId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result) {
+        if (![self.currentItem.content_id isEqualToString:contentId]) {
+            return;
+        }
+        
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
         
@@ -2885,8 +2893,10 @@ static ContentBuisnessType buisnessType;
 //MARK:- NextEpisode
 
 - (void)getNextEpisode:(void (^)(void))completion {
+    NSString *contentId = self.currentItem.content_id;
+
     NSDictionary *param = @{
-        @"episode_id": _currentItem.content_id,
+        @"episode_id": contentId,
         @"page":@"1",
         @"limit":@"1",
         @"translation":ZEE5UserDefaults.gettranslation,
@@ -2901,6 +2911,10 @@ static ContentBuisnessType buisnessType;
     };
     
     [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls.getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result) {
+        if (![self.currentItem.content_id isEqualToString:contentId]) {
+            return;
+        }
+        
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
         

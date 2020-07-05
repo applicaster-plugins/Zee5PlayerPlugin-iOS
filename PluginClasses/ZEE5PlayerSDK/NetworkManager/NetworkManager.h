@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NetworkManager : NSObject
 + (NetworkManager *)sharedInstance;
+- (void)cancelAllRequests;
+
 - (void)authenticateWithServer:(NSString *)app_id userId:(NSString *)user_id andSDK_key:(NSString *)key withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
 - (void)makeHttpGetRequest:(NSString *)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
