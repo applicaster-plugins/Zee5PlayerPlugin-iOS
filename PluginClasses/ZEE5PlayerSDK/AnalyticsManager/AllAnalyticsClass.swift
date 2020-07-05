@@ -7,8 +7,9 @@
 
 import UIKit
 import Zee5CoreSDK
+import ZappSDK
 
-public class AllAnalyticsClass: NSObject {
+public class AllAnalyticsClass: NSObject{
 
     let LotameClientid = "13772"      // *** Lotame Client ID****////
 
@@ -21,14 +22,14 @@ public class AllAnalyticsClass: NSObject {
     var realeseDate = ""
     var PlayerVersion = ""
     var series = ""
-    var Subtitles = [Any]()
-    var audiolanguage = [Any]()
-    var contentlanguages = [Any]()
-    var Charecters = [Any]()
-    var cast = [Any]()
+    var Subtitles = [String]()
+    var audiolanguage = [String]()
+    var contentlanguages = [String]()
+    var Charecters = [String]()
+    var cast = [String]()
     var genre = [Genres]()
-    var duration: TimeInterval = 0
-    var currentDuration: TimeInterval = 0
+    var duration = 0
+    var currentDuration:TimeInterval = 0
     var episodeNumber = 0
     var DrmVideo = false
     var notAppplicable = "N/A"
@@ -53,7 +54,7 @@ public class AllAnalyticsClass: NSObject {
 
     public override init(){}
 
-    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [Any], audio:[Any], gen: [Genres], duration: TimeInterval, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[Any],assetsubtype:String,buisnessType:String,actors:[Any],skiptime:String,language:[Any],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String,tvshowid:String,addict:NSDictionary,adtag:NSDictionary,tvchannelname:String) {
+    public init(contentName: String, contentId: String, releaseDate: String, playerVersion: String,series: String, subtitles: [String], audio:[String], gen: [Genres], duration: Int, currentDuration: TimeInterval, episodeNumber: Int, isDrm: Bool,NotApplicable:String,generestring:String,Cast:[String],assetsubtype:String,buisnessType:String,actors:[String],skiptime:String,language:[String],image:String,Tvshowimgurl:String,Starttime:String,seasonID:String,tvshowid:String,addict:NSDictionary,adtag:NSDictionary,tvchannelname:String) {
 
         
         self.contentId = contentId
@@ -91,26 +92,25 @@ public class AllAnalyticsClass: NSObject {
                    contentName = DataModel.channel_Name
                    contentId = DataModel.content_id
                    genre = DataModel.geners
-                   duration = Zee5PlayerPlugin.sharedInstance().getDuration()
+                   duration = DataModel.duration
                    currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
                    series = DataModel.channel_Name  
                    episodeNumber = DataModel.episode_number
                    DrmVideo = DataModel.isDRM
-                   Subtitles = DataModel.subTitles
+                   Subtitles = DataModel.subTitles as! [String]
                    realeseDate = DataModel.release_date
                    assetSubtype = DataModel.asset_subtype
                    Buisnesstype = DataModel.business_type
                    skipIntroTime = DataModel.skipintrotime
-                   contentlanguages = DataModel.language
+                   contentlanguages = DataModel.language as! [String]
                    Imageurl = DataModel.imageUrl
                    TvShowimagUrl = DataModel.tvShowImgurl
                    seasonId = DataModel.seasonId
                    TvShowId = DataModel.showId
                    TvshowChannelName = DataModel.showchannelName
-                   audiolanguage = DataModel.audioLanguages
-
+                   audiolanguage .removeAll()
                    if DataModel.charecters.count>0{
-                       Charecters  = DataModel.charecters
+                    Charecters  = DataModel.charecters as! [String]
                     }
                   let value = genre.map{$0.value}
                   genereString = value.joined(separator: ",")
@@ -138,16 +138,17 @@ extension AllAnalyticsClass
     
     public func ADInitize(with data: NSDictionary , CustomTags:NSDictionary)
     {
-     
+        currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
+        
         let parameter : Set = [
             Keys.AD_INITIALIZED.TITLE ~>> contentName == "" ? notAppplicable:contentName,
-            Keys.AD_INITIALIZED.SOURCE ~>> notAppplicable ,   // TT It Should (n-1) Page Where it come from
+            Keys.AD_INITIALIZED.SOURCE ~>> notAppplicable , 
             Keys.AD_INITIALIZED.AD_DURATION ~>> data.value(forKey: "duration") as? String ?? notAppplicable,
             Keys.AD_INITIALIZED.AD_CATEGORY ~>> data.value(forKey: "streamType") as? String ?? notAppplicable,
             Keys.AD_INITIALIZED.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
             Keys.AD_INITIALIZED.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.AD_INITIALIZED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-            Keys.AD_INITIALIZED.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+            Keys.AD_INITIALIZED.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
             Keys.AD_INITIALIZED.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
             Keys.AD_INITIALIZED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
             Keys.AD_INITIALIZED.SERIES ~>> series == "" ? notAppplicable:series,
@@ -156,27 +157,30 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.PAGE_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.DRM_VIDEO ~>> DrmVideo,
             Keys.AD_INITIALIZED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-            Keys.AD_INITIALIZED.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-            Keys.AD_INITIALIZED.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-            Keys.AD_INITIALIZED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+            Keys.AD_INITIALIZED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+            Keys.AD_INITIALIZED.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+            Keys.AD_INITIALIZED.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
             Keys.AD_INITIALIZED.TAB_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.CAST_TO ~>> notAppplicable,
             Keys.AD_INITIALIZED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
             Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? 0:videoStarttime,
             Keys.AD_INITIALIZED.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? "Kaltura Player",
             Keys.AD_INITIALIZED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-            Keys.AD_INITIALIZED.AD_PROVIDER ~>> "",
-            Keys.AD_VIEW.PROVIDER_ID ~>> notAppplicable,
-            Keys.AD_VIEW.PROVIDER_NAME ~>> notAppplicable,
+            Keys.AD_INITIALIZED.AD_PROVIDER ~>> "IMA",
+            Keys.AD_INITIALIZED.PROVIDER_ID ~>> data.value(forKey: "adId") as? String ?? notAppplicable,
+            Keys.AD_INITIALIZED.PROVIDER_NAME ~>> "IMA",
             Keys.AD_INITIALIZED.AD_POSITION ~>> CustomTags.value(forKey: "c3.ad.position") as? String ?? "nil",
-            Keys.AD_INITIALIZED.AD_CATEGORY ~>> "",
-            Keys.AD_INITIALIZED.AD_LOCATION ~>> "",
-            Keys.AD_INITIALIZED.AD_CUE_TIME ~>> "",
-            Keys.AD_INITIALIZED.AD_DESTINATION_URL ~>> "",
+            Keys.AD_INITIALIZED.AD_LOCATION ~>> "Instream",
+            Keys.AD_INITIALIZED.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
+            Keys.AD_INITIALIZED.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
+            Keys.AD_INITIALIZED.AD_ID ~>> data.value(forKey: "adId") as? String ?? notAppplicable,
+            Keys.AD_INITIALIZED.AD_TITLE ~>> data.value(forKey: "assetName") as? String ?? notAppplicable,
             Keys.AD_INITIALIZED.CDN ~>> notAppplicable,
             Keys.AD_INITIALIZED.DNS ~>> notAppplicable,
             Keys.AD_INITIALIZED.CAROUSAL_NAME ~>> notAppplicable,
             Keys.AD_INITIALIZED.CAROUSAL_ID ~>> notAppplicable,
+            Keys.AD_INITIALIZED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+            Keys.AD_INITIALIZED.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
         ]
         analytics.track(Events.AD_INITIALIZED, trackedProperties: parameter)
@@ -187,6 +191,7 @@ extension AllAnalyticsClass
        public func ADView()
        {
     
+        currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
            let parameter : Set = [
                Keys.AD_VIEW.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                Keys.AD_VIEW.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
@@ -195,7 +200,8 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_VIEW.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
                Keys.AD_VIEW.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
-               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,                                                           // TT
+               Keys.AD_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+               Keys.AD_VIEW.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable: Buisnesstype,
                Keys.AD_VIEW.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                Keys.AD_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
@@ -204,27 +210,35 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.PAGE_NAME ~>> notAppplicable,
                Keys.AD_VIEW.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-               Keys.AD_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-               Keys.AD_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+               Keys.AD_VIEW.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_VIEW.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_VIEW.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
                Keys.AD_VIEW.TAB_NAME ~>> notAppplicable,
                Keys.AD_VIEW.CAST_TO ~>> notAppplicable,
                Keys.AD_VIEW.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-               Keys.AD_VIEW.PROVIDER_ID ~>> notAppplicable,
-               Keys.AD_VIEW.PROVIDER_NAME ~>> notAppplicable,
+               Keys.AD_VIEW.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_VIEW.PROVIDER_NAME ~>> "IMA",
                Keys.AD_VIEW.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                Keys.AD_VIEW.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? "Kaltura Player",
                Keys.AD_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.AD_VIEW.AD_PROVIDER ~>> "",
+               Keys.AD_VIEW.AD_PROVIDER ~>> "IMA",
                Keys.AD_VIEW.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
-               Keys.AD_VIEW.AD_CATEGORY ~>> "",
-               Keys.AD_VIEW.AD_LOCATION ~>> "",
-               Keys.AD_VIEW.AD_CUE_TIME ~>> "",
-               Keys.AD_VIEW.AD_DESTINATION_URL ~>> "",
+               Keys.AD_VIEW.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
+               Keys.AD_VIEW.AD_LOCATION ~>> "Instream",
+               Keys.AD_VIEW.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_VIEW.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
+               Keys.AD_VIEW.AD_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_VIEW.AD_TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                Keys.AD_VIEW.CDN ~>> "",
                Keys.AD_VIEW.DNS ~>> notAppplicable,
                Keys.AD_VIEW.CAROUSAL_NAME ~>> notAppplicable,
                Keys.AD_VIEW.CAROUSAL_ID ~>> notAppplicable,
+               Keys.AD_VIEW.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+               Keys.AD_VIEW.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_VIEW.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+               Keys.AD_VIEW.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
+               Keys.AD_VIEW.AD_PERCENT_COMPLETE ~>>  "0" ,
+               
 
            ]
            analytics.track(Events.AD_VIEW, trackedProperties: parameter)
@@ -243,11 +257,10 @@ extension AllAnalyticsClass
             Keys.AD_VIEW_3.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.AD_VIEW_3.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
              Keys.AD_VIEW_3.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
-            Keys.AD_VIEW_3.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-            
+            Keys.AD_VIEW_3.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
             Keys.AD_VIEW_3.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-            
-            Keys.AD_VIEW_3.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+            Keys.AD_VIEW_3.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+            Keys.AD_VIEW_3.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
            ]
            analytics.track(Events.AD_VIEW_3, trackedProperties: parameter)
 
@@ -265,11 +278,10 @@ extension AllAnalyticsClass
             Keys.AD_VIEW_5.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
             Keys.AD_VIEW_5.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
              Keys.AD_VIEW_5.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
-            Keys.AD_VIEW_5.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-            
+            Keys.AD_VIEW_5.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
             Keys.AD_VIEW_5.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-            
-            Keys.AD_VIEW_5.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+            Keys.AD_VIEW_5.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+            Keys.AD_VIEW_5.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
            ]
            analytics.track(Events.AD_VIEW_5, trackedProperties: parameter)
        }
@@ -280,15 +292,15 @@ extension AllAnalyticsClass
 
         let parameter : Set = [
          Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-         Keys.AD_VIEW_10.AD_TYPE ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
          Keys.AD_VIEW_10.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
          Keys.AD_VIEW_10.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
          Keys.AD_VIEW_10.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
          Keys.AD_VIEW_10.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
           Keys.AD_VIEW_10.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
-         Keys.AD_VIEW_10.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+         Keys.AD_VIEW_10.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
          Keys.AD_VIEW_10.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-         Keys.AD_VIEW_10.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+         Keys.AD_VIEW_10.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+         Keys.AD_VIEW_10.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
         ]
         analytics.track(Events.AD_VIEW_10, trackedProperties: parameter)
     }
@@ -298,9 +310,17 @@ extension AllAnalyticsClass
     
     public func ADSkiped()
        {
-         
+        currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
+        
            let parameter : Set = [
                Keys.AD_SKIP.ELEMENT ~>> "Skip Add",
+               Keys.AD_SKIP.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+               Keys.AD_SKIP.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
+               Keys.AD_SKIP.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+               Keys.AD_SKIP.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+               Keys.AD_SKIP.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+                Keys.AD_SKIP.SERIES ~>> series == "" ? notAppplicable:series,
+               Keys.AD_SKIP.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
                Keys.AD_SKIP.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
                Keys.AD_SKIP.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
                Keys.AD_SKIP.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
@@ -309,27 +329,32 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.PAGE_NAME ~>> notAppplicable,
                Keys.AD_SKIP.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_SKIP.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_SKIP.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-               Keys.AD_SKIP.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-               Keys.AD_SKIP.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+               Keys.AD_SKIP.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_SKIP.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_SKIP.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
                Keys.AD_SKIP.TAB_NAME ~>> notAppplicable,
                Keys.AD_SKIP.CAST_TO ~>> notAppplicable,
                Keys.AD_SKIP.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-               Keys.AD_SKIP.PROVIDER_ID ~>> notAppplicable,
-               Keys.AD_SKIP.PROVIDER_NAME ~>> notAppplicable,
+               Keys.AD_SKIP.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_SKIP.PROVIDER_NAME ~>> "IMA",
                Keys.AD_SKIP.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                Keys.AD_SKIP.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_SKIP.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.AD_SKIP.AD_PROVIDER ~>> "",
+               Keys.AD_SKIP.AD_PROVIDER ~>> "IMA",
                Keys.AD_SKIP.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-               Keys.AD_SKIP.AD_CATEGORY ~>> "",
-               Keys.AD_SKIP.AD_LOCATION ~>> "",
-               Keys.AD_SKIP.AD_CUE_TIME ~>> "",
-               Keys.AD_SKIP.AD_DESTINATION_URL ~>> "",
+               Keys.AD_SKIP.AD_LOCATION ~>> "Instream",
+               Keys.AD_SKIP.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_SKIP.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
+               Keys.AD_SKIP.AD_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_SKIP.AD_TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                Keys.AD_SKIP.CDN ~>> "",
                Keys.AD_SKIP.DNS ~>> notAppplicable,
                Keys.AD_SKIP.CAROUSAL_NAME ~>> notAppplicable,
                Keys.AD_SKIP.CAROUSAL_ID ~>> notAppplicable,
+               Keys.AD_SKIP.CAROUSAL_NAME ~>> notAppplicable,
+               Keys.AD_SKIP.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+               Keys.AD_SKIP.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+               Keys.AD_SKIP.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
            ]
            analytics.track(Events.AD_SKIP, trackedProperties: parameter)
@@ -347,9 +372,10 @@ extension AllAnalyticsClass
                Keys.AD_VIEW_COMPLETE.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
                Keys.AD_VIEW_COMPLETE.GENRE ~>>  genereString  == "" ? notAppplicable : genereString,
                 Keys.AD_VIEW_COMPLETE.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
-               Keys.AD_VIEW_COMPLETE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
+               Keys.AD_VIEW_COMPLETE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
                Keys.AD_VIEW_COMPLETE.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-               Keys.AD_VIEW_COMPLETE.NEW_CONTENT_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
+               Keys.AD_VIEW_COMPLETE.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+               Keys.AD_VIEW_COMPLETE.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
               ]
               analytics.track(Events.AD_VIEW_COMPLETE, trackedProperties: parameter)
        }
@@ -358,13 +384,14 @@ extension AllAnalyticsClass
     
     public func ADClicked()
        {
+        currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
            let parameter : Set = [
                Keys.AD_CLICK.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
                Keys.AD_CLICK.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
                Keys.AD_CLICK.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                Keys.AD_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                Keys.AD_CLICK.GENRE ~>> genre.count>0 ? genre.description:notAppplicable,
-               Keys.AD_CLICK.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+               Keys.AD_CLICK.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
                Keys.AD_CLICK.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                Keys.AD_CLICK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_CLICK.SERIES ~>> series == "" ? notAppplicable:series,
@@ -373,28 +400,32 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.PAGE_NAME ~>> notAppplicable,
                Keys.AD_CLICK.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-               Keys.AD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-               Keys.AD_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-               Keys.AD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+               Keys.AD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+               Keys.AD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
                Keys.AD_CLICK.TAB_NAME ~>> notAppplicable,
                Keys.AD_CLICK.CAST_TO ~>> notAppplicable,
                Keys.AD_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-               Keys.AD_CLICK.PROVIDER_ID ~>> notAppplicable,
-               Keys.AD_CLICK.PROVIDER_NAME ~>> notAppplicable,
+               Keys.AD_CLICK.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_CLICK.PROVIDER_NAME ~>> "IMA",
                Keys.AD_CLICK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                Keys.AD_CLICK.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_CLICK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.AD_CLICK.AD_PROVIDER ~>> "",
+               Keys.AD_CLICK.AD_PROVIDER ~>> "IMA",
                Keys.AD_CLICK.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-               Keys.AD_CLICK.AD_LOCATION ~>> "",
+               Keys.AD_CLICK.AD_LOCATION ~>> "Instream",
                Keys.AD_CLICK.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
                Keys.AD_CLICK.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
-               Keys.AD_CLICK.AD_CUE_TIME ~>> "",
-               Keys.AD_CLICK.AD_DESTINATION_URL ~>> "",
+               Keys.AD_CLICK.AD_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+               Keys.AD_CLICK.AD_TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
+               Keys.AD_CLICK.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_CLICK.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
                Keys.AD_CLICK.CDNstatic ~>> "",
                Keys.AD_CLICK.DNS ~>> notAppplicable,
                Keys.AD_CLICK.CAROUSAL_NAME ~>> notAppplicable,
                Keys.AD_CLICK.CAROUSAL_ID ~>> notAppplicable,
+               Keys.AD_CLICK.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+               Keys.AD_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
            ]
          analytics.track(Events.AD_CLICK, trackedProperties: parameter)
@@ -405,13 +436,14 @@ extension AllAnalyticsClass
     
     public func ADWatchedDuration()
           {
+            currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
               let parameter : Set = [
                   Keys.AD_WATCH_DURATION.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? "No Source",
                   Keys.AD_WATCH_DURATION.TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? "No Title",
                   Keys.AD_WATCH_DURATION.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_WATCH_DURATION.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_WATCH_DURATION.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-                  Keys.AD_WATCH_DURATION.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+                  Keys.AD_WATCH_DURATION.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
                   Keys.AD_WATCH_DURATION.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                   Keys.AD_WATCH_DURATION.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_WATCH_DURATION.SERIES ~>> series == "" ? notAppplicable:series,
@@ -420,30 +452,34 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.PAGE_NAME ~>> "",
                   Keys.AD_WATCH_DURATION.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_WATCH_DURATION.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-                  Keys.AD_WATCH_DURATION.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-                  Keys.AD_WATCH_DURATION.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-                  Keys.AD_WATCH_DURATION.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+                  Keys.AD_WATCH_DURATION.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+                  Keys.AD_WATCH_DURATION.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+                  Keys.AD_WATCH_DURATION.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
                   Keys.AD_WATCH_DURATION.TAB_NAME ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.CAST_TO ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-                  Keys.AD_WATCH_DURATION.PROVIDER_ID ~>> notAppplicable,
-                  Keys.AD_WATCH_DURATION.PROVIDER_NAME ~>> notAppplicable,
+                  Keys.AD_WATCH_DURATION.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.PROVIDER_NAME ~>> "IMA",
                   Keys.AD_WATCH_DURATION.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                   Keys.AD_WATCH_DURATION.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                   Keys.AD_WATCH_DURATION.BUFFER_DURATION ~>> AdDict.value(forKey: "adPosition") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.WATCH_DURATION ~>> AdDict.value(forKey: "adPosition") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.CASTING_DURATION ~>> notAppplicable,
-                  Keys.AD_WATCH_DURATION.AD_PROVIDER ~>> "",
+                  Keys.AD_WATCH_DURATION.AD_PROVIDER ~>> "IMA",
                   Keys.AD_WATCH_DURATION.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? "nil",
-                  Keys.AD_WATCH_DURATION.AD_LOCATION ~>> "",
+                  Keys.AD_WATCH_DURATION.AD_LOCATION ~>> "Instream",
                   Keys.AD_WATCH_DURATION.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
-                  Keys.AD_WATCH_DURATION.AD_CUE_TIME ~>> "",
-                  Keys.AD_WATCH_DURATION.AD_DESTINATION_URL ~>> notAppplicable,
+                  Keys.AD_WATCH_DURATION.AD_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.AD_TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
+                  Keys.AD_WATCH_DURATION.AD_CUE_TIME ~>> currentDuration == 0 ? 0:currentDuration,
+                  Keys.AD_WATCH_DURATION.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
                   Keys.AD_WATCH_DURATION.DNS ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.CAROUSAL_NAME ~>> notAppplicable,
                   Keys.AD_WATCH_DURATION.CAROUSAL_ID ~>> notAppplicable,
+                  Keys.AD_WATCH_DURATION.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+                  Keys.AD_WATCH_DURATION.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
               ]
             analytics.track(Events.AD_WATCH_DURATION, trackedProperties: parameter)
@@ -453,6 +489,7 @@ extension AllAnalyticsClass
     // MARK:- AdForcedExit
     public func ADforcedExit()
           {
+            currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
               let parameter : Set = [
                   Keys.AD_FORCED_EXIT.SOURCE ~>> AdDict.value(forKey: "streamUrl") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
@@ -461,7 +498,7 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.CONTENT_NAME ~>> contentName  == "" ? notAppplicable : contentName,
                   Keys.AD_FORCED_EXIT.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId,
                   Keys.AD_FORCED_EXIT.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
-                  Keys.AD_FORCED_EXIT.CHARACTERS ~>> Charecters.count > 0 ? Charecters.description:notAppplicable,
+                  Keys.AD_FORCED_EXIT.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
                   Keys.AD_FORCED_EXIT.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
                   Keys.AD_FORCED_EXIT.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_FORCED_EXIT.SERIES ~>> series == "" ? notAppplicable:series,
@@ -470,26 +507,30 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.PAGE_NAME ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_FORCED_EXIT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
-                  Keys.AD_FORCED_EXIT.CONTENT_ORIGINAL_LANGUAGE ~>> contentlanguages.count > 0 ? contentlanguages.description:notAppplicable,
-                  Keys.AD_FORCED_EXIT.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.description:notAppplicable,
-                  Keys.AD_FORCED_EXIT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.description : notAppplicable,
+                  Keys.AD_FORCED_EXIT.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+                  Keys.AD_FORCED_EXIT.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+                  Keys.AD_FORCED_EXIT.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
                   Keys.AD_FORCED_EXIT.TAB_NAME ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.CAST_TO ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-                  Keys.AD_FORCED_EXIT.PROVIDER_ID ~>> notAppplicable,
-                  Keys.AD_FORCED_EXIT.PROVIDER_NAME ~>> notAppplicable,
+                  Keys.AD_FORCED_EXIT.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.PROVIDER_NAME ~>> "IMA",
                   Keys.AD_FORCED_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
                   Keys.AD_FORCED_EXIT.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-                  Keys.AD_FORCED_EXIT.AD_PROVIDER ~>> "",
+                  Keys.AD_FORCED_EXIT.AD_PROVIDER ~>> "IMA",
                   Keys.AD_FORCED_EXIT.AD_POSITION ~>> AdTag.value(forKey: "c3.ad.position") as? String ?? notAppplicable,
-                  Keys.AD_FORCED_EXIT.AD_LOCATION ~>> "",
-                  Keys.AD_FORCED_EXIT.AD_CUE_TIME ~>> "",
-                  Keys.AD_FORCED_EXIT.AD_DESTINATION_URL ~>> "",
+                  Keys.AD_FORCED_EXIT.AD_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.AD_TITLE ~>> AdDict.value(forKey: "assetName") as? String ?? notAppplicable,
+                  Keys.AD_FORCED_EXIT.AD_LOCATION ~>> "Instream",
+                  Keys.AD_FORCED_EXIT.AD_CUE_TIME ~>>  currentDuration == 0 ? 0:currentDuration,
+                  Keys.AD_FORCED_EXIT.AD_DESTINATION_URL ~>> "https://www.zee5.com/",
                   Keys.AD_FORCED_EXIT.CDN ~>> "",
                   Keys.AD_FORCED_EXIT.DNS ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.CAROUSAL_NAME ~>> notAppplicable,
                   Keys.AD_FORCED_EXIT.CAROUSAL_ID ~>> notAppplicable,
+                  Keys.AD_FORCED_EXIT.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+                  Keys.AD_FORCED_EXIT.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
 
               ]
             analytics.track(Events.AD_FORCED_EXIT, trackedProperties: parameter)

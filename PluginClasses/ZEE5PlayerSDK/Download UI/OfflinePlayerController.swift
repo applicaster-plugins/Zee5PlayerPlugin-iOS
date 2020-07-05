@@ -363,7 +363,7 @@ extension OfflinePlayerController {
             weakSelf?.playerViewTapped(UITapGestureRecognizer())
         }
     
-        self.forwardButton.pressed = { pressed in
+        self.forwardButton.pressed = {pressed in
             weakSelf?.forwardContent(with: value)
         }
         
@@ -376,7 +376,7 @@ extension OfflinePlayerController {
             weakSelf?.playerViewTapped(UITapGestureRecognizer())
         }
         
-        self.rewindButton.pressed = { pressed in
+        self.rewindButton.pressed = {pressed in
             weakSelf?.rewindContent(with: value)
         }
         

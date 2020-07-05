@@ -79,8 +79,6 @@
 
 -(void)forwardAndRewindActions
 {
-    NSInteger value = 10;
-//    NSInteger value = [self.labelForward.text integerValue];
     __weak typeof(self) weakSelf = self;
 
     [self.forwardButton removeFromSuperview];
@@ -96,10 +94,14 @@
         [[ZEE5PlayerManager sharedInstance] tapOnPlayer];
 
     };
+    self.forwardButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
+        if (totaltouches > 1) {
+             [[ZEE5PlayerManager sharedInstance] hideCustomControls];
+             [[ZEE5PlayerManager sharedInstance] forward:Counter];
+        }
+    };
     self.forwardButton.pressed = ^(BOOL pressed) {
-        
-        [[ZEE5PlayerManager sharedInstance] hideCustomControls];
-        [[ZEE5PlayerManager sharedInstance] forward:value];
+      
     };
     
     [self.rewindButton removeFromSuperview];
@@ -115,10 +117,15 @@
         [[ZEE5PlayerManager sharedInstance] tapOnPlayer];
     };
     self.rewindButton.pressed = ^(BOOL pressed) {
-        
-        [[ZEE5PlayerManager sharedInstance] hideCustomControls];
-        [[ZEE5PlayerManager sharedInstance] rewind:value];
     };
+    
+    self.rewindButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
+           if (totaltouches > 1) {
+                [[ZEE5PlayerManager sharedInstance] hideCustomControls];
+                [[ZEE5PlayerManager sharedInstance] rewind:Counter];
+           }
+           
+       };
 }
 
 - (void)refreshRelatedList
@@ -135,15 +142,11 @@
     {
         [[ZEE5PlayerManager sharedInstance] play];
         [engine playerResumeAnalytics];
-        
-       
     }
     else
     {
         [[ZEE5PlayerManager sharedInstance] pause];
         [engine playerPauseAnalytics];
-  
-
     }
     
 }

@@ -250,6 +250,7 @@ fileprivate class DownloadProgressView: UIView {
 
         if self.downloadedItem.downloadState == .completed {
             self.circularRing.value = 100
+             AnalyticEngine.shared.downloadCompleteOrFail(with: downloadedItem)
         }
         else if estimatedBytes == 0 {
             self.circularRing.value = 0

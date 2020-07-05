@@ -15,7 +15,7 @@ enum SEEKBTN{
 public class TouchableButton: UIButton {
     
     var waitDuration: Double = 0.7   // change this for custom duration to reset after the sequential tap
-    @objc public var valueChanged: ((_ value:Int) -> Void)?  // set this to handle press of button
+    @objc public var valueChanged: ((_ value:Int, _ counter:Int) -> Void)?  // set this to handle press of button
     var minimumTouches: Int = 1      // set this to change number of minimum presses
     private var initialTimer: Timer?
     var counter = 0
@@ -128,15 +128,14 @@ public class TouchableButton: UIButton {
     }
     @objc func emptyTouchCount(){
         self.touches = 0
-        counter = 0
     }
     
     private var timer: Timer?
     
     @objc public func resetTap() {
-        // Making number of touches zero after the sequential tap and button gradient clear
+    // Making number of touches zero after the sequential tap and button gradient clear
     // Based on final touch, return the call back to player
-        valueChanged?(finalTouches)
+        valueChanged?(finalTouches,counter)
         self.touches = 0
         self.finalTouches = 0
         self.btnLabel.text = ""
@@ -156,8 +155,7 @@ public class TouchableButton: UIButton {
             if touches >= minimumTouches {
                 
                 if touches != 1 {
-                    
-                    pressed?(true)
+        
                     self.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
                     stackView.isHidden = false
                     if counter <= 10 {
@@ -165,6 +163,7 @@ public class TouchableButton: UIButton {
                     }else{
                         btnLabel.text = "\(counter - 10) Seconds"
                     }
+                    pressed?(true)
                     // setting the gradient of the button on two or more taps
 
                 }

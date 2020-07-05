@@ -214,13 +214,17 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }
 
     NSDictionary *dict = [[NSDictionary alloc] init];
-        
+    NSString *AdDuration = @"0";
+    
+    if (event.adInfo.duration > 0) {
+        AdDuration = [NSString stringWithFormat:@"%f",event.adInfo.duration];
+    }
     
     dict = @{
              @"assetName": event.adInfo.title,
              @"applicationName": Conviva_Application_Name,
              @"streamType": stremType,
-             @"duration": @"NA",
+             @"duration": AdDuration,
              @"streamUrl":@"NA" ,
              @"adPosition":[NSString stringWithFormat:@"%ld",(long)event.adInfo.adPosition],
              @"adId": event.adInfo.adId,
@@ -353,11 +357,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.allAdsCompleted block:^(PKEvent * _Nonnull event) {
-             [engine AdCompleteAnalytics];
+//             [engine AdCompleteAnalytics];
+//                [engine AdWatchDurationAnalytics]
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
          [engine AdCompleteAnalytics];
+        [engine AdWatchDurationAnalytics];
 
     }];
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {

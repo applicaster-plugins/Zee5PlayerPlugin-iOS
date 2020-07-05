@@ -82,6 +82,7 @@ public class DownloadHelper: NSObject {
                     if let config = config {
                         DispatchQueue.main.async {
                             DownloadHelper.shared.setupDownloadOptionMenu(with: config, data: data)
+                            AnalyticEngine.shared.PopUpLaunch(with: "Download Quality Pop Up")
                         }
                     }
                     else {
@@ -105,6 +106,7 @@ public class DownloadHelper: NSObject {
         catch {
             ZeeUtility.utility.console("Download video Error: \(error.localizedDescription)")
             self.showToast("Download video Error: \(error)")
+
         }
     }
     

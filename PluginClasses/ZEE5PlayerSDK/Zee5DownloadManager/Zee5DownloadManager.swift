@@ -196,6 +196,7 @@ public class Zee5DownloadManager {
             }
             else { // Good to go
                 try self.downloadingContent(id: id, videoItem: videoDetail)
+              
             }
         }
         catch {

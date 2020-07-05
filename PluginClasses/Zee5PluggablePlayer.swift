@@ -200,6 +200,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     public func stopAndDismiss() {
         ZEE5PlayerManager.sharedInstance().stop()
         ZEE5PlayerManager.sharedInstance().destroyPlayer()
+        AnalyticEngine.shared.VideoExitAnalytics()
         
         func resetContent() {
             self.currentPlayableItem = nil
