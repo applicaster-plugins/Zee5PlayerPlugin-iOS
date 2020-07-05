@@ -2143,7 +2143,7 @@ static ContentBuisnessType buisnessType;
         }
         [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateHybridViewOpenWithCompletion:^(BOOL isSuccees) {
             if (isSuccees) {
-                [self RefreshViewNotification];
+                [self postReloadCurrentContentIdNotification];
             }
         }];
     }
@@ -2156,7 +2156,7 @@ static ContentBuisnessType buisnessType;
 }
 -(void)LoginSuccess{
     [self hideUnHidetrailerEndView:true];
-    [self RefreshViewNotification];
+    [self postReloadCurrentContentIdNotification];
     
      [[NSNotificationCenter defaultCenter]removeObserver:self name:@"sign_in_or_successfully" object:nil];
 }
@@ -2199,7 +2199,7 @@ static ContentBuisnessType buisnessType;
              [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:true Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees){
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-            [self RefreshViewNotification];
+            [self postReloadCurrentContentIdNotification];
         }
     }];
             return;
@@ -2207,7 +2207,7 @@ static ContentBuisnessType buisnessType;
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_ModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
                 if (isSuccees) {
                 [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-                [self RefreshViewNotification];
+                [self postReloadCurrentContentIdNotification];
             }
                 }];
         
@@ -2215,7 +2215,7 @@ static ContentBuisnessType buisnessType;
         [[ZEE5PlayerDeeplinkManager sharedMethod]GetSubscrbtionWith:_LiveModelValues.assetType beforetv:false Param:@"Subscribe" completion:^(BOOL isSuccees) {
             if (isSuccees) {
                 [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-                [self RefreshViewNotification];
+                [self postReloadCurrentContentIdNotification];
             }
         }];
     }
@@ -2228,7 +2228,7 @@ static ContentBuisnessType buisnessType;
     [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-            [self RefreshViewNotification];
+            [self postReloadCurrentContentIdNotification];
             
         }
     }];
@@ -3218,7 +3218,7 @@ static ContentBuisnessType buisnessType;
         [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
             if (isSuccess) {
                 [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-                [self RefreshViewNotification];
+                [self postReloadCurrentContentIdNotification];
             }
         }];
         return;

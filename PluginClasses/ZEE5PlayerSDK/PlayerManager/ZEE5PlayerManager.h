@@ -62,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
 - (void)playLiveContentWithModel:(LiveContentDetails *)model;
 - (void)postContentIdShouldUpdateNotification:(NSString *)contentId;
+- (void)postReloadCurrentContentIdNotification;
+
 /*!
  * @discussion This method used to stop the video
  */
@@ -136,7 +138,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setWatchHistory:(NSInteger)duration;
 
 -(void)removeSubview;
--(void)RefreshViewNotification;
 -(void)HybridViewOpen;
 
 -(void)hideUnHideTopView:(BOOL )isHidden;
