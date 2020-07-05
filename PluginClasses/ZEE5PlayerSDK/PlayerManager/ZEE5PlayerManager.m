@@ -314,9 +314,7 @@ static ContentBuisnessType buisnessType;
     
 }
 -(void)LogoutDone{
-    
-    [_PreviousContentArray removeAllObjects];
-    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Array"];
+    //Here If any Method Called After Logout Then Use this Function
 }
 -(void)ContentidNotification:(NSString *)ContentId{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:ContentId userInfo:nil];
@@ -411,11 +409,11 @@ static ContentBuisnessType buisnessType;
     _customControlView.viewLive.hidden = !self.isLive;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
-    _customControlView.btnSkipPrev.hidden = true;
     _customControlView.btnSkipNext.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
     _customControlView.adultView.hidden = YES;
     _customControlView.parentalDismissView.hidden = YES;
+    _customControlView.btnSkipPrev.hidden = !_customControlView.btnSkipPrev.selected;
     [self SliderReset];
 
       [self hideUnHidetrailerEndView:true];
@@ -854,12 +852,24 @@ static ContentBuisnessType buisnessType;
     }
     else
     {
-        _customControlView.btnSkipNext.selected = false;
         if (_CreditTimer != nil) {
             return;
         }
         RelatedVideos *Model;
-        Model = self.currentItem.related[0];
+             if (self.currentItem.related.count == 1) {
+            Model = self.currentItem.related[0];
+             }else{
+               for (RelatedVideos *Object in self.currentItem.related) {
+                    if ([_PreviousContentArray containsObject:Object.identifier])
+                        {
+                        }
+                        else{
+                           Model = Object;
+                           break;
+                         }
+                    }
+             }
+
        
         [[ZEE5PlayerManager sharedInstance] playSimilarEvent:Model.identifier];
         [[ZEE5PlayerManager sharedInstance]playVODContent:Model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
@@ -1261,13 +1271,17 @@ static ContentBuisnessType buisnessType;
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponPrevButton)]) {
         [self.delegate didTaponPrevButton];
         [self pause];
+        _customControlView.btnSkipPrev.selected = YES;
         if (_PreviousContentArray.count>1) {
             for (int i = 0; i< _PreviousContentArray.count; i++) {
                 NSString *cId = [_PreviousContentArray objectAtIndex:i];
+                
                 if ([_currentItem.content_id isEqualToString:cId] && i != 0)
                 {
                     cId = [_PreviousContentArray objectAtIndex:i-1];
-                   
+                    if (i == 1) {
+                        _customControlView.btnSkipPrev.selected = false;
+                    }
                     [[ZEE5PlayerManager sharedInstance]playVODContent:cId country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
                                    
                                }];
@@ -1309,11 +1323,11 @@ static ContentBuisnessType buisnessType;
         }
         [[NSUserDefaults standardUserDefaults]setObject:_VideocountArray forKey:@"VideoCount"];
     }
-    if (ZEE5PlayerSDK.getConsumpruionType == Live == false) {
-        _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
-        
+    if (ZEE5PlayerSDK.getConsumpruionType == Live == false && _customControlView.btnSkipNext.selected == TRUE) {
+
+        _customControlView.btnSkipNext.selected = FALSE;
+         _customControlView.btnSkipPrev.hidden = FALSE;
         _isAllreadyAdded = false;
-        _PreviousContentArray = [[[NSUserDefaults standardUserDefaults]valueForKey:@"Array"]mutableCopy];
     
         if (_PreviousContentArray.count>10) {
             [_PreviousContentArray removeObjectAtIndex:0];
@@ -1322,26 +1336,17 @@ static ContentBuisnessType buisnessType;
         if (_PreviousContentArray == nil) {
             _PreviousContentArray = [[[NSMutableArray alloc]initWithObjects:_currentItem.content_id, nil]mutableCopy];
         }else{
-            
             for (NSString  *Contentid in _PreviousContentArray) {
                 if ([Contentid isEqualToString:_currentItem.content_id]) {
                     _isAllreadyAdded = TRUE;
                     break;
                 }
-                
             }
-            
         }
         if (_isAllreadyAdded == false && _PreviousContentArray != nil && _currentItem != nil){
             [_PreviousContentArray addObject:_currentItem.content_id];
         }
-       
-        [[NSUserDefaults standardUserDefaults]setObject:_PreviousContentArray forKey:@"Array"];
-       }
-    
-      if (_PreviousContentArray.count>2 && ! _isLive) {
-          _customControlView.btnSkipPrev.hidden = false;
-      }
+    }
 }
 -(void)tapOnMinimizeButton
 {
@@ -1395,6 +1400,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)tapOnShareButton
 {
+    [self pause];   ///// Player Pause Here
     NSArray *objectsToShare;
     NSURL *zeeShareUrl;
 
@@ -1407,11 +1413,10 @@ static ContentBuisnessType buisnessType;
     } else
     {
         zeeShareUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",VodShareUrl,_ModelValues.web_Url]];
-                       
     }
     
     objectsToShare = @[zeeShareUrl];
-    [self pause];   ///// Player Pause Here
+
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
     activityVC.popoverPresentationController.sourceView = self.viewPlayer;
@@ -1509,7 +1514,6 @@ static ContentBuisnessType buisnessType;
     if(!_videoCompleted && _isLive == false)
     {
         _customControlView.btnSkipNext.hidden = NO;
-        _customControlView.btnSkipPrev.hidden = NO;
     }
     _customControlView.lableSubTitle.hidden = NO;
     
@@ -2352,6 +2356,7 @@ static ContentBuisnessType buisnessType;
     _isStop = false;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
+    _PreviousContentArray = [[NSMutableArray alloc]initWithCapacity:13];
     self.viewPlayer = playbackView;
     [[AnalyticEngine shared]VideoStartTimeWith:0];
     [[AnalyticEngine shared]AudioLanguageWith:@""];
@@ -2380,6 +2385,7 @@ static ContentBuisnessType buisnessType;
     }
     else
     {
+         [_PreviousContentArray addObject:content_id];
         [self playVODContent:content_id country:country translation:laguage withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
             completionBlock(result, customData);
         }];
@@ -2395,6 +2401,7 @@ static ContentBuisnessType buisnessType;
     _watchCtreditSeconds = 10;
     
     self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
+    
     
     if (self.previousDuration != 0)
     {
@@ -2508,6 +2515,7 @@ static ContentBuisnessType buisnessType;
         NSString *ContentID = self.TvShowModel.Episodes[0].episodeId;
             if (![ContentID isKindOfClass:[NSNull class]] || ![ContentID isEqualToString:@"(NULL)"])
             {
+                [self.PreviousContentArray addObject:ContentID];
                 [self playVODContent:ContentID country:country translation:laguage withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
                     //completionBlock(result, customData);
                 }];
