@@ -2484,6 +2484,17 @@ static ContentBuisnessType buisnessType;
 }
 
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model {
+    _watchCtreditSeconds = 10;
+    
+    self.previousDuration = [[Zee5PlayerPlugin sharedInstance] getDuration];
+    
+    if (self.previousDuration != 0)
+    {
+        [self watchDuration:self.currentItem.content_id];
+    }
+    
+    self.isLive = NO;
+    
     _isStop = false;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
