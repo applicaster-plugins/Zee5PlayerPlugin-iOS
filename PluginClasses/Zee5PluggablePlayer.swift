@@ -200,9 +200,10 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         if let hybridViewController = self.hybridViewController {
+            resetContent()
+
             hybridViewController.dismiss(animated: true) {
                 hybridViewController.playable = nil
-                resetContent()
             }
         }
         else {
@@ -234,8 +235,10 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         func play() {
-            guard let playbackView = self.hybridViewController?.kalturaPlayerController?.view else {
-                return
+            guard
+                self.initialPlayableItem != nil,
+                let playbackView = self.hybridViewController?.kalturaPlayerController?.view else {
+                    return
             }
             
             ZEE5PlayerManager.sharedInstance().setPlaybackView(playbackView)
