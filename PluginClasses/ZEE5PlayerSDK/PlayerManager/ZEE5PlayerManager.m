@@ -2468,36 +2468,6 @@ static ContentBuisnessType buisnessType;
 
 }
 
-//MARK:- FetchTvShow Content API.
-
-- (void)fetchTvShow:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage;
-{
-    
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@", BaseUrls.TvShowContentDetail, content_id];
-    NSDictionary *param =@{@"country":country, @"translation":laguage};
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token": ZEE5UserDefaults.getPlateFormToken};
-    
-    
-    [[NetworkManager sharedInstance] makeHttpGetRequest:urlString requestParam:param requestHeaders:headers withCompletionHandler:^(id result)
-    {
-
-        self.TvShowModel = [tvShowModel initFromJSONDictionary:result];
-        NSString *ContentID = self.TvShowModel.Episodes[0].episodeId;
-            if (![ContentID isKindOfClass:[NSNull class]] || ![ContentID isEqualToString:@"(NULL)"])
-            {
-                [self.PreviousContentArray addObject:ContentID];
-                [self playVODContent:ContentID country:country translation:laguage withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                    //completionBlock(result, customData);
-                }];
-            }
-        }
-        failureBlock:^(ZEE5SdkError *error)
-     {
-        [self notifiyError:error];
-    }];
-    
-}
-
 // MARK:- Download Ad Config
 
 -(void)downLoadAddConfig:(SuccessHandler)success failureBlock:(FailureHandler)failure

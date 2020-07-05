@@ -263,10 +263,7 @@
         RelatedVideos *model = self.related[indexPath.row];
         
         [[ZEE5PlayerManager sharedInstance] playSimilarEvent:model.identifier];
-        
-        [[ZEE5PlayerManager sharedInstance] playVODContent:model.identifier country:ZEE5UserDefaults.getCountry translation:ZEE5UserDefaults.gettranslation withCompletionHandler:^(VODContentDetailsDataModel * _Nullable result, NSString * _Nullable customData) {
-                           //completionBlock(result, customData);
-                       }];
+        [[ZEE5PlayerManager sharedInstance] postContentIdShouldUpdateNotification:model.identifier];
     }];
 }
 

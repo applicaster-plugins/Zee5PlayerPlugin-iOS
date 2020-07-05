@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)downloadVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
 - (void)playLiveContentWithModel:(LiveContentDetails *)model;
-
+- (void)postContentIdShouldUpdateNotification:(NSString *)contentId;
 /*!
  * @discussion This method used to stop the video
  */

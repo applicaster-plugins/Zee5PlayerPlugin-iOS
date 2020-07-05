@@ -288,6 +288,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             }
         }
         
+        self.hybridViewController?.kalturaPlayerController?.showIndicator()
         prepareUserData()
     }
     
