@@ -2795,30 +2795,33 @@ static ContentBuisnessType buisnessType;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
     
-    if (_playerConfig.playerType == normalPlayer)
-    {
+    if (_playerConfig.playerType == normalPlayer) {
         [self downLoadAddConfig:^(id result) {
-
-            if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original ){
-                [self getNextEpisode];
-            }else
-            {
-              [self getVodSimilarContent];
-            }
-            if (ZEE5PlayerSDK.getConsumpruionType == Trailer)
-               {
-                   self.allowVideoContent = YES;
-                   [self playWithCurrentItem];
-               }else{
-                     [self getSubscrptionList];
-               }
+            void (^playContent)(void) = ^() {
+                if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
+                    self.allowVideoContent = YES;
+                    [self playWithCurrentItem];
+                }
+                else {
+                    [self getSubscrptionList];
+                }
+            };
             
+            if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
+                [self getNextEpisode:^{
+                    playContent();
+                }];
+            }
+            else {
+                [self getVodSimilarContent:^{
+                    playContent();
+                }];
+            }
         } failureBlock:^(ZEE5SdkError *error) {
            [self getSubscrptionList];
         }];
     }
-    else
-    {
+    else {
         self.playerConfig.showCustomPlayerControls = false;
     }
     
@@ -2854,7 +2857,6 @@ static ContentBuisnessType buisnessType;
     if (_playerConfig.playerType == normalPlayer)
     {
         [self downLoadAddConfig:^(id result) {
-            [self getVodSimilarContent];
             [self getSubscrptionList];
             
         } failureBlock:^(ZEE5SdkError *error) {
@@ -3033,55 +3035,57 @@ static ContentBuisnessType buisnessType;
 
 //MARK:- Similar Content For Playback
 
-- (void)getVodSimilarContent
-{
-    NSDictionary *param =@{@"user_type": ZEE5UserDefaults.getUserType,
-                           @"page":@"1",
-                           @"limit":@"25",
-                           @"translation":ZEE5UserDefaults.gettranslation,
-                           @"country":ZEE5UserDefaults.getCountry,
-                           @"languages":self.currentItem.audioLanguages
-                           };
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"Cache-Control":@"no-cache"};
+- (void)getVodSimilarContent:(void (^)(void))completion {
+    NSDictionary *param = @{
+        @"user_type": ZEE5UserDefaults.getUserType,
+        @"page":@"1",
+        @"limit":@"25",
+        @"translation":ZEE5UserDefaults.gettranslation,
+        @"country":ZEE5UserDefaults.getCountry,
+        @"languages":self.currentItem.audioLanguages
+    };
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls. vodSimilarContent,_currentItem.content_id] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
-     {
-         
+    NSDictionary *headers = @{
+        @"Content-Type": @"application/json",
+        @"X-Access-Token": ZEE5UserDefaults.getPlateFormToken,
+        @"Cache-Control":@"no-cache"
+    };
+    
+    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls. vodSimilarContent,_currentItem.content_id] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result) {
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kRefreshRelatedVideoList" object:nil];
-        
+        completion();
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
-        
+        completion();
     }];
-    
 }
 
 //MARK:- NextEpisode
 
-- (void)getNextEpisode
-{
-    NSDictionary *param =@{@"episode_id": _currentItem.content_id,
-                           @"page":@"1",
-                           @"limit":@"1",
-                           @"translation":ZEE5UserDefaults.gettranslation,
-                           @"country":ZEE5UserDefaults.getCountry,
-                           @"type":@"next"
-                           };
-    NSDictionary *headers = @{@"Content-Type":@"application/json",@"X-Access-Token":ZEE5UserDefaults.getPlateFormToken,@"Cache-Control":@"no-cache"};
+- (void)getNextEpisode:(void (^)(void))completion {
+    NSDictionary *param = @{
+        @"episode_id": _currentItem.content_id,
+        @"page":@"1",
+        @"limit":@"1",
+        @"translation":ZEE5UserDefaults.gettranslation,
+        @"country":ZEE5UserDefaults.getCountry,
+        @"type":@"next"
+    };
     
-    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls.getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result)
-     {
-         
+    NSDictionary *headers = @{
+        @"Content-Type": @"application/json",
+        @"X-Access-Token": ZEE5UserDefaults.getPlateFormToken,
+        @"Cache-Control":@"no-cache"
+    };
+    
+    [[NetworkManager sharedInstance] makeHttpGetRequest:[NSString stringWithFormat:@"%@/%@",BaseUrls.getNextContent,self.ModelValues.SeasonId] requestParam:param requestHeaders:headers withCompletionHandler:^(id  _Nullable result) {
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kRefreshRelatedVideoList" object:nil];
-        
-        
+        completion();
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
-        
+        completion();
     }];
 }
 
