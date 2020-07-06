@@ -23,8 +23,8 @@ class KalturaPlayerController: UIViewController {
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
 
     var currentDisplayMode: PlayerViewDisplayMode = .hidden
-    let container = UIView()
-    let activityLoader = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+    var loadingContainer: UIView!
+    var zeeActivityIndicator: Zee5ActivityLoader!
     let Singleton:SingletonClass
     
     var delegate: ZEE5PlayerDelegate?
@@ -40,8 +40,13 @@ class KalturaPlayerController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        view = PlaybackViewWithLoader()
+    }
+    
     override  func viewDidLoad() {
         super.viewDidLoad()
+        
         
         ZEE5PlayerManager.sharedInstance().delegate = self
         
@@ -73,43 +78,46 @@ class KalturaPlayerController: UIViewController {
     }
     
     public func showIndicator()  {
-        guard self.container.superview == nil else {
+        guard !self.isLoading() else {
             return
         }
+                
+        let loadingContainer = UIView()
+        self.loadingContainer = loadingContainer
         
-        container.frame = view.bounds
-        container.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
+        self.view.insertSubview(loadingContainer, at: max(self.view.subviews.count - 1, 0))
+
+        loadingContainer.fillParent()
+        loadingContainer.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
         
-        let loadingView: UIView = UIView()
-        loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-        loadingView.center = container.center
-        loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 20
-        activityLoader.center = CGPoint(x: loadingView.frame.size.width / 2,y : loadingView.frame.size.height / 2)
-        loadingView.addSubview(activityLoader)
-        container.addSubview(loadingView)
-        view.addSubview(container)
+        (self.view as? PlaybackViewWithLoader)?.overlay = loadingContainer
         
-        activityLoader.startAnimating()
+        let zeeActivityIndicator = Zee5ActivityLoader(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.zeeActivityIndicator = zeeActivityIndicator
+        
+        loadingContainer.addSubview(zeeActivityIndicator)
+
+        zeeActivityIndicator.centerInParent(size: CGSize(width: 40, height: 40))
+        zeeActivityIndicator.startAnimating()
+        
         checkForReachability()
         
-        if Singleton.viewsArray.contains(container) == false {
-            Singleton.viewsArray.add(container)
+        if Singleton.viewsArray.contains(loadingContainer) == false {
+            Singleton.viewsArray.add(loadingContainer)
         }
-        if Singleton.viewsArray.contains(loadingView) == false {
-            Singleton.viewsArray.add(loadingView)
-        }
-        if Singleton.viewsArray.contains(activityLoader) == false {
-            Singleton.viewsArray.add(activityLoader)
-        }
-        if Singleton.viewsArray.contains(view) == false {
-            Singleton.viewsArray.add(view)
+
+        if Singleton.viewsArray.contains(zeeActivityIndicator) == false {
+            Singleton.viewsArray.add(zeeActivityIndicator)
         }
     }
     
     public func hideIndicator()  {
-        container.removeFromSuperview()
-        activityLoader.stopAnimating()
+        self.loadingContainer?.removeFromSuperview()
+        self.zeeActivityIndicator?.stopAnimating()
+    }
+    
+    public func isLoading() -> Bool {
+        return self.loadingContainer?.superview != nil
     }
     
     @objc public func checkForReachability() {
@@ -184,5 +192,17 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     
     func showPlayerLoader() {
         self.showIndicator()
+    }
+}
+
+class PlaybackViewWithLoader: UIView {
+    var overlay: UIView?
+    
+    override func didAddSubview(_ subview: UIView) {
+        super.didAddSubview(subview)
+        
+        if let overlay = self.overlay {
+            self.bringSubviewToFront(overlay)
+        }
     }
 }
