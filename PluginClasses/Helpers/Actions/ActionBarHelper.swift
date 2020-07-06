@@ -26,7 +26,7 @@ class ActionBarHelper {
         
         builders.append(CastActionButtonBuilder.self)
 
-        if (consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .show || consumptionFeedType == .original || consumptionFeedType == .music || consumptionFeedType == .video) && (buisnessType == .premiumDownloadable || buisnessType == .freeDownloadable || buisnessType == .advertisementDownloadable) {
+        if (consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .show || consumptionFeedType == .original || consumptionFeedType == .music || consumptionFeedType == .video || consumptionFeedType == .episode) && (buisnessType == .premiumDownloadable || buisnessType == .freeDownloadable || buisnessType == .advertisementDownloadable) {
             builders.append(DownloadActionButtonBuilder.self)
         }
         
