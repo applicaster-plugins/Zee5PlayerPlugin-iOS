@@ -2182,6 +2182,12 @@ static ContentBuisnessType buisnessType;
         [_devicePopView removeFromSuperview];
         _devicePopView = nil;
     }else if (_parentalView != nil){
+        if (self.isParentalControlOffline == TRUE && _parentalControl == false) {
+            [_parentalView removeFromSuperview];
+            _parentalView = nil;
+            [self play];
+            return;
+        }
         [self CustomControlViewNew];
         [_parentalView removeFromSuperview];
         _parentalView = nil;
