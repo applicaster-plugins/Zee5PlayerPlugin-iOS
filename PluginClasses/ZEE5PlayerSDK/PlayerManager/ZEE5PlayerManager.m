@@ -824,8 +824,8 @@ static ContentBuisnessType buisnessType;
             if (duration > 0) {
                 _customControlView.sliderDuration.maximumValue = duration;
                 _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
-                [_customControlView.sliderDuration setMarkerAtPosition:100.0/_customControlView.sliderDuration.maximumValue];
-                [_customControlView.sliderDuration setMarkerAtPosition:200.0/_customControlView.sliderDuration.maximumValue];
+               // [_customControlView.sliderDuration setMarkerAtPosition:100.0/_customControlView.sliderDuration.maximumValue];
+              //  [_customControlView.sliderDuration setMarkerAtPosition:200.0/_customControlView.sliderDuration.maximumValue];
             }
         }
     }
@@ -2346,8 +2346,7 @@ static ContentBuisnessType buisnessType;
     [self SliderReset];
     
     [ZEE5UserDefaults setContentId:model.identifier];
-
-    [[AnalyticEngine new] cleanupVideoSesssion];
+    [[AnalyticEngine shared]cleanupVideoSesssion];
     
     [self registerNotifications];
     self.playerConfig = [[ZEE5PlayerConfig alloc] init];
