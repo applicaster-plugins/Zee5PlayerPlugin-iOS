@@ -1543,6 +1543,8 @@ static ContentBuisnessType buisnessType;
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
     [[AnalyticEngine shared]PlayerViewChangedWith:@"Portrait" newView:@"Landscape"];
     [self updateConvivaSessionWithMetadata: dict];
+    
+    [self.panDownGestureHandlerHelper didEnterLandscapeMode];
 }
 
 -(void)hideFullScreen
@@ -1585,6 +1587,8 @@ static ContentBuisnessType buisnessType;
           self.devicePopView.hidden =NO;
       }
     [[AnalyticEngine shared]PlayerViewChangedWith:@"Landscape" newView:@"Portrait"];
+    
+    [self.panDownGestureHandlerHelper didEnterPortraitMode];
 }
 
 //MARK:- Player Loader

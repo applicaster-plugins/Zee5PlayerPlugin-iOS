@@ -9,7 +9,10 @@
 #import "GestureHandlerHelper.h"
 
 @interface GestureHandlerHelper ()
-@property (nonatomic) BOOL allowOnPortraitModeOnly;
+
+@property (nonatomic) BOOL isInPortraitMode;
+@property (nonatomic) BOOL allowGestureHandler;
+
 @end
 
 @implementation GestureHandlerHelper
@@ -18,14 +21,16 @@
     if (self = [super init]) {
         _allowGestureHandler = YES;
         _gestureHandler = handler;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
-        _allowOnPortraitModeOnly = [[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait ? YES : NO;
     }
     return self;
 }
 
--(void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+- (void)didEnterLandscapeMode {
+    self.isInPortraitMode = NO;
+}
+
+- (void)didEnterPortraitMode {
+    self.isInPortraitMode = YES;
 }
 
 -(void)startAd {
@@ -37,29 +42,9 @@
 }
 
 -(void)execute {
-    if (self.gestureHandler && self.allowGestureHandler && self.allowOnPortraitModeOnly) {
+    if (self.gestureHandler && self.allowGestureHandler && self.isInPortraitMode) {
         self.gestureHandler();
     }
-}
-
-- (void) orientationChanged:(NSNotification *)note
-{
-    UIDevice * device = note.object;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            switch(device.orientation)
-            {
-                case UIDeviceOrientationPortrait :
-                    self.allowOnPortraitModeOnly = YES;
-                    break;
-                default:
-                    self.allowOnPortraitModeOnly = NO;
-                    break;
-            };
-        });
-        
-    });
 }
 
 @end
