@@ -1097,7 +1097,7 @@ public func VideoViewEvent()
                   Keys.POP_UP_CTAS.CAROUSAL_NAME ~>> notAppplicable,
                   Keys.POP_UP_CTAS.CAROUSAL_ID ~>> notAppplicable,
                   Keys.POP_UP_CTAS.TRACKING_MODE ~>> "Online",
-                  Keys.POP_UP_CTAS.POP_UP_NAMEstatic ~>> PopUpName == "" ? notAppplicable:PopUpName,
+                  Keys.POP_UP_CTAS.POP_UP_NAME ~>> PopUpName == "" ? notAppplicable:PopUpName,
                   Keys.POP_UP_CTAS.POP_UP_TYPE ~>> "native"
                 ]
             analytics.track(Events.POP_UP_CTAS, trackedProperties: parameter)
