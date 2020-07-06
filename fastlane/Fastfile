@@ -23,6 +23,7 @@ platform :ios do
     add_git_tag(tag: "#{version}")
     
     sh("git", "push")
+    sh("git", "push", "origin", "#{version}")
 
     sh("#{ENV['PWD']}/fastlane/scripts/publish_manifest.sh #{manifest}")
   end
