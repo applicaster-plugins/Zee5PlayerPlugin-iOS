@@ -1409,7 +1409,7 @@ static ContentBuisnessType buisnessType;
     if (_isLive){
         
         if (_LiveModelValues.title && _LiveModelValues.identifier != nil ){
-            NSString *Title = [_LiveModelValues.title stringByReplacingOccurrencesOfString:@"" withString:@"-"].lowercaseString;
+            NSString *Title = [_LiveModelValues.title stringByReplacingOccurrencesOfString:@" " withString:@"-"].lowercaseString;
             zeeShareUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@",LiveShareUrl,Title,_LiveModelValues.identifier]];
         }
     } else
