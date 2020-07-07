@@ -182,13 +182,22 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     public required init(configurationJSON: NSDictionary?) { }
     
     @objc public func handleUrlScheme(_ params: NSDictionary) {
-        guard let dsUrl = params["data_source"] as? String else {
+        guard
+            let dsUrlValue = params["data_source"] as? String,
+            let dsUrl = URL(string: dsUrlValue),
+            let components = URLComponents(url: dsUrl, resolvingAgainstBaseURL: false),
+            let queryItems = components.queryItems else {
+                return
+        }
+        
+        guard let contentId = queryItems.first(where: {$0.name == "id"})?.value else {
             return
         }
-                
+        
         let link = APAtomEntryPlayable()
+        link.identifier = contentId
         link.extensionsDictionary = [AnyHashable: String]()
-        link.extensionsDictionary["item_details_url"] = dsUrl
+        link.extensionsDictionary["item_details_url"] = dsUrlValue
         link.play()
     }
     
