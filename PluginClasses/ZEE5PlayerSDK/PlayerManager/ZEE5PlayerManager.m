@@ -1198,9 +1198,8 @@ static ContentBuisnessType buisnessType;
 
 -(void)setSeekTime:(NSInteger)value
 {
+       [self showloaderOnPlayer];
     __weak __typeof(self) weakSelf = self;
-   // [self showloaderOnPlayer];
-    
     int rounded = roundf([[Zee5PlayerPlugin sharedInstance] getDuration]);
     if(value == 0)
     {
