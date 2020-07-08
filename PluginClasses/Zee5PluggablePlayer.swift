@@ -70,7 +70,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
             }
             
-            if let overrideChromecastAppId = configuration["chromecast_app_id"] as? String {
+            if let overrideChromecastAppId = configuration["chromecast_app_id"] as? String, overrideChromecastAppId.count > 0 {
                 ChromeCastManager.shared.appId = overrideChromecastAppId
             }
         }
