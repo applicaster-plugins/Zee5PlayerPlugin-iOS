@@ -90,7 +90,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)replay;
 -(void)setMute:(BOOL)isMute;
 -(void)setLock:(BOOL)isLock;
+
 -(void)setFullScreen:(BOOL)isFull;
+-(void)showFullScreen;
+-(void)hideFullScreen;
+
 -(void)forward:(NSInteger)value;
 -(void)rewind:(NSInteger)value;
 -(void)setSeekTime:(NSInteger)value;

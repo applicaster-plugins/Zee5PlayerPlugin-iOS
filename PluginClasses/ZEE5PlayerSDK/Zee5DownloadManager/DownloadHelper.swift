@@ -28,22 +28,6 @@ public class DownloadHelper: NSObject {
         self.addItemToDownload(data: zItem)
     }
     
-    
-    @objc public func transition(to parentView: UIView?) {
-        guard
-            let currentDownloadOptionsView = self.currentDownloadOptionsView else {
-                return
-        }
-        
-        if let parentView = parentView {
-            parentView.addSubview(currentDownloadOptionsView)
-            currentDownloadOptionsView.fillParent()
-        }
-        else {
-            currentDownloadOptionsView.removeFromSuperview()
-        }
-    }
-    
     fileprivate func createVodData(with item: CurrentItem) -> (VODContentDetailsDataModel, String) {
         let data = VODContentDetailsDataModel()
         data.hlsUrl = item.hls_Url

@@ -22,7 +22,17 @@ internal enum PlayerViewDisplayMode : Int {
 class KalturaPlayerController: UIViewController {
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
 
-    var currentDisplayMode: PlayerViewDisplayMode = .hidden
+    public var currentDisplayMode: PlayerViewDisplayMode = .hidden {
+        didSet {
+            switch self.currentDisplayMode {
+            case .fullScreen:
+                ZEE5PlayerManager.sharedInstance().showFullScreen()
+            default:
+                ZEE5PlayerManager.sharedInstance().hideFullScreen()
+            }
+        }
+    }
+    
     var loadingContainer: UIView!
     var zeeActivityIndicator: Zee5ActivityLoader!
     let Singleton:SingletonClass
@@ -46,7 +56,6 @@ class KalturaPlayerController: UIViewController {
     
     override  func viewDidLoad() {
         super.viewDidLoad()
-        
         
         ZEE5PlayerManager.sharedInstance().delegate = self
         

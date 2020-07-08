@@ -22,7 +22,6 @@ class HybridViewController: UIViewController {
     
     var kalturaPlayerController: KalturaPlayerController?
     
-    public var isViewWillAppear = true
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
     
@@ -84,35 +83,16 @@ class HybridViewController: UIViewController {
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
   
-        guard let playerViewController = self.kalturaPlayerController else {
+        guard let kalturaPlayerController = self.kalturaPlayerController else {
             return
         }
-        
-        DownloadHelper.shared.transition(to: nil)
-        
-        let shareViwController = ZEE5PlayerManager.sharedInstance().currentShareViewController
-        if let shareViwController = shareViwController {
-            shareViwController.dismiss(animated: false)
-        }
-        
+
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
             switch newCollection.verticalSizeClass {
             case .compact:
-                playerViewController.changePlayer(displayMode: .fullScreen, parentViewController: self, viewContainer: self.playerView) {
-                    DownloadHelper.shared.transition(to: playerViewController.view)
-                    if let shareViwController = shareViwController {
-                        playerViewController.present(shareViwController, animated: false)
-                    }
-
-                }
+                kalturaPlayerController.currentDisplayMode = .fullScreen
             default:
-                playerViewController.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: self.playerView) {
-                    DownloadHelper.shared.transition(to: self.view)
-                    
-                    if let shareViwController = shareViwController {
-                        self.present(shareViwController, animated: false)
-                    }
-                }
+                kalturaPlayerController.currentDisplayMode = .inline
             }
         })
     }
@@ -139,17 +119,10 @@ class HybridViewController: UIViewController {
         
         self.addGradient()
         
+        self.addChildViewController(self.kalturaPlayerController, to: self.playerView)
         self.kalturaPlayerController?.delegate = self
-        
-        initKalturaPlayer()
-        
-        addGestureRecognizerHandler()
-    }
-    
-    func initKalturaPlayer() {
-        self.observer()
                 
-        kalturaPlayerConfiguration()
+        addGestureRecognizerHandler()
     }
     
     func commonInit() {
@@ -175,10 +148,6 @@ class HybridViewController: UIViewController {
     var originalPosition: CGPoint?
     var currentPositionTouched: CGPoint?
     
-    @objc func changePlayerDisplayToMini() {
-        //        self.playerViewController?.changePlayerDisplayMode(.mini)
-    }
-    
     @objc func panGestureAction(_ panGesture: UIPanGestureRecognizer) {
         let velocity = panGesture.velocity(in: view)
         let currentPositionTouched = panGesture.location(in: view)
@@ -187,16 +156,7 @@ class HybridViewController: UIViewController {
             let playerViewBottom = self.playerView?.bottom,
             currentPositionTouched.y < (playerViewBottom * 4/5) {
             closePlayer()
-            //            self.playerViewController?.changePlayerDisplayMode(.mini)
         }
-    }
-    
-    func observer() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(changePlayerDisplayToMini),
-                                               name: NSNotification.Name(rawValue: "chromecastPlayerWasMinimized"),
-                                               object: nil)
-        
     }
     
     // MARK:
@@ -241,21 +201,6 @@ class HybridViewController: UIViewController {
                  return
          }
         self.view.backgroundColor = color
-    }
-    
-    
-    public func kalturaPlayerConfiguration() {
-        guard
-            let playerView = self.playerView,
-            let kalturaPlayerController = self.kalturaPlayerController else {
-                return
-        }
-        
-        kalturaPlayerController.changePlayer(displayMode: .inline, parentViewController: self, viewContainer: playerView)
-    }
-    
-    public func updatePlayerConfiguration() {
-        self.kalturaPlayerConfiguration()
     }
     
     func closePlayer() {

@@ -151,7 +151,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         let animated = configuration?.animated ?? true
         
         if topmostViewController is HybridViewController {
-            hybridViewController.updatePlayerConfiguration()
             self.updateContent(contentId, force: true)
             
             completion?()

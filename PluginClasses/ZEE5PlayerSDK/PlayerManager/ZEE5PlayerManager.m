@@ -258,7 +258,6 @@ static ContentBuisnessType buisnessType;
         
         self.panGesture = [[UIPanGestureRecognizer alloc] init];
         
-        [self handleOrientations];
         [self handleTracks];
         
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
@@ -308,24 +307,18 @@ static ContentBuisnessType buisnessType;
 }
 
 //MARK:- Notification
--(void)registerNotifications
-{
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+
+-(void)registerNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didEnterForGround)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LogoutDone) name:@"ZPLoginProviderLoggedOut" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LogoutDone) name:@"ZPLoginProviderLoggedOut" object:nil];
 }
+
 -(void)LogoutDone{
     //Here If any Method Called After Logout Then Use this Function
 }
+
 -(void)postContentIdShouldUpdateNotification:(NSString *)ContentId {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentIdUpdatedNotification" object:nil userInfo:@{@"contentId": ContentId}];
 }
@@ -344,51 +337,6 @@ static ContentBuisnessType buisnessType;
         [self pause];
     } else {
     }
-}
-
--(void)didEnterForGround
-{
-    if ( ([[UIDevice currentDevice] orientation] ==  UIDeviceOrientationLandscapeLeft) || ([[UIDevice currentDevice] orientation] ==  UIDeviceOrientationLandscapeRight) )
-    {
-        [self showFullScreen];
-    }
-    else
-    {
-        [self hideFullScreen];
-    }
-}
-
-- (void) orientationChanged:(NSNotification *)note
-{
-    UIDevice * device = note.object;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            switch(device.orientation)
-            {
-                case UIDeviceOrientationLandscapeLeft :
-                    [self showFullScreen];
-                    
-                    break;
-                case  UIDeviceOrientationLandscapeRight:
-                    [self showFullScreen];
-                  
-                    break;
-                    
-                case UIDeviceOrientationPortrait :
-                    [self hideFullScreen];
-                   
-                    break;
-                case UIDeviceOrientationPortraitUpsideDown:
-                    [self hideFullScreen];
-                 
-                    break;
-                default:
-                    break;
-            };
-        });
-        
-    });
 }
 
 //MARK:- Add Controls to Player(Control View)
@@ -938,18 +886,6 @@ static ContentBuisnessType buisnessType;
 
 }
 
--(void)handleOrientations
-{
-    if (_playerConfig.shouldStartPlayerInLandScape)
-    {
-        [self showFullScreen];
-    }
-    else
-    {
-        [self didEnterForGround];
-    }
-}
-
 -(void)perfomAction
 {
     [self performSelector:@selector(hideCustomControls) withObject:nil afterDelay:HIDECONTROLSVALUE];
@@ -1145,7 +1081,6 @@ static ContentBuisnessType buisnessType;
     
     [_customControlView  removeFromSuperview];
     [self.kalturaPlayerView removeFromSuperview];
-    [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
 }
 
 -(void)replay
@@ -1217,24 +1152,16 @@ static ContentBuisnessType buisnessType;
     });
 }
 
-
-
--(void)setFullScreen:(BOOL)isFull
-{
-    if(isFull)
-    {
-        [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
-    }
-    else
-    {
-        [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait) forKey:@"orientation"];
-    }
+-(void)setFullScreen:(BOOL)isFull {
+    UIInterfaceOrientation value = isFull ? UIInterfaceOrientationLandscapeRight : UIInterfaceOrientationPortrait;
+    [[UIDevice currentDevice] setValue:@(value) forKey:@"orientation"];
 }
+
 -(void)setMute:(BOOL)isMute
 {
     [Zee5PlayerPlugin sharedInstance].player.volume = isMute ? 0.0 : 1.0;
-    
 }
+
 -(void)setWatchHistory:(NSInteger)duration
 {
     _PlayerStartTime = duration;    // Duration Get From WatchHistory Api Response.

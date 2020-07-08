@@ -38,7 +38,6 @@
 		4D9F317F2436352200C30A5A /* ZeeDownloadUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F402436352000C30A5A /* ZeeDownloadUtility.swift */; };
 		4D9F31802436352200C30A5A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D9F2F412436352000C30A5A /* Info.plist */; };
 		4D9F31812436352200C30A5A /* ContentClickApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F432436352000C30A5A /* ContentClickApi.m */; };
-		4D9F31822436352200C30A5A /* KalturaPlayerController+PlayerDisplayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F462436352000C30A5A /* KalturaPlayerController+PlayerDisplayMode.swift */; };
 		4D9F31832436352200C30A5A /* KalturaPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F472436352000C30A5A /* KalturaPlayerController.swift */; };
 		4D9F31842436352200C30A5A /* ZappZee5PlayerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F482436352000C30A5A /* ZappZee5PlayerAdapter.swift */; };
 		4D9F31852436352200C30A5A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F2F492436352000C30A5A /* Utils.swift */; };
@@ -529,7 +528,6 @@
 		4D9F2F412436352000C30A5A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D9F2F432436352000C30A5A /* ContentClickApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentClickApi.m; sourceTree = "<group>"; };
 		4D9F2F442436352000C30A5A /* ContentClickApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentClickApi.h; sourceTree = "<group>"; };
-		4D9F2F462436352000C30A5A /* KalturaPlayerController+PlayerDisplayMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KalturaPlayerController+PlayerDisplayMode.swift"; sourceTree = "<group>"; };
 		4D9F2F472436352000C30A5A /* KalturaPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KalturaPlayerController.swift; sourceTree = "<group>"; };
 		4D9F2F482436352000C30A5A /* ZappZee5PlayerAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZappZee5PlayerAdapter.swift; sourceTree = "<group>"; };
 		4D9F2F492436352000C30A5A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -1227,7 +1225,6 @@
 		4D9F2F452436352000C30A5A /* ApplicasterPlayerPlugin */ = {
 			isa = PBXGroup;
 			children = (
-				4D9F2F462436352000C30A5A /* KalturaPlayerController+PlayerDisplayMode.swift */,
 				4D9F2F472436352000C30A5A /* KalturaPlayerController.swift */,
 				4D9F2F482436352000C30A5A /* ZappZee5PlayerAdapter.swift */,
 				4D9F2F492436352000C30A5A /* Utils.swift */,
@@ -2678,7 +2675,6 @@
 				4D9F31DD2436352200C30A5A /* NSDictionary+Extra.m in Sources */,
 				4D9F31DC2436352200C30A5A /* ReportingManager.m in Sources */,
 				4D9F31B22436352200C30A5A /* Zee5CollectionCell.m in Sources */,
-				4D9F31822436352200C30A5A /* KalturaPlayerController+PlayerDisplayMode.swift in Sources */,
 				4D9F31702436352200C30A5A /* UICircularRingLayer.swift in Sources */,
 				4D9F31D82436352200C30A5A /* comScoreAnalytics.m in Sources */,
 				4D9F31812436352200C30A5A /* ContentClickApi.m in Sources */,
