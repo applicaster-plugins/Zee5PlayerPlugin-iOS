@@ -212,6 +212,7 @@
 - (IBAction)ForgotPinoutlet:(id)sender
 {
     [[ZEE5PlayerManager sharedInstance]removeSubview];
+    [self AddNotification:@"ForgotPIN"];
     [[ZEE5PlayerDeeplinkManager new]NavigatetoParentalViewPage];
 }
 
