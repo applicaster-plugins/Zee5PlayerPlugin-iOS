@@ -78,7 +78,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     
-    if ((textField.text.length <1) && (string.length > 0))
+    if ((textField.text.length <=1) && (string.length > 0))
     {
         NSInteger nextTag = textField.tag + 1;
         // Try to find next responder
@@ -161,9 +161,9 @@
 
 - (IBAction)showHideAction:(id)sender
 {
-    if ([_showhideOutlet.currentTitle isEqualToString:@"Show Pin"])
+    if ([_showhideOutlet.currentTitle isEqualToString:@"Show PIN"])
     {
-        [_showhideOutlet setTitle:@"Hide Pin" forState:UIControlStateNormal];
+        [_showhideOutlet setTitle:@"Hide PIN" forState:UIControlStateNormal];
         _textPin.secureTextEntry = NO;
         _textPin2.secureTextEntry =NO;
         _textPin3.secureTextEntry =NO;
@@ -172,7 +172,7 @@
     }
     else
     {
-        [_showhideOutlet setTitle:@"Show Pin" forState:UIControlStateNormal];
+        [_showhideOutlet setTitle:@"Show PIN" forState:UIControlStateNormal];
         _textPin.secureTextEntry = YES;
          _textPin2.secureTextEntry = YES;
         _textPin3.secureTextEntry = YES;
