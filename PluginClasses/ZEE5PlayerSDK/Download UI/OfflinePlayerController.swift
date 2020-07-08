@@ -157,7 +157,11 @@ protocol OfflineVideoDurationDelegate: class {
                  playerOffline.play()
                  parentalView.removeFromSuperview()
                
-            }else{
+            }else if userPIn == "ForgotPIN"{
+                NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidShowNotification, object: nil)
+                 parentalView.removeFromSuperview()
+            }
+            else{
                 Zee5ToastView .showToastAboveKeyboard(withMessage: "Please Enter Correct Pin!")
             }
         }
@@ -176,6 +180,8 @@ protocol OfflineVideoDurationDelegate: class {
                 }
                 if ParentalPin != "" && Agerating != "" {
                     parentalLogic()
+                }else{
+                     isparentalPin = false
                 }
             }
     }
@@ -251,8 +257,6 @@ protocol OfflineVideoDurationDelegate: class {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
-        
-
     }
     
     @objc public func canRotate() -> Void {}
@@ -425,8 +429,14 @@ extension OfflinePlayerController {
         }
         else {
             if isparentalPin == true {
-                self.parentalControlshow()
-                return
+                 checkParentalSet()
+                if isparentalPin == true {
+                    self.parentalControlshow()
+                    return
+                }else{
+                    let value = UIInterfaceOrientation.landscapeRight.rawValue
+                    UIDevice.current.setValue(value, forKey: "orientation")
+                }
             }
             btnPlay.isSelected = true
             self.playerOffline.play()
