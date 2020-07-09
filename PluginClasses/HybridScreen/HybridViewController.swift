@@ -120,6 +120,7 @@ class HybridViewController: UIViewController {
         self.addGradient()
         
         self.addChildViewController(self.kalturaPlayerController, to: self.playerView)
+        self.kalturaPlayerController?.currentDisplayMode = .inline
         self.kalturaPlayerController?.delegate = self
                 
         addGestureRecognizerHandler()

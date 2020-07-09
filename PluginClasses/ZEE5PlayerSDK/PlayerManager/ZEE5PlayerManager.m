@@ -430,7 +430,6 @@ static ContentBuisnessType buisnessType;
     _customControlView.backtoPartnerView.hidden = YES;
     
     [_customControlView forwardAndRewindActions];
-   // [self showAllControls];
     [self showloaderOnPlayer];
     [self MoatViewAdd];
     [self LocalStorageArray];
