@@ -158,11 +158,11 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
     }
     
     func didTaponMinimizeButton() {
-        if self.currentDisplayMode == .inline {
-            self.delegate?.didFinishPlaying?()
+        if self.currentDisplayMode == .fullScreen {
+            ZEE5PlayerManager.sharedInstance().setFullScreen(false)
         }
         else {
-            ZEE5PlayerManager.sharedInstance().setFullScreen(false)
+            self.delegate?.didFinishPlaying?()
         }
     }
     
