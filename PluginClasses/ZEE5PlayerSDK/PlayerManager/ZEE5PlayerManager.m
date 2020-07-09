@@ -434,9 +434,6 @@ static ContentBuisnessType buisnessType;
     [self MoatViewAdd];
     [self LocalStorageArray];
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
-    if (UIDevice.currentDevice.orientation == UIInterfaceOrientationPortrait ) {
-        [self hideFullScreen];
-    }
 }
 
 
