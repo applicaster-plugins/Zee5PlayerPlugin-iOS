@@ -30,6 +30,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     fileprivate var setInitialContentIdNotificationToken: Any?
     fileprivate var subscriptionEnabledNotificationToken: Any?
 
+    // for debug only, set a value here to always use this content id
+    fileprivate var debugOverrideContentId: String? = ""
+    
     // MARK: - Lifecycle
     
     public required init?(pluginModel: ZPPluginModel, screenModel: ZLScreenModel, dataSourceModel: NSObject?) {
@@ -238,6 +241,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     }
     
     func updateContent(_ contentId: String, force: Bool = false) {
+        var contentId = contentId
+        
+        // for debug only
+        if let overrideContentId = self.debugOverrideContentId, overrideContentId.count > 0 {
+            contentId = overrideContentId
+            ZEE5PlayerManager.sharedInstance().showToastMessage("Override content id: " + contentId)
+        }
+        
         guard force || !self.playerAdapter.sessionHasEqual(contentId: contentId) else {
             return
         }
