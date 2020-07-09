@@ -81,7 +81,6 @@ public class AnalyticEngine: NSObject {
     {
         ConvivaAnalytics.shared.cleanupSession()
         VideWatchInt = 0
-        
     }
     
     @objc public func updateMetadata(with data: NSDictionary)
@@ -110,12 +109,10 @@ public class AnalyticEngine: NSObject {
     }
     
     @objc public func cleanupAdSession() {
+        ConvivaAnalytics.shared.EndAdSession()
         ConvivaAnalytics.shared.cleanupAdSession()
     }
-    
-    
-    
-    
+
     // MARK:- Mixpanel Player Events
     
     @objc public func CurrentItemData(with data: CurrentItem)
@@ -149,7 +146,7 @@ public class AnalyticEngine: NSObject {
     
     @objc public func watchCreditsAnalytics(with StartTime: NSString)
       {
-       // AllAnalyticsClass.shared.watchCredit(with: StartTime)
+        AllAnalyticsClass.shared.watchCredit(with: StartTime)
       }
     
     @objc public func playerPauseAnalytics()

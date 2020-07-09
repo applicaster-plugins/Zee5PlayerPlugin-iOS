@@ -23,6 +23,8 @@ public class ConvivaAnalytics: NSObject {
     public var playerStateManager: CISPlayerStateManagerProtocol?
     
     // Ad Events
+    private var zeeAdPlayer: Player?
+    private var zeeAdInterface: PlayerInterface?
     private var adSessionId: Int32? = NO_SESSION_KEY
     private var adStateManager: CISPlayerStateManagerProtocol?
     
@@ -89,8 +91,9 @@ public class ConvivaAnalytics: NSObject {
             self.client?.reportError(sessionID, errorMessage: ErrorMsg as String, errorSeverity:ConvivaSeverity)
             
        if Severity == 0 {
-            self.client?.cleanupSession(sessionID)
-                   }
+            cleanupSession()
+            cleanupAdSession()
+            }
         }
 
     }
@@ -271,7 +274,7 @@ extension ConvivaAnalytics {
             let streamType = data.value(forKey: "streamType") as? String
             let streamUrl = data.value(forKey: "streamUrl") as? String
             let duration = data.value(forKey: "duration") as? Int
-            
+            var adPosition = AdPosition.ADPOSITION_PREROLL
             let adMetadata = CISContentMetadata()
             adMetadata.assetName = assetName
             adMetadata.applicationName = applicationName
@@ -279,11 +282,28 @@ extension ConvivaAnalytics {
             adMetadata.streamUrl = streamUrl
             adMetadata.duration = duration ?? 1
             
+            if ((tags.value(forKey: "c3.ad.position") as? String) == "Mid-roll") {
+                adPosition = AdPosition.ADPOSITION_MIDROLL
+            }else if ((tags.value(forKey: "c3.ad.position") as? String) == "Post-roll"){
+                adPosition = AdPosition.ADPOSITION_POSTROLL
+            }
+            
             let dict: NSMutableDictionary = NSMutableDictionary.init(dictionary: tags)
             adMetadata.custom = dict
             
             self.adSessionId = self.client?.createAdSession(sessionId, adMetadata: adMetadata)
+            
+            if let sessionId = self.adSessionId {
+                self.client?.adStart(sessionId, adStream: AdStream.ADSTREAM_CONTENT, adPlayer: AdPlayer.ADPLAYER_SEPARATE, adPosition:adPosition)
+            }
+           
             ZeeUtility.utility.console("|******** Ad Session Created: \(String(describing: self.adSessionId)) ********|")
+        }
+    }
+    
+    public func EndAdSession(){
+        if let SessionId = self.adSessionId {
+            self.client?.adEnd(SessionId)
         }
     }
     
@@ -334,6 +354,7 @@ extension ConvivaAnalytics {
     
     public func setupAdPlayerInterface() {
         if self.client != nil {
+            self.createAdplayerInstance()
             if self.adStateManager == nil {
                 self.adStateManager = self.client?.getPlayerStateManager()
                 //  Attach player for monitoring Ad session
@@ -343,13 +364,32 @@ extension ConvivaAnalytics {
                     ZeeUtility.utility.console("||*** Attach Ad Player: \(sessionId)) ***||")
                 }
             }
+             self.createAdPlayerInterfaceInstance()
         }
     }
+    // Create Player Instance
+    private func createAdplayerInstance() {
+        if self.zeeAdPlayer == nil
+        {
+            self.zeeAdPlayer = Zee5PlayerPlugin.sharedInstance().player
+        }
+    }
+    private func createAdPlayerInterfaceInstance()
+       {
+           if self.zeeAdInterface == nil {
+               if let stateManager = self.adStateManager, let player = self.zeeAdPlayer
+               {
+                self.zeeAdInterface = PlayerInterface(playerStateManger: stateManager, player: player)
+               }
+           }
+       }
     
     public func cleanupAdSession() {
         if let sessionId = self.adSessionId {
             self.client?.cleanupSession(sessionId)
             self.adSessionId = NO_SESSION_KEY
+            self.zeeAdPlayer = nil
+            self.zeeAdInterface = nil
             
             if self.adStateManager != nil {
                 self.client?.releasePlayerStateManager(self.adStateManager)

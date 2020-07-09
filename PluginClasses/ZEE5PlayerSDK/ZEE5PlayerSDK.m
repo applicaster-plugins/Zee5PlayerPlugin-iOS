@@ -48,7 +48,7 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 +(void)setupConvivaAnalytics
 {
     EventManager *eventManager = [[EventManager alloc] init];
-    [eventManager setConvivaConfigurationWithCustomerKey: convivaCustomerKey gatewayUrl: convivaGatewayUrl];
+    [eventManager setConvivaConfigurationWithCustomerKey: touchConvivaCustomerKey gatewayUrl: touchConvivaGatewayUrl];
 }
 
 // MARK:- ComScoreAnalytics Setup
