@@ -174,27 +174,30 @@ class ZeePlayable {
         return result
     }
     
-    public var firstEpisode: Episode? {
+    public var latestEpisode: Episode? {
         guard let seasons = self.extensions[ExtensionsKey.seasons] as? [DefaultDict] else {
             return nil
         }
         
-        for season in seasons {
-            guard season["index"] as? Int == 1 else {
-                continue
-            }
-            
-            if let episodes = season["episodes"] as? [DefaultDict] {
-                for episode in episodes {
-                    if episode["index"]  as? Int == 1 {
-                        return Episode(contentId: episode["id"] as? String, title: episode["title"] as? String)
-                    }
-                }
-            }
+        let latestSeason = seasons.max { (season1, season2) -> Bool in
+            let season1Index = season1["index"] as? Int ?? 0
+            let season2Index = season2["index"] as? Int ?? 0
+
+            return season1Index < season2Index
         }
         
-        return nil
+        let latestEpisode = (latestSeason?["episodes"] as? [DefaultDict])?.max { (episode1, episode2) -> Bool in
+            let episode1Index = episode1["index"] as? Int ?? 0
+            let episode2Index = episode2["index"] as? Int ?? 0
+            
+            return episode1Index < episode2Index
+        }
 
+        guard let result = latestEpisode else {
+            return nil
+        }
+        
+        return Episode(contentId: result["id"] as? String, title: result["title"] as? String)
     }
     
     public var releaseDate: String? {
