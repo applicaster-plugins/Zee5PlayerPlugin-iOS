@@ -69,23 +69,34 @@ class ZeePlayable {
                     return .original
                 }
             }
-
+            
             return .video
-
+            
         case "video":
-            if let genres = self.extensions[ExtensionsKey.genres] as? [DefaultDict] {
-                for genre in genres {
-                    if let value = genre["value"] as? String, value.lowercased() == "music" {
-                        return .music
-                    }
+            guard let genres = self.extensions[ExtensionsKey.genres] as? [DefaultDict] else {
+                return .video
+            }
+            
+            for genre in genres {
+                guard let value = genre["value"] as? String else {
+                    continue
+                }
+                
+                switch value.lowercased() {
+                case "music":
+                    return .music
+                case "news":
+                    return .news
+                default:
+                    break
                 }
             }
             
-            return .video
-            
         default:
-            return .video
+            break
         }
+        
+        return .video
     }
     
     public var isFree: Bool {

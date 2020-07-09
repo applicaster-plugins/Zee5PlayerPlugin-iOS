@@ -55,7 +55,7 @@ class InfoTextBuilder {
         case .news:
             add(playable.owner)
             add(playable.genre)
-            addDate(playable.published)
+            addDate(playable.releaseDate)
             addDuration(playable.duration)
         
         case .music:
@@ -120,14 +120,14 @@ class InfoTextBuilder {
     
     fileprivate func formatDate(value: String) -> String? {
         let inputDateFormatter = DateFormatter()
-        inputDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        inputDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         
         guard let date = inputDateFormatter.date(from: value) else {
             return nil
         }
         
         let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "dd MMMM yyyy"
+        outputDateFormatter.dateFormat = "dd MMM, HH:mm z"
         
         return outputDateFormatter.string(from: date)
     }
