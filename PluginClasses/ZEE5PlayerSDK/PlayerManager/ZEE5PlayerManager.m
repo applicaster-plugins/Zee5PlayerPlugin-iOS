@@ -367,6 +367,7 @@ static ContentBuisnessType buisnessType;
     _customControlView.viewVod.hidden = self.isLive;
     _customControlView.skipIntro.hidden = self.isLive;
     _customControlView.btnSkipNext.hidden = _isLive;
+    _customControlView.MenuBtn.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
     _customControlView.adultView.hidden = YES;
     _customControlView.parentalDismissView.hidden = YES;
@@ -1454,10 +1455,10 @@ static ContentBuisnessType buisnessType;
     
     CGRect frame = [UIScreen mainScreen].bounds;
     _customControlView.forwardButton.frame = CGRectMake(frame.size.width - 200, 0, 200, frame.size.height);
-    
     _customControlView.rewindButton.frame = CGRectMake(0, 0, 200, frame.size.height);
     
-    
+      _customControlView.forwardButton.enabled = !_isLive;
+      _customControlView.rewindButton.enabled = !_isLive;
     _customControlView.backtoPartnerView.hidden = YES;
 
     
@@ -1493,6 +1494,8 @@ static ContentBuisnessType buisnessType;
 
     _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 150, 0, 150, self.kalturaPlayerView.frame.size.height);
     _customControlView.rewindButton.frame = CGRectMake(0, 0, 150, self.kalturaPlayerView.frame.size.height);
+    _customControlView.forwardButton.enabled = !_isLive;
+    _customControlView.rewindButton.enabled = !_isLive;
     
     
     if (_isTelco == true)
