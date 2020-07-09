@@ -430,11 +430,13 @@ static ContentBuisnessType buisnessType;
     _customControlView.backtoPartnerView.hidden = YES;
     
     [_customControlView forwardAndRewindActions];
-   // [self showAllControls];
     [self showloaderOnPlayer];
     [self MoatViewAdd];
     [self LocalStorageArray];
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
+    if (UIDevice.currentDevice.orientation == UIInterfaceOrientationPortrait ) {
+        [self hideFullScreen];
+    }
 }
 
 
