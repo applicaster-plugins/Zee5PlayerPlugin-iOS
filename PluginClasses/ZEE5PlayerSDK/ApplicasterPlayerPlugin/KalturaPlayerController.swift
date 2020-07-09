@@ -24,12 +24,7 @@ class KalturaPlayerController: UIViewController {
 
     public var currentDisplayMode: PlayerViewDisplayMode = .hidden {
         didSet {
-            switch self.currentDisplayMode {
-            case .fullScreen:
-                ZEE5PlayerManager.sharedInstance().showFullScreen()
-            default:
-                ZEE5PlayerManager.sharedInstance().hideFullScreen()
-            }
+            self.updateDisplayMode()
         }
     }
     
@@ -38,6 +33,15 @@ class KalturaPlayerController: UIViewController {
     let Singleton:SingletonClass
     
     var delegate: ZEE5PlayerDelegate?
+    
+    public func updateDisplayMode() {
+        switch self.currentDisplayMode {
+        case .fullScreen:
+            ZEE5PlayerManager.sharedInstance().showFullScreen()
+        default:
+            ZEE5PlayerManager.sharedInstance().hideFullScreen()
+        }
+    }
     
     // MARK: - Lifecycle
     

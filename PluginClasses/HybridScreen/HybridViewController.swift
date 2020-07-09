@@ -131,6 +131,8 @@ class HybridViewController: UIViewController {
             return
         }
         
+        self.kalturaPlayerController?.updateDisplayMode()
+        
         self.stylesConfiguration()
         
         self.itemNameLabel.text = playable.title
