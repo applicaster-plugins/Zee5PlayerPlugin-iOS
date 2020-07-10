@@ -90,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)bactoPartnetAppAction:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *parentalDismissView;
 
+@property (weak, nonatomic) IBOutlet UIButton *MenuBtn;
 - (IBAction)parentalPlayBtn:(UIButton *)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerControlView;
 - (IBAction)upNextAction:(id)sender;

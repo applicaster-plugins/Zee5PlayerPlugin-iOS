@@ -96,6 +96,8 @@
     };
     self.forwardButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
         if (totaltouches > 1) {
+            if (Counter == 0){
+                Counter = 10;}
              [[ZEE5PlayerManager sharedInstance] hideCustomControls];
              [[ZEE5PlayerManager sharedInstance] forward:Counter];
         }
@@ -121,6 +123,8 @@
     
     self.rewindButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
            if (totaltouches > 1) {
+               if (Counter == 0){
+                   Counter = 10;}
                 [[ZEE5PlayerManager sharedInstance] hideCustomControls];
                 [[ZEE5PlayerManager sharedInstance] rewind:Counter];
            }

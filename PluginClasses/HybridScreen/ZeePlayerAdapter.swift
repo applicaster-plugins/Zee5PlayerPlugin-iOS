@@ -270,8 +270,8 @@ fileprivate class TvShowPlaybackSession: BasePlaybackSession, BasePlaybackSessio
             let showPlayable = ZeePlayable(response)
             
             guard
-                let firstEpisode = showPlayable.firstEpisode,
-                let episodeContentId = firstEpisode.contentId else {
+                let latestEpisode = showPlayable.latestEpisode,
+                let episodeContentId = latestEpisode.contentId else {
                     return
             }
             
