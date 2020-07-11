@@ -117,6 +117,14 @@ class HybridViewController: UIViewController {
         self.kalturaPlayerController?.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.playable == nil {
+            self.kalturaPlayerController.showIndicator()
+        }
+    }
+    
     func commonInit() {
         guard let playable = self.playable else {
             return
@@ -189,18 +197,7 @@ class HybridViewController: UIViewController {
         
         playerManager.stopAndDismiss()
     }
-    
-    // MARK: Video Loading View
-    
-    public func videoLoadingView() -> (UIView & APLoadingView)? {
-        var loadingView: (UIView & APLoadingView)?
-        
-        if let videoLoadingView = (Bundle(for: HybridViewController.self).loadNibNamed("Zee5VideoLoadingView", owner: self, options: nil)?.first) {
-            loadingView = videoLoadingView as? UIView & APLoadingView
-        }
-        return loadingView
-    }
-    
+
     fileprivate func addGradient() {
         let gradientLayer = CAGradientLayer()
 

@@ -251,12 +251,10 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         func play() {
             guard
-                self.initialPlayableItem != nil,
-                let playbackView = self.hybridViewController?.kalturaPlayerController?.view else {
+                self.initialPlayableItem != nil else {
                     return
             }
             
-            ZEE5PlayerManager.sharedInstance().setPlaybackView(playbackView)
             self.playerAdapter.startSession(contentId)
         }
         
@@ -303,7 +301,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             }
         }
         
-        self.hybridViewController?.kalturaPlayerController?.showIndicator()
         prepareUserData()
     }
     
