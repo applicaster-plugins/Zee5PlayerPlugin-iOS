@@ -89,10 +89,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.playerAdapter.delegate = instance
             
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
-            
-            let playerViewController = KalturaPlayerController()
-            instance.hybridViewController?.kalturaPlayerController = playerViewController
-                        
             instance.addPlayerObservers()
         }
         

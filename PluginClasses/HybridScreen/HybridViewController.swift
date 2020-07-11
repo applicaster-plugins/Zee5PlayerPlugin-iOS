@@ -19,8 +19,8 @@ class HybridViewController: UIViewController {
     
     var configurationJSON: NSDictionary?
     public var pluginStyles: [String : Any]?
-    
-    var kalturaPlayerController: KalturaPlayerController?
+   
+    fileprivate let kalturaPlayerController = KalturaPlayerController()
     
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
@@ -82,17 +82,13 @@ class HybridViewController: UIViewController {
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
-  
-        guard let kalturaPlayerController = self.kalturaPlayerController else {
-            return
-        }
 
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
             switch newCollection.verticalSizeClass {
             case .compact:
-                kalturaPlayerController.currentDisplayMode = .fullScreen
+                self.kalturaPlayerController.currentDisplayMode = .fullScreen
             default:
-                kalturaPlayerController.currentDisplayMode = .inline
+                self.kalturaPlayerController.currentDisplayMode = .inline
             }
         })
     }
@@ -126,7 +122,7 @@ class HybridViewController: UIViewController {
             return
         }
         
-        self.kalturaPlayerController?.updateDisplayMode()
+        self.kalturaPlayerController.updateDisplayMode()
         
         self.stylesConfiguration()
         
@@ -176,14 +172,13 @@ class HybridViewController: UIViewController {
             self.creatorsDataSource = creatorsDataSource
         }
     }
-    
-    
-    func stylesConfiguration() {
         
+    func stylesConfiguration() {
         guard let buttonsBackgroundStyle = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: "LayoutGenericListItemBGColor"),
-             let color = buttonsBackgroundStyle["color"] as? UIColor else {
-                 return
-         }
+            let color = buttonsBackgroundStyle["color"] as? UIColor else {
+                return
+        }
+        
         self.view.backgroundColor = color
     }
     

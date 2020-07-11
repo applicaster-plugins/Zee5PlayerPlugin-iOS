@@ -72,7 +72,7 @@ class KalturaPlayerController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         ZEE5PlayerManager.sharedInstance().playbackcheck()
     }
-        
+    
     private func addNotifiactonObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(wentForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
