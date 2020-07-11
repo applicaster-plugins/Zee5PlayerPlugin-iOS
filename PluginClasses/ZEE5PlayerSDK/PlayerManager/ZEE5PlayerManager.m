@@ -173,6 +173,8 @@ static ContentBuisnessType buisnessType;
         [[PlayKitManager sharedInstance] registerPlugin:IMAPlugin.self];
         
         sharedManager.allowMinimizeDuringAds = NO;
+        
+        sharedManager.panDownGestureHandlerHelper = [[GestureHandlerHelper alloc] init];
     });
     
     return sharedManager;
@@ -958,7 +960,6 @@ static ContentBuisnessType buisnessType;
                 if (isVerticalGesture) {
                     if (velocity.y > 0) {
                         direction = UIPanGestureRecognizerDirectionDown;
-                        [self.panDownGestureHandlerHelper execute];
                     } else {
                         direction = UIPanGestureRecognizerDirectionUp;
                     }
@@ -993,6 +994,14 @@ static ContentBuisnessType buisnessType;
         }
             
         case UIGestureRecognizerStateEnded: {
+            if (direction == UIPanGestureRecognizerDirectionDown) {
+                if ([self.panDownGestureHandlerHelper isAllowed]) {
+                    [self tapOnMinimizeButton];
+                }
+                else {
+                    [self handleDownwardsGesture:sender];
+                }
+            }
             direction = UIPanGestureRecognizerDirectionUndefined;
             break;
         }
@@ -1448,7 +1457,6 @@ static ContentBuisnessType buisnessType;
     self.customControlView.con_height_topBar.constant = TOPBARHEIGHT;
     self.customControlView.con_bottom_liveView.constant = 30;
     
-    self.panGesture.enabled = (self.customControlView.buttonLiveFull.selected && !_customControlView.topView.hidden && [AppConfigManager sharedInstance].config.isSimilarVideos);
     self.customControlView.collectionView.hidden = ![AppConfigManager sharedInstance].config.isSimilarVideos;
     _customControlView.con_top_collectionView.constant = 10;
     
@@ -1487,7 +1495,6 @@ static ContentBuisnessType buisnessType;
     self.customControlView.con_height_topBar.constant = 0;
     self.customControlView.con_bottom_liveView.constant = 10;
     
-    self.panGesture.enabled = (self.customControlView.buttonLiveFull.selected && !_customControlView.topView.hidden && [AppConfigManager sharedInstance].config.isSimilarVideos);
     self.customControlView.collectionView.hidden = YES;
     _customControlView.con_top_collectionView.constant = 10;
 
@@ -3361,14 +3368,6 @@ static ContentBuisnessType buisnessType;
         [_customMenu reloadDataWithObjects:models : true];
         [[[UIApplication sharedApplication] keyWindow] addSubview:_customMenu];
 
-}
-
--(void)setPanDownGestureHandler:(GestureHandler)panDownGestureHandler {
-    if (self.panDownGestureHandlerHelper == nil) {
-        self.panDownGestureHandlerHelper = [[GestureHandlerHelper alloc] initWithGestureHandler: panDownGestureHandler];
-    } else {
-        self.panDownGestureHandlerHelper.gestureHandler = panDownGestureHandler;
-    }
 }
 
 @end

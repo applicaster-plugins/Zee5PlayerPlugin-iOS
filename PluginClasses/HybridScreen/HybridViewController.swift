@@ -114,16 +114,11 @@ class HybridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-        self.playerView.addGestureRecognizer(panGestureRecognizer)
-        
         self.addGradient()
         
         self.addChildViewController(self.kalturaPlayerController, to: self.playerView)
         self.kalturaPlayerController?.currentDisplayMode = .inline
         self.kalturaPlayerController?.delegate = self
-                
-        addGestureRecognizerHandler()
     }
     
     func commonInit() {
@@ -147,21 +142,7 @@ class HybridViewController: UIViewController {
         
         self.metadataViewContainer.isHidden = false
     }
-    
-    var originalPosition: CGPoint?
-    var currentPositionTouched: CGPoint?
-    
-    @objc func panGestureAction(_ panGesture: UIPanGestureRecognizer) {
-        let velocity = panGesture.velocity(in: view)
-        let currentPositionTouched = panGesture.location(in: view)
         
-        if velocity.y >= 0,
-            let playerViewBottom = self.playerView?.bottom,
-            currentPositionTouched.y < (playerViewBottom * 4/5) {
-            closePlayer()
-        }
-    }
-    
     // MARK:
     
     func setupDataSources() {
@@ -274,10 +255,6 @@ class HybridViewController: UIViewController {
         self.mainCollectionViewContainer.removeAllSubviews()
         
         self.metadataViewContainer.isHidden = true
-    }
-    
-    private func addGestureRecognizerHandler() {
-        ZEE5PlayerManager.sharedInstance().setPanDownGestureHandler(closePlayer)
     }
 }
 

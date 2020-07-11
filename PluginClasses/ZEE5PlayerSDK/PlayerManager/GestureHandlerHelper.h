@@ -12,9 +12,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GestureHandlerHelper : NSObject
-@property (nonatomic, copy) GestureHandler gestureHandler;
-
--(instancetype)initWithGestureHandler:(GestureHandler)handler;
 
 -(void)didEnterLandscapeMode;
 -(void)didEnterPortraitMode;
@@ -22,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)startAd;
 -(void)endAd;
 
--(void)execute;
+-(BOOL)isAllowed;
 
 @end
 
