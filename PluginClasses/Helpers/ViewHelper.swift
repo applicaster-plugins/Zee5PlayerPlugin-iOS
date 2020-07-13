@@ -85,13 +85,15 @@ import Foundation
         self.trailingAnchor.constraint(lessThanOrEqualTo: view.leadingAnchor).isActive = true
     }
     
-    public func anchorToTopLeft(inset: CGFloat) {
+    public func anchorToTopLeft(inset: CGFloat, size: CGSize) {
         guard let parent = self.superview else {
             return
         }
         
         self.translatesAutoresizingMaskIntoConstraints = false
         
+        self.widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
         self.topAnchor.constraint(equalTo: parent.topAnchor, constant: inset).isActive = true
         self.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: inset).isActive = true
     }

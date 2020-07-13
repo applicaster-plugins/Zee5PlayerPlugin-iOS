@@ -85,8 +85,6 @@
     
     self.forwardButton = [[TouchableButton alloc] initWithTitle:@"Forward" imageName:@"3" seekBtn:@"Forward"];
     [self insertSubview:self.forwardButton atIndex:1];
-//    [self sendSubviewToBack:self.forwardButton];
-    
     
     self.forwardButton.singleTouch = ^(BOOL  touch)
     {
@@ -107,12 +105,8 @@
     };
     
     [self.rewindButton removeFromSuperview];
-    
     self.rewindButton = [[TouchableButton alloc] initWithTitle:@"Rewind" imageName:@"N" seekBtn:@"Rewind"];
-    
     [self insertSubview:self.rewindButton atIndex:1];
-//    [self sendSubviewToBack:self.rewindButton];
-    
     
     self.rewindButton.singleTouch = ^(BOOL  touch) {
         [weakSelf.rewindButton resetViews];

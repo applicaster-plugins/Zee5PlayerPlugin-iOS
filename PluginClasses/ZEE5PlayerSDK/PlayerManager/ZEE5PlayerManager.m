@@ -92,7 +92,7 @@
 @property(nonatomic) NSString *CurrentAudioTrack;
 @property(nonatomic) NSString *CurrenttextTrack;
 
-
+@property(nonatomic) BOOL isLoaderShowing;
 @property(nonatomic) BOOL isLive;
 @property(nonatomic) BOOL videoCompleted;
 @property(nonatomic) BOOL isAllreadyAdded;
@@ -129,6 +129,7 @@
 
 @property(nonatomic) Boolean seekStared;
 
+@property (nonatomic, assign) BOOL isFullScreenMode;
 
 @property(strong, nonatomic) GestureHandlerHelper *panDownGestureHandlerHelper;
 @end
@@ -171,9 +172,7 @@ static ContentBuisnessType buisnessType;
         [UIFont jbs_registerFontWithFilenameString:@"NotoSans-SemiBold.ttf" bundle:bundel];
         
         [[PlayKitManager sharedInstance] registerPlugin:IMAPlugin.self];
-        
-        sharedManager.allowMinimizeDuringAds = NO;
-        
+                
         sharedManager.panDownGestureHandlerHelper = [[GestureHandlerHelper alloc] init];
     });
     
@@ -188,7 +187,7 @@ static ContentBuisnessType buisnessType;
     }
     
     if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
-        [self CustomControlViewNew];
+        [self showLockedContentControls];
         return;
     }
     
@@ -212,26 +211,7 @@ static ContentBuisnessType buisnessType;
     }
     
     self.kalturaPlayerView = [[PlayerView alloc] init];
-    [self.parentPlaybackView addSubview:self.kalturaPlayerView];
-    
-    if (self.allowMinimizeDuringAds) { // For debug only
-        UIButton *skipAdsButton = [[UIButton alloc] init];
-        skipAdsButton.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.parentPlaybackView addSubview:skipAdsButton];
-            
-        [[skipAdsButton.heightAnchor constraintEqualToConstant:30] setActive:YES];
-        [[skipAdsButton.widthAnchor constraintEqualToConstant:100] setActive:YES];
-        [skipAdsButton anchorToTopLeftWithInset:10];
-
-        skipAdsButton.backgroundColor = UIColor.blackColor;
-        skipAdsButton.titleLabel.textColor = UIColor.whiteColor;
-        
-        [skipAdsButton setTitle:@"Minimize" forState:UIControlStateNormal];
-        
-        [skipAdsButton setTapHandlerWithHandler:^{
-            [self tapOnMinimizeButton];
-        }];
-    }
+    [self.parentPlaybackView insertSubview:self.kalturaPlayerView belowSubview:self.customControlView];
     
     self.kalturaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.kalturaPlayerView matchParent];
@@ -244,22 +224,12 @@ static ContentBuisnessType buisnessType;
     }
     
     [self getBase64StringwithCompletion:^(NSString *base64) {
-        if (self.playerConfig.showCustomPlayerControls) {
-            [self addCustomControls];
-            self.customControlView.buttonPlay.selected = true;
-        }
-        else {
-            [self addMuteViewToPlayer];
-        }
-        
         if (self.currentItem == nil) {
             return;
         }
         
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
-        
-        self.panGesture = [[UIPanGestureRecognizer alloc] init];
-        
+                
         [self handleTracks];
         
         if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
@@ -344,6 +314,10 @@ static ContentBuisnessType buisnessType;
 //MARK:- Add Controls to Player(Control View)
 -(void)addCustomControls
 {
+    if (self.customControlView != nil) {
+        return;
+    }
+    
      _watchHistorySecond = 0;
     /************************************/
     /////  Array of Playeback Rate
@@ -352,122 +326,67 @@ static ContentBuisnessType buisnessType;
     
     self.playBackRate = Rate;
        
-    NSBundle *bundel = [NSBundle bundleForClass:self.class];
-    
-    if(_customControlView != nil )
-    {
-        [_customControlView.sliderLive animateToolTipFading:NO];
-    }
-    if(_customControlView == nil)
-    {
-        _customControlView = [[bundel loadNibNamed:@"ZEE5CustomControl" owner:self options:nil] objectAtIndex:0];
-    }
-    _customControlView.frame = CGRectMake(0, 0, self.parentPlaybackView.frame.size.width, self.parentPlaybackView.frame.size.height);
-    _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _customControlView.playerControlView.hidden = YES;
-    _customControlView.viewLive.hidden = !self.isLive;
-    _customControlView.viewVod.hidden = self.isLive;
-    _customControlView.skipIntro.hidden = self.isLive;
-    _customControlView.btnSkipNext.hidden = _isLive;
-    _customControlView.MenuBtn.hidden = _isLive;
-    _customControlView.related = self.currentItem.related;
-    _customControlView.adultView.hidden = YES;
-    _customControlView.parentalDismissView.hidden = YES;
-    _customControlView.btnSkipPrev.hidden = !_customControlView.btnSkipPrev.selected;
-    [self SliderReset];
+    NSBundle *bundle = [NSBundle bundleForClass:self.class];
 
-      [self hideUnHidetrailerEndView:true];
+    [_customControlView.sliderLive animateToolTipFading:NO];
+
+    // temporal bypass to get the view, must refactor the xib structure
+    NSArray *nib = [bundle loadNibNamed:@"ZEE5CustomControl" owner:self options:nil];
+                  
+    _customControlView = [nib objectAtIndex:0];
+    _customControlView.accessibilityLabel = @"ZEE5CustomControl";
+
+    UIButton *minimizeButton = [nib objectAtIndex:1];
+
+    [self.parentPlaybackView addSubview:_customControlView];
+    [_customControlView fillParent];
     
-    if (_currentItem.related.count == 1)
-    {
-         RelatedVideos *model = self.currentItem.related[0];
-        _customControlView.nextEpisodename.text = model.title;
+    [self.parentPlaybackView addSubview:minimizeButton];
+    [minimizeButton anchorToTopLeftWithInset:0 size:CGSizeMake(60, 55)];
     
-        [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
-        
-           dispatch_async(dispatch_get_global_queue(0,0), ^{
-               NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];
-               if ( data == nil )
-                   return;
-               dispatch_async(dispatch_get_main_queue(), ^{
-                   [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
-               });
-           });
-    }
-    if (self.isLive) {
-        _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];
-        _customControlView.sliderLive.userInteractionEnabled = NO;
-        if (_endTime == 0) {
-            [self refreshLabel];
-        }
-        else
-        {
-           // _customControlView.labelLiveDuration.text = [Utility convertEpochToTime:_endTime];
-        }
-    }
-    else
-    {
-        if (_currentItem.channel_Name.length!=0)
-        {
-             _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.channel_Name];
-        }
-    }
-    
-    
-    [self.kalturaPlayerView addSubview:_customControlView];
-    _tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnPlayer)];
+    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnPlayer)];
     _tapGesture.delegate = self;
     [_tapGesture setDelaysTouchesBegan : YES];
     _tapGesture.numberOfTapsRequired = 1;
+    _tapGesture.cancelsTouchesInView = NO;
 
-    [_customControlView addGestureRecognizer:_tapGesture];
+    [self.parentPlaybackView addGestureRecognizer:_tapGesture];
     
     _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePanGesture:)];
-    [_customControlView addGestureRecognizer:_panGesture];
+    [self.parentPlaybackView addGestureRecognizer:_panGesture];
+    _panGesture.cancelsTouchesInView = NO;
+
+    self.parentPlaybackView.accessibilityLabel = @"ParentPlaybackView";
     
     [Zee5PlayerPlugin sharedInstance].player.view.multipleTouchEnabled   = NO;
     [Zee5PlayerPlugin sharedInstance].player.view.userInteractionEnabled = YES;
     
-    _customControlView.collectionView.hidden = YES;
-    _customControlView.backtoPartnerView.hidden = YES;
-    
-    [_customControlView forwardAndRewindActions];
-    [self showloaderOnPlayer];
     [self MoatViewAdd];
     [self LocalStorageArray];
+    
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
+    
+    [self resetControls];
 }
 
-
--(void)CustomControlViewNew{
-    NSBundle *bundel = [NSBundle bundleForClass:self.class];
+-(void)showLockedContentControls {
     [self hideLoaderOnPlayer];
-    if (self.kalturaPlayerView != nil) {
-             [self.kalturaPlayerView removeFromSuperview];
-         }
-    if(_customControlView == nil)
-       {
-           _customControlView = [[bundel loadNibNamed:@"ZEE5CustomControl" owner:self options:nil] objectAtIndex:0];
-       }
-       _customControlView.frame = CGRectMake(0, 0, self.parentPlaybackView.frame.size.width, self.parentPlaybackView.frame.size.height);
-       _customControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.parentPlaybackView addSubview:self.customControlView];
     
-    _customControlView.parentalDismissView.hidden = true;
-    _customControlView.adultView.hidden = true;
-    _customControlView.trailerEndView.hidden = true;
+    _customControlView.parentalDismissView.hidden = YES;
+    _customControlView.adultView.hidden = YES;
+    _customControlView.trailerEndView.hidden = YES;
 
-   if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false)
-            {
-                _customControlView.adultView.hidden = NO;
-                return;
-            }
-    if (_parentalControl == YES) {
-        _customControlView.parentalDismissView.hidden = false;
+    if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
+        _customControlView.adultView.hidden = NO;
+        return;
     }
     
-    if (_isNeedToSubscribe == true) {
-       [self hideUnHidetrailerEndView:false];
+    if (_parentalControl == YES) {
+        _customControlView.parentalDismissView.hidden = NO;
+    }
+    
+    if (_isNeedToSubscribe) {
+        [self hideUnHidetrailerEndView:NO];
         return;
     }
 }
@@ -509,37 +428,17 @@ static ContentBuisnessType buisnessType;
     
 }
 
--(void)addMuteViewToPlayer
-{
-    NSBundle *bundel = [NSBundle bundleForClass:self.class];
-    if(_muteView == nil)
-    {
-        _muteView = [[bundel loadNibNamed:@"Zee5MuteView" owner:self options:nil] objectAtIndex:0];
-    }
-    _muteView.frame = CGRectMake(0, 0, [Zee5PlayerPlugin sharedInstance].player.view.frame.size.width, [Zee5PlayerPlugin sharedInstance].player.view.frame.size.height);
-    _muteView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    if ([self.currentItem.asset_subtype isEqualToString:@"episode"])
-    {
-        _muteView.lblTitle.text = self.currentItem.channel_Name;
-        NSString *date = [Utility convertFullDateToDate:self.currentItem.release_date];
-        _muteView.lblEpisode.text = [NSString stringWithFormat:@"E%ld | %@", (long)self.currentItem.episode_number, date];
-    }
-    else
-    {
-        _muteView.lblTitle.text = self.currentItem.channel_Name;
-        _muteView.lblEpisode.text = @"";
-    }
-    [Zee5PlayerPlugin sharedInstance].player.volume = 0.0;
-    [[Zee5PlayerPlugin sharedInstance].player.view addSubview:_muteView];
-}
-
-
 -(void)hideUnHideTopView:(BOOL )isHidden
 {
+    _customControlView.btnMinimize.hidden = isHidden;
+
+    if (self.currentItem == nil) {
+        isHidden = YES;
+    }
+    
     _customControlView.viewTop.hidden = isHidden;
     _customControlView.topView.hidden = isHidden;
-    _customControlView.playerControlView.hidden = isHidden;
-    _customControlView.btnMinimize.hidden = isHidden;
+    _customControlView.playerControlView.hidden = self.isLoaderShowing || isHidden;
     if (!self.isLive)
     {
         _customControlView.viewVod.hidden = isHidden;
@@ -557,7 +456,6 @@ static ContentBuisnessType buisnessType;
 -(void)hideCustomControls
 {
     [self hideUnHideTopView:YES];
-    self.panGesture.enabled = false;
 }
 
 
@@ -565,9 +463,9 @@ static ContentBuisnessType buisnessType;
 {
     _customControlView.trailerEndView.hidden = isHidden;
     _customControlView.stackLoginView.hidden = isHidden;
-    [self stop];
-    if (ZEE5PlayerSDK.getUserTypeEnum == Guest== false) {
-        _customControlView.stackLoginView.hidden = true;
+
+    if (ZEE5PlayerSDK.getUserTypeEnum != Guest) {
+        _customControlView.stackLoginView.hidden = YES;
     }
     
 }
@@ -613,6 +511,10 @@ static ContentBuisnessType buisnessType;
 
 -(void)onTimeChange:(PKEvent *)event
 {
+    if (self.currentItem == nil) {
+        return;
+    }
+    
     CGFloat floored = floor([event.currentTime doubleValue]);
     NSInteger totalSeconds = (NSInteger) floored;
     [[AnalyticEngine shared]VideoWatchPercentCalcWith:@"Forward"];
@@ -674,7 +576,14 @@ static ContentBuisnessType buisnessType;
             _customControlView.skipIntro.hidden = YES;
         
         }
-        _customControlView.labelTotalDuration.text = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
+        
+        NSString *duration = [Utility getDuration:[[Zee5PlayerPlugin sharedInstance] getDuration] total:[[Zee5PlayerPlugin sharedInstance] getDuration]];
+        if (duration != nil && [duration length] > 0) {
+            _customControlView.labelTotalDuration.text = duration;
+        }
+        else {
+            _customControlView.labelTotalDuration.text = nil;
+        }
         
         _customControlView.sliderDuration.maximumValue = [[Zee5PlayerPlugin sharedInstance] getDuration];
         
@@ -749,7 +658,6 @@ static ContentBuisnessType buisnessType;
 -(void)onBuffring
 {
     [self showloaderOnPlayer];
-    _customControlView.playerControlView.hidden = YES;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 }
@@ -899,7 +807,8 @@ static ContentBuisnessType buisnessType;
 {
     
     [_customControlView.sliderDuration animateToolTipFading:NO];
-    if (_customControlView.topView.hidden)
+
+    if (_customControlView.btnMinimize.hidden)
     {
         [self hideUnHideTopView:NO];
     }
@@ -908,19 +817,16 @@ static ContentBuisnessType buisnessType;
         [self hideUnHideTopView:YES];
     }
 
-    
-    
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     if (_customControlView.buttonPlay.selected) {
         if (!_customControlView.topView.hidden) {
             [self perfomAction];
         }
-        
     }
-    self.panGesture.enabled = (self.customControlView.buttonLiveFull.selected && !_customControlView.topView.hidden && [AppConfigManager sharedInstance].config.isSimilarVideos);
-    _customControlView.con_top_collectionView.constant = 10;
     
+    _customControlView.con_top_collectionView.constant = 10;
 }
+
 -(void)removeMenuView
 {
     if(_customMenu != nil)
@@ -1085,11 +991,14 @@ static ContentBuisnessType buisnessType;
     _audioTracks = nil;
     _offlineLanguageTracks = nil;
     self.LiveModelValues = nil;
+    self.ModelValues = nil;
     self.posterImageView.image = nil;
     self.allowVideoContent = false;
     
-    [_customControlView  removeFromSuperview];
     [self.kalturaPlayerView removeFromSuperview];
+    self.kalturaPlayerView = nil;
+    
+    [self resetControls];
 }
 
 -(void)replay
@@ -1288,15 +1197,9 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnMinimizeButton
 {
     [[ReportingManager sharedInstance] startReportingWatchHistory];
-    if (self.customControlView.buttonFullScreen.selected == YES) {
-        [self hideFullScreen];
-    }else{
-         [self stop];
-        [_customControlView removeFromSuperview];
-    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
-       
     }
 }
 
@@ -1327,6 +1230,7 @@ static ContentBuisnessType buisnessType;
 -(void)SliderReset{
     _customControlView.sliderDuration.value = 0;
     _customControlView.labelCurrentTime.text = @"00:00";
+    _customControlView.labelTotalDuration.text = nil;
 }
 
 -(void)tapOnGoLiveButton
@@ -1428,15 +1332,22 @@ static ContentBuisnessType buisnessType;
     }
     return 0;
 }
+
 -(void)showAllControls
 {
-    BOOL fullScreen = !self.customControlView.buttonLiveFull.selected;
     _customControlView.buttonReplay.hidden = YES;
-    _customControlView.playerControlView.hidden = NO;
+    
+    [self hideUnHideTopView:NO];
 }
 
 -(void)showFullScreen
 {
+    self.isFullScreenMode = YES;
+    
+    if (_customControlView == nil) {
+        return;
+    }
+    
     [_customControlView.sliderDuration animateToolTipFading:NO];
     _customControlView.sliderLive.fullScreen = YES;
     [_customControlView.sliderLive updateToolTipView];
@@ -1460,20 +1371,17 @@ static ContentBuisnessType buisnessType;
     self.customControlView.collectionView.hidden = ![AppConfigManager sharedInstance].config.isSimilarVideos;
     _customControlView.con_top_collectionView.constant = 10;
     
-    CGRect frame = [UIScreen mainScreen].bounds;
-    _customControlView.forwardButton.frame = CGRectMake(frame.size.width - 200, 0, 200, frame.size.height);
-    _customControlView.rewindButton.frame = CGRectMake(0, 0, 200, frame.size.height);
-    
-      _customControlView.forwardButton.enabled = !_isLive;
-      _customControlView.rewindButton.enabled = !_isLive;
+    _customControlView.forwardButton.enabled = !_isLive;
+    _customControlView.rewindButton.enabled = !_isLive;
     _customControlView.backtoPartnerView.hidden = YES;
 
     
-    if ( self.devicePopView!=nil ||self.parentalView!=nil)
+    if (self.devicePopView != nil ||self.parentalView != nil)
     {
         self.devicePopView.hidden =YES;
         self.parentalView.hidden =YES;
     }
+    
     NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
     [[AnalyticEngine shared]PlayerViewChangedWith:@"Portrait" newView:@"Landscape"];
     [self updateConvivaSessionWithMetadata: dict];
@@ -1483,6 +1391,12 @@ static ContentBuisnessType buisnessType;
 
 -(void)hideFullScreen
 {
+    self.isFullScreenMode = NO;
+
+    if (_customControlView == nil) {
+        return;
+    }
+    
     _customControlView.sliderLive.fullScreen = NO;
     [_customControlView.sliderLive animateToolTipFading:NO];
     [_customControlView.sliderDuration animateToolTipFading:NO];
@@ -1498,18 +1412,15 @@ static ContentBuisnessType buisnessType;
     self.customControlView.collectionView.hidden = YES;
     _customControlView.con_top_collectionView.constant = 10;
 
-    _customControlView.forwardButton.frame = CGRectMake(_customControlView.frame.size.width - 150, 0, 150, self.kalturaPlayerView.frame.size.height);
-    _customControlView.rewindButton.frame = CGRectMake(0, 0, 150, self.kalturaPlayerView.frame.size.height);
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
-    
     
     if (_isTelco == true)
     {
         _customControlView.backtoPartnerView.hidden = false;
         _customControlView.partnerLblTxt.text = _TelcoMsg;
     }
-    ////
+
     NSDictionary *dict = @{@"viewingMode" : @"Portrait"};
     [self updateConvivaSessionWithMetadata: dict];
     
@@ -1517,25 +1428,127 @@ static ContentBuisnessType buisnessType;
     {
         self.parentalView.hidden = NO;
     }
+
     if (self.devicePopView!=nil)
-      {
-          self.devicePopView.hidden =NO;
-      }
+    {
+        self.devicePopView.hidden =NO;
+    }
+
     [[AnalyticEngine shared]PlayerViewChangedWith:@"Landscape" newView:@"Portrait"];
     
     [self.panDownGestureHandlerHelper didEnterPortraitMode];
 }
 
+- (void)resetControls {
+    _customControlView.btnMinimize.hidden = YES;
+    
+    _customControlView.viewTop.hidden = YES;
+    _customControlView.topView.hidden = YES;
+    _customControlView.playerControlView.hidden = YES;
+
+    _customControlView.collectionView.hidden = YES;
+    _customControlView.backtoPartnerView.hidden = YES;
+    
+    _customControlView.adultView.hidden = YES;
+    _customControlView.parentalDismissView.hidden = YES;
+    _customControlView.btnSkipPrev.hidden = YES;
+    
+    [_customControlView forwardAndRewindActions];
+    
+    _customControlView.viewLive.hidden = YES;
+    _customControlView.viewVod.hidden = YES;
+    _customControlView.skipIntro.hidden = YES;
+    _customControlView.btnSkipNext.hidden = YES;
+    _customControlView.MenuBtn.hidden = YES;
+        
+    [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
+
+    _customControlView.lableTitle.text = nil;
+
+    [self hideUnHidetrailerEndView:YES];
+    [self SliderReset];
+    [self removeSubview];
+}
+
+- (void)updateControlsForCurrentItem {
+    if (self.currentItem == nil) {
+        return;
+    }
+    
+    if (singleton.isAdStarted) {
+        _customControlView.hidden = YES;
+        return;
+    }
+    
+    _customControlView.hidden = NO;
+    
+    _customControlView.viewLive.hidden = !self.isLive;
+    _customControlView.viewVod.hidden = self.isLive;
+    _customControlView.skipIntro.hidden = self.isLive;
+    _customControlView.btnSkipNext.hidden = _isLive;
+    _customControlView.MenuBtn.hidden = _isLive;
+    _customControlView.related = self.currentItem.related;
+    
+    if (_currentItem.related.count == 1)
+    {
+        RelatedVideos *model = self.currentItem.related[0];
+        _customControlView.nextEpisodename.text = model.title;
+        
+        [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
+        
+        dispatch_async(dispatch_get_global_queue(0,0), ^{
+            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];
+            if ( data == nil )
+                return;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
+            });
+        });
+    }
+    
+    if (self.isLive) {
+        _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];
+        _customControlView.sliderLive.userInteractionEnabled = NO;
+        if (_endTime == 0) {
+            [self refreshLabel];
+        }
+        else
+        {
+            // _customControlView.labelLiveDuration.text = [Utility convertEpochToTime:_endTime];
+        }
+    }
+    else
+    {
+        if (_currentItem.channel_Name.length!=0)
+        {
+            _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.channel_Name];
+        }
+    }
+    
+    if (self.isFullScreenMode) {
+        [self showFullScreen];
+    }
+    else {
+        [self hideFullScreen];
+    }
+}
+
 //MARK:- Player Loader
 
 -(void)showloaderOnPlayer{
+    self.isLoaderShowing = YES;
+    self.customControlView.playerControlView.hidden = YES;
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(showPlayerLoader)]) {
-           [self.delegate showPlayerLoader];
-       }
+        [self.delegate showPlayerLoader];
+    }
+    
 }
 
 -(void)hideLoaderOnPlayer{
     
+    self.isLoaderShowing = NO;
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(hidePlayerLoader)]) {
         [self.delegate hidePlayerLoader];
     }
@@ -1543,16 +1556,20 @@ static ContentBuisnessType buisnessType;
 
 -(void)startAd {
     [self.panDownGestureHandlerHelper startAd];
-     singleton.isAdPause = FALSE;
-     singleton.isAdStarted = TRUE;
+     singleton.isAdPause = NO;
+     singleton.isAdStarted = YES;
+    
+    [self updateControlsForCurrentItem];
 }
 
 -(void)endAd {
     [self.panDownGestureHandlerHelper endAd];
-     singleton.isAdStarted = FALSE;
+     singleton.isAdStarted = NO;
+    
+    [self updateControlsForCurrentItem];
 }
 -(void)pauseAd {
-    singleton.isAdPause = TRUE;
+    singleton.isAdPause = YES;
 }
 
 -(void)ShowToastMessage:(NSString *)Message{
@@ -2127,7 +2144,7 @@ static ContentBuisnessType buisnessType;
             [self play];
             return;
         }
-        [self CustomControlViewNew];
+
         [_parentalView removeFromSuperview];
         _parentalView = nil;
     }
@@ -2562,35 +2579,32 @@ static ContentBuisnessType buisnessType;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
     
-    if (_playerConfig.playerType == normalPlayer) {
-        [self downLoadAddConfig:^(id result) {
-            void (^playContent)(void) = ^() {
-                if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
-                    self.allowVideoContent = YES;
-                    [self playWithCurrentItem];
-                }
-                else {
-                    [self getSubscrptionList];
-                }
-            };
-            
-            if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
-                [self getNextEpisode:^{
-                    playContent();
-                }];
+    [self updateControlsForCurrentItem];
+    
+    [self downLoadAddConfig:^(id result) {
+        void (^playContent)(void) = ^() {
+            if (ZEE5PlayerSDK.getConsumpruionType == Trailer) {
+                self.allowVideoContent = YES;
+                [self playWithCurrentItem];
             }
             else {
-                [self getVodSimilarContent:^{
-                    playContent();
-                }];
+                [self getSubscrptionList];
             }
-        } failureBlock:^(ZEE5SdkError *error) {
-           [self getSubscrptionList];
-        }];
-    }
-    else {
-        self.playerConfig.showCustomPlayerControls = false;
-    }
+        };
+        
+        if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
+            [self getNextEpisode:^{
+                playContent();
+            }];
+        }
+        else {
+            [self getVodSimilarContent:^{
+                playContent();
+            }];
+        }
+    } failureBlock:^(ZEE5SdkError *error) {
+        [self getSubscrptionList];
+    }];
     
     [[AnalyticEngine shared]CurrentItemDataWith:self.currentItem];
 }
@@ -2599,7 +2613,6 @@ static ContentBuisnessType buisnessType;
 
 - (void)initilizePlayerWithLiveContent:(LiveContentDetails*)Livemodel andDRMToken:(NSString*)token VideoToken:(NSString*)Vidtoken
 {
-    
     self.currentItem = [[CurrentItem alloc] init];
     self.currentItem.hls_Url = [Livemodel.StreamhlsUrl stringByAppendingString:Vidtoken];
 
@@ -2621,18 +2634,15 @@ static ContentBuisnessType buisnessType;
     self.currentItem.geners = Livemodel.geners;
     self.currentItem.imageUrl = [NSString stringWithFormat:@"https://akamaividz.zee5.com/resources/%@/list/270x152/%@",Livemodel.identifier,Livemodel.Image];
     
-    if (_playerConfig.playerType == normalPlayer)
-    {
-        [self downLoadAddConfig:^(id result) {
-            [self getSubscrptionList];
-            
-        } failureBlock:^(ZEE5SdkError *error) {
-            [self getSubscrptionList];
-        }];
-    }
-    else {
-        self.playerConfig.showCustomPlayerControls = false;
-    }
+    [self updateControlsForCurrentItem];
+
+    [self downLoadAddConfig:^(id result) {
+        [self getSubscrptionList];
+        
+    } failureBlock:^(ZEE5SdkError *error) {
+        [self getSubscrptionList];
+    }];
+    
     [[AnalyticEngine shared] CurrentItemDataWith:self.currentItem];
 }
 
@@ -2945,7 +2955,7 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
     }
     
-    [self CustomControlViewNew];
+    [self showLockedContentControls];
 }
 
 //MARK:- Get User Setting
@@ -3116,14 +3126,20 @@ static ContentBuisnessType buisnessType;
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if ([touch.view isDescendantOfView:_customControlView.collectionView] || [touch.view isDescendantOfView:_customControlView.sliderDuration] || [touch.view isDescendantOfView:_customControlView.sliderLive] || [touch.view isDescendantOfView:_customMenu.tblView] ) {
+    UIView *v = touch.view;
+    
+    if (v == _customControlView.btnMinimize ||
+        ([v isDescendantOfView:_customControlView] && [v isKindOfClass:[UIButton class]]) ||
+        [touch.view isDescendantOfView:_customControlView.collectionView] ||
+        [touch.view isDescendantOfView:_customControlView.sliderDuration] ||
+        [touch.view isDescendantOfView:_customControlView.sliderLive] ||
+        [touch.view isDescendantOfView:_customMenu.tblView]) {
+        
         return NO;
     }
+    
     return YES;
 }
-
-
-
 
 #pragma mark: GA Events
 

@@ -96,8 +96,10 @@ class KalturaPlayerController: UIViewController {
         }
                 
         let loadingContainer = UIView()
+        loadingContainer.accessibilityLabel = "LoadingContainer"
+
         self.loadingContainer = loadingContainer
-        
+
         self.view.insertSubview(loadingContainer, at: max(self.view.subviews.count - 1, 0))
 
         loadingContainer.fillParent()

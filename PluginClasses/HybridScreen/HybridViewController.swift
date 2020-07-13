@@ -113,8 +113,10 @@ class HybridViewController: UIViewController {
         self.addGradient()
         
         self.addChildViewController(self.kalturaPlayerController, to: self.playerView)
-        self.kalturaPlayerController?.currentDisplayMode = .inline
-        self.kalturaPlayerController?.delegate = self
+        self.kalturaPlayerController.currentDisplayMode = .inline
+        self.kalturaPlayerController.delegate = self
+        
+        ZEE5PlayerManager.sharedInstance().setPlaybackView(self.kalturaPlayerController.view)
     }
     
     override func viewDidAppear(_ animated: Bool) {
