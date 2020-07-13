@@ -262,17 +262,17 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
             ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
             
+            var oneTrustData: Dictionary<String, Any>? = nil
             if Zee5UserDefaultsManager.shared.isEuropeanCountry() {
-             let OneTrust = Zee5UserDefaultsManager.shared.getOneTrustMapValues()
-                do {
-                    let dictionary = try convertToDictionary(from: OneTrust)
-                    print(dictionary)
-                    ZEE5PlayerManager .sharedInstance().setoneTrustValue(dictionary)
-                } catch {
-                    print(error)
+                let oneTrust = Zee5UserDefaultsManager.shared.getOneTrustMapValues()
+                
+                if oneTrust.count > 0, let dictionary = try? convertToDictionary(from: oneTrust) {
+                    oneTrustData = dictionary
                 }
             }
             
+            ZEE5PlayerManager.sharedInstance().setOneTrustValue(oneTrustData)
+                
             let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             ZEE5UserDefaults.setCountry(location.country, andState: location.state)
             

@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)SliderReset;
 -(void)Playbackcheck;
 -(void)setPlaybackView:(UIView *)playbackView;
--(void)setoneTrustValue:(NSDictionary *)oneDict;
+-(void)setOneTrustValue:(nullable NSDictionary *)oneDict;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;
