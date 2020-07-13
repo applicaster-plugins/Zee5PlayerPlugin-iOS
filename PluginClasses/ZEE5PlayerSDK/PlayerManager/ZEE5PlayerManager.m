@@ -87,6 +87,7 @@
 @property (weak, nonatomic) NSArray *selectedTracks;
 @property (strong, nonatomic) NSArray *playBackRate;
 @property (strong, nonatomic) NSMutableArray *PreviousContentArray;
+@property (strong, nonatomic) NSMutableDictionary *oneTrustDict;
 @property (strong, nonatomic) NSMutableArray *VideocountArray;
 @property (strong,nonatomic) NSTimer *CreditTimer;
 @property(nonatomic) NSString *CurrentAudioTrack;
@@ -2431,6 +2432,9 @@ static ContentBuisnessType buisnessType;
 
 }
 
+-(void)setoneTrustValue:(NSDictionary *)oneDict{
+    _oneTrustDict = [oneDict mutableCopy];
+}
 // MARK:- Download Ad Config
 
 -(void)downLoadAddConfig:(SuccessHandler)success failureBlock:(FailureHandler)failure
@@ -2440,7 +2444,14 @@ static ContentBuisnessType buisnessType;
         [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
     }
     NSString * Bundleversion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
-    NSDictionary *params = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
+    NSDictionary *param = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
+      NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:param];
+   
+    if (_oneTrustDict != nil) {
+        
+        [params addEntriesFromDictionary:_oneTrustDict];
+        _oneTrustDict = nil;
+    }
     
     [[NetworkManager sharedInstance] makeHttpGetRequest:BaseUrls.adConfig requestParam:params requestHeaders:@{} withCompletionHandler:^(id  _Nullable result)
     {
@@ -2653,6 +2664,10 @@ static ContentBuisnessType buisnessType;
 {
     NSString *stremType = @"Unknown";
     NSString *isLive = @"false";
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
+         if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+             userId = ZEE5UserDefaults.getUserToken;
+         }
     
     if (self.currentItem.streamType == CONVIVA_STREAM_VOD) {
         stremType = @"Vod";
@@ -2673,7 +2688,8 @@ static ContentBuisnessType buisnessType;
              
              @"isLive": isLive,
              @"playerName": Conviva_Player_name,
-             @"viewerId": ZEE5PlayerSDK.getUserId
+             @"viewerId": userId,
+             @"duration":[NSString stringWithFormat:@"%ld",_currentItem.duration]
              };
  
     [[AnalyticEngine shared] setupConvivaSessionWith:dict];
@@ -2690,6 +2706,11 @@ static ContentBuisnessType buisnessType;
     NSString *stremType = @"Unknown";
     NSString *isLive = @"false";
     
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
+      if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+          userId = ZEE5UserDefaults.getUserToken;
+      }
+    
     if (self.currentItem.streamType == CONVIVA_STREAM_VOD) {
         stremType = @"Vod";
         isLive = @"false";
@@ -2709,7 +2730,7 @@ static ContentBuisnessType buisnessType;
              
              @"isLive": isLive,
              @"playerName": Conviva_Player_name,
-             @"viewerId": ZEE5PlayerSDK.getUserId
+             @"viewerId": userId
              };
      [SCORAnalytics notifyViewEventWithLabels:dict];
 }
@@ -2718,8 +2739,12 @@ static ContentBuisnessType buisnessType;
 
     
     NSDictionary *dict;
+
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
     
-    NSString *userId = ZEE5PlayerSDK.getUserId;
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+        userId = ZEE5UserDefaults.getUserToken;
+    }
     NSString *buildNumber = ZEE5PlayerSDK.getPlayerSDKVersion;
     NSString *genres = [Utility getCommaSaperatedGenreList: self.currentItem.geners];
     NSString *releaseDate = [Utility convertDateFormat: self.currentItem.release_date toDateFormat:@"MMM d, yyyy"];
@@ -2821,7 +2846,7 @@ static ContentBuisnessType buisnessType;
         @"limit":@"25",
         @"translation":ZEE5UserDefaults.gettranslation,
         @"country":ZEE5UserDefaults.getCountry,
-        @"languages":self.currentItem.audioLanguages
+        @"languages":[self.currentItem.audioLanguages componentsJoinedByString:@","]
     };
     
     NSDictionary *headers = @{

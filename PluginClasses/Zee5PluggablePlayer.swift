@@ -262,6 +262,17 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
             ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
             
+            if Zee5UserDefaultsManager.shared.isEuropeanCountry() {
+             let OneTrust = Zee5UserDefaultsManager.shared.getOneTrustMapValues()
+                do {
+                    let dictionary = try convertToDictionary(from: OneTrust)
+                    print(dictionary)
+                    ZEE5PlayerManager .sharedInstance().setoneTrustValue(dictionary)
+                } catch {
+                    print(error)
+                }
+            }
+            
             let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             ZEE5UserDefaults.setCountry(location.country, andState: location.state)
             
@@ -302,6 +313,13 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         }
         
         prepareUserData()
+    }
+
+    
+    func convertToDictionary(from text: String) throws -> [String: String] {
+        guard let data = text.data(using: .utf8) else { return [:] }
+        let anyResult: Any = try JSONSerialization.jsonObject(with: data, options: [])
+        return anyResult as? [String: String] ?? [:]
     }
     
     func handleTelcoData(param:[String: String])  {
