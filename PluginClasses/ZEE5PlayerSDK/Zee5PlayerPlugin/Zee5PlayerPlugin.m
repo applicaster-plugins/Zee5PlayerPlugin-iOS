@@ -265,13 +265,18 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *country = [Utility getCountryName];   //  // "India = 21665149170", "ExIndia = 21800039520"
     NSString *countryAdCode = [country.lowercaseString containsString: @"india"] ? @"21665149170" : @"21800039520";
     
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
+         if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+             userId = ZEE5UserDefaults.getUserToken;
+         }
+    
     NSDictionary *tags = [[NSDictionary alloc] init];
     tags = @{
              @"streamUrl": @"NA",
              
              @"isLive": isLive,
              @"playerName": Conviva_Player_Name,
-             @"viewerId": ZEE5PlayerSDK.getUserId,
+             @"viewerId": userId,
              
              @"c3.ad.technology": @"Client Side",   // "Server Side" or "Client Side"
              @"c3.ad.id": event.adInfo.adId,
@@ -314,6 +319,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         _adCount++;
         [engine AdViewNumberWithAdNo:_adCount];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+          [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
     }
 }
 
@@ -328,9 +334,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         
         // Setup Ad events
-        [engine detachVideoPlayer];
+       // [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
-        [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         [[ZEE5PlayerManager sharedInstance] startAd];
         
@@ -339,9 +344,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
     
         [engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
-        
+        [engine EndAdbreak];
         [engine attachVideoPlayer];
-        [engine cleanupAdSession];
         [engine AdCompleteAnalytics];
         [engine AdWatchDurationAnalytics];
         [[ZEE5PlayerManager sharedInstance] endAd];
@@ -350,7 +354,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
     
         [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
-        [engine cleanupAdSession];
+        [engine EndAdbreak];
         [engine attachVideoPlayer];
         [[ZEE5PlayerManager sharedInstance] endAd];
     }];

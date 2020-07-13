@@ -93,7 +93,10 @@ public class AnalyticEngine: NSObject {
         ConvivaAnalytics.shared.createConvivaAdSession(with: data, tags: customTags)
         ConvivaAnalytics.shared.setupAdPlayerInterface()
     }
-    
+    @objc public func EndAdbreak()
+    {
+         ConvivaAnalytics.shared.EndAdSession()
+    }
     @objc public func updateAdPlayerState(state: PlayerState)
     {
         ConvivaAnalytics.shared.reportAdPlayerState(currentState: state)
@@ -109,7 +112,6 @@ public class AnalyticEngine: NSObject {
     }
     
     @objc public func cleanupAdSession() {
-        ConvivaAnalytics.shared.EndAdSession()
         ConvivaAnalytics.shared.cleanupAdSession()
     }
 
