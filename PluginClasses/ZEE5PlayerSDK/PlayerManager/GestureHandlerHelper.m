@@ -17,10 +17,9 @@
 
 @implementation GestureHandlerHelper
 
--(instancetype)initWithGestureHandler:(GestureHandler)handler {
+-(instancetype)init {
     if (self = [super init]) {
         _allowGestureHandler = YES;
-        _gestureHandler = handler;
     }
     return self;
 }
@@ -41,10 +40,8 @@
     self.allowGestureHandler = YES;
 }
 
--(void)execute {
-    if (self.gestureHandler && self.allowGestureHandler && self.isInPortraitMode) {
-        self.gestureHandler();
-    }
+-(BOOL)isAllowed {
+    return self.allowGestureHandler && self.isInPortraitMode;
 }
 
 @end

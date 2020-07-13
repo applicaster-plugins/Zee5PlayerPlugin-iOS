@@ -89,10 +89,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             instance.playerAdapter.delegate = instance
             
             instance.hybridViewController = HybridViewController(nibName: "HybridViewController", bundle: nil)
-            
-            let playerViewController = KalturaPlayerController()
-            instance.hybridViewController?.kalturaPlayerController = playerViewController
-                        
             instance.addPlayerObservers()
         }
         
@@ -255,18 +251,27 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         func play() {
             guard
-                self.initialPlayableItem != nil,
-                let playbackView = self.hybridViewController?.kalturaPlayerController?.view else {
+                self.initialPlayableItem != nil else {
                     return
             }
             
-            ZEE5PlayerManager.sharedInstance().setPlaybackView(playbackView)
             self.playerAdapter.startSession(contentId)
         }
         
         func continueAfterUserInfoResponse() {
             ZEE5UserDefaults.setUserType(User.shared.getType().rawValue)
             ZEE5UserDefaults.settranslationLanguage(Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en")
+            
+            if Zee5UserDefaultsManager.shared.isEuropeanCountry() {
+             let OneTrust = Zee5UserDefaultsManager.shared.getOneTrustMapValues()
+                do {
+                    let dictionary = try convertToDictionary(from: OneTrust)
+                    print(dictionary)
+                    ZEE5PlayerManager .sharedInstance().setoneTrustValue(dictionary)
+                } catch {
+                    print(error)
+                }
+            }
             
             let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             ZEE5UserDefaults.setCountry(location.country, andState: location.state)
@@ -307,8 +312,14 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             }
         }
         
-        self.hybridViewController?.kalturaPlayerController?.showIndicator()
         prepareUserData()
+    }
+
+    
+    func convertToDictionary(from text: String) throws -> [String: String] {
+        guard let data = text.data(using: .utf8) else { return [:] }
+        let anyResult: Any = try JSONSerialization.jsonObject(with: data, options: [])
+        return anyResult as? [String: String] ?? [:]
     }
     
     func handleTelcoData(param:[String: String])  {

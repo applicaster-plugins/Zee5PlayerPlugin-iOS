@@ -72,7 +72,7 @@ class KalturaPlayerController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         ZEE5PlayerManager.sharedInstance().playbackcheck()
     }
-        
+    
     private func addNotifiactonObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(wentForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -96,12 +96,16 @@ class KalturaPlayerController: UIViewController {
         }
                 
         let loadingContainer = UIView()
+        loadingContainer.accessibilityLabel = "LoadingContainer"
+
         self.loadingContainer = loadingContainer
-        
+
         self.view.insertSubview(loadingContainer, at: max(self.view.subviews.count - 1, 0))
 
         loadingContainer.fillParent()
+        
         loadingContainer.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4)
+        loadingContainer.isUserInteractionEnabled = false
         
         (self.view as? PlaybackViewWithLoader)?.overlay = loadingContainer
         

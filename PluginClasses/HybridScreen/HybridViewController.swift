@@ -19,8 +19,8 @@ class HybridViewController: UIViewController {
     
     var configurationJSON: NSDictionary?
     public var pluginStyles: [String : Any]?
-    
-    var kalturaPlayerController: KalturaPlayerController?
+   
+    fileprivate let kalturaPlayerController = KalturaPlayerController()
     
     var dataSource:[Any] = []
     private let bundle = Bundle(for: DownloadRootController.self)
@@ -82,17 +82,13 @@ class HybridViewController: UIViewController {
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
-  
-        guard let kalturaPlayerController = self.kalturaPlayerController else {
-            return
-        }
 
         coordinator.animate(alongsideTransition: nil, completion: { (context) in
             switch newCollection.verticalSizeClass {
             case .compact:
-                kalturaPlayerController.currentDisplayMode = .fullScreen
+                self.kalturaPlayerController.currentDisplayMode = .fullScreen
             default:
-                kalturaPlayerController.currentDisplayMode = .inline
+                self.kalturaPlayerController.currentDisplayMode = .inline
             }
         })
     }
@@ -114,16 +110,21 @@ class HybridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-        self.playerView.addGestureRecognizer(panGestureRecognizer)
-        
         self.addGradient()
         
         self.addChildViewController(self.kalturaPlayerController, to: self.playerView)
-        self.kalturaPlayerController?.currentDisplayMode = .inline
-        self.kalturaPlayerController?.delegate = self
-                
-        addGestureRecognizerHandler()
+        self.kalturaPlayerController.currentDisplayMode = .inline
+        self.kalturaPlayerController.delegate = self
+        
+        ZEE5PlayerManager.sharedInstance().setPlaybackView(self.kalturaPlayerController.view)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.playable == nil {
+            self.kalturaPlayerController.showIndicator()
+        }
     }
     
     func commonInit() {
@@ -131,7 +132,7 @@ class HybridViewController: UIViewController {
             return
         }
         
-        self.kalturaPlayerController?.updateDisplayMode()
+        self.kalturaPlayerController.updateDisplayMode()
         
         self.stylesConfiguration()
         
@@ -147,21 +148,7 @@ class HybridViewController: UIViewController {
         
         self.metadataViewContainer.isHidden = false
     }
-    
-    var originalPosition: CGPoint?
-    var currentPositionTouched: CGPoint?
-    
-    @objc func panGestureAction(_ panGesture: UIPanGestureRecognizer) {
-        let velocity = panGesture.velocity(in: view)
-        let currentPositionTouched = panGesture.location(in: view)
         
-        if velocity.y >= 0,
-            let playerViewBottom = self.playerView?.bottom,
-            currentPositionTouched.y < (playerViewBottom * 4/5) {
-            closePlayer()
-        }
-    }
-    
     // MARK:
     
     func setupDataSources() {
@@ -195,14 +182,13 @@ class HybridViewController: UIViewController {
             self.creatorsDataSource = creatorsDataSource
         }
     }
-    
-    
-    func stylesConfiguration() {
         
+    func stylesConfiguration() {
         guard let buttonsBackgroundStyle = ZAAppConnector.sharedInstance().layoutsStylesDelegate.styleParams?(byStyleName: "LayoutGenericListItemBGColor"),
-             let color = buttonsBackgroundStyle["color"] as? UIColor else {
-                 return
-         }
+            let color = buttonsBackgroundStyle["color"] as? UIColor else {
+                return
+        }
+        
         self.view.backgroundColor = color
     }
     
@@ -213,18 +199,7 @@ class HybridViewController: UIViewController {
         
         playerManager.stopAndDismiss()
     }
-    
-    // MARK: Video Loading View
-    
-    public func videoLoadingView() -> (UIView & APLoadingView)? {
-        var loadingView: (UIView & APLoadingView)?
-        
-        if let videoLoadingView = (Bundle(for: HybridViewController.self).loadNibNamed("Zee5VideoLoadingView", owner: self, options: nil)?.first) {
-            loadingView = videoLoadingView as? UIView & APLoadingView
-        }
-        return loadingView
-    }
-    
+
     fileprivate func addGradient() {
         let gradientLayer = CAGradientLayer()
 
@@ -274,10 +249,6 @@ class HybridViewController: UIViewController {
         self.mainCollectionViewContainer.removeAllSubviews()
         
         self.metadataViewContainer.isHidden = true
-    }
-    
-    private func addGestureRecognizerHandler() {
-        ZEE5PlayerManager.sharedInstance().setPanDownGestureHandler(closePlayer)
     }
 }
 

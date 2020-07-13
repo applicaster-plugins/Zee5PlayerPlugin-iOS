@@ -35,22 +35,19 @@ static NetworkManager *sharedManager = nil;
 - (id)init
 {
     if (self = [super init]) {
-        
-        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        [self createSession];
     }
     
     return self;
 }
 
+- (void)createSession {
+    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+}
+
 - (void)cancelAllRequests {
-    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        if (!dataTasks || !dataTasks.count) {
-            return;
-        }
-        for (NSURLSessionTask *task in dataTasks) {
-            [task cancel];
-        }
-    }];
+    [self.session invalidateAndCancel];
+    [self createSession];
 }
 
 - (void)authenticateWithServer:(NSString *)app_id userId:(NSString *)user_id andSDK_key:(NSString *)key withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure
@@ -87,20 +84,19 @@ static NetworkManager *sharedManager = nil;
         [request setValue:[headers valueForKey:key] forHTTPHeaderField:key];
     }
 
-    
     NSURLSessionDataTask *postDataTask = [self.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error.code == NSURLErrorCancelled) {
+            return;
+        }
         
-        [sharedManager checkForValidityForData:data withURLResponse:response andError:error withCompletionHandler:^(id result)
-         {
+        [sharedManager checkForValidityForData:data withURLResponse:response andError:error withCompletionHandler:^(id result) {
             success(result);
         } failureBlock:^(id error) {
             failure(error);
-            
         }];
     }];
-    [postDataTask resume];
     
-
+    [postDataTask resume];
 }
 
 - (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
@@ -128,7 +124,10 @@ static NetworkManager *sharedManager = nil;
     [request setHTTPBody:dataFromDict];
     
     NSURLSessionDataTask *postDataTask = [_session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-      
+        if (error.code == NSURLErrorCancelled) {
+            return;
+        }
+        
         [sharedManager checkForValidityForData:data withURLResponse:response andError:error withCompletionHandler:^(id result)
         {
             success(result);
@@ -137,10 +136,8 @@ static NetworkManager *sharedManager = nil;
             
         }];
     }];
+    
     [postDataTask resume];
-
-
-
 }
 
 
@@ -166,17 +163,16 @@ static NetworkManager *sharedManager = nil;
     }
     
     
-    NSURLSessionDataTask *postDataTask = [_session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
-        {
-        id jsonObj;
+    NSURLSessionDataTask *postDataTask = [_session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error.code == NSURLErrorCancelled) {
+            return;
+        }
         
-             if (data)
-             {
-                 jsonObj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                
-                 success(jsonObj);
-             }
-      
+        id jsonObj;
+        if (data) {
+            jsonObj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            success(jsonObj);
+        }
     }];
     [postDataTask resume];
 
@@ -199,14 +195,17 @@ static NetworkManager *sharedManager = nil;
     
     NSURLSessionDataTask *postDataTask = [_session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
     {
+        if (error.code == NSURLErrorCancelled) {
+            return;
+        }
+        
         id jsonObj;
                                               
-            if (data)
-            {
-              jsonObj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-              success(jsonObj);
-            }
-                                              
+        if (data)
+        {
+            jsonObj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            success(jsonObj);
+        }
     }];
     [postDataTask resume];
     
