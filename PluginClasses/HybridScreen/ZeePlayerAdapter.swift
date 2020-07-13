@@ -113,9 +113,6 @@ fileprivate class BasePlaybackSession: PlaybackSession {
     }
     
     func loadContent(completion: @escaping LoadContentCompletion) {
-        guard let networkDelegate = ZAAppConnector.sharedInstance().networkDelegate else {
-            return
-        }
         
         let url = self.baseDelegate.sessionContentUrl()
         
@@ -135,8 +132,18 @@ fileprivate class BasePlaybackSession: PlaybackSession {
         
         ZEE5PlayerManager.sharedInstance().showloaderOnPlayer()
         
-        networkDelegate.requestJsonObject(forUrlString: url, method: "GET", parameters: params, queue: nil, headers: headers) { [weak self] (success, data, error, code) in
+        NetworkHelper.requestJsonObject(forUrlString: url, method: .get, parameters: params, headers: headers) { [weak self] (data, error, zee5SdkError, statusCode) in
             guard let self = self, !self.didEnd else {
+                return
+            }
+            
+            if let zee5SdkError = zee5SdkError {
+                switch zee5SdkError.zeeErrorCode {
+                // Data not found
+                case 101: self.handleUnavailableContent()
+                default: break
+                }
+                completion()
                 return
             }
             
@@ -179,6 +186,11 @@ fileprivate class BasePlaybackSession: PlaybackSession {
     
     func playable() -> ZeePlayable? {
         return self.baseDelegate.sessionPlayable()
+    }
+    
+    private func handleUnavailableContent() {
+        ZEE5PlayerManager.sharedInstance().hideLoaderOnPlayer()
+        ZEE5PlayerManager.sharedInstance().setContentUnavailable()
     }
 }
 

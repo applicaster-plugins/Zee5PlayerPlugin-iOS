@@ -561,6 +561,36 @@
                         </view>
                     </subviews>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sY-9S-Qjc">
+                    <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4GI-bF-9Jy">
+                            <rect key="frame" x="50" y="199" width="796" height="16.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1d5-jK-gxc">
+                                    <rect key="frame" x="0.0" y="0.0" width="796" height="16.5"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="1d5-jK-gxc" firstAttribute="top" secondItem="4GI-bF-9Jy" secondAttribute="top" id="7gb-S3-diM"/>
+                                <constraint firstAttribute="trailing" secondItem="1d5-jK-gxc" secondAttribute="trailing" id="KuQ-Q6-SSQ"/>
+                                <constraint firstItem="1d5-jK-gxc" firstAttribute="leading" secondItem="4GI-bF-9Jy" secondAttribute="leading" id="fvw-jD-OnZ"/>
+                                <constraint firstAttribute="bottom" secondItem="1d5-jK-gxc" secondAttribute="bottom" id="r2l-kK-Pq2"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="4GI-bF-9Jy" firstAttribute="centerY" secondItem="4sY-9S-Qjc" secondAttribute="centerY" id="2Im-jL-Ipq"/>
+                        <constraint firstItem="4GI-bF-9Jy" firstAttribute="centerX" secondItem="4sY-9S-Qjc" secondAttribute="centerX" id="NCH-f0-G8g"/>
+                        <constraint firstItem="4GI-bF-9Jy" firstAttribute="leading" secondItem="4sY-9S-Qjc" secondAttribute="leading" constant="50" id="RK9-05-yKx"/>
+                        <constraint firstAttribute="trailing" secondItem="4GI-bF-9Jy" secondAttribute="trailing" constant="50" id="hsh-Zv-Ckg"/>
+                    </constraints>
+                </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zfz-bG-2t7">
                     <rect key="frame" x="0.0" y="1" width="895" height="412"/>
                     <subviews>
@@ -733,10 +763,12 @@ watch this video</string>
                 <constraint firstItem="bGG-Kh-eme" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3IJ-JU-stZ"/>
                 <constraint firstItem="32F-Kd-DAn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5dR-Mu-KGD"/>
                 <constraint firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="7EK-cD-Xhb"/>
+                <constraint firstItem="4sY-9S-Qjc" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8Is-u7-bYr"/>
                 <constraint firstAttribute="trailing" secondItem="orD-Ja-xQR" secondAttribute="trailing" id="9Vd-1O-DsO"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9Y7-r1-Wce"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="10" id="9sp-0y-Lsl"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="XW3-Dd-FYa" secondAttribute="bottom" constant="5" id="BB1-Rf-ep1"/>
+                <constraint firstItem="4sY-9S-Qjc" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Byq-Dc-UkW"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="GD1-NY-Ifr"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="Gdr-Tw-PXi"/>
                 <constraint firstItem="Ih4-4v-ast" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Hpx-5K-5qs"/>
@@ -764,7 +796,9 @@ watch this video</string>
                 <constraint firstItem="URa-Gj-Z0M" firstAttribute="leading" secondItem="bGG-Kh-eme" secondAttribute="trailing" priority="999" constant="305.5" id="iGo-d3-Aqc">
                     <variation key="widthClass=regular" constant="0.0"/>
                 </constraint>
+                <constraint firstAttribute="bottom" secondItem="4sY-9S-Qjc" secondAttribute="bottom" id="ill-F2-YUi"/>
                 <constraint firstItem="Rhx-bt-hUm" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="jrl-fc-ZbP"/>
+                <constraint firstAttribute="trailing" secondItem="4sY-9S-Qjc" secondAttribute="trailing" id="kwb-K4-J5K"/>
                 <constraint firstAttribute="trailing" secondItem="URa-Gj-Z0M" secondAttribute="trailing" id="lBo-mM-8np"/>
                 <constraint firstItem="pve-ci-rSh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lRC-yn-OUS"/>
                 <constraint firstItem="URa-Gj-Z0M" firstAttribute="leading" secondItem="bGG-Kh-eme" secondAttribute="trailing" priority="999" id="mdZ-Sp-zzA"/>
@@ -835,6 +869,8 @@ watch this video</string>
                 <outlet property="stackLoginView" destination="Csr-5M-reu" id="zat-8a-qfL"/>
                 <outlet property="topView" destination="Ih4-4v-ast" id="pjM-Cu-bRh"/>
                 <outlet property="trailerEndView" destination="Zfz-bG-2t7" id="7n1-fF-jhp"/>
+                <outlet property="unavailableContentLabel" destination="1d5-jK-gxc" id="W6Q-d4-U3F"/>
+                <outlet property="unavailableContentView" destination="4sY-9S-Qjc" id="fO1-IA-qtP"/>
                 <outlet property="viewLive" destination="Rhx-bt-hUm" id="FaS-i5-hRh"/>
                 <outlet property="viewTop" destination="7CG-57-Izx" id="Ia0-0L-35J"/>
                 <outlet property="viewVod" destination="XXD-zP-Fnc" id="BZc-T6-8c7"/>
