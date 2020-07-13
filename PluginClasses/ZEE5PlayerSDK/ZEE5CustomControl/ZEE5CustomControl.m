@@ -51,6 +51,8 @@
     _watchcretidStackview.hidden=YES;
     _watchcreditsTimeLbl.hidden=YES;
     _downloadBtnOutlet.hidden = YES;
+    _unavailableContentView.hidden = YES;
+    _unavailableContentLabel.text = [[PlayerConstants shared] detailApiFailed];
     
     _watchcreditShowView.layer.borderColor = [[UIColor whiteColor]CGColor];
     _watchcreditShowView.layer.borderWidth = 1.0f;

@@ -270,6 +270,9 @@ static NetworkManager *sharedManager = nil;
                 if ([jsonObj isKindOfClass:[NSDictionary class]] && [[jsonObj valueForKey:@"message"] isKindOfClass:[NSString class]]) {
                     generalError = [ZEE5SdkError initWithErrorCode:400 andZee5Code:[[jsonObj valueForKey:@"code"]intValue] andMessage:[jsonObj valueForKey:@"message"]];
                 }
+                if ([jsonObj isKindOfClass:[NSDictionary class]] && [[jsonObj valueForKey:@"error_msg"] isKindOfClass:[NSString class]]) {
+                    generalError = [ZEE5SdkError initWithErrorCode:400 andZee5Code:[[jsonObj valueForKey:@"error_code"]intValue] andMessage:[jsonObj valueForKey:@"error_msg"]];
+                }
                 failure(generalError);
             }
                 break;

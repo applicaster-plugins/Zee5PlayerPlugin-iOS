@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -523,6 +523,36 @@
                         </view>
                     </subviews>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OY6-jS-4cO">
+                    <rect key="frame" x="0.0" y="0.0" width="547" height="276"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yX4-jE-vb5">
+                            <rect key="frame" x="50" y="130" width="447" height="16.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sBW-Ma-iDD">
+                                    <rect key="frame" x="0.0" y="0.0" width="447" height="16.5"/>
+                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="sBW-Ma-iDD" secondAttribute="bottom" id="7Ye-IK-AGn"/>
+                                <constraint firstItem="sBW-Ma-iDD" firstAttribute="leading" secondItem="yX4-jE-vb5" secondAttribute="leading" id="8sM-h2-qaz"/>
+                                <constraint firstAttribute="trailing" secondItem="sBW-Ma-iDD" secondAttribute="trailing" id="UfA-Ql-17e"/>
+                                <constraint firstItem="sBW-Ma-iDD" firstAttribute="top" secondItem="yX4-jE-vb5" secondAttribute="top" id="WZW-r0-4te"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="yX4-jE-vb5" firstAttribute="centerX" secondItem="OY6-jS-4cO" secondAttribute="centerX" id="07b-2j-Sit"/>
+                        <constraint firstItem="yX4-jE-vb5" firstAttribute="centerY" secondItem="OY6-jS-4cO" secondAttribute="centerY" id="Je1-y0-XZV"/>
+                        <constraint firstAttribute="trailing" secondItem="yX4-jE-vb5" secondAttribute="trailing" constant="50" id="R9h-CJ-6Cl"/>
+                        <constraint firstItem="yX4-jE-vb5" firstAttribute="leading" secondItem="OY6-jS-4cO" secondAttribute="leading" constant="50" id="ojr-bD-1SP"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zfz-bG-2t7">
                     <rect key="frame" x="0.0" y="1" width="895" height="412"/>
                     <subviews>
@@ -692,8 +722,10 @@ watch this video</string>
             <constraints>
                 <constraint firstItem="bGG-Kh-eme" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-10" id="0vi-87-t3b"/>
                 <constraint firstItem="bGG-Kh-eme" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3IJ-JU-stZ"/>
+                <constraint firstAttribute="bottom" secondItem="OY6-jS-4cO" secondAttribute="bottom" id="44D-fu-5MH"/>
                 <constraint firstItem="32F-Kd-DAn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5dR-Mu-KGD"/>
                 <constraint firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="7EK-cD-Xhb"/>
+                <constraint firstItem="OY6-jS-4cO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="98K-Kh-VKO"/>
                 <constraint firstAttribute="trailing" secondItem="orD-Ja-xQR" secondAttribute="trailing" id="9Vd-1O-DsO"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9Y7-r1-Wce"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="10" id="9sp-0y-Lsl"/>
@@ -701,7 +733,10 @@ watch this video</string>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="GD1-NY-Ifr"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="Gdr-Tw-PXi"/>
                 <constraint firstItem="Ih4-4v-ast" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Hpx-5K-5qs"/>
+                <constraint firstItem="OY6-jS-4cO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Nae-p4-J9Q"/>
+                <constraint firstAttribute="trailing" secondItem="OY6-jS-4cO" secondAttribute="trailing" id="Nw8-hZ-rUB"/>
                 <constraint firstItem="Rhx-bt-hUm" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OAn-Am-SHQ"/>
+                <constraint firstItem="OY6-jS-4cO" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ONG-NO-lHP"/>
                 <constraint firstItem="orD-Ja-xQR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="T1C-IA-eBL"/>
                 <constraint firstAttribute="trailing" secondItem="Zfz-bG-2t7" secondAttribute="trailing" constant="1" id="TpM-R7-k1U"/>
                 <constraint firstItem="Ih4-4v-ast" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Vfq-rR-QVM"/>
@@ -765,6 +800,8 @@ watch this video</string>
                 <outlet property="stackLoginView" destination="Csr-5M-reu" id="zat-8a-qfL"/>
                 <outlet property="topView" destination="Ih4-4v-ast" id="pjM-Cu-bRh"/>
                 <outlet property="trailerEndView" destination="Zfz-bG-2t7" id="7n1-fF-jhp"/>
+                <outlet property="unavailableContentLabel" destination="sBW-Ma-iDD" id="SpY-wF-Eaw"/>
+                <outlet property="unavailableContentView" destination="OY6-jS-4cO" id="YWJ-HA-8wo"/>
                 <outlet property="viewLive" destination="Rhx-bt-hUm" id="FaS-i5-hRh"/>
                 <outlet property="viewTop" destination="7CG-57-Izx" id="Ia0-0L-35J"/>
                 <outlet property="viewVod" destination="XXD-zP-Fnc" id="BZc-T6-8c7"/>
@@ -775,7 +812,7 @@ watch this video</string>
                 <outlet property="watchcreditsTimeLbl" destination="XW3-Dd-FYa" id="uvh-rq-8er"/>
                 <outlet property="watchcretidStackview" destination="pfO-AE-4HQ" id="3oO-6M-kUU"/>
             </connections>
-            <point key="canvasLocation" x="60.14492753623189" y="-121.875"/>
+            <point key="canvasLocation" x="59.933035714285708" y="-123.18840579710145"/>
         </view>
         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p8M-q7-7S1">
             <rect key="frame" x="0.0" y="0.0" width="60" height="55"/>

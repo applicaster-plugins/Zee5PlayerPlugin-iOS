@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *con_width_more;
 @property (weak, nonatomic) IBOutlet UIButton *skipIntro;
 
+@property (weak, nonatomic) IBOutlet UIView *unavailableContentView;
+@property (weak, nonatomic) IBOutlet UILabel *unavailableContentLabel;
+
 @property (nonatomic) NSArray <RelatedVideos*>*related;
 
 

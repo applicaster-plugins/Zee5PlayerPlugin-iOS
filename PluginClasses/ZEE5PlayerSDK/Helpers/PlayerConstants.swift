@@ -10,23 +10,22 @@ import Zee5CoreSDK
 
 @objc public class PlayerConstants: NSObject {
     
-   enum localizedKeys: String {
-    case Consumption_PlayerError_ContentNotAvailable_Text = "Consumption_PlayerError_ContentNotAvailable_Text"
-    case Player_PlayerBody_Wait24Hours_Text = "Player_PlayerBody_Wait24Hours_Text"
+    enum localizedKeys: String {
+        case Consumption_PlayerError_ContentNotAvailable_Text = "Consumption_PlayerError_ContentNotAvailable_Text"
+        case Player_PlayerBody_Wait24Hours_Text = "Player_PlayerBody_Wait24Hours_Text"
+    }
     
-}
+    @objc public static let shared = PlayerConstants()
     
-  @objc public static let shared = PlayerConstants()
-    
-    @objc public func DetailApiFailed() ->String{
+    @objc public func detailApiFailed() ->String{
         let str = localizedKeys.Consumption_PlayerError_ContentNotAvailable_Text.rawValue.localized()
         return str
     }
     
     @objc public func deviceFullError() ->String{
-         let str = localizedKeys.Player_PlayerBody_Wait24Hours_Text.rawValue.localized()
-          return str
-      }
+        let str = localizedKeys.Player_PlayerBody_Wait24Hours_Text.rawValue.localized()
+        return str
+    }
 
 }
 extension String{

@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isAutoplay;
 @property(nonatomic) BOOL isStreamoverWifi;
 @property(nonatomic) BOOL isdownloadOverWifi;
+@property(nonatomic) BOOL isContentAvailable;
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;
@@ -144,6 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)HybridViewOpen;
 
 -(void)hideUnHideTopView:(BOOL )isHidden;
+-(void)setContentUnavailable;
 
 -(void)selectedMenuItem:(id)model;
 -(void)tapOnPlayer;
