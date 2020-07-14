@@ -238,7 +238,7 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
     
     func updateContent(_ contentId: String, force: Bool = false) {
         var contentId = contentId
-        debugOverrideContentId = "0-0-2481"
+
         // for debug only
         if let overrideContentId = self.debugOverrideContentId, overrideContentId.count > 0 {
             contentId = overrideContentId
