@@ -2298,7 +2298,6 @@ static ContentBuisnessType buisnessType;
 - (void)setContentUnavailable {
     [self hideLoaderOnPlayer];
     self.isContentAvailable = NO;
-    [self CustomControlViewNew];
     [self hideUnHidetrailerEndView: YES];
 }
 
