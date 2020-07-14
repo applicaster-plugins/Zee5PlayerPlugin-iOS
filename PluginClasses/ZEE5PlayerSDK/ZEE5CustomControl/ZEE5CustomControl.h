@@ -66,8 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UILabel *watchcreditsTimeLbl;
 
-@property (strong, nonatomic)  TouchableButton *forwardButton;
-@property (strong, nonatomic)  TouchableButton *rewindButton;
+@property (strong, nonatomic) IBOutlet TouchableButton *forwardButton;
+@property (strong, nonatomic) IBOutlet TouchableButton *rewindButton;
 - (IBAction)watchCreditsAction:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *watchcreditsOutlet;
 

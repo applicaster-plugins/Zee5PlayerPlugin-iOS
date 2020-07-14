@@ -45,3 +45,27 @@ extension String{
         return localizedString
     }
 }
+
+public extension UIFont {
+    @objc static func jbs_registerFont(withFilenameString filenameString: String, bundle: Bundle) {
+        guard let pathForResourceString = bundle.path(forResource: filenameString, ofType: nil) else {
+            return
+        }
+        
+        guard let fontData = NSData(contentsOfFile: pathForResourceString) else {
+            return
+        }
+        
+        guard let dataProvider = CGDataProvider(data: fontData) else {
+            return
+        }
+        
+        guard let font = CGFont(dataProvider) else {
+            return
+        }
+        
+        var errorRef: Unmanaged<CFError>? = nil
+        if (CTFontManagerRegisterGraphicsFont(font, &errorRef) == false) {
+        }
+    }
+}

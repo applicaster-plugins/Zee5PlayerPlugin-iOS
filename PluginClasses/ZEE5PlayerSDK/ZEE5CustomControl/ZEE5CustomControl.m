@@ -12,34 +12,28 @@
 #import "Zee5CollectionCell.h"
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
 #import "Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h"
+
 @implementation ZEE5CustomControl
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     [super awakeFromNib];
+    
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
     UIImage *image = [UIImage imageNamed:@"Thumb" inBundle:bundel compatibleWithTraitCollection:nil];
-
+    
     _sliderDuration.showTooltip = YES;
     [_sliderDuration setThumbImage:image forState:UIControlStateNormal];
     [_sliderDuration setThumbImage:image forState:UIControlStateHighlighted];
     
-    _sliderLive.showTooltip = NO; 
+    _sliderLive.showTooltip = NO;
     _sliderLive.showTooltipContiously = NO;
     [_sliderLive setThumbImage:image forState:UIControlStateNormal];
     [_sliderLive setThumbImage:image forState:UIControlStateHighlighted];
     
     [_sliderDuration addTarget:self action:@selector(sliderValueChanged:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-  
+    
     [_sliderDuration addTarget:self action:@selector(sliderValueChanged:withEvent:) forControlEvents:UIControlEventValueChanged];
-
+    
     
     [_collectionView registerNib:[UINib nibWithNibName:@"Zee5CollectionCell" bundle:bundel] forCellWithReuseIdentifier:@"cell"];
     
@@ -58,17 +52,13 @@
     [_watchcreditShowView.layer setMasksToBounds:YES];
     _adultView.hidden = YES;
     
-
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRelatedList) name:@"kRefreshRelatedVideoList" object:nil];
-    
-    
 }
 
 - (IBAction)watchCreditsAction:(id)sender
 {
     [[ZEE5PlayerManager sharedInstance]WatchCredits];
-    _watchcreditsOutlet.hidden =YES;
+    _watchcreditsOutlet.hidden = YES;
     _watchcreditsTimeLbl.hidden =YES;
 }
 
@@ -80,11 +70,6 @@
 -(void)forwardAndRewindActions
 {
     __weak typeof(self) weakSelf = self;
-
-    [self.forwardButton removeFromSuperview];
-    
-    self.forwardButton = [[TouchableButton alloc] initWithTitle:@"Forward" imageName:@"3" seekBtn:@"Forward"];
-    [self insertSubview:self.forwardButton atIndex:1];
     
     self.forwardButton.singleTouch = ^(BOOL  touch)
     {
@@ -92,38 +77,38 @@
         [[ZEE5PlayerManager sharedInstance] tapOnPlayer];
 
     };
+    
     self.forwardButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
         if (totaltouches > 1) {
-            if (Counter == 0){
-                Counter = 10;}
-             [[ZEE5PlayerManager sharedInstance] hideCustomControls];
-             [[ZEE5PlayerManager sharedInstance] forward:Counter];
+            if (Counter == 0) {
+                Counter = 10;
+            }
+            
+            [[ZEE5PlayerManager sharedInstance] hideCustomControls];
+            [[ZEE5PlayerManager sharedInstance] forward:Counter];
         }
     };
     self.forwardButton.pressed = ^(BOOL pressed) {
-      
     };
-    
-    [self.rewindButton removeFromSuperview];
-    self.rewindButton = [[TouchableButton alloc] initWithTitle:@"Rewind" imageName:@"N" seekBtn:@"Rewind"];
-    [self insertSubview:self.rewindButton atIndex:1];
     
     self.rewindButton.singleTouch = ^(BOOL  touch) {
         [weakSelf.rewindButton resetViews];
         [[ZEE5PlayerManager sharedInstance] tapOnPlayer];
     };
+    
     self.rewindButton.pressed = ^(BOOL pressed) {
     };
     
     self.rewindButton.valueChanged = ^(NSInteger totaltouches,NSInteger Counter) {
-           if (totaltouches > 1) {
-               if (Counter == 0){
-                   Counter = 10;}
-                [[ZEE5PlayerManager sharedInstance] hideCustomControls];
-                [[ZEE5PlayerManager sharedInstance] rewind:Counter];
-           }
-           
-       };
+        if (totaltouches > 1) {
+            if (Counter == 0) {
+                Counter = 10;
+            }
+            
+            [[ZEE5PlayerManager sharedInstance] hideCustomControls];
+            [[ZEE5PlayerManager sharedInstance] rewind:Counter];
+        }
+    };
 }
 
 - (void)refreshRelatedList
