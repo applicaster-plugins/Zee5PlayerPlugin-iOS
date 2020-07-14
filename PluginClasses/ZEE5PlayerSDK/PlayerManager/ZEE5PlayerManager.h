@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isAutoplay;
 @property(nonatomic) BOOL isStreamoverWifi;
 @property(nonatomic) BOOL isdownloadOverWifi;
+@property(nonatomic) BOOL isContentAvailable;
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;
@@ -123,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)SliderReset;
 -(void)Playbackcheck;
 -(void)setPlaybackView:(UIView *)playbackView;
--(void)setoneTrustValue:(NSDictionary *)oneDict;
+-(void)setOneTrustValue:(nullable NSDictionary *)oneDict;
 
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion;
 -(void)Telcouser:(BOOL)istelco param:(NSString *)Message;
@@ -144,6 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)HybridViewOpen;
 
 -(void)hideUnHideTopView:(BOOL )isHidden;
+-(void)setContentUnavailable;
 
 -(void)selectedMenuItem:(id)model;
 -(void)tapOnPlayer;
