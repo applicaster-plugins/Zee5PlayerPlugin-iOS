@@ -386,8 +386,12 @@ static ContentBuisnessType buisnessType;
         _customControlView.parentalDismissView.hidden = NO;
     }
     
+    if (_isContentAvailable == NO) {
+        _customControlView.unavailableContentView.hidden = false;
+    }
+    
     if (_isNeedToSubscribe) {
-        [self hideUnHidetrailerEndView:NO];
+       [self hideUnHidetrailerEndView:NO];
         return;
     }
 }
@@ -2284,8 +2288,18 @@ static ContentBuisnessType buisnessType;
             completionBlock(nil, nil);
         }
     } failureBlock:^(ZEE5SdkError *error) {
+        if (error.zeeErrorCode == 101) {
+            [self setContentUnavailable];
+        }
         completionBlock(nil, nil);
     }];
+}
+
+- (void)setContentUnavailable {
+    [self hideLoaderOnPlayer];
+    self.isContentAvailable = NO;
+    _customControlView.unavailableContentView.hidden = false;
+    [self hideUnHidetrailerEndView: YES];
 }
 
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model {
@@ -2300,6 +2314,7 @@ static ContentBuisnessType buisnessType;
     
     self.isLive = NO;
     
+    _isContentAvailable = true;
     _isStop = false;
     _isNeedToSubscribe = false;
     _ishybridViewOpen = false;
