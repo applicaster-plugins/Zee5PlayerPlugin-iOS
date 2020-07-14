@@ -6,13 +6,13 @@
     ],
     "require_startup_execution": false
   },
-  "author_email": "s.borkin@applicaster.com",
-  "author_name": "sborkin",
+  "author_email": "e.kyivskyi@applicaster.com",
+  "author_name": "ekievsky",
   "dependency_name": "Zee5PlayerPlugin",
   "dependency_repository_url": [
     "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
   ],
-  "dependency_version": "1.1.66",
+  "dependency_version": "1.1.67",
   "deprecated_since_zapp_sdk": "",
   "description": "Zee5 Player Plugin",
   "extra_dependencies": [],
