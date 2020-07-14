@@ -2298,7 +2298,7 @@ static ContentBuisnessType buisnessType;
 - (void)setContentUnavailable {
     [self hideLoaderOnPlayer];
     self.isContentAvailable = NO;
-    [self CustomControlViewNew];
+    _customControlView.unavailableContentView.hidden = false;
     [self hideUnHidetrailerEndView: YES];
 }
 
@@ -2447,7 +2447,7 @@ static ContentBuisnessType buisnessType;
 
 }
 
--(void)setoneTrustValue:(NSDictionary *)oneDict{
+-(void)setOneTrustValue:(NSDictionary *)oneDict {
     _oneTrustDict = [oneDict mutableCopy];
 }
 // MARK:- Download Ad Config

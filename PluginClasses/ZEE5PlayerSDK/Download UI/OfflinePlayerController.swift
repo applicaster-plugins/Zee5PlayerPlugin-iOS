@@ -279,9 +279,6 @@ extension OfflinePlayerController {
             
             self.addPlayerObserver()
             
-            self.forwardButton = TouchableButton(title: "Forward", imageName: "3", seekBtn: "Forward")
-            self.rewindButton = TouchableButton(title: "Rewind", imageName: "N", seekBtn: "Rewind")
-            
             self.forwardAndRewindActions()
         }
     }
