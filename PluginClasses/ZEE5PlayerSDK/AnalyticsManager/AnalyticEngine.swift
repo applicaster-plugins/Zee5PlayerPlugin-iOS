@@ -38,7 +38,8 @@ public class AnalyticEngine: NSObject {
     @objc public func initializeConvivaAnalytics(customerKey: String, gatewayUrl: String) {
         do {
             ZeeUtility.utility.console("|*** customerKey: \(customerKey) *** gatewayUrl: \(gatewayUrl) ***|||")
-            try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
+            //try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
+            try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
             ZeeUtility.utility.console("|||*** Conviva Initialized Successfully ***|||")
         }
         catch {
@@ -65,23 +66,22 @@ public class AnalyticEngine: NSObject {
     }
     
     @objc public func updateVideoBitrate(with value: Int) {
-        ConvivaAnalytics.shared.playerStateManager?.setBitrateKbps?(value)
+        ConvivaAnalytics.shared.reportPlayerBitrate(bitrate: value)
     }
     
     @objc public func setSeekStartTime(duration: Int64) {
-        ConvivaAnalytics.shared.playerStateManager?.setSeekStart?(duration)
+        ConvivaAnalytics.shared.SeekStarted(SeekStart: duration)
     }
     
     @objc public func setSeekEndTime(duration: Int64)
     {
-        ConvivaAnalytics.shared.playerStateManager?.setSeekEnd?(duration)
+        ConvivaAnalytics.shared.SeekEnded(SeekEnd: duration)
     }
     
     @objc public func cleanupVideoSesssion()
     {
         ConvivaAnalytics.shared.cleanupSession()
         VideWatchInt = 0
-        
     }
     
     @objc public func updateMetadata(with data: NSDictionary)
@@ -92,30 +92,30 @@ public class AnalyticEngine: NSObject {
     @objc public func setupConvivaAdSession(with data: NSDictionary, customTags: NSDictionary)
     {
         ConvivaAnalytics.shared.createConvivaAdSession(with: data, tags: customTags)
-        ConvivaAnalytics.shared.setupAdPlayerInterface()
+       // ConvivaAnalytics.shared.setupAdPlayerInterface()
     }
-    
+    @objc public func EndAdbreak()
+    {
+         ConvivaAnalytics.shared.EndAdSession()
+    }
     @objc public func updateAdPlayerState(state: PlayerState)
     {
-        ConvivaAnalytics.shared.reportAdPlayerState(currentState: state)
+        //ConvivaAnalytics.shared.reportAdPlayerState(currentState: state)
     }
     
     @objc public func attachVideoPlayer()
     {
-        ConvivaAnalytics.shared.attachMainVideoPlayer()
+        //ConvivaAnalytics.shared.attachMainVideoPlayer()
     }
     
     @objc public func detachVideoPlayer() {
-        ConvivaAnalytics.shared.detachMainVideoPlayer()
+        //ConvivaAnalytics.shared.detachMainVideoPlayer()
     }
     
     @objc public func cleanupAdSession() {
-        ConvivaAnalytics.shared.cleanupAdSession()
+       // ConvivaAnalytics.shared.cleanupAdSession()
     }
-    
-    
-    
-    
+
     // MARK:- Mixpanel Player Events
     
     @objc public func CurrentItemData(with data: CurrentItem)
@@ -149,7 +149,7 @@ public class AnalyticEngine: NSObject {
     
     @objc public func watchCreditsAnalytics(with StartTime: NSString)
       {
-       // AllAnalyticsClass.shared.watchCredit(with: StartTime)
+        AllAnalyticsClass.shared.watchCredit(with: StartTime)
       }
     
     @objc public func playerPauseAnalytics()

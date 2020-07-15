@@ -280,7 +280,7 @@ public func VideoViewEvent()
            Keys.WATCH_CREDITS.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.WATCH_CREDITS.PROVIDER_ID ~>> notAppplicable,
            Keys.WATCH_CREDITS.PROVIDER_NAME ~>> notAppplicable,
-           Keys.WATCH_CREDITS.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.WATCH_CREDITS.PLAYER_HEAD_POSITION ~>> creditStartTime == "" ? notAppplicable:creditStartTime as String,
            Keys.WATCH_CREDITS.PLAYER_HEAD_START_POSITION ~>> creditStartTime == "" ? notAppplicable:creditStartTime as String,
            Keys.WATCH_CREDITS.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? 0:duration,
            Keys.WATCH_CREDITS.PLAYER_NAME ~>> "Kaltura",

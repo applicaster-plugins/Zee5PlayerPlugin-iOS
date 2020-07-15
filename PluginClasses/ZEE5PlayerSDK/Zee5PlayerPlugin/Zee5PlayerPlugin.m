@@ -265,13 +265,18 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *country = [Utility getCountryName];   //  // "India = 21665149170", "ExIndia = 21800039520"
     NSString *countryAdCode = [country.lowercaseString containsString: @"india"] ? @"21665149170" : @"21800039520";
     
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
+         if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+             userId = ZEE5UserDefaults.getUserToken;
+         }
+    
     NSDictionary *tags = [[NSDictionary alloc] init];
     tags = @{
              @"streamUrl": @"NA",
              
              @"isLive": isLive,
              @"playerName": Conviva_Player_Name,
-             @"viewerId": ZEE5PlayerSDK.getUserId,
+             @"viewerId": userId,
              
              @"c3.ad.technology": @"Client Side",   // "Server Side" or "Client Side"
              @"c3.ad.id": event.adInfo.adId,
@@ -308,12 +313,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
     if (AdEvent.adsRequested)
     {
-        [engine setupConvivaAdSessionWith: dict customTags: tags];
+        [engine setupConvivaAdSessionWith:dict customTags:tags];
         [engine SetupMixpanelAnalyticsWith:dict tags:tags];
          [engine AdViewAnalytics];
         _adCount++;
         [engine AdViewNumberWithAdNo:_adCount];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+         // [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
     }
 }
 
@@ -326,11 +332,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
     {
-        
-        // Setup Ad events
-        [engine detachVideoPlayer];
+       // [engine detachVideoPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
-        [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         [[ZEE5PlayerManager sharedInstance] startAd];
         
@@ -338,31 +341,29 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
     
-        [engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
-        
-        [engine attachVideoPlayer];
-        [engine cleanupAdSession];
-       // [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
+        [engine EndAdbreak];
+        [engine AdCompleteAnalytics];
+        [engine AdWatchDurationAnalytics];
         [[ZEE5PlayerManager sharedInstance] endAd];
+        //[engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
+        // [engine attachVideoPlayer];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-    
-        [engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
-        [engine attachVideoPlayer];
-        [engine cleanupAdSession];
+        [engine EndAdbreak];
         [[ZEE5PlayerManager sharedInstance] endAd];
+        //[engine attachVideoPlayer];
+        //[engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
     }];
     
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
-        [engine updateAdPlayerStateWithState: CONVIVA_BUFFERING];
-       // [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
+        //[engine updateAdPlayerStateWithState: CONVIVA_BUFFERING];
     }];
-    
     
     //// Extra Ad events
     
     [self.player addObserver: self event: AdEvent.adBreakReady block:^(PKEvent * _Nonnull event) {
+        // [engine updateAdPlayerStateWithState: CONVIVA_PLAYING];
     }];
     
     [self.player addObserver: self event: AdEvent.allAdsCompleted block:^(PKEvent * _Nonnull event) {
@@ -371,9 +372,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
-         [engine AdCompleteAnalytics];
-        [engine AdWatchDurationAnalytics];
-
+       
     }];
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
               [engine AdClickedAnalytics];
@@ -392,10 +391,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adPaused block:^(PKEvent * _Nonnull event) {
+        //[engine updateAdPlayerStateWithState: CONVIVA_PAUSED];
         [[ZEE5PlayerManager sharedInstance]pauseAd];
     }];
     
     [self.player addObserver: self event: AdEvent.adResumed block:^(PKEvent * _Nonnull event) {
+           //[engine updateAdPlayerStateWithState: CONVIVA_PLAYING];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
@@ -501,8 +502,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        event:PlayerEvent.loadedMetadata
                        block:^(PKEvent * _Nonnull event) {
                         
-        [[AnalyticEngine new]VideoPlayAnalytics];
-        [[AnalyticEngine new]ConsumptionAnalyticEvents];
+        [[AnalyticEngine shared]VideoPlayAnalytics];
+        [[AnalyticEngine shared]ConsumptionAnalyticEvents];
 
                        }];
 }
@@ -524,6 +525,21 @@ static Zee5PlayerPlugin *sharedManager = nil;
                            
                            [engine updatePlayerStateWithState: CONVIVA_PAUSED];
                        }];
+    
+    [self.player addObserver:self
+                        events:@[PlayerEvent.play]
+                         block:^(PKEvent * _Nonnull event){
+                             
+                             [engine updatePlayerStateWithState: CONVIVA_PLAYING];
+                         }];
+    
+    [self.player addObserver:self
+                         events:@[PlayerEvent.stopped]
+                          block:^(PKEvent * _Nonnull event){
+                              
+                              [engine updatePlayerStateWithState: CONVIVA_STOPPED];
+                              [engine cleanupVideoSesssion];
+                          }];
 }
 
 // Handle Duration Changes
@@ -559,20 +575,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
                            
                            
                            if (newState == PlayerStateBuffering) {
-                               
-                               
-                               AnalyticEngine *engine = [[AnalyticEngine alloc] init];
-                               [engine updatePlayerStateWithState: CONVIVA_BUFFERING];
-                              // [[ZEE5PlayerManager sharedInstance]showloaderOnPlayer];
+                               [[AnalyticEngine shared]updatePlayerStateWithState:CONVIVA_BUFFERING];
                            }
                             if (newState == PlayerStateReady) {
-                                      
-                                      AnalyticEngine *engine = [[AnalyticEngine alloc] init];
-                                
+                                   [[AnalyticEngine shared]updatePlayerStateWithState:CONVIVA_PLAYING];
                                    [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
                                   }
-        
-        
                        }];
 }
 
@@ -581,9 +589,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver: self event: PlayerEvent.videoTrackChanged block:^(PKEvent * _Nonnull event) {
         
         NSInteger videoBitrate = [event.bitrate integerValue] / 1000;
-        
-        AnalyticEngine *engine = [[AnalyticEngine alloc] init];
-        [engine updateVideoBitrateWith: videoBitrate];
+        [[AnalyticEngine shared]updateVideoBitrateWith:videoBitrate];
     }];
 }
 
@@ -651,8 +657,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
                       events:@[PlayerEvent.ended]
                        block:^(PKEvent * _Nonnull event) {
                            [[ZEE5PlayerManager sharedInstance] onComplete];
-        [engine  videoWatchDurationAnalytic];
+                            [engine  videoWatchDurationAnalytic];
                            [engine updatePlayerStateWithState: CONVIVA_STOPPED];
+                            [engine cleanupVideoSesssion];
                        }];
 }
 // Handle Player Errors
