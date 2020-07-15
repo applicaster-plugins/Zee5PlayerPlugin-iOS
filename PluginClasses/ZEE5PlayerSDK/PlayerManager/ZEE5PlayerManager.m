@@ -993,7 +993,6 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)DestroyPlayer{
-    
     [[NetworkManager sharedInstance] cancelAllRequests];
     [self hideLoaderOnPlayer];
     [self.panDownGestureHandlerHelper endAd];
@@ -1903,7 +1902,6 @@ static ContentBuisnessType buisnessType;
                 _parentalControl =NO;
                 _allowVideoContent =YES;
                 [self playWithCurrentItem];
-                _customControlView.parentalDismissView.hidden = YES;
                 
             }
             return;
@@ -2159,7 +2157,6 @@ static ContentBuisnessType buisnessType;
         }
 
         [_parentalView removeFromSuperview];
-        [self showLockedContentControls];
         _parentalView = nil;
     }
 }
@@ -2330,7 +2327,6 @@ static ContentBuisnessType buisnessType;
         
     [[AnalyticEngine shared] VideoStartTimeWith:0];
     [[AnalyticEngine shared] AudioLanguageWith:@""];
-    [[AnalyticEngine shared]cleanupVideoSesssion];
     [self SliderReset];
     
     [ZEE5UserDefaults setContentId:model.identifier];
@@ -2641,7 +2637,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)CreateConvivaSession{
        [[AnalyticEngine shared] cleanupVideoSesssion];
-       //[[AnalyticEngine shared] cleanupAdSession];
        [self createConvivaSeesionWithMetadata];
 }
 // MARK:- Set Current Item For Live Data(url,drmToken,Title)
