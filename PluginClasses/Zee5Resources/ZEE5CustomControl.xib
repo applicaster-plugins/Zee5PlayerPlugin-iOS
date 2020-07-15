@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -55,6 +55,45 @@
                         <constraint firstItem="cca-iE-Ak3" firstAttribute="leading" secondItem="Ih4-4v-ast" secondAttribute="leading" constant="70" id="zh3-tf-RVw"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="URa-Gj-Z0M" customClass="ForwardButton" customModule="Zee5PlayerPlugin" customModuleProvider="target">
+                    <rect key="frame" x="696" y="0.0" width="200" height="414"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="LzD-XL-qZG"/>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="351.5" id="g3m-Da-jAF">
+                            <variation key="widthClass=regular" constant="200"/>
+                        </constraint>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="g3m-Da-jAF"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=regular">
+                        <mask key="constraints">
+                            <exclude reference="LzD-XL-qZG"/>
+                            <include reference="g3m-Da-jAF"/>
+                        </mask>
+                    </variation>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mBU-r2-NUl" customClass="RewindButton" customModule="Zee5PlayerPlugin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="414"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="N7U-8A-6tU"/>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="wVb-OS-loh"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="wVb-OS-loh"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=regular">
+                        <mask key="constraints">
+                            <exclude reference="N7U-8A-6tU"/>
+                            <include reference="wVb-OS-loh"/>
+                        </mask>
+                    </variation>
+                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="32F-Kd-DAn">
                     <rect key="frame" x="0.0" y="339" width="896" height="75"/>
                     <subviews>
@@ -152,45 +191,6 @@
                         </view>
                     </subviews>
                 </stackView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="URa-Gj-Z0M" customClass="ForwardButton" customModule="Zee5PlayerPlugin" customModuleProvider="target">
-                    <rect key="frame" x="696" y="0.0" width="200" height="414"/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="LzD-XL-qZG"/>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="351.5" id="g3m-Da-jAF">
-                            <variation key="widthClass=regular" constant="200"/>
-                        </constraint>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="g3m-Da-jAF"/>
-                        </mask>
-                    </variation>
-                    <variation key="widthClass=regular">
-                        <mask key="constraints">
-                            <exclude reference="LzD-XL-qZG"/>
-                            <include reference="g3m-Da-jAF"/>
-                        </mask>
-                    </variation>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mBU-r2-NUl" customClass="RewindButton" customModule="Zee5PlayerPlugin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="414"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="N7U-8A-6tU"/>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="wVb-OS-loh"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="wVb-OS-loh"/>
-                        </mask>
-                    </variation>
-                    <variation key="widthClass=regular">
-                        <mask key="constraints">
-                            <exclude reference="N7U-8A-6tU"/>
-                            <include reference="wVb-OS-loh"/>
-                        </mask>
-                    </variation>
-                </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGG-Kh-eme">
                     <rect key="frame" x="351.5" y="172" width="193" height="50"/>
                     <subviews>
