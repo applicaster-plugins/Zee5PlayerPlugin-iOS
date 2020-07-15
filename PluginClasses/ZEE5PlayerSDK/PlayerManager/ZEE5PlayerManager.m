@@ -2459,13 +2459,9 @@ static ContentBuisnessType buisnessType;
 
 -(void)downLoadAddConfig:(SuccessHandler)success failureBlock:(FailureHandler)failure
 {
-    if (_playerConfig.shouldStartPlayerInLandScape)
-    {
-        [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
-    }
     NSString * Bundleversion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     NSDictionary *param = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
-      NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:param];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:param];
    
     if (_oneTrustDict != nil) {
         
@@ -3183,7 +3179,8 @@ static ContentBuisnessType buisnessType;
         [touch.view isDescendantOfView:_customControlView.sliderDuration] ||
         [touch.view isDescendantOfView:_customControlView.sliderLive] ||
         [touch.view isDescendantOfView:_customMenu.tblView]) {
-        
+        NSLog(@"simon gestureRecognizer NO %@", v.accessibilityLabel ? v.accessibilityLabel : v);
+
         return NO;
     }
     
