@@ -526,6 +526,9 @@ static ContentBuisnessType buisnessType;
     
     if (self.isLive)
     {
+        [_customControlView.labelLiveCurrentTime setHidden:YES];
+        [_customControlView.labelLiveDuration setHidden:YES];
+        
         if (!_customControlView.sliderLive.isTracking && !_seekStared)
         {
             _customControlView.sliderLive.value = totalSeconds;
@@ -546,9 +549,14 @@ static ContentBuisnessType buisnessType;
         {
             [_customControlView.buttonLive setTitle:@"GO LIVE" forState:UIControlStateNormal];
         }
+        
+        _customControlView.sliderLive.value = _customControlView.sliderLive.maximumValue;
     }
     else
     {
+        [_customControlView.labelLiveCurrentTime setHidden:NO];
+        [_customControlView.labelLiveDuration setHidden:NO];
+        
         if (!_customControlView.sliderDuration.isTracking && !_seekStared)
         {
             _customControlView.sliderDuration.value = totalSeconds;
