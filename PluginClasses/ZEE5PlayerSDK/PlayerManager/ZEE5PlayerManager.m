@@ -3002,6 +3002,7 @@ static ContentBuisnessType buisnessType;
     
     if (_ModelValues.isBeforeTv == true) {
        // [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1000 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup -"];
+         [self HybridViewOpen];
     }
     
     [self showLockedContentControls];
