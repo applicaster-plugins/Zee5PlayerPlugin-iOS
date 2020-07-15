@@ -13,6 +13,12 @@
 #import <Zee5PlayerPlugin/ZEE5PlayerSDK.h>
 #import "Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h"
 
+#define UIColorFromRGB(rgbValue) \
+[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+                green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+                 blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+                alpha:1.0]
+
 @implementation ZEE5CustomControl
 
 - (void)awakeFromNib {
@@ -39,6 +45,17 @@
     
     _buttonLive.layer.cornerRadius = _buttonLive.frame.size.height/2;
     _buttonLive.clipsToBounds = YES;
+    _buttonLive.backgroundColor = UIColor.clearColor;
+    [_buttonLive setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    
+    CGFloat radius = 10;
+    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, radius, radius)];
+    v.userInteractionEnabled = NO;
+    v.frame = CGRectMake(0, _buttonLive.height/2 - radius/2, radius, radius);
+    v.layer.cornerRadius = radius/2;
+    v.backgroundColor = UIColorFromRGB(0xFF0091);
+    
+    [_buttonLive addSubview:v];
     
     _skipIntro.layer.cornerRadius = _buttonLive.frame.size.height/2;
     _skipIntro.clipsToBounds = YES;
