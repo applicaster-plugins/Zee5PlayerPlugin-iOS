@@ -83,19 +83,28 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     PluginConfig *pluginConfig = [self createPluginConfig];
     self.player = [[PlayKitManager sharedInstance] loadPlayerWithPluginConfig:pluginConfig];
-    self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
     
     [self registerPlayerEvents];
     
     self.player.view = playbackView;
 
-    NSURL *contentURL = [[NSURL alloc] initWithString:contentStringURL];
     NSString *entryId = self.currentItem.content_id;
 
-    FairPlayDRMParams* fairplayParams = [[FairPlayDRMParams alloc] initWithLicenseUri:licence base64EncodedCertificate:cerificate];
+#if TARGET_IPHONE_SIMULATOR
+    NSURL *contentURL = [[NSURL alloc] initWithString:@"https://www.csiamerica.com/sites/default/files/CSiBridge_-_07_Staged_Analysis.mp4"];
+    
+    PKMediaSource *source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:nil mediaFormat:MediaFormatMp4];
+    PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
+#else
+    NSURL *contentURL = [[NSURL alloc] initWithString:contentStringURL];
+    
+    self.fairplayProvider.customData = self.currentItem.drm_token;
+    self.player.settings.fairPlayLicenseProvider = self.fairplayProvider;
 
+    FairPlayDRMParams *fairplayParams = [[FairPlayDRMParams alloc] initWithLicenseUri:licence base64EncodedCertificate:cerificate];
+    
     MediaFormat mediaFormat = MediaFormatHls;
-
+    
     if (!currentItem.isDRM) {
         if ([contentStringURL containsString:@".mp3"]) {
             mediaFormat = MediaFormatMp3;
@@ -108,9 +117,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
         }
     }
     
-    PKMediaSource* source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:@[fairplayParams] mediaFormat:mediaFormat];
+    PKMediaSource *source = [[PKMediaSource alloc] init:entryId contentUrl:contentURL mimeType:nil drmData:@[fairplayParams] mediaFormat:mediaFormat];
     
     PKMediaEntry *mediaEntry = [[PKMediaEntry alloc] init:entryId sources:@[source] duration:-1];
+#endif
+
+    
+
     
     // Can set external subtitles only when the duration is known
 //    if (currentItem.duration > 0) {
@@ -120,7 +133,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
 
-    self.fairplayProvider.customData = self.currentItem.drm_token;
     [self.player prepare:mediaConfig];
     [self.player play];
 
@@ -191,7 +203,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
         contentStringURL = [NSString stringWithFormat:@"%@%@",contentStringURL,token];
     }
     
+    
+#if TARGET_IPHONE_SIMULATOR
+    NSURL *contentURL = [[NSURL alloc] initWithString:@"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"];
+#else
     NSURL *contentURL = [[NSURL alloc] initWithString:contentStringURL];
+#endif
     
     NSString *entryId = self.currentItem.content_id;
     
