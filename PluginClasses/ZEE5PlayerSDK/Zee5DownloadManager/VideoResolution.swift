@@ -30,6 +30,6 @@ class ZeeUtility {
     
     func console(_ object: Any) {
         // logs disabled, should be enabled only locally
-        print(object)
+//        print(object)
     }
 }
