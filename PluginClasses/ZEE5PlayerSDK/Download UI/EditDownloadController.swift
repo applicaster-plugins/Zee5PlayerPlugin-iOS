@@ -20,6 +20,8 @@ class EditDownloadController: UIViewController {
     @IBOutlet weak var viewEditMenu: UIView!
     @IBOutlet weak var btnSelectAll: UIButton!
     
+    @IBOutlet weak var selectitemlbl: UILabel!
+    
     private var editItems = [DownloadItem]() {
         didSet {
             self.btnSelectAll.isEnabled = self.editItems.isEmpty ? false : true
@@ -30,9 +32,10 @@ class EditDownloadController: UIViewController {
         super.viewDidLoad()
         self.navigationItem.title = self.selectedIndex == 101 ? self.selectedShow : "Downloads"
         self.tableView.tableHeaderView = self.viewEditMenu
-     
+        self.selectitemlbl.text = PlayerConstants.localizedKeys.Downloads_SubHeader_SelectItemsToDelete_Text.rawValue.localized()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
-        //
+        self.btnSelectAll .setTitle(PlayerConstants.localizedKeys.Downloads_SubHeader_SelectAll_Link.rawValue.localized(), for: UIControl.State.normal)
+
         self.setupEditContentData()
     }
     
@@ -242,7 +245,9 @@ extension EditDownloadController : UITableViewDataSource, UITableViewDelegate{
         let item = self.editItems[index]
         item.isSelected.toggle()
         self.tableView.reloadData()
-        
         self.btnSelectAll.isSelected = self.editItems.contains { ($0.isSelected == true) }
+        if btnSelectAll.isSelected == true {
+               self.btnSelectAll .setTitle(PlayerConstants.localizedKeys.Downloads_SubHeader_Delete_Link.rawValue.localized(), for: UIControl.State.selected)
+        }
     }
 }

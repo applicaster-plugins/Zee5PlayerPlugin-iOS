@@ -27,13 +27,25 @@ enum DownloadStateMenu {
     
     var description: String {
         switch self {
-        case .play:             return "Play"
-        case .retry:            return "Retry Download"
-        case .pause:            return "Pause"
-        case .resume:           return "Resume"
-        case .deleteDownload:   return "Delete Download"
-        case .cancelDownload:   return "Cancel Download"
-        case .restoreDownload:  return "Restore Download"
+    case .play:
+        return PlayerConstants.localizedKeys.Downloads_ListItemOverflowMenu_Play_MenuItem.rawValue.localized()
+            
+    case .retry:
+        return PlayerConstants.localizedKeys.Downloads_ListItemOverflowMenu_RetryDownload_MenuItem.rawValue.localized()
+    case .pause:
+        return PlayerConstants.localizedKeys.Downloads_OverflowMenu_Pause_Button.rawValue.localized()
+            
+    case .resume:
+            return PlayerConstants.localizedKeys.Downloads_OverflowMenu_Resume_Button.rawValue.localized()
+            
+    case .deleteDownload:
+        return PlayerConstants.localizedKeys.Downloads_ListItemOverflowMenu_DeleteDownload_MenuItem.rawValue.localized()
+            
+    case .cancelDownload:
+        return PlayerConstants.localizedKeys.Downloads_ListItemOverflowMenu_CancelDownload_MenuItem.rawValue.localized()
+            
+    case .restoreDownload:
+        return PlayerConstants.localizedKeys.Downloads_ListItemDetails_RestoreDownload_Link.rawValue.localized()
         }
     }
 }
@@ -76,13 +88,14 @@ class DownloadOptionCell: UITableViewCell {
             self.lblInfo.text = "\(duration) • \(totalSize)"
             
             if self.currentItem?.downloadState == .inProgress {
+//                self.lblDownloading.text = "\(PlayerConstants.localizedKeys.Downloads_ListItemDetails_Downloading_Text.rawValue.localized()...)"
                 self.lblDownloading.text = "Downloading..."
             }
             else if self.currentItem?.downloadState == .paused {
-                self.lblDownloading.text = "Paused"
+                self.lblDownloading.text = PlayerConstants.localizedKeys.Downloads_ListItemDetails_Paused_Text.rawValue.localized()
             }
             else if self.currentItem?.downloadState == .expired {
-                self.lblDownloading.text = "Download Expired"
+                self.lblDownloading.text = PlayerConstants.localizedKeys.Downloads_ListItemDetails_DownloadExpired_Text.rawValue.localized()
             }
             self.lblDownloading.isHidden = self.currentItem?.downloadState == .completed ? true : false
             self.lblDownloading.textColor = self.currentItem?.downloadState == .expired ? .red : AppColor.aquaGreen

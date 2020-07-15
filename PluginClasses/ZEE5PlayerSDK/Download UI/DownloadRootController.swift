@@ -24,10 +24,16 @@ public class DownloadRootController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         self.setupTopSgment()
-        //
-        self.navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationBar.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+         
+        var nav = self.navigationController?.navigationBar
+        
+        nav?.barStyle = .black
+        nav?.backgroundColor = UIColor.clear
+        self.navigationItem.title =  PlayerConstants.localizedKeys.Downloads_Header_Downloads_Text.rawValue.localized()
+        nav?.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationItem.rightBarButtonItem?.title =
+            PlayerConstants.localizedKeys.Downloads_SubHeader_Edit_Link.rawValue.localized()
+    
     }
     
     @IBAction func actionBack(_ sender: Any) {
@@ -35,7 +41,9 @@ public class DownloadRootController: UIViewController {
     }
     
     func setupTopSgment() {
-        let items = ["Shows", "Movies", "Videos"]
+        let items = [PlayerConstants.localizedKeys.Downloads_SubHeader_Shows_Tab.rawValue.localized(),
+        PlayerConstants.localizedKeys.Downloads_SubHeader_Movies_Tab.rawValue.localized(),
+        PlayerConstants.localizedKeys.Downloads_SubHeader_Videos_Tab.rawValue.localized()]
         carbonNav = CarbonTabSwipeNavigation(items: items, delegate: self)
         carbonNav.insert(intoRootViewController: self)
         

@@ -355,32 +355,31 @@ extension OfflinePlayerController {
         let value: TimeInterval = 10
         weak var weakSelf = self
         let frame = UIScreen .main.bounds
-        
-        self.forwardButton.frame = .init(x: frame.size.height - 200, y: 0, width: 200, height: frame.size.width)
-        self.viewPlayer.addSubview(self.forwardButton)
-        
-        self.forwardButton.singleTouch = { touch in
-            weakSelf?.forwardButton.resetViews()
-            weakSelf?.playerViewTapped(UITapGestureRecognizer())
-        }
     
-        self.forwardButton.pressed = {pressed in
-            weakSelf?.forwardContent(with: value)
-        }
-        
-        //
-        self.rewindButton.frame = .init(x: 0, y: 0, width: 200, height: self.viewPlayer.frame.height)
-        self.viewPlayer.addSubview(self.rewindButton)
-        
-        self.rewindButton.singleTouch = { touch in
-            weakSelf?.rewindButton.resetViews()
-            weakSelf?.playerViewTapped(UITapGestureRecognizer())
-        }
-        
-        self.rewindButton.pressed = {pressed in
-            weakSelf?.rewindContent(with: value)
-        }
-        
+//        self.rewindButton .resetViews()
+//        self.forwardButton.frame = .init(x: frame.size.height - 200, y: 0, width: 200, height: frame.size.width)
+//        self.viewPlayer.addSubview(self.forwardButton)
+//
+//        self.forwardButton.singleTouch = { touch in
+//            weakSelf?.forwardButton.resetViews()
+//            weakSelf?.playerViewTapped(UITapGestureRecognizer())
+//        }
+//
+//        self.forwardButton.pressed = {pressed in
+//            weakSelf?.forwardContent(with: value)
+//        }
+//        self.rewindButton.frame = .init(x: 0, y: 0, width: 200, height: self.viewPlayer.frame.height)
+//        self.viewPlayer.addSubview(self.rewindButton)
+//
+//        self.rewindButton.singleTouch = { touch in
+//            weakSelf?.rewindButton.resetViews()
+//            weakSelf?.playerViewTapped(UITapGestureRecognizer())
+//        }
+//
+//        self.rewindButton.pressed = {pressed in
+//            weakSelf?.rewindContent(with: value)
+//        }
+
         ///
         self.bringControlsToTop()
     }

@@ -23,7 +23,8 @@ class DownloadTableCell: UITableViewCell {
                 lblTitle.text = show.originalTitle
                 let totalSize = ByteCountFormatter.string(fromByteCount: Int64(show.noOfBytes ?? "0") ?? 0, countStyle: .file)
                 lblInfo.text = "\(show.noOfEpisodes ?? "") Episodes • \(totalSize)"
-                lblDownloading.text = "Downloading \(show.pendingDownloads ?? "") of \(show.noOfEpisodes ?? "")"
+                lblDownloading.text = "\(PlayerConstants.localizedKeys.Downloads_ListItemDetails_Downloading_Text.rawValue.localized()) \(show.pendingDownloads ?? "") of \(show.noOfEpisodes ?? "")"
+                
                 lblDownloading.isHidden = show.downloadState == .inProgress ? false : true
                 imgView.setImage(with: show.showimgUrl)
             }

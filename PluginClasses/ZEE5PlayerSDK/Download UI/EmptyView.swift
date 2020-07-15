@@ -19,6 +19,8 @@ class EmptyView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.btnDownload.layer.applyGradientBorder(withColors: AppColor.gradient, radius: self.btnDownload.frame.size.height / 2)
+        self.btnDownload .setTitle(PlayerConstants.localizedKeys.Downloads_CTA_BrowseToDownload_Button.rawValue.localized(), for: UIControl.State.normal)
+        self.btnDownload.titleLabel?.textColor = UIColor.init(hexColor: "FF0091")
     }
     
     @IBAction func actionBrowseDownload(_ sender: Any) {

@@ -42,6 +42,7 @@ class ShowDetailController: UIViewController {
         self.navigationItem.leftBarButtonItem = backBtn
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.btnEdit)
+        self.navigationItem.rightBarButtonItem?.title = PlayerConstants.localizedKeys.Downloads_SubHeader_Edit_Link.rawValue.localized()
         
         //
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshDownloadData), name: AppNotification.editDownload, object: nil)
