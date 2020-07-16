@@ -392,7 +392,7 @@ static ContentBuisnessType buisnessType;
     }
     
     if (_isContentAvailable == NO) {
-        _customControlView.unavailableContentView.hidden = false;
+        _customControlView.unavailableContentView.hidden = NO;
     }
     
     if (_isNeedToSubscribe) {
@@ -1483,6 +1483,8 @@ static ContentBuisnessType buisnessType;
 
     _customControlView.lableTitle.text = nil;
 
+    _customControlView.unavailableContentView.hidden = YES;
+    
     [self hideUnHidetrailerEndView:YES];
     [self SliderReset];
     [self removeSubview];
@@ -2311,8 +2313,10 @@ static ContentBuisnessType buisnessType;
 
 - (void)setContentUnavailable {
     [self hideLoaderOnPlayer];
+    
     self.isContentAvailable = NO;
-    _customControlView.unavailableContentView.hidden = false;
+    _customControlView.unavailableContentView.hidden = NO;
+    
     [self hideUnHidetrailerEndView: YES];
 }
 
