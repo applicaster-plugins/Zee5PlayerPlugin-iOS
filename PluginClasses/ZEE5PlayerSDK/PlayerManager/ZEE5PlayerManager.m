@@ -1638,14 +1638,15 @@ static ContentBuisnessType buisnessType;
     
 }
 
--(void)setSubTitle:(NSString *)subTitleID Title:(NSString *)SubtitleTitle
+-(void)setSubTitle:(Zee5MenuModel *)model
 {
-    [[Zee5PlayerPlugin sharedInstance].player selectTrackWithTrackId:subTitleID];
+    NSString *trackId = model.idValue;
+    [[Zee5PlayerPlugin sharedInstance].player selectTrackWithTrackId:trackId];
     AnalyticEngine *engine = [[AnalyticEngine alloc]init];
     if ([self.CurrenttextTrack isEqualToString:@""]) {
         self.CurrenttextTrack = @"English";
     }
-    [engine subtitlelangChangeAnalyticsWith:self.CurrenttextTrack newSubtitle:SubtitleTitle Mode:@"Online"];
+    [engine subtitlelangChangeAnalyticsWith:self.CurrenttextTrack newSubtitle:model.title Mode:@"Online"];
 }
 
 
@@ -1704,7 +1705,7 @@ static ContentBuisnessType buisnessType;
 
     for (Track *track in self.audioTracks) {
         Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
-        if ([self.selectedLangauge isEqualToString:track.id])
+        if ([self.selectedLangauge isEqualToString:track.title])
         {
             model.imageName = @"t";
             model.isSelected = true;
@@ -1740,10 +1741,10 @@ static ContentBuisnessType buisnessType;
     model1.isSelected = false;
     [models addObject:model1];
     
-    for (NSString *subtitle in self.currentItem.subTitles)
+    for (Track *track in self.textTracks)
     {
         Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
-        if ([self.selectedSubtitle isEqualToString:subtitle]) {
+        if ([self.selectedSubtitle isEqualToString:track.title]) {
             model.imageName = @"t";
             model.isSelected = true;
         }
@@ -1753,7 +1754,8 @@ static ContentBuisnessType buisnessType;
             model.isSelected = false;
         }
 
-        model.title =  subtitle;
+        model.title =  track.title;
+        model.idValue = track.id;
         model.type = 2;
         [models addObject:model];
     }
@@ -2087,7 +2089,7 @@ static ContentBuisnessType buisnessType;
             [self.offlinePlayer selectTrackWithTrackId: menuModel.idValue];
         }
         else {
-            [self setSubTitle:menuModel.idValue Title:menuModel.title];
+            [self setSubTitle:menuModel];
         }
         
         NSString *str = [menuModel.title.lowercaseString containsString: @"off"] ? @"Off" : @"On";
