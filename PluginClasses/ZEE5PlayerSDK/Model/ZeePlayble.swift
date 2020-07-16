@@ -45,14 +45,19 @@ class ZeePlayable {
     }
     
     public var consumptionType: ConsumptionFeedType {
+        guard let type = self.assetType else {
+            return .video
+        }
+        
+        if (type == 9) {
+            return .live
+        }
+        
         guard let subtype = self.assetSubtype else {
             return .video
         }
         
         switch subtype {
-        case "9":
-            return .live
-            
         case "trailer", "promo":
             return .trailer
             
