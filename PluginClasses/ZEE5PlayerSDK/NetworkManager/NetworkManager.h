@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)makeHttpGetRequest:(NSString *)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
 - (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers shouldCancel:(BOOL)shouldCancel withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
 - (void)makeHttpRawPostRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary *)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 

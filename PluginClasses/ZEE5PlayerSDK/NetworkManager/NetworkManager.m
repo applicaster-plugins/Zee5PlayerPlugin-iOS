@@ -41,8 +41,12 @@ static NetworkManager *sharedManager = nil;
     return self;
 }
 
+- (NSURLSession *)defaultNewSession {
+    return [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+}
+
 - (void)createSession {
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    self.session = [self defaultNewSession];
 }
 
 - (void)cancelAllRequests {
@@ -99,7 +103,11 @@ static NetworkManager *sharedManager = nil;
     [postDataTask resume];
 }
 
-- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure {
+    [self makeHttpRequest:requestname requestUrl:urlString requestParam:param requestHeaders:headers shouldCancel:YES withCompletionHandler:success failureBlock:failure];
+}
+
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers shouldCancel:(BOOL)shouldCancel withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure
 {
     
     NSError *error = nil;
@@ -123,7 +131,12 @@ static NetworkManager *sharedManager = nil;
     }
     [request setHTTPBody:dataFromDict];
     
-    NSURLSessionDataTask *postDataTask = [_session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSession *session = _session;
+    if (!shouldCancel) {
+        session = [self defaultNewSession];
+    }
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error.code == NSURLErrorCancelled) {
             return;
         }

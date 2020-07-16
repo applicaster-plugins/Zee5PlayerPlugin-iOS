@@ -96,7 +96,7 @@ static ReportingManager *sharedManager = nil;
     
      NSDictionary *requestheaders = @{@"Content-Type":@"application/json", @"Authorization": userToken,@"Accept":@"application/json"};
     
-    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
+    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory requestParam:requestParams requestHeaders:requestheaders shouldCancel:NO withCompletionHandler:^(id  _Nullable result)
     {
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
@@ -159,7 +159,7 @@ static ReportingManager *sharedManager = nil;
         requestheaders = @{@"Content-Type":@"application/json", @"Authorization": userToken,@"Accept":@"application/json"};
     }
 
-    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory2 requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result)
+    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory2 requestParam:requestParams requestHeaders:requestheaders shouldCancel:NO withCompletionHandler:^(id  _Nullable result)
     {
         if ([[result valueForKey:@"meta"]isKindOfClass:[NSDictionary class]])
         {
