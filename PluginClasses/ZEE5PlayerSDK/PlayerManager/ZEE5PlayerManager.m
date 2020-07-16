@@ -1902,6 +1902,7 @@ static ContentBuisnessType buisnessType;
                 _parentalControl =NO;
                 _allowVideoContent =YES;
                 [self playWithCurrentItem];
+                _customControlView.parentalDismissView.hidden = YES;
                 
             }
             return;
@@ -2157,6 +2158,7 @@ static ContentBuisnessType buisnessType;
         }
 
         [_parentalView removeFromSuperview];
+        [self showLockedContentControls];
         _parentalView = nil;
     }
 }
