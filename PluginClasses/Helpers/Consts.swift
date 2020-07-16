@@ -129,3 +129,15 @@ public struct ItemTag {
         static let storyLineLabel = 836
     }
 }
+
+class ExtensionsHelper {
+    static func isLive(_ consumptionFeedType: ConsumptionFeedType) -> Bool {
+        return consumptionFeedType == .live || consumptionFeedType == .channel
+    }
+    
+    static func isDownloadable(_ consumptionFeedType: ConsumptionFeedType, _ buisnessType: PlayableBusinessType) -> Bool {
+        return  !isLive(consumptionFeedType) &&
+                (buisnessType == .premiumDownloadable || buisnessType == .freeDownloadable || buisnessType == .advertisementDownloadable)
+
+    }
+}

@@ -271,7 +271,7 @@ class ZeePlayable {
         return nil
     }
     
-    public var businessType: PlayableBusinessType? {
+    public var businessType: PlayableBusinessType {
         guard let value = self.extensions["business_type"] as? String else {
             return .freeDownloadable
         }

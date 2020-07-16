@@ -20,13 +20,13 @@ class ActionBarHelper {
         
         builders.append(ShareActionButtonBuilder.self)
 
-        if consumptionFeedType != .live && consumptionFeedType != .channel {
+        if !ExtensionsHelper.isLive(consumptionFeedType) {
             builders.append(WatchListActionButtonBuilder.self)
         }
         
         builders.append(CastActionButtonBuilder.self)
 
-        if (consumptionFeedType == .movie || consumptionFeedType == .episode || consumptionFeedType == .show || consumptionFeedType == .original || consumptionFeedType == .music || consumptionFeedType == .video || consumptionFeedType == .episode) && (buisnessType == .premiumDownloadable || buisnessType == .freeDownloadable || buisnessType == .advertisementDownloadable) {
+        if ExtensionsHelper.isDownloadable(consumptionFeedType, buisnessType) {
             builders.append(DownloadActionButtonBuilder.self)
         }
         
