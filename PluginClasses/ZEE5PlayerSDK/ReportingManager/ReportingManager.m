@@ -17,6 +17,7 @@
 @property(strong, nonatomic) NSString *QuardileValue;
 @property(strong, nonatomic) NSString *currentDate;
 @property (readwrite, nonatomic) BOOL isAlreadyExist;
+@property (readwrite, nonatomic) BOOL isAlreadyPost;
 @property (readwrite, nonatomic) BOOL isDmpSync;   // For Lotame Analytics Check if value is true
 @property (readwrite, nonatomic) BOOL isLotameEventSent;
 
@@ -68,7 +69,7 @@ static ReportingManager *sharedManager = nil;
 
 - (void)reportWatchHistory
 {
-    if ([[ZEE5PlayerManager sharedInstance]getCurrentDuration] <=0)
+    if ([[ZEE5PlayerManager sharedInstance]getCurrentDuration] <= 0)
     {
         return;
     }
@@ -88,7 +89,6 @@ static ReportingManager *sharedManager = nil;
         @"id": [ZEE5PlayerManager sharedInstance].currentItem.content_id,
         @"asset_type": [ZEE5PlayerManager sharedInstance].currentItem.asset_type,
         @"duration": [NSString stringWithFormat:@"%.f",[[ZEE5PlayerManager sharedInstance] getCurrentDuration]],
-        @"date": _currentDate
     };
     
 
@@ -98,6 +98,7 @@ static ReportingManager *sharedManager = nil;
     
     [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory requestParam:requestParams requestHeaders:requestheaders shouldCancel:NO withCompletionHandler:^(id  _Nullable result)
     {
+        
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {
@@ -117,7 +118,7 @@ static ReportingManager *sharedManager = nil;
 
 - (void)reportWatchHistory2
 {
-    if ([[ZEE5PlayerManager sharedInstance]getCurrentDuration] <=0)
+    if ([[ZEE5PlayerManager sharedInstance]getCurrentDuration] <= 0)
     {
         return;
     }
@@ -127,7 +128,7 @@ static ReportingManager *sharedManager = nil;
     }
     NSString *requestName = @"POST";
     
-    if (_isAlreadyExist)
+    if (_isAlreadyPost)
     {
         requestName = @"PUT";
     }
@@ -142,8 +143,7 @@ static ReportingManager *sharedManager = nil;
     NSDictionary *requestParams = @{
         @"id": [ZEE5PlayerManager sharedInstance].currentItem.content_id,
         @"asset_type": [NSNumber numberWithInt:[[ZEE5PlayerManager sharedInstance].currentItem.asset_type intValue]],
-        @"duration": Duration,
-        @"date": _currentDate
+        @"duration": Duration
     };
     
 
@@ -179,11 +179,11 @@ static ReportingManager *sharedManager = nil;
      {
         if (error.code == 400)
         {
-            self.isAlreadyExist = true;
+            self.isAlreadyPost = true;
         }
         else
         {
-            self.isAlreadyExist = false;
+            self.isAlreadyPost = false;
         }
     }];
    
