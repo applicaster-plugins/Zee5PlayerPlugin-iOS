@@ -17,7 +17,7 @@
 @property(strong, nonatomic) NSString *QuardileValue;
 @property(strong, nonatomic) NSString *currentDate;
 @property (readwrite, nonatomic) BOOL isAlreadyExist;
-@property (readwrite, nonatomic) BOOL isAlreadyExist2;
+@property (readwrite, nonatomic) BOOL isAlreadyPost;
 @property (readwrite, nonatomic) BOOL isDmpSync;   // For Lotame Analytics Check if value is true
 @property (readwrite, nonatomic) BOOL isLotameEventSent;
 
@@ -128,7 +128,7 @@ static ReportingManager *sharedManager = nil;
     }
     NSString *requestName = @"POST";
     
-    if (_isAlreadyExist2)
+    if (_isAlreadyPost)
     {
         requestName = @"PUT";
     }
@@ -142,7 +142,7 @@ static ReportingManager *sharedManager = nil;
     
     NSDictionary *requestParams = @{
         @"id": [ZEE5PlayerManager sharedInstance].currentItem.content_id,
-        @"asset_type": [NSNumber numberWithInt:[[ZEE5PlayerManager sharedInstance].currentItem.asset_type intValue]]
+        @"asset_type": [NSNumber numberWithInt:[[ZEE5PlayerManager sharedInstance].currentItem.asset_type intValue]],
         @"duration": Duration
     };
     
@@ -179,11 +179,11 @@ static ReportingManager *sharedManager = nil;
      {
         if (error.code == 400)
         {
-            self.isAlreadyExist2 = true;
+            self.isAlreadyPost = true;
         }
         else
         {
-            self.isAlreadyExist2 = false;
+            self.isAlreadyPost = false;
         }
     }];
    
