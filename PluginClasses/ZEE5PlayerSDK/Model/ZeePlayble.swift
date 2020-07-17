@@ -191,12 +191,15 @@ class ZeePlayable {
             return season1Index < season2Index
         }
         
-        let latestEpisode = (latestSeason?["episodes"] as? [DefaultDict])?.max { (episode1, episode2) -> Bool in
-            let episode1Index = episode1["index"] as? Int ?? 0
-            let episode2Index = episode2["index"] as? Int ?? 0
-            
-            return episode1Index < episode2Index
-        }
+        let Episodes = (latestSeason?["episodes"] as? [DefaultDict])
+        let latestEpisode = Episodes?[0]
+        
+//         ?.max { (episode1, episode2) -> Bool in
+//            let episode1Index = episode1["index"] as? Int ?? 0
+//            let episode2Index = episode2["index"] as? Int ?? 0
+//
+//            return episode1Index < episode2Index
+//        }
 
         guard let result = latestEpisode else {
             return nil
