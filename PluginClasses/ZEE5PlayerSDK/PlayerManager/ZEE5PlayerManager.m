@@ -395,7 +395,7 @@ static ContentBuisnessType buisnessType;
         _customControlView.unavailableContentView.hidden = NO;
     }
     
-    if (_isNeedToSubscribe) {
+    if (_isNeedToSubscribe && ZEE5PlayerSDK.getUserTypeEnum != premium) {
        [self hideUnHidetrailerEndView:NO];
         return;
     }
@@ -2214,7 +2214,7 @@ static ContentBuisnessType buisnessType;
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self postReloadCurrentContentIdNotification];
-            [self showLockedContentControls];
+            //[self showLockedContentControls];
             
         }
     }];
