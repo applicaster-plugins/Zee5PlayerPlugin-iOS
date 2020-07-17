@@ -227,6 +227,9 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
+    BOOL isReplay = self.videoCompleted;
+    self.videoCompleted = NO;
+    
     [self getBase64StringwithCompletion:^(NSString *base64) {
         if (self.currentItem == nil) {
             return;
@@ -235,7 +238,7 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         [self handleTracks];
         
-        if (ZEE5PlayerSDK.getConsumpruionType == Live == false && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
+        if (!isReplay && ZEE5PlayerSDK.getConsumpruionType != Live && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
             [[ReportingManager sharedInstance] getWatchHistory];
         }
     }];
@@ -389,7 +392,7 @@ static ContentBuisnessType buisnessType;
     }
     
     if (_isContentAvailable == NO) {
-        _customControlView.unavailableContentView.hidden = false;
+        _customControlView.unavailableContentView.hidden = NO;
     }
     
     if (_isNeedToSubscribe) {
@@ -707,58 +710,61 @@ static ContentBuisnessType buisnessType;
 
 - (void)onComplete
 {
-    _isTelco = false;
-      [self pause];
+    _isTelco = NO;
+    
+    [self pause];
     [self hideLoaderOnPlayer];
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false)
-    {
+    
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum != Premium) {
         _videoCompleted = YES;
          [self HybridViewOpen];
-        [self hideUnHidetrailerEndView:false];
+        [self hideUnHidetrailerEndView:NO];
+        
         return;
     }
+    
     if (_isNeedToSubscribe == true) {
-         _videoCompleted = YES;
-                [self HybridViewOpen];
-               [self hideUnHidetrailerEndView:false];
-               return;
+        _videoCompleted = YES;
+        [self HybridViewOpen];
+        [self hideUnHidetrailerEndView:NO];
+        
+        return;
     }
-    if (_isAutoplay == false && _customControlView.btnSkipNext.selected == false)
-    {
+    
+    if (!_isAutoplay && !_customControlView.btnSkipNext.selected) {
         _videoCompleted = YES;
         _customControlView.buttonPlay.hidden = YES;
         _customControlView.buttonReplay.hidden = NO;
         [self hideUnHideTopView:NO];
+        
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        
         [self SliderReset];
     }
-    else
-    {
+    else {
         if (_CreditTimer != nil) {
             return;
         }
-        RelatedVideos *Model;
-             if (self.currentItem.related.count == 1) {
-            Model = self.currentItem.related[0];
-             }else{
-               for (RelatedVideos *Object in self.currentItem.related) {
-                    if ([_PreviousContentArray containsObject:Object.identifier])
-                        {
-                        }
-                        else{
-                           Model = Object;
-                           break;
-                         }
-                    }
-             }
-
-       
-        [[ZEE5PlayerManager sharedInstance] playSimilarEvent:Model.identifier];
-        [self postContentIdShouldUpdateNotification:Model.identifier];
+        
+        RelatedVideos *nextItem = nil;
+        if (self.currentItem.related.count == 1) {
+            nextItem = self.currentItem.related[0];
+        }
+        else {
+            for (RelatedVideos *relatedVideo in self.currentItem.related) {
+                if (![_PreviousContentArray containsObject:relatedVideo.identifier]) {
+                    nextItem = relatedVideo;
+                    break;
+                }
+            }
+        }
+        
+        if (nextItem != nil) {
+            [[ZEE5PlayerManager sharedInstance] playSimilarEvent:nextItem.identifier];
+            [self postContentIdShouldUpdateNotification:nextItem.identifier];
+        }
     }
 }
-
-
 
 //MARK:- HandleHlsError(ndToken Method)
 
@@ -1017,17 +1023,14 @@ static ContentBuisnessType buisnessType;
 
 -(void)replay
 {
-    [self showAllControls];
-    _videoCompleted = false;
-    _customControlView.buttonPlay.hidden = NO;
-    _customControlView.sliderDuration.value = 0.0;
-    _customControlView.bufferProgress.progress = 0.0;
-    _customControlView.labelCurrentTime.text = @"00:00";
-     [[AnalyticEngine shared]ReplayVideo];
-    [self hideLoaderOnPlayer];
+    [[NetworkManager sharedInstance] cancelAllRequests];
+
+    [self resetControls];
+    [self showloaderOnPlayer];
     
-    [self play];
+    [[AnalyticEngine shared] ReplayVideo];
     
+    [self playWithCurrentItem];
 }
 
 - (void)stop
@@ -1239,7 +1242,8 @@ static ContentBuisnessType buisnessType;
     }
 }
 
--(void)SliderReset{
+-(void)SliderReset {
+    _customControlView.bufferProgress.progress = 0;
     _customControlView.sliderDuration.value = 0;
     _customControlView.labelCurrentTime.text = @"00:00";
     _customControlView.labelTotalDuration.text = nil;
@@ -1454,10 +1458,12 @@ static ContentBuisnessType buisnessType;
 - (void)resetControls {
     _customControlView.btnMinimize.hidden = YES;
     
+    _customControlView.buttonPlay.hidden = NO;
+    _customControlView.buttonReplay.hidden = YES;
+    
     _customControlView.viewTop.hidden = YES;
     _customControlView.topView.hidden = YES;
     _customControlView.playerControlView.hidden = YES;
-
     _customControlView.collectionView.hidden = YES;
     _customControlView.backtoPartnerView.hidden = YES;
     
@@ -1477,6 +1483,8 @@ static ContentBuisnessType buisnessType;
 
     _customControlView.lableTitle.text = nil;
 
+    _customControlView.unavailableContentView.hidden = YES;
+    
     [self hideUnHidetrailerEndView:YES];
     [self SliderReset];
     [self removeSubview];
@@ -2307,8 +2315,10 @@ static ContentBuisnessType buisnessType;
 
 - (void)setContentUnavailable {
     [self hideLoaderOnPlayer];
+    
     self.isContentAvailable = NO;
-    _customControlView.unavailableContentView.hidden = false;
+    _customControlView.unavailableContentView.hidden = NO;
+    
     [self hideUnHidetrailerEndView: YES];
 }
 

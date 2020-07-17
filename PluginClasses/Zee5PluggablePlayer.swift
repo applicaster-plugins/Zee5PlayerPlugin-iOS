@@ -249,6 +249,9 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             return
         }
         
+        self.playerAdapter.endSession()
+        self.hybridViewController?.playable = nil
+        
         func play() {
             guard
                 self.initialPlayableItem != nil else {
