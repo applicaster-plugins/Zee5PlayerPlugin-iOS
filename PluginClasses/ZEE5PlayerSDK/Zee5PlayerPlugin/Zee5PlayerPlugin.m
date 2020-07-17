@@ -125,13 +125,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
     
     // Can set external subtitles only when the duration is known
-    if (currentItem.duration > 0 && _SubtitleError == false) {
+    if (_SubtitleError == true) {
+           mediaEntry.externalSubtitles = nil;
+       }
+    else if (currentItem.duration > 0 && ![currentItem.vttThumbnailsUrl containsString:@"mp4"] ) {
         mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
     }
-    if (_SubtitleError == true) {
-        mediaEntry.externalSubtitles = nil;
-    }
-    
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
     _SubtitleError = false;
@@ -504,7 +503,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
         {
-             self->_SubtitleError = true;
+             weakSelf.SubtitleError = true;
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
             [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
         }

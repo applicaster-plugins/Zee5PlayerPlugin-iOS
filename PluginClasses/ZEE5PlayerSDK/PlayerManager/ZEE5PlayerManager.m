@@ -2214,6 +2214,7 @@ static ContentBuisnessType buisnessType;
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self postReloadCurrentContentIdNotification];
+            [self showLockedContentControls];
             
         }
     }];
