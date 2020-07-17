@@ -32,6 +32,7 @@
 @property (nonatomic) int PlayerStartTime;          ///   Use In analytics when Seekbar chnaged
 @property (nonatomic) int PlayerEndTime;            ///   Use In analytics when Seekbar chnaged
 @property (nonatomic) int adCount;
+@property(nonatomic) BOOL SubtitleError;
 
 
 
@@ -123,16 +124,16 @@ static Zee5PlayerPlugin *sharedManager = nil;
 #endif
 
     
-
-    
     // Can set external subtitles only when the duration is known
-//    if (currentItem.duration > 0) {
-//        mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
-//    }
-    
+    if (_SubtitleError == true) {
+           mediaEntry.externalSubtitles = nil;
+    }
+    else if (currentItem.duration > 0 && ![currentItem.vttThumbnailsUrl containsString:@"mp4"] ) {
+        mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
+    }
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
-
+    _SubtitleError = false;
     [self.player prepare:mediaConfig];
     [self.player play];
 
@@ -502,10 +503,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
         {
+             weakSelf.SubtitleError = true;
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
-            
             [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
-            
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
         }];
@@ -791,8 +791,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
                                                                       characteristics:@""];
         
         [result addObject:externalSubtitle];
+        break;
     }
-    
     return result;
 }
 
