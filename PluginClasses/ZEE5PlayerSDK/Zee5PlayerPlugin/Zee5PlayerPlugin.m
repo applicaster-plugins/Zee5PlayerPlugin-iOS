@@ -127,7 +127,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     // Can set external subtitles only when the duration is known
     if (_SubtitleError == true) {
            mediaEntry.externalSubtitles = nil;
-       }
+    }
     else if (currentItem.duration > 0 && ![currentItem.vttThumbnailsUrl containsString:@"mp4"] ) {
         mediaEntry.externalSubtitles = [self externalSubtitlesFrom:currentItem.subTitles vttThumbnailsUrl:currentItem.vttThumbnailsUrl duration:currentItem.duration];
     }
