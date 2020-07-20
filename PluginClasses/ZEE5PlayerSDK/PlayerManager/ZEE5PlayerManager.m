@@ -418,24 +418,26 @@ static ContentBuisnessType buisnessType;
         [singleton.ViewsArray addObject:_customControlView.viewLive];
     }
     if (_customControlView.stackLoginView != nil && [singleton.ViewsArray containsObject:_customControlView.stackLoginView]== false) {
-          [singleton.ViewsArray addObject:_customControlView.stackLoginView];
-      }
+        [singleton.ViewsArray addObject:_customControlView.stackLoginView];
+    }
     if (_customControlView.watchcretidStackview != nil && [singleton.ViewsArray containsObject:_customControlView.watchcretidStackview]== false ) {
-             [singleton.ViewsArray addObject:_customControlView.watchcretidStackview];
-         }
+        [singleton.ViewsArray addObject:_customControlView.watchcretidStackview];
+    }
     if (_customControlView.adultView != nil && [singleton.ViewsArray containsObject:_customControlView.adultView]== false) {
-                [singleton.ViewsArray addObject:_customControlView.adultView];
-        }
+        [singleton.ViewsArray addObject:_customControlView.adultView];
+    }
     if (_customControlView.parentalDismissView != nil && [singleton.ViewsArray containsObject:_customControlView.parentalDismissView]== false) {
-                   [singleton.ViewsArray addObject:_customControlView.parentalDismissView];
-           }
+        [singleton.ViewsArray addObject:_customControlView.parentalDismissView];
+    }
     if (_customControlView.playerControlView != nil && [singleton.ViewsArray containsObject:_customControlView.playerControlView]== false ) {
-            [singleton.ViewsArray addObject:_customControlView.playerControlView];
+        [singleton.ViewsArray addObject:_customControlView.playerControlView];
     }
     if (_parentPlaybackView != nil && [singleton.ViewsArray containsObject:_parentPlaybackView]== false ) {
-               [singleton.ViewsArray addObject:_parentPlaybackView];
-       }
-    
+        [singleton.ViewsArray addObject:_parentPlaybackView];
+    }
+    if (_customControlView.btnMinimize != nil && [singleton.ViewsArray containsObject:_customControlView.btnMinimize]== false) {
+        [singleton.ViewsArray addObject:_customControlView.btnMinimize];
+    }
 }
 
 -(void)hideUnHideTopView:(BOOL )isHidden
