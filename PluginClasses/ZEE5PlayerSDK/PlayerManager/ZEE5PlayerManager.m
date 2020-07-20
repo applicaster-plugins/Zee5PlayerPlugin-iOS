@@ -2344,6 +2344,7 @@ static ContentBuisnessType buisnessType;
         
     [[AnalyticEngine shared] VideoStartTimeWith:0];
     [[AnalyticEngine shared] AudioLanguageWith:@""];
+    [[AnalyticEngine shared]cleanupVideoSesssion];
     [self SliderReset];
     
     [ZEE5UserDefaults setContentId:model.identifier];
@@ -2654,6 +2655,7 @@ static ContentBuisnessType buisnessType;
 
 -(void)CreateConvivaSession{
        [[AnalyticEngine shared] cleanupVideoSesssion];
+       //[[AnalyticEngine shared] cleanupAdSession];
        [self createConvivaSeesionWithMetadata];
 }
 // MARK:- Set Current Item For Live Data(url,drmToken,Title)
