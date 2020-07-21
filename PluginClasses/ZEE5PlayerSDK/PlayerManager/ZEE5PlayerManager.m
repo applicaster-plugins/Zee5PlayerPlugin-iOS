@@ -238,6 +238,10 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         [self handleTracks];
         
+        if (_customControlView.btnSkipNext.selected == true) {
+            [self LocalStorageArray];
+        }
+        
         if (!isReplay && ZEE5PlayerSDK.getConsumpruionType != Live && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
             [[ReportingManager sharedInstance] getWatchHistory];
         }
@@ -368,8 +372,6 @@ static ContentBuisnessType buisnessType;
     [Zee5PlayerPlugin sharedInstance].player.view.userInteractionEnabled = YES;
     
     [self MoatViewAdd];
-    [self LocalStorageArray];
-    
     [[Zee5PlayerPlugin sharedInstance].player setRate:1.0];
     
     [self resetControls];
@@ -717,7 +719,7 @@ static ContentBuisnessType buisnessType;
     [self pause];
     [self hideLoaderOnPlayer];
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum != Premium) {
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum != Premium && !_customControlView.btnSkipNext.selected) {
         _videoCompleted = YES;
          [self HybridViewOpen];
         [self hideUnHidetrailerEndView:NO];
@@ -725,7 +727,7 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (_isNeedToSubscribe == true) {
+    if (_isNeedToSubscribe == true && !_customControlView.btnSkipNext.selected) {
         _videoCompleted = YES;
         [self HybridViewOpen];
         [self hideUnHidetrailerEndView:NO];
