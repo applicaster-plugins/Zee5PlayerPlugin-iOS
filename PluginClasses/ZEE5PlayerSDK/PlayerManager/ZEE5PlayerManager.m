@@ -3025,18 +3025,23 @@ static ContentBuisnessType buisnessType;
 -(void)getUserSettings{
     
 
-   NSString *result = [ZEE5UserDefaults getUserSetting];
-      if ([result isKindOfClass:[NSNull class]] || result.length ==0 || ZEE5PlayerSDK.getUserTypeEnum == Guest)
+      NSString *result = [ZEE5UserDefaults getUserSetting];
+    if ([result isKindOfClass:[NSNull class]] || result.length == 0) {
+        return;
+    }
+      NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
+      id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+      userSettingDataModel *settingModel = [userSettingDataModel initFromJSONDictionary:resultData];
+    
+      if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
       {
           self.parentalControl = NO;
           self.isParentalControlOffline = NO;
+          if ([settingModel.autoPlay isEqualToString:@"true"]) {
+              _isAutoplay = true;
+          }
           return;
       }
-    
-    NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
-   id _Nullable resultData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    
-        userSettingDataModel *settingModel = [userSettingDataModel initFromJSONDictionary:resultData];
         self.ageRating =settingModel.ageRating;
         self.parentalPin = settingModel.userPin;
     _isAutoplay = false;
