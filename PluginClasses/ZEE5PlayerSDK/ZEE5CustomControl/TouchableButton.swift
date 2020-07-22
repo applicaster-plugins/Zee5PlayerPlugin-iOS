@@ -22,7 +22,7 @@ public class TouchableButton: UIButton {
     @objc public var pressed: ((_ value:Bool) -> Void)?
     @objc public var singleTouch: ((_ value:Bool) -> Void)?
 
-    fileprivate lazy var btnImage : UILabel = {
+    fileprivate lazy var arrowLabel : UILabel = {
         let label = UILabel()
         
         label.font = UIFont(name:"ZEE5_Player", size : 20)
@@ -32,32 +32,28 @@ public class TouchableButton: UIButton {
         return label
     }()
     
-    fileprivate lazy var btnLabel : UILabel = {
+    fileprivate lazy var timeLabel : UILabel = {
         let label = UILabel()
         
         label.textColor = .white
-        label.font = UIFont(name:"NotoSans", size : 16)
+        label.font = UIFont(name:"NotoSans", size : 14)
+        label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
         label.isUserInteractionEnabled = false
         
         return label
     }()
     
-    fileprivate lazy var stackView : UIStackView = {
-        let stack = UIStackView()
+    fileprivate lazy var containerView : UIView = {
+        let containerView = UIView()
+        self.addSubview(containerView)
         
-        stack.axis = .vertical
-        stack.spacing = 2.0
+        containerView.fillCenteredInParent(height: 0)
+
+        containerView.isHidden = true
+        containerView.isUserInteractionEnabled = false
         
-        self.addSubview(stack)
-        
-        stack.isHidden = true
-        
-        stack.centerInParent(size: CGSize(width: 100, height: 50))
-        
-        stack.isUserInteractionEnabled = false
-        
-        return stack
+        return containerView
     }()
     
     override public func awakeFromNib() {
@@ -65,8 +61,11 @@ public class TouchableButton: UIButton {
         
         setTarget()
         
-        self.stackView.addArrangedSubview(self.btnImage)
-        self.stackView.addArrangedSubview(self.btnLabel)
+        self.containerView.addSubview(self.arrowLabel)
+        self.arrowLabel.anchorToTop()
+        
+        self.containerView.addSubview(self.timeLabel)
+        self.timeLabel.anchorBelowOf(view: self.arrowLabel)
     }
     
     private func setTarget() {
@@ -99,18 +98,18 @@ public class TouchableButton: UIButton {
         valueChanged?(finalTouches,counter)
         self.touches = 0
         self.finalTouches = 0
-        self.btnLabel.text = ""
+        self.timeLabel.text = ""
         
         self.backgroundColor = UIColor.clear
         
-        self.stackView.isHidden = true
+        self.containerView.isHidden = true
         
         counter = 0
     }
     
     @objc public func resetViews() {
         self.backgroundColor = UIColor.clear
-        self.stackView.isHidden = true
+        self.containerView.isHidden = true
         counter = 0
     }
     
@@ -122,13 +121,13 @@ public class TouchableButton: UIButton {
                 
             if touches != 1 {
                 self.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
-                stackView.isHidden = false
+                self.containerView.isHidden = false
                 
                 if counter <= 10 {
-                    btnLabel.text = "10 Seconds"
+                    self.timeLabel.text = "10 Seconds"
                 }
                 else{
-                    btnLabel.text = "\(counter - 10) Seconds"
+                    self.timeLabel.text = "\(counter - 10) Seconds"
                 }
                 
                 pressed?(true)
@@ -154,7 +153,7 @@ public class ForwardButton: TouchableButton {
         semanticContentAttribute = .forceRightToLeft
         contentHorizontalAlignment = .right
         
-        self.btnImage.text = "3"
+        self.arrowLabel.text = "3" // the font converts this value to an image
     }
     
     override func checkTouch(duration: Int, position: Int) -> Bool {
@@ -178,7 +177,7 @@ public class RewindButton: TouchableButton {
         semanticContentAttribute = .forceLeftToRight
         contentHorizontalAlignment = .left
         
-        self.btnImage.text = "N"
+        self.arrowLabel.text = "N"  // the font converts this value to an image
     }
     
     override func checkTouch(duration: Int, position: Int) -> Bool {
