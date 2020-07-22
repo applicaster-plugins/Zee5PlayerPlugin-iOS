@@ -95,7 +95,7 @@
                     </variation>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="32F-Kd-DAn">
-                    <rect key="frame" x="0.0" y="339" width="896" height="75"/>
+                    <rect key="frame" x="0.0" y="349" width="896" height="65"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXD-zP-Fnc">
                             <rect key="frame" x="0.0" y="0.0" width="896" height="35"/>
@@ -161,16 +161,16 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KAO-pB-dvA">
-                            <rect key="frame" x="0.0" y="40" width="896" height="35"/>
+                            <rect key="frame" x="0.0" y="40" width="896" height="25"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSo-wd-ZW7">
-                                    <rect key="frame" x="10" y="5" width="881" height="25"/>
+                                    <rect key="frame" x="10" y="5" width="881" height="15"/>
                                     <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="11"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="msW-Rc-JYo">
-                                    <rect key="frame" x="1" y="1" width="894" height="33"/>
+                                    <rect key="frame" x="1" y="1" width="894" height="23"/>
                                     <connections>
                                         <action selector="bactoPartnetAppAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="DlB-7y-9PC"/>
                                     </connections>
@@ -178,7 +178,7 @@
                             </subviews>
                             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="35" id="5TY-vk-XS3"/>
+                                <constraint firstAttribute="height" constant="25" id="5TY-vk-XS3"/>
                                 <constraint firstItem="lSo-wd-ZW7" firstAttribute="top" secondItem="KAO-pB-dvA" secondAttribute="top" constant="5" id="7cm-I5-U3q"/>
                                 <constraint firstItem="lSo-wd-ZW7" firstAttribute="leading" secondItem="KAO-pB-dvA" secondAttribute="leading" constant="10" id="8DL-b1-vlA"/>
                                 <constraint firstAttribute="bottom" secondItem="lSo-wd-ZW7" secondAttribute="bottom" constant="5" id="Fdk-8r-Agx"/>
@@ -260,7 +260,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4i-9L-w3V">
-                    <rect key="frame" x="811" y="304" width="80" height="30"/>
+                    <rect key="frame" x="811" y="314" width="80" height="30"/>
                     <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="80" id="97n-ea-7MB"/>
