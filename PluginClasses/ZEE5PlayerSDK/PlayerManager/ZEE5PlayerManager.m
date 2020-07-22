@@ -334,9 +334,8 @@ static ContentBuisnessType buisnessType;
     NSArray * Rate = [[NSArray alloc]initWithObjects:@"0.5X",@"1X",@"1.5X",@"2X",@"2.5X",@"3X", nil];
     
     self.playBackRate = Rate;
-       
+    self.selectedplaybackRate = @"1X";
     NSBundle *bundle = [NSBundle bundleForClass:self.class];
-
     [_customControlView.sliderLive animateToolTipFading:NO];
 
     // temporal bypass to get the view, must refactor the xib structure
@@ -1016,6 +1015,7 @@ static ContentBuisnessType buisnessType;
     _offlineTextTracks = nil;
     _audioTracks = nil;
     _offlineLanguageTracks = nil;
+    self.selectedplaybackRate = @"1X";
     self.LiveModelValues = nil;
     self.ModelValues = nil;
     self.posterImageView.image = nil;
