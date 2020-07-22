@@ -98,6 +98,19 @@ import Foundation
         self.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: inset).isActive = true
     }
     
+    public func anchorBelowOf(view: UIView) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        self.bottomAnchor.constraint(lessThanOrEqualTo: parent.bottomAnchor).isActive = true
+    }
+    
     public func centerInParent(size: CGSize) {
         guard let parent = self.superview else {
             return
