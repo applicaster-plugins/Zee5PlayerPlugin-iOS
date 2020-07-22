@@ -192,14 +192,16 @@ class ZeePlayable {
         }
         
         let Episodes = (latestSeason?["episodes"] as? [DefaultDict])
-        let latestEpisode = Episodes?[0]
-        
-//         ?.max { (episode1, episode2) -> Bool in
-//            let episode1Index = episode1["index"] as? Int ?? 0
-//            let episode2Index = episode2["index"] as? Int ?? 0
-//
-//            return episode1Index < episode2Index
-//        }
+        if ((Episodes?.count) == 0) {
+            if let Promos = latestSeason?["promos"] as? [DefaultDict] {
+                if Promos.count > 0 {
+                    let latestPromo = Promos[0]
+                    return Episode(contentId: latestPromo["id"] as? String, title: latestPromo["title"] as? String)
+                }
+            }
+            return nil
+        }
+       let latestEpisode = Episodes?[0]
 
         guard let result = latestEpisode else {
             return nil
