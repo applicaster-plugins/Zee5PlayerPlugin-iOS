@@ -1104,7 +1104,7 @@ static ContentBuisnessType buisnessType;
     _PlayerStartTime = duration;    // Duration Get From WatchHistory Api Response.
     
     NSString *videoStartPoint = [Utility stringFromTimeInterval:duration];
-    NSString *VideoEndpoint = [Utility stringFromTimeInterval:[[Zee5PlayerPlugin sharedInstance]getDuration]];
+    NSString *VideoEndpoint = [Utility stringFromTimeInterval:_currentItem.duration];
     NSDictionary *dict = @{@"videoStartPoint" : videoStartPoint,@"videoEndPoint":VideoEndpoint};
     [[AnalyticEngine shared]VideoStartTimeWith:duration];
     [self updateConvivaSessionWithMetadata: dict];
@@ -2807,8 +2807,8 @@ static ContentBuisnessType buisnessType;
     }
     
     NSString *BeforeTv = @"Y";
-    if (_ModelValues.isBeforeTv) {
-        AutoPlay = @"N";
+    if (_ModelValues.isBeforeTv || _isLive) {
+        BeforeTv = @"N";
     }
     NSMutableArray *LanguageArr = [[NSMutableArray alloc]init];
     NSString *LanguageStr;
