@@ -3127,7 +3127,7 @@ static ContentBuisnessType buisnessType;
                {
                    [self DevicePopupShow];
                }
-        if (error.zeeErrorCode == 3803) {
+        if (error.zeeErrorCode == 3803 || error.zeeErrorCode == 3804) {
             [self playTrailer];
         }
     }];
