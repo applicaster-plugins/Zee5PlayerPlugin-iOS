@@ -46,6 +46,21 @@ import Foundation
         self.centerXAnchor.constraint(equalTo: parent.centerXAnchor).isActive = true
     }
     
+    public func fillCenteredInParent(height: CGFloat) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        if height > 0 {
+            self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        self.centerYAnchor.constraint(equalTo: parent.centerYAnchor).isActive = true
+    }
+    
     public func anchorToTop() {
         guard let parent = self.superview else {
             return
