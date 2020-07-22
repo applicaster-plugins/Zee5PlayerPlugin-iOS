@@ -238,9 +238,8 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         [self handleTracks];
         
-        if (_customControlView.btnSkipNext.selected == true) {
-            [self LocalStorageArray];
-        }
+        [self LocalStorageArray];
+
         
         if (!isReplay && ZEE5PlayerSDK.getConsumpruionType != Live && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
             [[ReportingManager sharedInstance] getWatchHistory];
@@ -1127,6 +1126,9 @@ static ContentBuisnessType buisnessType;
         if (_currentItem.related.count>0)
         {
             _customControlView.btnSkipNext.selected = YES;
+            if (_PreviousContentArray == nil) {
+                            _PreviousContentArray = [[[NSMutableArray alloc]initWithObjects:_currentItem.content_id, nil]mutableCopy];
+                        }
             [self onComplete];
         }
     }
