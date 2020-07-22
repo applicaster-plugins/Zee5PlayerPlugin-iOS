@@ -26,8 +26,8 @@
 - (id)init {
   if (self = [super init]) {
       ViewsArray = [[NSMutableArray alloc]init];
-      isAdPause = false;
-      isAdStarted = false;
+      isAdPause = NO;
+      isAdStarted = NO;
   }
   return self;
 }

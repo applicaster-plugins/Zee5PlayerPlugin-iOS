@@ -379,6 +379,7 @@ static ContentBuisnessType buisnessType;
 -(void)showLockedContentControls {
     [self hideLoaderOnPlayer];
     
+    _customControlView.hidden = NO;
     _customControlView.parentalDismissView.hidden = YES;
     _customControlView.adultView.hidden = YES;
     _customControlView.trailerEndView.hidden = YES;
@@ -1009,6 +1010,8 @@ static ContentBuisnessType buisnessType;
     [[Zee5PlayerPlugin sharedInstance].player destroy];
     _currentItem = nil;
     
+     singleton.isAdStarted = NO;
+     singleton.isAdPause = NO;
     _textTracks = nil;
     _offlineTextTracks = nil;
     _audioTracks = nil;
