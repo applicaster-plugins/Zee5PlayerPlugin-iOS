@@ -25,7 +25,6 @@
                 <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dJR-IO-Knz">
                     <rect key="frame" x="1" y="1" width="412" height="770"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <state key="normal" title="Button"/>
                     <connections>
                         <action selector="closeBtnAction:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="xqF-tn-gU3"/>
                     </connections>
