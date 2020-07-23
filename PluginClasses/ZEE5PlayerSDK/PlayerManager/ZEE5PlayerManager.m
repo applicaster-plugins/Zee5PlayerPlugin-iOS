@@ -334,7 +334,7 @@ static ContentBuisnessType buisnessType;
     NSArray * Rate = [[NSArray alloc]initWithObjects:@"0.5X",@"1X",@"1.5X",@"2X",@"2.5X",@"3X", nil];
     
     self.playBackRate = Rate;
-    self.selectedplaybackRate = @"1X";
+    self.selectedplaybackRate = self.selectedSubtitle =@"1X";
     NSBundle *bundle = [NSBundle bundleForClass:self.class];
     [_customControlView.sliderLive animateToolTipFading:NO];
 
@@ -1015,7 +1015,7 @@ static ContentBuisnessType buisnessType;
     _offlineTextTracks = nil;
     _audioTracks = nil;
     _offlineLanguageTracks = nil;
-    self.selectedplaybackRate = @"1X";
+    self.selectedplaybackRate = self.selectedplaybackRateOffline = @"1X";
     self.LiveModelValues = nil;
     self.ModelValues = nil;
     self.posterImageView.image = nil;
@@ -2094,8 +2094,8 @@ static ContentBuisnessType buisnessType;
     {
         [self removeMenuView];
         self.selectedplaybackRate =menuModel.title;
+        self.selectedplaybackRateOffline = menuModel.title;
         [self setPlaybackRate:menuModel.idValue Title:menuModel.title];
-        
     }
     else if([self.selectedString isEqualToString:SUBTITLES] )
     {
@@ -3436,7 +3436,7 @@ static ContentBuisnessType buisnessType;
 
         for (NSString *value in self.playBackRate) {
             Zee5MenuModel *model = [[Zee5MenuModel alloc] init];
-            if ([self.selectedplaybackRate isEqualToString:value])
+            if ([self.selectedplaybackRateOffline isEqualToString:value])
             {
                 model.imageName = @"t";
                 model.isSelected = true;

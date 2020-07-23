@@ -91,24 +91,33 @@ protocol OfflineVideoDurationDelegate: class {
     @IBAction func actionBack(_ sender: Any) {
         playerOffline.stop()
         playerOffline.destroy()
+        ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
         self.dismissViewController(withAnimation: true)
     }
     
-    func hideUnHindeTopView(isHidden: Bool) {
+    @objc func hideUnHindeTopView(isHidden: Bool) {
         self.btnPlay.isHidden = isHidden
         self.btnBack.isHidden = isHidden
         self.viewSlider.isHidden = isHidden
         self.lblContentTitle.isHidden = isHidden
+        self.btnMenu.isHidden = isHidden
         self.checkMenuOptionState()
+        if isHidden == false {
+             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                if self?.viewPlayer != nil{
+                self?.hideUnHindeTopView(isHidden: true)
+            }
+        }
     }
-    
+}
     func checkMenuOptionState() {
-        if self.availableTracks?.audioTracks?.count ?? 0 > 1 || self.availableTracks?.textTracks?.count ?? 0 > 1 {
-            self.btnMenu.isHidden = false
-        }
-        else {
-            self.btnMenu.isHidden = true
-        }
+//        if self.availableTracks?.audioTracks?.count ?? 0 > 1 || self.availableTracks?.textTracks?.count ?? 0 > 1 {
+//            self.btnMenu.isHidden = false
+//        }
+//        else {
+//            self.btnMenu.isHidden = true
+//        }
+        // self.btnMenu.isHidden = false
     }
     
     func NotificationObserver() {
@@ -321,6 +330,13 @@ extension OfflinePlayerController {
             self.availableTracks = event.tracks
             self.playerOffline.removeObserver(self, event: PlayerEvent.tracksAvailable)
         }
+        self.playerOffline.addObserver(self, event: PlayerEvent.playing) {[weak self] (event) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                if self?.viewPlayer != nil{
+                self?.hideUnHindeTopView(isHidden: true)
+            }
+        }
+    }
         
         self.playerOffline.addObserver(self, event: PlayerEvent.textTrackChanged) { (event) in
             if let title = event.selectedTrack?.title {
@@ -440,10 +456,13 @@ extension OfflinePlayerController {
     }
     
     @IBAction func actionMoreClicked(_ sender: UIButton) {
+        
         if let audioTracks = self.availableTracks?.audioTracks,
             let textTracks = self.availableTracks?.textTracks {
-            
             ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio: audioTracks, text: textTracks, with: self.playerOffline)
+        }else{
+            ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio:[Track](), text: [Track](), with: self.playerOffline)
         }
+    
     }
 }

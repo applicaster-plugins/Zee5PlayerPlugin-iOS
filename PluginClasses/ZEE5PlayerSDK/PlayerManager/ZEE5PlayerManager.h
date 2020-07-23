@@ -174,6 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isOfflineContent;
 @property NSArray<Track*>* offlineTextTracks;
 @property NSArray<Track*>* offlineLanguageTracks;
+@property(nonatomic) NSString *selectedplaybackRateOffline;
 @property (strong, nonatomic) id<Player> offlinePlayer;
 
 @end
