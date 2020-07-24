@@ -79,6 +79,7 @@
 
 @property(nonatomic) UIPanGestureRecognizer *panGesture;
 @property(nonatomic) UITapGestureRecognizer *tapGesture;
+@property(nonatomic) UIPinchGestureRecognizer *pinGesture;
 
 @property(nonatomic) NSString *selectedString;         // Selected Value Of MenuView From Player.
 
@@ -115,6 +116,8 @@
 @property(nonatomic) NSInteger watchCreditsTime;
 @property(nonatomic) NSInteger watchHistorySecond;
 
+@property(nonatomic) float currentScale;
+@property(nonatomic) float endScale;
 
 @property(nonatomic)int watchCtreditSeconds;
 
@@ -363,6 +366,10 @@ static ContentBuisnessType buisnessType;
     _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePanGesture:)];
     [self.parentPlaybackView addGestureRecognizer:_panGesture];
     _panGesture.cancelsTouchesInView = NO;
+    
+    _pinGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinGesture:)];
+    _pinGesture.delegate = self;
+     [self.parentPlaybackView addGestureRecognizer:_pinGesture];
 
     self.parentPlaybackView.accessibilityLabel = @"ParentPlaybackView";
     
@@ -862,6 +869,32 @@ static ContentBuisnessType buisnessType;
         return;
     }
 
+}
+- (void)handlePinGesture:(UIPinchGestureRecognizer *)sender{
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan:self.pinGesture.state;
+            _currentScale = _pinGesture.scale;
+            break;
+        case UIGestureRecognizerStateEnded:self.pinGesture.state;
+            _endScale = _pinGesture.scale;
+            [self pinchZoomPlayerview:_currentScale End:_endScale];
+            break;
+        default:
+            break;
+    }
+}
+-(void)pinchZoomPlayerview:(float)currentScale End:(float)endScale{
+    if (endScale > currentScale ) {
+        if (_parentPlaybackView != nil && singleton.isAdStarted == false) {
+            [Zee5PlayerPlugin .sharedInstance.player.view setContentMode:UIViewContentModeScaleAspectFill];
+        }
+        
+    }else if (currentScale > endScale){
+        if (_parentPlaybackView != nil && singleton.isAdStarted == false) {
+                   [Zee5PlayerPlugin .sharedInstance.player.view setContentMode:UIViewContentModeScaleAspectFit];
+               }
+    }
+    _currentScale = _endScale = 0.0;
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender
