@@ -349,6 +349,12 @@ extension OfflinePlayerController {
                 ZEE5PlayerManager.sharedInstance().selectedLangauge = title
             }
         }
+        
+        self.playerOffline.addObserver(self, event: PlayerEvent.error) { (event) in
+            print("*****Error Code**** \(String(describing: event.error?.code))")
+            print("*****Error Code**** \(String(describing: event.error?.description))")
+
+        }
     }
     
     func getDuration(currentDuraton: Int, total totalDuraton: Int) -> String? {

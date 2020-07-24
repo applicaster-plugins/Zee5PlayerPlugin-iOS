@@ -2339,7 +2339,7 @@ static ContentBuisnessType buisnessType;
         
         if (vodModel.isDRM) {
             [[CdnHandler sharedInstance]getKCDNUrl:vodModel.identifier withCompletion:^(id  _Nullable result, NSString * _Nonnull CDN) {                
-                [self getDRMToken:vodModel andDrmKey:vodModel.drmKeyID withCompletionHandler:^(id  _Nullable result) {
+                [self getDRMToken:vodModel.identifier andDrmKey:vodModel.drmKeyID withCompletionHandler:^(id  _Nullable result) {
                     completionBlock(vodModel, [result valueForKey:@"drm"]);
                 } failureBlock:^(ZEE5SdkError * _Nullable error) {
                     completionBlock(nil, nil);
@@ -2351,9 +2351,9 @@ static ContentBuisnessType buisnessType;
             completionBlock(nil, nil);
         }
     } failureBlock:^(ZEE5SdkError *error) {
-        if (error.zeeErrorCode == 101) {
-            [self setContentUnavailable];
-        }
+//        if (error.zeeErrorCode == 101) {
+//            [self setContentUnavailable];
+//        }
         completionBlock(nil, nil);
     }];
 }
