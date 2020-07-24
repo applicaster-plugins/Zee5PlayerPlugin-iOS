@@ -1873,6 +1873,7 @@ static ContentBuisnessType buisnessType;
 }
 -(void)DevicePopupShow
 {
+    [self hideLoaderOnPlayer];
     [self preparePopView];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_devicePopView];
 }
@@ -1984,6 +1985,7 @@ static ContentBuisnessType buisnessType;
         {
           case DeviceMaxout:
                 [self DevicePopupShow];
+                return;
                 break;
           case DeviceAdded:
                 [self postReloadCurrentContentIdNotification];
@@ -3155,10 +3157,11 @@ static ContentBuisnessType buisnessType;
         
     } failureBlock:^(ZEE5SdkError * _Nullable error)
      {
-        
                if (error.zeeErrorCode == 3608)
                {
-                   [self DevicePopupShow];
+                  [DeviceManager addDevice];
+               }else if (error.zeeErrorCode == 3602){
+                  [self DevicePopupShow];
                }
         if (error.zeeErrorCode == 3803 || error.zeeErrorCode == 3804) {
             [self playTrailer];
