@@ -64,14 +64,9 @@ class InfoTextBuilder {
             add(playable.genre)
             add(playable.age)
 
-        case .live:
-            add("Episode")
+        case .live, .channel:
+            add(playable.owner)
             
-            if let seasonDetails = playable.parentSeasonDetails {
-                add(seasonDetails.episodeNumber)
-            }
-            
-        case .channel:
             break
             
         default:

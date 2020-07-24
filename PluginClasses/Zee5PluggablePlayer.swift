@@ -188,7 +188,23 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 return
         }
         
-        guard let contentId = queryItems.first(where: {$0.name == "id"})?.value else {
+        var _contentId = queryItems.first(where: {$0.name == "id"})?.value
+        if _contentId == nil {
+            guard
+                let subUrlParam = queryItems.first(where: {$0.name == "url"})?.value,
+                let subUrlData = Data(base64Encoded: subUrlParam),
+                let subUrlValue = String(data: subUrlData, encoding: .utf8),
+                let subUrl = URL(string: subUrlValue),
+                let subComponents = URLComponents(url: subUrl, resolvingAgainstBaseURL: false),
+                let subQueryItems = subComponents.queryItems,
+                let idParam = subQueryItems.first(where: {$0.name == "id"})?.value else {
+                    return
+            }
+            
+            _contentId = idParam
+        }
+        
+        guard let contentId = _contentId else {
             return
         }
         
