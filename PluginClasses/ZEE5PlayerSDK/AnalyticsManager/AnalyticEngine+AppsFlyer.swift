@@ -30,6 +30,16 @@ extension AnalyticEngine
         }
     }
     
+    @objc public func RemoveFromWatchlistAnlytics()
+    {
+        AllAnalyticsClass.shared.removeFromWatchlistEvent()
+    }
+    
+    @objc public func ShareAnlytics()
+    {
+        AllAnalyticsClass.shared.shareClickEvent()
+    }
+    
     @objc public func SubscribeCTAClicked()
     {
         AllAnalyticsClass.shared.subscribeBtnClicked()

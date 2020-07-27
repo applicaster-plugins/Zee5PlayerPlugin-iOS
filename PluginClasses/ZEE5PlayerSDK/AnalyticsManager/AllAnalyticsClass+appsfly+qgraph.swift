@@ -47,6 +47,72 @@ extension AllAnalyticsClass{
          analytics.track(Events.ADD_TO_WATCHLIST, trackedProperties: parameter)
     }
     
+    public func removeFromWatchlistEvent()
+    {
+        let parameter : Set = [
+        Keys.ADD_TO_WATCHLIST.SOURCE ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.ADD_TO_WATCHLIST.ELEMENT ~>> "Remove to watch List",
+        Keys.ADD_TO_WATCHLIST.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.ADD_TO_WATCHLIST.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.ADD_TO_WATCHLIST.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+        Keys.ADD_TO_WATCHLIST.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+        Keys.ADD_TO_WATCHLIST.SERIES ~>> series == "" ? notAppplicable:series,
+        Keys.ADD_TO_WATCHLIST.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+        Keys.ADD_TO_WATCHLIST.CAST_TO ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+        Keys.ADD_TO_WATCHLIST.PAGE_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.DRM_VIDEO ~>> DrmVideo,
+        Keys.ADD_TO_WATCHLIST.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+        Keys.ADD_TO_WATCHLIST.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TAB_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TV_CATEGORY ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+        Keys.ADD_TO_WATCHLIST.CAROUSAL_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
+        Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+        ]
+         analytics.track(Events.REMOVE_FROM_WATCHLIST, trackedProperties: parameter)
+    }
+    
+    public func shareClickEvent()
+    {
+        let parameter : Set = [
+        Keys.ADD_TO_WATCHLIST.SOURCE ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+        Keys.ADD_TO_WATCHLIST.ELEMENT ~>> "Sharing item",
+        Keys.ADD_TO_WATCHLIST.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+        Keys.ADD_TO_WATCHLIST.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+        Keys.ADD_TO_WATCHLIST.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+        Keys.ADD_TO_WATCHLIST.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+        Keys.ADD_TO_WATCHLIST.SERIES ~>> series == "" ? notAppplicable:series,
+        Keys.ADD_TO_WATCHLIST.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+        Keys.ADD_TO_WATCHLIST.CAST_TO ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
+        Keys.ADD_TO_WATCHLIST.PAGE_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.DRM_VIDEO ~>> DrmVideo,
+        Keys.ADD_TO_WATCHLIST.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+        Keys.ADD_TO_WATCHLIST.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+        Keys.ADD_TO_WATCHLIST.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TAB_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TV_CATEGORY ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+        Keys.ADD_TO_WATCHLIST.CAROUSAL_NAME ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
+        Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+        ]
+         analytics.track(Events.SHARE, trackedProperties: parameter)
+    }
+    
     
     //MARK:- Subscription CTA Button cLicked
     
