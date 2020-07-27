@@ -1325,6 +1325,7 @@ static ContentBuisnessType buisnessType;
         self.currentShareViewController = nil;
 
         if (completed){
+            [[AnalyticEngine shared]ShareAnlytics];
             [self play];
         }else{
             [self play];

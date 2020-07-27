@@ -154,6 +154,7 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             params: nil) { (response) in
                 self.setItemInWatchList(itemIn: false,
                                   toastMessage: self.localizedText(for: "Consumption_ToastMessage_RemovedFromWatchlist_Text"))
+                AnalyticEngine.shared.RemoveFromWatchlistAnlytics()
         }
     }
 
