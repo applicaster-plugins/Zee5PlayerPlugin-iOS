@@ -10,16 +10,25 @@ import Zee5CoreSDK
 
 extension AllAnalyticsClass{
     
+    var source:String {
+        return UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/a"
+    }
+    var currently_tab:String {
+        return UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/a"
+    }
+    var carousal_name:String {
+        return UserDefaults.standard.string(forKey: "carousal_name") ?? "N/a"
+    }
+    var carousal_id:String {
+        return UserDefaults.standard.string(forKey: "carousal_id") ?? "N/a"
+    }
+    
     //MARK:- AppsFlyer Events
     
   //MARK:- Add to WatchList Event
     
     public func addtoWatchlistEvent()
     {
-        let source = UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/a"
-        let currentlyTab = UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/a"
-        let carousal_name = UserDefaults.standard.string(forKey: "carousal_name") ?? "N/a"
-        let carousal_id = UserDefaults.standard.string(forKey: "carousal_id") ?? "N/a"
         
         let parameter : Set = [
         Keys.ADD_TO_WATCHLIST.SOURCE ~>> source,
@@ -54,10 +63,6 @@ extension AllAnalyticsClass{
     
     public func removeFromWatchlistEvent()
     {
-        let source = UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/a"
-        let currentlyTab = UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/a"
-        let carousal_name = UserDefaults.standard.string(forKey: "carousal_name") ?? "N/a"
-        let carousal_id = UserDefaults.standard.string(forKey: "carousal_id") ?? "N/a"
         
         let parameter : Set = [
         Keys.REMOVE_FROM_WATCHLIST.SOURCE ~>> source,
@@ -90,10 +95,6 @@ extension AllAnalyticsClass{
     
     public func shareClickEvent()
     {
-        let source = UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/a"
-        let currentlyTab = UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/a"
-        let carousal_name = UserDefaults.standard.string(forKey: "carousal_name") ?? "N/a"
-        let carousal_id = UserDefaults.standard.string(forKey: "carousal_id") ?? "N/a"
     
         let parameter : Set = [
         Keys.SHARE.SOURCE ~>> source,
