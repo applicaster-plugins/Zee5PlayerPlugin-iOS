@@ -21,6 +21,10 @@
     self.labelTitle.text = model.title;
     NSBundle *bundel = [NSBundle bundleForClass:self.class];
     self.imageView.image  = [UIImage imageNamed:@"placeholder" inBundle:bundel compatibleWithTraitCollection:nil];
+    self.labelTitle.hidden = NO;
+    if (ZEE5PlayerSDK.getConsumpruionType == Movie  || ZEE5PlayerSDK.getConsumpruionType == Live) {
+        self.labelTitle.hidden = YES;
+    }
 
     dispatch_async(dispatch_get_global_queue(0,0), ^{
         NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];

@@ -455,8 +455,10 @@ static ContentBuisnessType buisnessType;
 
 -(void)hideUnHideTopView:(BOOL )isHidden
 {
+    if (_customControlView.watchNowTitle.isHidden == NO) {
+        return;
+    }
     _customControlView.btnMinimize.hidden = isHidden;
-
     if (self.currentItem == nil) {
         isHidden = YES;
     }
@@ -473,7 +475,9 @@ static ContentBuisnessType buisnessType;
     {
         _customControlView.viewLive.hidden = isHidden;
         _customControlView.collectionView.hidden = self.customControlView.buttonLiveFull.selected ? isHidden : YES;
-
+    }
+    if (isHidden) {
+        _customControlView.con_top_collectionView.constant = 5;
     }
 
 }
@@ -638,7 +642,7 @@ static ContentBuisnessType buisnessType;
     if ([self.ModelValues.watchCreditTime isEqualToString:@"NULL"]==false && self.currentItem.WatchCredit == NO && _CreditTimer == nil )
         {
         
-            if (_currentItem.related.count == 1 && _customControlView.watchcretidStackview.hidden == true)
+            if ((ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _customControlView.watchcretidStackview.hidden == true)
             {
                  self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
         
@@ -673,7 +677,7 @@ static ContentBuisnessType buisnessType;
             
            [_customControlView.showcreditTimelbl setText:[NSString stringWithFormat:@"%@%02d",@"Starts In : ",_watchCtreditSeconds]];
             
-            if (_currentItem.related.count > 1){
+            if (ZEE5PlayerSDK.getConsumpruionType != Episode){
                 _customControlView.collectionView.hidden = false;
                 return;
             }
@@ -762,7 +766,7 @@ static ContentBuisnessType buisnessType;
         }
         
         RelatedVideos *nextItem = nil;
-        if (self.currentItem.related.count == 1) {
+        if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
             nextItem = self.currentItem.related[0];
         }
         else {
@@ -859,8 +863,6 @@ static ContentBuisnessType buisnessType;
             [self perfomAction];
         }
     }
-    
-    _customControlView.con_top_collectionView.constant = 10;
 }
 
 -(void)removeMenuView
@@ -984,20 +986,38 @@ static ContentBuisnessType buisnessType;
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     _customControlView.con_top_collectionView.constant = -130;
+    [self hideUnHideControls:YES];
     [UIView animateWithDuration:0.3 animations:^{
         [self.customControlView layoutIfNeeded];
     }];
 }
 
+-(void)hideUnHideControls:(BOOL )isHidden
+{
+    if (_customControlView.buttonFullScreen.selected == NO || _customControlView.buttonLiveFull.selected == NO) {
+        return;
+    }
+    _customControlView.btnMinimize.hidden = isHidden;
+
+    if (self.currentItem == nil) {
+        isHidden = YES;
+    }
+    _customControlView.collectionView.hidden = isHidden ? NO:YES;
+    _customControlView.watchNowTitle.hidden = isHidden ? NO:YES;
+    _customControlView.viewTop.hidden = isHidden;
+    _customControlView.topView.hidden = isHidden;
+    _customControlView.viewVod.hidden = isHidden;
+    _customControlView.playerControlView.hidden = self.isLoaderShowing || isHidden;
+}
+
 - (void)handleDownwardsGesture:(UIPanGestureRecognizer *)sender
 {
+     [self hideUnHideControls:NO];
     if (_customControlView.buttonPlay.selected) {
-        if (!_customControlView.topView.hidden) {
             [NSObject cancelPreviousPerformRequestsWithTarget:self];
             [self perfomAction];
-        }
     }
-    _customControlView.con_top_collectionView.constant = 10;
+    _customControlView.con_top_collectionView.constant = 5;
     [UIView animateWithDuration:0.3 animations:^{
         [self.customControlView layoutIfNeeded];
     }];
@@ -1413,6 +1433,7 @@ static ContentBuisnessType buisnessType;
     }
     
     [_customControlView.sliderDuration animateToolTipFading:NO];
+    _customControlView.watchNowTitle.hidden = YES;
     _customControlView.sliderLive.fullScreen = YES;
     [_customControlView.sliderLive updateToolTipView];
     if(_customControlView.sliderLive.userInteractionEnabled)
@@ -1433,7 +1454,7 @@ static ContentBuisnessType buisnessType;
     self.customControlView.con_bottom_liveView.constant = 30;
     
     self.customControlView.collectionView.hidden = ![AppConfigManager sharedInstance].config.isSimilarVideos;
-    _customControlView.con_top_collectionView.constant = 10;
+    _customControlView.con_top_collectionView.constant = 5;
     
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
@@ -1462,6 +1483,7 @@ static ContentBuisnessType buisnessType;
     }
     
     _customControlView.sliderLive.fullScreen = NO;
+    _customControlView.watchNowTitle.hidden = YES;
     [_customControlView.sliderLive animateToolTipFading:NO];
     [_customControlView.sliderDuration animateToolTipFading:NO];
     
@@ -1474,7 +1496,7 @@ static ContentBuisnessType buisnessType;
     self.customControlView.con_bottom_liveView.constant = 10;
     
     self.customControlView.collectionView.hidden = YES;
-    _customControlView.con_top_collectionView.constant = 10;
+    _customControlView.con_top_collectionView.constant = 5;
 
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
@@ -1557,7 +1579,7 @@ static ContentBuisnessType buisnessType;
     _customControlView.MenuBtn.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
     
-    if (_currentItem.related.count == 1)
+    if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original)
     {
         RelatedVideos *model = self.currentItem.related[0];
         _customControlView.nextEpisodename.text = model.title;
@@ -2956,6 +2978,7 @@ static ContentBuisnessType buisnessType;
         
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kRefreshRelatedVideoList" object:nil];
         
         completion();
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
@@ -2971,7 +2994,7 @@ static ContentBuisnessType buisnessType;
     NSDictionary *param = @{
         @"episode_id": contentId,
         @"page":@"1",
-        @"limit":@"1",
+        @"limit":@"10",
         @"translation":ZEE5UserDefaults.gettranslation,
         @"country":ZEE5UserDefaults.getCountry,
         @"type":@"next"
@@ -2990,6 +3013,7 @@ static ContentBuisnessType buisnessType;
         
         SimilarDataModel *model = [SimilarDataModel initFromJSONDictionary:result];
         self.currentItem.related = model.relatedVideos;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kRefreshRelatedVideoList" object:nil];
         
         completion();
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
