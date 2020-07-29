@@ -246,9 +246,6 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         [self handleTracks];
         
-        [self LocalStorageArray];
-
-        
         if (!isReplay && ZEE5PlayerSDK.getConsumpruionType != Live && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
             [[ReportingManager sharedInstance] getWatchHistory];
         }

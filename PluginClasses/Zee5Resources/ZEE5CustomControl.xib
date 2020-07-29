@@ -60,15 +60,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="i0x-ew-mUj"/>
                     </constraints>
-                    <attributedString key="attributedText">
-                        <fragment content="Label">
-                            <attributes>
-                                <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <font key="NSFont" size="15" name="NotoSans-SemiBold"/>
-                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                            </attributes>
-                        </fragment>
-                    </attributedString>
+                    <attributedString key="attributedText"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="URa-Gj-Z0M" customClass="ForwardButton" customModule="Zee5PlayerPlugin" customModuleProvider="target">

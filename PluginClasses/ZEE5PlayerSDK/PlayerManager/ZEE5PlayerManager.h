@@ -93,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setFullScreen:(BOOL)isFull;
 -(void)showFullScreen;
 -(void)hideFullScreen;
+-(void)LocalStorageArray;
 
 -(void)forward:(NSInteger)value;
 -(void)rewind:(NSInteger)value;
