@@ -224,6 +224,11 @@ public class AnalyticEngine: NSObject {
        {
         AllAnalyticsClass.shared.PlayerBtnPressed(with: Element)
        }
+    
+    @objc public func screenViewEvent()
+       {
+           AllAnalyticsClass.shared.ScreenViewEvent()
+       }
        
      // MARK:- For Downlaod Anlytics Events
     

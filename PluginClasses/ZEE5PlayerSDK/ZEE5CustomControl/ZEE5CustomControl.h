@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *con_height_topBar;
 
+@property (weak, nonatomic) IBOutlet UILabel *watchNowTitle;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *con_top_collectionView;
 

@@ -535,8 +535,13 @@ extension AllAnalyticsClass
               ]
             analytics.track(Events.AD_FORCED_EXIT, trackedProperties: parameter)
        }
+    
+    // MARK:- Screen_view Event
+      public func ScreenViewEvent()
+    {
+        analytics.track(Events.SCREEN_VIEW, trackedProperties: Set<TrackedProperty>())
+    }
 }
-
 
 func getAge() -> String {
     guard let data = Zee5UserSettingsManager.shared.getUserSettingsModal() else {return ""}
