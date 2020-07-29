@@ -521,6 +521,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
                         
         [[AnalyticEngine shared]VideoPlayAnalytics];
         [[AnalyticEngine shared]ConsumptionAnalyticEvents];
+        [[ZEE5PlayerManager sharedInstance]LocalStorageArray];
 
                        }];
 }

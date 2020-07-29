@@ -11,16 +11,16 @@ import Zee5CoreSDK
 extension AllAnalyticsClass{
     
     var source:String {
-        return UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/a"
+        return UserDefaults.standard.string(forKey: "analyticsSource") ?? "N/A"
     }
     var currently_tab:String {
-        return UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/a"
+        return UserDefaults.standard.string(forKey: "currentlyTab") ?? "N/A"
     }
     var carousal_name:String {
-        return UserDefaults.standard.string(forKey: "carousal_name") ?? "N/a"
+        return UserDefaults.standard.string(forKey: "carousal_name") ?? "N/A"
     }
     var carousal_id:String {
-        return UserDefaults.standard.string(forKey: "carousal_id") ?? "N/a"
+        return UserDefaults.standard.string(forKey: "carousal_id") ?? "N/A"
     }
     
     //MARK:- AppsFlyer Events
@@ -43,17 +43,17 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.ADD_TO_WATCHLIST.CAST_TO ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
-        Keys.ADD_TO_WATCHLIST.PAGE_NAME ~>> currentlyTab,
+        Keys.ADD_TO_WATCHLIST.PAGE_NAME ~>> currently_tab,
         Keys.ADD_TO_WATCHLIST.DRM_VIDEO ~>> DrmVideo,
         Keys.ADD_TO_WATCHLIST.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
         Keys.ADD_TO_WATCHLIST.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.ADD_TO_WATCHLIST.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.ADD_TO_WATCHLIST.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
-        Keys.ADD_TO_WATCHLIST.TAB_NAME ~>> currentlyTab,
+        Keys.ADD_TO_WATCHLIST.TAB_NAME ~>> currently_tab,
         Keys.ADD_TO_WATCHLIST.TV_CATEGORY ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.ADD_TO_WATCHLIST.CAROUSAL_NAME ~>> carousal_name,
-        Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> notAppplicable,
+        Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> carousal_id,
         Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
         Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
         Keys.ADD_TO_WATCHLIST.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
@@ -77,13 +77,13 @@ extension AllAnalyticsClass{
         Keys.REMOVE_FROM_WATCHLIST.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.REMOVE_FROM_WATCHLIST.CAST_TO ~>> notAppplicable,
         Keys.REMOVE_FROM_WATCHLIST.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
-        Keys.REMOVE_FROM_WATCHLIST.PAGE_NAME ~>> currentlyTab,
+        Keys.REMOVE_FROM_WATCHLIST.PAGE_NAME ~>> currently_tab,
         Keys.REMOVE_FROM_WATCHLIST.DRM_VIDEO ~>> DrmVideo,
         Keys.REMOVE_FROM_WATCHLIST.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
         Keys.REMOVE_FROM_WATCHLIST.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.REMOVE_FROM_WATCHLIST.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.REMOVE_FROM_WATCHLIST.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
-        Keys.REMOVE_FROM_WATCHLIST.TAB_NAME ~>> currentlyTab,
+        Keys.REMOVE_FROM_WATCHLIST.TAB_NAME ~>> currently_tab,
         Keys.REMOVE_FROM_WATCHLIST.TV_CATEGORY ~>> notAppplicable,
         Keys.REMOVE_FROM_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.REMOVE_FROM_WATCHLIST.CAROUSAL_NAME ~>> carousal_name,
@@ -108,13 +108,13 @@ extension AllAnalyticsClass{
         Keys.SHARE.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.SHARE.CAST_TO ~>> notAppplicable,
         Keys.SHARE.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
-        Keys.SHARE.PAGE_NAME ~>> currentlyTab,
+        Keys.SHARE.PAGE_NAME ~>> currently_tab,
         Keys.SHARE.DRM_VIDEO ~>> DrmVideo,
         Keys.SHARE.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
         Keys.SHARE.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.SHARE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.SHARE.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
-        Keys.SHARE.TAB_NAME ~>> currentlyTab,
+        Keys.SHARE.TAB_NAME ~>> currently_tab,
         Keys.SHARE.TV_CATEGORY ~>> notAppplicable,
         Keys.SHARE.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.SHARE.CAROUSAL_NAME ~>> carousal_name,
@@ -206,6 +206,7 @@ extension AllAnalyticsClass{
                  Keys.LIVE_CHANNEL_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
                  Keys.LIVE_CHANNEL_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                  Keys.LIVE_CHANNEL_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
+                 Keys.LIVE_CHANNEL_PLAYED.SOURCE ~>> source,
                      ]
              analytics.track(Events.LIVE_CHANNEL_PLAYED, trackedProperties: parameter)
     
@@ -254,6 +255,7 @@ extension AllAnalyticsClass{
             Keys.MOVIESSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.MOVIESSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
             Keys.MOVIESSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
+            Keys.MOVIESSECTION_PLAYED.SOURCE ~>> source,
                 ]
         analytics.track(Events.MOVIESSECTION_PLAYED, trackedProperties:parameter)
         }
@@ -287,6 +289,7 @@ extension AllAnalyticsClass{
                Keys.TVSHOWSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
                Keys.TVSHOWSSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                Keys.TVSHOWSSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+                Keys.TVSHOWSSECTION_PLAYED.SOURCE ~>> source,
                    ]
            analytics.track(Events.TVSHOWSSECTION_PLAYED, trackedProperties: parameter)
        
@@ -319,6 +322,7 @@ extension AllAnalyticsClass{
             Keys.VIDEOSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
             Keys.VIDEOSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.VIDEOSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
+            Keys.VIDEOSECTION_PLAYED.SOURCE ~>> source,
                      ]
             analytics.track(Events.VIDEOSECTION_PLAYED, trackedProperties:parameter)
          
@@ -335,6 +339,7 @@ extension AllAnalyticsClass{
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
         Keys.ORIGINALSSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
+        Keys.ORIGINALSSECTION_PLAYED.SOURCE ~>> source,
             ]
           
         analytics.track(Events.ORIGINALSSECTION_PLAYED, trackedProperties:parameter)
@@ -345,7 +350,7 @@ extension AllAnalyticsClass{
     @objc public func PlayerBtnPressed(with Element : String){
         
       let parameter : Set = [
-            Keys.PLAYER_CTAS.SOURCE ~>> notAppplicable,
+            Keys.PLAYER_CTAS.SOURCE ~>> source,
             Keys.PLAYER_CTAS.ELEMENT ~>> Element  == "" ? notAppplicable : Element,
             Keys.PLAYER_CTAS.BUTTON_TYPE ~>> Element  == "" ? notAppplicable : Element,
                 ]
@@ -371,7 +376,7 @@ extension AllAnalyticsClass{
     
         
     let parameter : Set = [
-             Keys.DOWNLOAD_CLICK.SOURCE ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.SOURCE ~>> source,
              Keys.DOWNLOAD_CLICK.ELEMENT ~>> "Download CTA",
              Keys.DOWNLOAD_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
              Keys.DOWNLOAD_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
@@ -382,19 +387,20 @@ extension AllAnalyticsClass{
              Keys.DOWNLOAD_CLICK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
              Keys.DOWNLOAD_CLICK.CAST_TO ~>> notAppplicable,
              Keys.DOWNLOAD_CLICK.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
-             Keys.DOWNLOAD_CLICK.PAGE_NAME ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.PAGE_NAME ~>> currently_tab,
              Keys.DOWNLOAD_CLICK.DRM_VIDEO ~>> DrmVideo,
              Keys.DOWNLOAD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
              Keys.DOWNLOAD_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
              Keys.DOWNLOAD_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
              Keys.DOWNLOAD_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
-             Keys.DOWNLOAD_CLICK.TAB_NAME ~>> notAppplicable,
+             Keys.DOWNLOAD_CLICK.TAB_NAME ~>> currently_tab,
              Keys.DOWNLOAD_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
              Keys.DOWNLOAD_CLICK.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_NAME ~>>  contentName == "" ? notAppplicable:contentName,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_EXPIRY_DATE ~>>  DownloadExpiryDate == "" ? notAppplicable:DownloadExpiryDate,
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_NO_OF_DAYS_TO_EXPIRY ~>>  "2",
              Keys.DOWNLOAD_CLICK.DOWNLOADED_CONTENT_IMAGE ~>>  Imageurl == "" ? notAppplicable:Imageurl,
+             Keys.DOWNLOAD_CLICK.STATE ~>> ZEE5UserDefaults.getState(),
              ]
               analytics.track(Events.DOWNLOAD_CLICK, trackedProperties: parameter)
         }
@@ -556,7 +562,7 @@ extension AllAnalyticsClass{
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
-           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
+           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
            ]
             analytics.track(Events.VIDEOSECTION_ADDED_TO_WATCH_LATER, trackedProperties: parameter)
        }
@@ -569,7 +575,7 @@ extension AllAnalyticsClass{
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
-              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
+              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
@@ -587,7 +593,7 @@ extension AllAnalyticsClass{
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
-             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> notAppplicable,
+             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
@@ -606,6 +612,7 @@ extension AllAnalyticsClass{
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
+              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
               ]
                analytics.track(Events.MOVIESSECTION_ADDED_TO_WATCH_LATER, trackedProperties: parameter)
           }
