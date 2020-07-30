@@ -106,6 +106,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             ZEE5PlayerDeeplinkManager.sharedMethod.NavigatetoLoginpage(Param: "Watclist") { (isSucceess) -> (Void) in
                 if isSucceess {
                     ZEE5PlayerDeeplinkManager.sharedMethod.fetchUserdata()
+                    ZEE5PlayerManager.sharedInstance().postReloadCurrentContentIdNotification()
+                    return
                 }
             }
             ZEE5PlayerManager.sharedInstance().pause()
