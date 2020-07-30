@@ -65,6 +65,7 @@ class InfoTextBuilder {
             add(playable.age)
 
         case .live, .channel:
+            add("Live TV")
             add(playable.owner)
             
             break
