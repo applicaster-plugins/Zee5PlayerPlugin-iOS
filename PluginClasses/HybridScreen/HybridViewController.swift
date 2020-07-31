@@ -71,6 +71,12 @@ class HybridViewController: UIViewController {
     }
     
     // MARK: Orientation
+    
+    // Apple documentation: The system takes your preference into account,
+    // but returning true is NO guarantee that the indicator will be hidden.
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
         
     override open var prefersStatusBarHidden: Bool {
         return false
