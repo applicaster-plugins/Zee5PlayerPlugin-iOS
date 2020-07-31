@@ -82,6 +82,8 @@ static AddToWatchlist *SharedInstance = nil;
         [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Watclist" completion:^(BOOL IsSucceess) {
             if (IsSucceess) {
                 [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
+                [[ZEE5PlayerManager sharedInstance]postReloadCurrentContentIdNotification];
+                return ;
             }
         }];
         [[ZEE5PlayerManager sharedInstance]pause];
