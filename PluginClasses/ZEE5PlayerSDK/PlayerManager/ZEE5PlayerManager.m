@@ -109,6 +109,7 @@ typedef NS_ENUM(NSUInteger, ZeeUserPlaybackAction) {
 @property(nonatomic) BOOL isParentalControlOffline;
 @property(nonatomic) BOOL isHybridViewOpen;
 @property(nonatomic) BOOL isNeedToSubscribe;
+@property(nonatomic) BOOL isRsVodUser;
 
 @property(nonatomic) CGFloat previousDuration;
 
@@ -2221,7 +2222,7 @@ static ContentBuisnessType buisnessType;
     BOOL hadAccess = !self.isNeedToSubscribe;
     BOOL hasAccess = [ZEE5PlayerSDK getUserTypeEnum] == Premium;
         
-    if (!hadAccess && hasAccess) {
+    if (!hadAccess && hasAccess && !_isRsVodUser) {
         [self resetControls];
         
         if (_ModelValues.isBeforeTv && self.TvShowModel.Episodes.count > 0) {
@@ -2233,6 +2234,7 @@ static ContentBuisnessType buisnessType;
         }
     }
     else if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden) {
+         _isRsVodUser = NO;
         [self play];
     }
 }
@@ -2422,7 +2424,6 @@ static ContentBuisnessType buisnessType;
     }
     
     self.isLive = NO;
-    
     _isContentAvailable = YES;
     _isStop = NO;
     _isHybridViewOpen = NO;
@@ -3078,6 +3079,10 @@ static ContentBuisnessType buisnessType;
 -(void)playTrailer
 {
     _isNeedToSubscribe = YES;
+    if (ZEE5PlayerSDK.getUserTypeEnum == Premium) {
+        _isRsVodUser = YES;
+    }
+    
     
     if (!_isLive && self.ModelValues.trailerIdentifier != nil) {
         [self postContentIdShouldUpdateNotification: self.ModelValues.trailerIdentifier];
