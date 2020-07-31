@@ -123,7 +123,7 @@ class InfoTextBuilder {
         }
         
         let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "dd MMM"
+        outputDateFormatter.dateFormat = "yyyy-MM-dd"
         
         return outputDateFormatter.string(from: date)
     }
