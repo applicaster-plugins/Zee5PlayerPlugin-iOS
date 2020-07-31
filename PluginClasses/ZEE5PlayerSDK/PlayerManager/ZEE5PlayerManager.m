@@ -1060,6 +1060,7 @@ static ContentBuisnessType buisnessType;
     
      singleton.isAdStarted = NO;
      singleton.isAdPause = NO;
+    _isNeedToSubscribe = NO;
     _textTracks = nil;
     _offlineTextTracks = nil;
     _audioTracks = nil;
@@ -3327,12 +3328,12 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
-        [self pause];
-        [self HybridViewOpen];
-        return;
-    }
-    if (_isNeedToSubscribe) {
+//    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
+//        [self pause];
+//        [self HybridViewOpen];
+//        return;
+//    }
+    if (_isNeedToSubscribe && ZEE5PlayerSDK.getConsumpruionType != Trailer ) {
          [self pause];
          [self HybridViewOpen];
           return;
