@@ -586,7 +586,7 @@ static ContentBuisnessType buisnessType;
             [[ReportingManager sharedInstance]startReportingWatchHistory];
         }
        /***********************************************/
-             // Watchcredit
+        //MARK:- WatchCredit
        /*********************************************/
         if (totalSeconds>=_watchCreditsTime){
             
@@ -663,12 +663,12 @@ static ContentBuisnessType buisnessType;
 {
     if(_watchCtreditSeconds>0)
         {
-            _watchCtreditSeconds-=1;
+            _watchCtreditSeconds -= 1;
             [_customControlView.watchcreditsTimeLbl setText:[NSString stringWithFormat:@"%@%02d",@"Starts In : ",_watchCtreditSeconds]];
             
            [_customControlView.showcreditTimelbl setText:[NSString stringWithFormat:@"%@%02d",@"Starts In : ",_watchCtreditSeconds]];
             
-            if (ZEE5PlayerSDK.getConsumpruionType != Episode){
+            if ((ZEE5PlayerSDK.getConsumpruionType != Episode || ZEE5PlayerSDK.getConsumpruionType != Original) && _customControlView.buttonFullScreen.selected){
                 _customControlView.collectionView.hidden = false;
                 return;
             }
@@ -986,6 +986,7 @@ static ContentBuisnessType buisnessType;
 -(void)hideUnHideControls:(BOOL )isHidden
 {
     if (_customControlView.buttonFullScreen.selected == NO || _customControlView.buttonLiveFull.selected == NO) {
+        _customControlView.collectionView.hidden = YES;
         return;
     }
     _customControlView.btnMinimize.hidden = isHidden;
@@ -1266,6 +1267,22 @@ static ContentBuisnessType buisnessType;
             [_PreviousContentArray addObject:_currentItem.content_id];
         }
     }
+    if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original)
+      {
+          RelatedVideos *model = self.currentItem.related[0];
+          _customControlView.nextEpisodename.text = model.title;
+          
+          [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
+          
+          dispatch_async(dispatch_get_global_queue(0,0), ^{
+              NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];
+              if ( data == nil )
+                  return;
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
+              });
+          });
+      }
 }
 -(void)tapOnMinimizeButton
 {
@@ -1486,8 +1503,9 @@ static ContentBuisnessType buisnessType;
     self.customControlView.con_height_topBar.constant = 0;
     self.customControlView.con_bottom_liveView.constant = 10;
     
-    self.customControlView.collectionView.hidden = YES;
     _customControlView.con_top_collectionView.constant = 5;
+    self.customControlView.collectionView.hidden = YES;
+    _customControlView.watchcreditsTimeLbl.hidden = YES;
 
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
@@ -1569,23 +1587,6 @@ static ContentBuisnessType buisnessType;
     _customControlView.btnSkipNext.hidden = _isLive;
     _customControlView.MenuBtn.hidden = _isLive;
     _customControlView.related = self.currentItem.related;
-    
-    if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original)
-    {
-        RelatedVideos *model = self.currentItem.related[0];
-        _customControlView.nextEpisodename.text = model.title;
-        
-        [_customControlView.nextEpisodeImg setImage:[UIImage imageNamed:@"placeholder"]];
-        
-        dispatch_async(dispatch_get_global_queue(0,0), ^{
-            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: model.imageURL]];
-            if ( data == nil )
-                return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.customControlView.nextEpisodeImg setImage:[UIImage imageWithData: data]];
-            });
-        });
-    }
     
     if (self.isLive) {
         _customControlView.lableTitle.text = [NSString stringWithFormat:@"%@ : %@",self.currentItem.channel_Name,self.currentItem.showName];

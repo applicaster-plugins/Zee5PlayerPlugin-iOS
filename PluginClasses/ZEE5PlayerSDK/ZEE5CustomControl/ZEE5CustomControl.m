@@ -138,7 +138,7 @@
 }
 
 -(void)setWatchNowLable{
-    NSString * Title = [NSString stringWithFormat:@"Now Playing:%@",ZEE5PlayerManager.sharedInstance.currentItem.channel_Name];
+    NSString * Title = [NSString stringWithFormat:@"Now Playing: %@",ZEE5PlayerManager.sharedInstance.currentItem.channel_Name];
     NSMutableAttributedString * tempString = [[NSMutableAttributedString alloc]initWithString:Title];
    [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:256 green:0 blue:145 alpha:1] range:NSMakeRange(0,12)];
     [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(12,ZEE5PlayerManager.sharedInstance.currentItem.channel_Name.length)];
