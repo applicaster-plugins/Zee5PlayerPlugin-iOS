@@ -396,19 +396,13 @@ static ContentBuisnessType buisnessType;
         _customControlView.adultView.hidden = NO;
         return;
     }
-    
-    if (_parentalControl == YES) {
-        _customControlView.parentalDismissView.hidden = NO;
-    }
-    
     if (_isContentAvailable == NO) {
         _customControlView.unavailableContentView.hidden = NO;
     }
-    
     if (_isNeedToSubscribe && ZEE5PlayerSDK.getUserTypeEnum != premium) {
-       [self hideUnHidetrailerEndView:NO];
-        return;
-    }
+            [self hideUnHidetrailerEndView:NO];
+             return;
+         }
 }
 
 -(void)MoatViewAdd{
@@ -2257,8 +2251,11 @@ static ContentBuisnessType buisnessType;
         }
 
         [_parentalView removeFromSuperview];
-        [self showLockedContentControls];
         _parentalView = nil;
+        _customControlView.parentalDismissView.hidden = YES;
+        if (_parentalControl == YES) {
+              _customControlView.parentalDismissView.hidden = NO;
+          }
     }
 }
 
