@@ -3136,11 +3136,21 @@ static ContentBuisnessType buisnessType;
 //MARK:- Check Parental control Logic
 
 -(void)CheckParentalControl{
-    if ([self.ageRating isEqualToString:@"A"] || self.ageRating == nil || self.ageRating.length==0)
+    if ( self.ageRating == nil || self.ageRating.length==0)
     {
         self.parentalControl = NO;
         self.isParentalControlOffline = NO;
         
+    }
+    else if ([self.ageRating isEqualToString:@"A"] ){
+        if ([self.ModelValues.ageRating isEqualToString:@"A"])
+        {
+            self.parentalControl = YES;
+           self.isParentalControlOffline = YES;
+        }else{
+            self.parentalControl = NO;
+            self.isParentalControlOffline = NO;
+        }
     }
     else if ([self.ageRating isEqualToString:@"UA"])
     {
@@ -3158,7 +3168,7 @@ static ContentBuisnessType buisnessType;
     else
     {
       self.parentalControl = YES;
-    self.isParentalControlOffline = YES;
+      self.isParentalControlOffline = YES;
     }
 }
 
