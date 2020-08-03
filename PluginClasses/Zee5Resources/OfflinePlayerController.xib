@@ -11,9 +11,6 @@
         <array key="NotoSans-Medium.ttf">
             <string>NotoSans-Medium</string>
         </array>
-        <array key="ZEE5_Player.ttf">
-            <string>ZEE5_Player</string>
-        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OfflinePlayerController" customModule="Zee5PlayerPlugin" customModuleProvider="target">
@@ -24,6 +21,7 @@
                 <outlet property="lblContentTitle" destination="EWp-KH-v4n" id="xQf-B7-vYv"/>
                 <outlet property="lblCurrentTime" destination="lAK-b0-TaE" id="lI5-21-KJt"/>
                 <outlet property="lblTotalDuration" destination="7IZ-mP-yQH" id="lVd-nz-iZL"/>
+                <outlet property="replayBtnOutlet" destination="1Tc-kE-et1" id="eIB-2f-xSO"/>
                 <outlet property="sliderDuration" destination="C4E-jM-HY4" id="H4l-LN-2h8"/>
                 <outlet property="view" destination="iN0-l3-epB" id="ip5-0m-nJH"/>
                 <outlet property="viewPlayer" destination="N2O-1f-nTe" id="1fV-VH-Gls"/>
@@ -88,14 +86,13 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfm-gL-CAS">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfm-gL-CAS">
                             <rect key="frame" x="508" y="10" width="50" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="F6f-4M-QBG"/>
                                 <constraint firstAttribute="width" constant="50" id="nOy-zN-702"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="ZEE5_Player" family="ZEE5_Player" pointSize="30"/>
-                            <state key="normal" title="V">
+                            <state key="normal" image="moreIcon">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -119,10 +116,19 @@
                                 <constraint firstAttribute="height" constant="50" id="W1W-7p-AXA"/>
                                 <constraint firstAttribute="width" constant="50" id="ho9-hh-g55"/>
                             </constraints>
-                            <state key="normal" image="play-circle"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                            <state key="normal" title="p" image="play-circle"/>
                             <state key="selected" image="pause-circle"/>
                             <connections>
                                 <action selector="actionPlayPause:" destination="-1" eventType="touchUpInside" id="uRf-b7-J1p"/>
+                            </connections>
+                        </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Tc-kE-et1">
+                            <rect key="frame" x="262.5" y="135.5" width="43" height="49"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <state key="normal" image="Replay"/>
+                            <connections>
+                                <action selector="replayAction:" destination="-1" eventType="touchUpInside" id="gDg-ZJ-bBw"/>
                             </connections>
                         </button>
                     </subviews>
@@ -134,8 +140,12 @@
                         <constraint firstItem="g6O-cD-S9o" firstAttribute="centerY" secondItem="N2O-1f-nTe" secondAttribute="centerY" id="IgR-fo-c9Q"/>
                         <constraint firstAttribute="trailing" secondItem="DfN-pd-Unm" secondAttribute="trailing" id="JYS-Ye-YGo"/>
                         <constraint firstItem="EWp-KH-v4n" firstAttribute="leading" secondItem="N2O-1f-nTe" secondAttribute="leading" constant="56" id="KWQ-BD-LxQ"/>
+                        <constraint firstItem="1Tc-kE-et1" firstAttribute="height" secondItem="g6O-cD-S9o" secondAttribute="height" multiplier="0.98" id="Txc-E5-fAU"/>
+                        <constraint firstItem="1Tc-kE-et1" firstAttribute="width" secondItem="g6O-cD-S9o" secondAttribute="width" multiplier="0.86" id="Wj3-TF-gDg"/>
                         <constraint firstItem="dfm-gL-CAS" firstAttribute="top" secondItem="N2O-1f-nTe" secondAttribute="top" constant="10" id="Xd7-Wv-X6e"/>
+                        <constraint firstItem="1Tc-kE-et1" firstAttribute="centerY" secondItem="N2O-1f-nTe" secondAttribute="centerY" id="aZa-u3-TV1"/>
                         <constraint firstItem="DfN-pd-Unm" firstAttribute="leading" secondItem="N2O-1f-nTe" secondAttribute="leading" id="h0S-NI-Hhx"/>
+                        <constraint firstItem="1Tc-kE-et1" firstAttribute="centerX" secondItem="N2O-1f-nTe" secondAttribute="centerX" id="lA7-qm-cOe"/>
                         <constraint firstItem="g6O-cD-S9o" firstAttribute="centerX" secondItem="DfN-pd-Unm" secondAttribute="centerX" id="lBd-La-vef"/>
                         <constraint firstItem="pyh-Mj-i72" firstAttribute="leading" secondItem="N2O-1f-nTe" secondAttribute="leading" constant="10" id="oul-Ov-G1e"/>
                         <constraint firstAttribute="trailing" secondItem="dfm-gL-CAS" secondAttribute="trailing" constant="10" id="vaa-5b-hX7"/>
@@ -165,6 +175,8 @@
     </objects>
     <resources>
         <image name="Back" width="11" height="20"/>
+        <image name="Replay" width="43" height="51"/>
+        <image name="moreIcon" width="6" height="20"/>
         <image name="pause-circle" width="48" height="48"/>
         <image name="play-circle" width="48" height="48"/>
     </resources>
