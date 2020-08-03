@@ -110,7 +110,7 @@ public protocol ChromeCastDelegate {
         
         let customData: NSMutableDictionary = [:]
         customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
-        customData["licenseUrl"] = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
+        customData["licenseUrl"] = "https://wv-keyos-aps1.licensekeyserver.com"//"https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
         mediaInfo = self.getMediaInformation(for: currentItem, with: customData)
     
 
@@ -237,7 +237,7 @@ extension ChromeCastManager: GCKSessionManagerListener
         ZEE5PlayerManager.sharedInstance().castCurrentItem()
     }
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
-        ZEE5PlayerManager.sharedInstance().playWithCurrentItem()
+        ZEE5PlayerManager.sharedInstance().handleCastingStopped()
     }
     
     public func sessionManager(_ sessionManager: GCKSessionManager, session: GCKSession, didUpdate device: GCKDevice) {

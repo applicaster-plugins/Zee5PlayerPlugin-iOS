@@ -203,10 +203,12 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
-    if (_parentalControl == true) {
-         [self hideLoaderOnPlayer];
-         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1003 platformCode:@"012" severityCode:1 andErrorMsg:@"Parental Control Overlay"];
-          [self parentalControlshow];
+    if (_parentalControl) {
+        [self hideLoaderOnPlayer];
+        
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1003 platformCode:@"012" severityCode:1 andErrorMsg:@"Parental Control Overlay"];
+        [self parentalControlshow];
+        
         return;
     }
     
@@ -253,11 +255,18 @@ static ContentBuisnessType buisnessType;
     }];
 }
 
+- (void)handleCastingStopped {
+    [self playWithCurrentItem];
+    [self updateControlsForCurrentItem];
+}
+
 - (void)castCurrentItem {
     [self hideLoaderOnPlayer];
     
     NSTimeInterval startTime = _customControlView.sliderDuration.value;
     [[ChromeCastManager shared] playSelectedItemRemotelyWithStartTime:startTime];
+    
+    [self resetControls];
     
     [self pause];
     [self.kalturaPlayerView removeFromSuperview];
@@ -450,8 +459,13 @@ static ContentBuisnessType buisnessType;
     if (_customControlView.watchNowTitle.isHidden == NO) {
         return;
     }
+    
     _customControlView.btnMinimize.hidden = isHidden;
+    
     if (self.currentItem == nil) {
+        isHidden = YES;
+    }
+    else if ([[ChromeCastManager shared] isCasting]) {
         isHidden = YES;
     }
     
@@ -990,11 +1004,13 @@ static ContentBuisnessType buisnessType;
         _customControlView.collectionView.hidden = YES;
         return;
     }
+    
     _customControlView.btnMinimize.hidden = isHidden;
 
     if (self.currentItem == nil) {
         isHidden = YES;
     }
+    
     _customControlView.collectionView.hidden = isHidden ? NO:YES;
     _customControlView.watchNowTitle.hidden = isHidden ? NO:YES;
     _customControlView.viewTop.hidden = isHidden;
@@ -1652,6 +1668,7 @@ static ContentBuisnessType buisnessType;
     
     [self updateControlsForCurrentItem];
 }
+
 -(void)pauseAd {
     singleton.isAdPause = YES;
 }

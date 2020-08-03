@@ -163,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnSubscribeButton;
 -(void)tapOnLoginButton;
 
-- (void)playWithCurrentItem;
+- (void)handleCastingStopped;
 - (void)castCurrentItem;
 
 -(void)showLangaugeActionSheet;
