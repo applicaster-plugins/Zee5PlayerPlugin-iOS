@@ -43,6 +43,12 @@ class KalturaPlayerController: UIViewController {
         }
     }
     
+    // Apple documentation: The system takes your preference into account,
+    // but returning true is NO guarantee that the indicator will be hidden.
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+    
     // MARK: - Lifecycle
     
     required init() {
