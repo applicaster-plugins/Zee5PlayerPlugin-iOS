@@ -18,7 +18,9 @@ extension AllAnalyticsClass
        
 public func VideoViewEvent()
 {
-           
+    if firstFramecontentId == contentId {
+        return
+    }
     let parameter : Set = [
         Keys.VIDEO_VIEW.SOURCE ~>> source,
         Keys.VIDEO_VIEW.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
@@ -60,6 +62,7 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
     ]
       analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
+      firstFramecontentId = contentId
     
     if Buisnesstype == "premium" || Buisnesstype == "premium_downloadable"{
         AllAnalyticsClass.shared.SvodContentplayed()
@@ -715,7 +718,9 @@ public func VideoViewEvent()
     public func VideoWatchDuration()
        {
          let DurationPlayer = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
-        
+         if DurationPlayer == 0.0 {
+            return;
+         }
           let parameter : Set = [
            Keys.VIDEO_WATCH_DURATON.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
            Keys.VIDEO_WATCH_DURATON.SOURCE ~>> source,

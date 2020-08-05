@@ -43,6 +43,7 @@ public class AllAnalyticsClass: NSObject{
     var CurrentAudioLanguage = ""
     var AdDict = NSDictionary()
     var AdTag = NSDictionary()
+    var firstFramecontentId = ""
 
     
     let Gender = analytics.getGender()   /// From Core SDK
