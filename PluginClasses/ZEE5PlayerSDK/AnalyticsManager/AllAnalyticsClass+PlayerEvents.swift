@@ -29,7 +29,7 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
         Keys.VIDEO_VIEW.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
         Keys.VIDEO_VIEW.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
-        Keys.VIDEO_VIEW.PREVIEW_STATUS ~>> "",
+        Keys.VIDEO_VIEW.PREVIEW_STATUS ~>> preview_status,
         Keys.VIDEO_VIEW.PAGE_NAME ~>> currently_tab,
         Keys.VIDEO_VIEW.DRM_VIDEO ~>> DrmVideo,
         Keys.VIDEO_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -55,7 +55,9 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.CAROUSAL_NAME ~>> carousal_name,
         Keys.VIDEO_VIEW.CAROUSAL_ID ~>> carousal_id,
         Keys.VIDEO_VIEW.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-
+        Keys.VIDEO_VIEW.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+        Keys.VIDEO_VIEW.PLAYER_HEAD_START_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+        Keys.VIDEO_VIEW.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
     ]
       analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
     
@@ -85,7 +87,7 @@ public func VideoViewEvent()
             Keys.AUTO_SEEK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
             Keys.AUTO_SEEK.SERIES ~>> series == "" ? notAppplicable:series,
             Keys.AUTO_SEEK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-            Keys.AUTO_SEEK.PREVIEW_STATUS ~>> "",
+            Keys.AUTO_SEEK.PREVIEW_STATUS ~>> preview_status,
             Keys.AUTO_SEEK.PAGE_NAME ~>> currently_tab,
             Keys.AUTO_SEEK.DRM_VIDEO ~>> DrmVideo,
             Keys.AUTO_SEEK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -97,11 +99,11 @@ public func VideoViewEvent()
             Keys.AUTO_SEEK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
             Keys.AUTO_SEEK.PROVIDER_ID ~>> notAppplicable,
             Keys.AUTO_SEEK.PROVIDER_NAME ~>> notAppplicable,
-            Keys.AUTO_SEEK.PLAYER_HEAD_POSITION ~>> startvalue == 0 ? 0:startvalue,
-            Keys.AUTO_SEEK.PLAYER_HEAD_START_POSITION ~>> startvalue == 0 ? 0:startvalue,
-            Keys.AUTO_SEEK.PLAYER_HEAD_END_POSITION ~>> EndValue == 0 ? 0:EndValue,
+            Keys.AUTO_SEEK.PLAYER_HEAD_POSITION ~>> startvalue == 0 ? "0":String(startvalue),
+            Keys.AUTO_SEEK.PLAYER_HEAD_START_POSITION ~>> startvalue == 0 ? "0":String(startvalue),
+            Keys.AUTO_SEEK.PLAYER_HEAD_END_POSITION ~>> EndValue == 0 ? "0":String(EndValue),
             Keys.AUTO_SEEK.DIRECTION ~>> Direction == "" ? notAppplicable: Direction as String,
-            Keys.AUTO_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? 0:scrubDuration,
+            Keys.AUTO_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? "0":String(scrubDuration),
             Keys.AUTO_SEEK.PLAYER_NAME ~>> "Kaltura",
             Keys.AUTO_SEEK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
             Keys.AUTO_SEEK.CDN ~>> notAppplicable,
@@ -134,7 +136,7 @@ public func VideoViewEvent()
                Keys.REPLAY.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.REPLAY.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.REPLAY.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.REPLAY.PREVIEW_STATUS ~>> "",
+               Keys.REPLAY.PREVIEW_STATUS ~>> preview_status,
                Keys.REPLAY.PAGE_NAME ~>> currently_tab,
                Keys.REPLAY.DRM_VIDEO ~>> DrmVideo,
                Keys.REPLAY.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -146,9 +148,9 @@ public func VideoViewEvent()
                Keys.REPLAY.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.REPLAY.PROVIDER_ID ~>> notAppplicable,
                Keys.REPLAY.PROVIDER_NAME ~>> notAppplicable,
-               Keys.REPLAY.PLAYER_HEAD_POSITION ~>> duration == 0 ? 0:duration,
-               Keys.REPLAY.PLAYER_HEAD_START_POSITION ~>> duration == 0 ? 0:duration,
-               Keys.REPLAY.PLAYER_HEAD_END_POSITION ~>> 0,
+               Keys.REPLAY.PLAYER_HEAD_POSITION ~>> duration == 0 ? "0":String(duration),
+               Keys.REPLAY.PLAYER_HEAD_START_POSITION ~>> duration == 0 ? "0":String(duration),
+               Keys.REPLAY.PLAYER_HEAD_END_POSITION ~>> "0",
                Keys.REPLAY.PLAYER_NAME ~>> "Kaltura",
                Keys.REPLAY.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.REPLAY.CDN ~>> notAppplicable,
@@ -170,6 +172,8 @@ public func VideoViewEvent()
            
           let parameter : Set = [
            Keys.SKIP_INTRO.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
+           Keys.SKIP_INTRO.ELEMENT ~>> "Skip Intro CTA",
+           Keys.SKIP_INTRO.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.SKIP_INTRO.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
            Keys.SKIP_INTRO.SOURCE ~>> source,
            Keys.SKIP_INTRO.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
@@ -179,7 +183,7 @@ public func VideoViewEvent()
            Keys.SKIP_INTRO.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.SKIP_INTRO.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.SKIP_INTRO.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.SKIP_INTRO.PREVIEW_STATUS ~>> "",
+           Keys.SKIP_INTRO.PREVIEW_STATUS ~>> preview_status,
            Keys.SKIP_INTRO.PAGE_NAME ~>> currently_tab,
            Keys.SKIP_INTRO.DRM_VIDEO ~>> DrmVideo,
            Keys.SKIP_INTRO.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -207,8 +211,7 @@ public func VideoViewEvent()
            
        }
     
-    
-    
+
 //MARK:-  SKIP_RECAP Video Analytics
        
        public func SkipRecapVideo(with SkipstartTime: NSString , SkipendTime:NSString)
@@ -224,7 +227,7 @@ public func VideoViewEvent()
               Keys.SKIP_RECAP.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
               Keys.SKIP_RECAP.SERIES ~>> series == "" ? notAppplicable:series,
               Keys.SKIP_RECAP.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-              Keys.SKIP_RECAP.PREVIEW_STATUS ~>> "",
+              Keys.SKIP_RECAP.PREVIEW_STATUS ~>> preview_status,
               Keys.SKIP_RECAP.PAGE_NAME ~>> currently_tab,
               Keys.SKIP_RECAP.DRM_VIDEO ~>> DrmVideo,
               Keys.SKIP_RECAP.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -268,7 +271,7 @@ public func VideoViewEvent()
            Keys.WATCH_CREDITS.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.WATCH_CREDITS.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.WATCH_CREDITS.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.WATCH_CREDITS.PREVIEW_STATUS ~>> "",
+           Keys.WATCH_CREDITS.PREVIEW_STATUS ~>> preview_status,
            Keys.WATCH_CREDITS.PAGE_NAME ~>> currently_tab,
            Keys.WATCH_CREDITS.DRM_VIDEO ~>> DrmVideo,
            Keys.WATCH_CREDITS.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -312,7 +315,7 @@ public func VideoViewEvent()
            Keys.PAUSE.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.PAUSE.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.PAUSE.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.PAUSE.PREVIEW_STATUS ~>> "",
+           Keys.PAUSE.PREVIEW_STATUS ~>> preview_status,
            Keys.PAUSE.PAGE_NAME ~>> currently_tab,
            Keys.PAUSE.DRM_VIDEO ~>> DrmVideo,
            Keys.PAUSE.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -324,11 +327,12 @@ public func VideoViewEvent()
            Keys.PAUSE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.PAUSE.PROVIDER_ID ~>> notAppplicable,
            Keys.PAUSE.PROVIDER_NAME ~>> notAppplicable,
-           Keys.PAUSE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-           Keys.PAUSE.PLAYER_HEAD_END_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.PAUSE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+           Keys.PAUSE.PLAYER_HEAD_START_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+           Keys.PAUSE.PLAYER_HEAD_END_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
            Keys.PAUSE.PLAYER_NAME ~>> "Kaltura",
            Keys.PAUSE.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-           Keys.PAUSE.CDN ~>> "",
+           Keys.PAUSE.CDN ~>> notAppplicable,
            Keys.PAUSE.DNS ~>> notAppplicable,
            Keys.PAUSE.CAROUSAL_NAME ~>> carousal_name,
            Keys.PAUSE.CAROUSAL_ID ~>> carousal_id,
@@ -359,7 +363,7 @@ public func VideoViewEvent()
            Keys.RESUME.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.RESUME.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.RESUME.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.RESUME.PREVIEW_STATUS ~>> "",
+           Keys.RESUME.PREVIEW_STATUS ~>> preview_status,
            Keys.RESUME.PAGE_NAME ~>> currently_tab,
            Keys.RESUME.DRM_VIDEO ~>> DrmVideo,
            Keys.RESUME.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -371,8 +375,9 @@ public func VideoViewEvent()
            Keys.RESUME.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.RESUME.PROVIDER_ID ~>> notAppplicable,
            Keys.RESUME.PROVIDER_NAME ~>> notAppplicable,
-           Keys.RESUME.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-           Keys.RESUME.PLAYER_HEAD_END_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.RESUME.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+           Keys.RESUME.PLAYER_HEAD_START_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+           Keys.RESUME.PLAYER_HEAD_END_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
            Keys.RESUME.PLAYER_NAME ~>> "Kaltura",
            Keys.RESUME.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
            Keys.RESUME.CDN ~>> "",
@@ -405,7 +410,7 @@ public func VideoViewEvent()
                Keys.SCRUB_SLASH_SEEK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.SCRUB_SLASH_SEEK.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.SCRUB_SLASH_SEEK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.SCRUB_SLASH_SEEK.PREVIEW_STATUS ~>> "",
+               Keys.SCRUB_SLASH_SEEK.PREVIEW_STATUS ~>> preview_status,
                Keys.SCRUB_SLASH_SEEK.PAGE_NAME ~>> currently_tab,
                Keys.SCRUB_SLASH_SEEK.DRM_VIDEO ~>> DrmVideo,
                Keys.SCRUB_SLASH_SEEK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -417,14 +422,14 @@ public func VideoViewEvent()
                Keys.SCRUB_SLASH_SEEK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.SCRUB_SLASH_SEEK.PROVIDER_ID ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.PROVIDER_NAME ~>> notAppplicable,
-               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
-               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_START_POSITION ~>> StartTime == 0 ? 0:StartTime,
-               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_END_POSITION ~>> EndTime == 0 ? 0:EndTime,
+               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_START_POSITION ~>> StartTime == 0 ? "0":String(StartTime),
+               Keys.SCRUB_SLASH_SEEK.PLAYER_HEAD_END_POSITION ~>> EndTime == 0 ? "0":String(EndTime),
                Keys.SCRUB_SLASH_SEEK.DIRECTION ~>> Direction == "" ? notAppplicable: Direction as String,
-               Keys.SCRUB_SLASH_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? 0:scrubDuration,
+               Keys.SCRUB_SLASH_SEEK.SEEK_SCRUB_DURATION ~>> scrubDuration == 0 ? "0":String(scrubDuration),
                Keys.SCRUB_SLASH_SEEK.PLAYER_NAME ~>> "Kaltura",
                Keys.SCRUB_SLASH_SEEK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.SCRUB_SLASH_SEEK.CDN ~>> "",
+               Keys.SCRUB_SLASH_SEEK.CDN ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.DNS ~>> notAppplicable,
                Keys.SCRUB_SLASH_SEEK.CAROUSAL_NAME ~>> carousal_name,
                Keys.SCRUB_SLASH_SEEK.CAROUSAL_ID ~>> carousal_id,
@@ -452,7 +457,7 @@ public func VideoViewEvent()
                Keys.LANGUAGE_AUDIO_CHANGE.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.LANGUAGE_AUDIO_CHANGE.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.LANGUAGE_AUDIO_CHANGE.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.LANGUAGE_AUDIO_CHANGE.PREVIEW_STATUS ~>> "",
+               Keys.LANGUAGE_AUDIO_CHANGE.PREVIEW_STATUS ~>> preview_status,
                Keys.LANGUAGE_AUDIO_CHANGE.PAGE_NAME ~>> currently_tab,
                Keys.LANGUAGE_AUDIO_CHANGE.DRM_VIDEO ~>> DrmVideo,
                Keys.LANGUAGE_AUDIO_CHANGE.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -464,11 +469,11 @@ public func VideoViewEvent()
                Keys.LANGUAGE_AUDIO_CHANGE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.LANGUAGE_AUDIO_CHANGE.PROVIDER_ID ~>> notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.PROVIDER_NAME ~>> notAppplicable,
-               Keys.LANGUAGE_AUDIO_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.LANGUAGE_AUDIO_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                Keys.LANGUAGE_AUDIO_CHANGE.PLAYER_NAME ~>> "Kaltura",
                Keys.LANGUAGE_AUDIO_CHANGE.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.LANGUAGE_AUDIO_CHANGE.OLD ~>> Old == "" ? notAppplicable:Old ,
-               Keys.LANGUAGE_AUDIO_CHANGE.NEW ~>> New == "" ? notAppplicable:New ,
+               Keys.LANGUAGE_AUDIO_CHANGE.OLD_AUDIO_LANGUAGE ~>> Old == "" ? notAppplicable:Old ,
+               Keys.LANGUAGE_AUDIO_CHANGE.NEW_AUDIO_LANGUAGE ~>> New == "" ? notAppplicable:New ,
                Keys.LANGUAGE_AUDIO_CHANGE.CDN ~>> "",
                Keys.LANGUAGE_AUDIO_CHANGE.DNS ~>> notAppplicable,
                Keys.LANGUAGE_AUDIO_CHANGE.TRACKING_MODE ~>> TrackingMode == "" ? notAppplicable:TrackingMode,
@@ -499,7 +504,7 @@ public func VideoViewEvent()
                Keys.SUBTITLE_LANGUAGE_CHANGE.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.SUBTITLE_LANGUAGE_CHANGE.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.SUBTITLE_LANGUAGE_CHANGE.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.PREVIEW_STATUS ~>> "",
+               Keys.SUBTITLE_LANGUAGE_CHANGE.PREVIEW_STATUS ~>> preview_status,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PAGE_NAME ~>> currently_tab,
                Keys.SUBTITLE_LANGUAGE_CHANGE.DRM_VIDEO ~>> DrmVideo,
                Keys.SUBTITLE_LANGUAGE_CHANGE.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -511,12 +516,12 @@ public func VideoViewEvent()
                Keys.SUBTITLE_LANGUAGE_CHANGE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PROVIDER_ID ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.PROVIDER_NAME ~>> notAppplicable,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.SUBTITLE_LANGUAGE_CHANGE.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                Keys.SUBTITLE_LANGUAGE_CHANGE.PLAYER_NAME ~>> "Kaltura",
                Keys.SUBTITLE_LANGUAGE_CHANGE.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.OLD ~>> Old == "" ? notAppplicable:Old ,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.NEW ~>> New == "" ? notAppplicable:New ,
-               Keys.SUBTITLE_LANGUAGE_CHANGE.CDN ~>> "",
+               Keys.SUBTITLE_LANGUAGE_CHANGE.OLD_SUBTITLE_LANGUAGE ~>> Old == "" ? notAppplicable:Old ,
+               Keys.SUBTITLE_LANGUAGE_CHANGE.NEW_SUBTITLE_LANGUAGE ~>> New == "" ? notAppplicable:New ,
+               Keys.SUBTITLE_LANGUAGE_CHANGE.CDN ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.DNS ~>> notAppplicable,
                Keys.SUBTITLE_LANGUAGE_CHANGE.TRACKING_MODE ~>> TrackingMode == "" ? notAppplicable:TrackingMode,
                Keys.SUBTITLE_LANGUAGE_CHANGE.CAROUSAL_NAME ~>> carousal_name,
@@ -547,7 +552,7 @@ public func VideoViewEvent()
               Keys.BUFFER_START.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
               Keys.BUFFER_START.SERIES ~>> series == "" ? notAppplicable:series,
               Keys.BUFFER_START.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-              Keys.BUFFER_START.PREVIEW_STATUS ~>> "",
+              Keys.BUFFER_START.PREVIEW_STATUS ~>> preview_status,
               Keys.BUFFER_START.PAGE_NAME ~>> currently_tab,
               Keys.BUFFER_START.DRM_VIDEO ~>> DrmVideo,
               Keys.BUFFER_START.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -559,7 +564,7 @@ public func VideoViewEvent()
               Keys.BUFFER_START.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.BUFFER_START.PROVIDER_ID ~>> notAppplicable,
               Keys.BUFFER_START.PROVIDER_NAME ~>> notAppplicable,
-              Keys.BUFFER_START.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+              Keys.BUFFER_START.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
               Keys.BUFFER_START.PLAYER_NAME ~>> "Kaltura",
               Keys.BUFFER_START.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
               Keys.BUFFER_START.CDN ~>> "",
@@ -587,7 +592,7 @@ public func VideoViewEvent()
            Keys.BUFFER_END.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.BUFFER_END.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.BUFFER_END.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.BUFFER_END.PREVIEW_STATUS ~>> "",
+           Keys.BUFFER_END.PREVIEW_STATUS ~>> preview_status,
            Keys.BUFFER_END.PAGE_NAME ~>> currently_tab,
            Keys.BUFFER_END.DRM_VIDEO ~>> DrmVideo,
            Keys.BUFFER_END.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -599,7 +604,7 @@ public func VideoViewEvent()
            Keys.BUFFER_END.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.BUFFER_END.PROVIDER_ID ~>> notAppplicable,
            Keys.BUFFER_END.PROVIDER_NAME ~>> notAppplicable,
-           Keys.BUFFER_END.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.BUFFER_END.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
            Keys.BUFFER_END.PLAYER_NAME ~>> "Kaltura",
            Keys.BUFFER_END.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
            Keys.BUFFER_END.CDN ~>> "",
@@ -616,10 +621,8 @@ public func VideoViewEvent()
     
     //MARK:-  PlayerView Changed Event
        
-       public func PlayerViewChanged(with Old: String , New:String )
-          {
-              
-             let parameter : Set = [
+    public func playerOrientationChanged(from oldPlayerOrientation: String, to newPlayerOrientation: String) {
+        let parameter : Set = [
               Keys.PLAYER_VIEW_CHANGED.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
               Keys.PLAYER_VIEW_CHANGED.SOURCE ~>> source,
               Keys.PLAYER_VIEW_CHANGED.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
@@ -629,7 +632,7 @@ public func VideoViewEvent()
               Keys.PLAYER_VIEW_CHANGED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
               Keys.PLAYER_VIEW_CHANGED.SERIES ~>> series == "" ? notAppplicable:series,
               Keys.PLAYER_VIEW_CHANGED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-              Keys.PLAYER_VIEW_CHANGED.PREVIEW_STATUS ~>> "",
+              Keys.PLAYER_VIEW_CHANGED.PREVIEW_STATUS ~>> preview_status,
               Keys.PLAYER_VIEW_CHANGED.PAGE_NAME ~>> currently_tab,
               Keys.PLAYER_VIEW_CHANGED.DRM_VIDEO ~>> DrmVideo,
               Keys.PLAYER_VIEW_CHANGED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -641,25 +644,25 @@ public func VideoViewEvent()
               Keys.PLAYER_VIEW_CHANGED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
               Keys.PLAYER_VIEW_CHANGED.PROVIDER_ID ~>> notAppplicable,
               Keys.PLAYER_VIEW_CHANGED.PROVIDER_NAME ~>> notAppplicable,
-              Keys.PLAYER_VIEW_CHANGED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+              Keys.PLAYER_VIEW_CHANGED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+              Keys.PLAYER_VIEW_CHANGED.PLAYER_HEAD_START_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
+              Keys.PLAYER_VIEW_CHANGED.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
               Keys.PLAYER_VIEW_CHANGED.PLAYER_NAME ~>> "Kaltura",
               Keys.PLAYER_VIEW_CHANGED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
               Keys.PLAYER_VIEW_CHANGED.CDN ~>> "",
               Keys.PLAYER_VIEW_CHANGED.DNS ~>> notAppplicable,
-              Keys.PLAYER_VIEW_CHANGED.OLD ~>> Old == "" ? notAppplicable:Old,
-              Keys.PLAYER_VIEW_CHANGED.NEW ~>> New == "" ? notAppplicable:New,
+              Keys.PLAYER_VIEW_CHANGED.OLD_VIEW_POSITION ~>> oldPlayerOrientation,
+              Keys.PLAYER_VIEW_CHANGED.NEW_VIEW_POSITION ~>> newPlayerOrientation,
               Keys.PLAYER_VIEW_CHANGED.CAROUSAL_NAME ~>> carousal_name,
               Keys.PLAYER_VIEW_CHANGED.CAROUSAL_ID ~>> carousal_id,
               Keys.PLAYER_VIEW_CHANGED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
               Keys.PLAYER_VIEW_CHANGED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
               Keys.PLAYER_VIEW_CHANGED.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-
-              ]
-              analytics.track(Events.PLAYER_VIEW_CHANGED, trackedProperties: parameter)
-              
-          }
+        ]
+        
+        analytics.track(Events.PLAYER_VIEW_CHANGED, trackedProperties: parameter)
+    }
        
-    
     //MARK:-  VideoExit Event
     
     public func VideoExit()
@@ -676,7 +679,7 @@ public func VideoViewEvent()
            Keys.VIDEO_EXIT.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.VIDEO_EXIT.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.VIDEO_EXIT.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.VIDEO_EXIT.PREVIEW_STATUS ~>> "",
+           Keys.VIDEO_EXIT.PREVIEW_STATUS ~>> preview_status,
            Keys.VIDEO_EXIT.PAGE_NAME ~>> currently_tab,
            Keys.VIDEO_EXIT.DRM_VIDEO ~>> DrmVideo,
            Keys.VIDEO_EXIT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -688,13 +691,12 @@ public func VideoViewEvent()
            Keys.VIDEO_EXIT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.VIDEO_EXIT.PROVIDER_ID ~>> notAppplicable,
            Keys.VIDEO_EXIT.PROVIDER_NAME ~>> notAppplicable,
-           Keys.VIDEO_EXIT.PLAYER_HEAD_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
-           Keys.VIDEO_EXIT.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
-            Keys.VIDEO_EXIT.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
+           Keys.VIDEO_EXIT.PLAYER_HEAD_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
+           Keys.VIDEO_EXIT.PLAYER_HEAD_START_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
+           Keys.VIDEO_EXIT.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
            Keys.VIDEO_EXIT.PLAYER_NAME ~>> "Kaltura",
            Keys.VIDEO_EXIT.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion,
-           Keys.VIDEO_EXIT.TALAMOOS ~>> "",
-           Keys.VIDEO_EXIT.CDN ~>> "",
+           Keys.VIDEO_EXIT.CDN ~>> notAppplicable,
            Keys.VIDEO_EXIT.DNS ~>> notAppplicable,
            Keys.VIDEO_EXIT.CAROUSAL_NAME ~>> carousal_name,
            Keys.VIDEO_EXIT.CAROUSAL_ID ~>> carousal_id,
@@ -724,7 +726,7 @@ public func VideoViewEvent()
            Keys.VIDEO_WATCH_DURATON.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.VIDEO_WATCH_DURATON.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.VIDEO_WATCH_DURATON.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.VIDEO_WATCH_DURATON.PREVIEW_STATUS ~>> "",
+           Keys.VIDEO_WATCH_DURATON.PREVIEW_STATUS ~>> preview_status,
            Keys.VIDEO_WATCH_DURATON.PAGE_NAME ~>> currently_tab,
            Keys.VIDEO_WATCH_DURATON.DRM_VIDEO ~>> DrmVideo,
            Keys.VIDEO_WATCH_DURATON.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -736,9 +738,9 @@ public func VideoViewEvent()
            Keys.VIDEO_WATCH_DURATON.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.VIDEO_WATCH_DURATON.PROVIDER_ID ~>> notAppplicable,
            Keys.VIDEO_WATCH_DURATON.PROVIDER_NAME ~>> notAppplicable,
-            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
-            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
-            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? 0:DurationPlayer,
+            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
+            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
+            Keys.VIDEO_WATCH_DURATON.PLAYER_HEAD_END_POSITION ~>> DurationPlayer == 0 ? "0":String(DurationPlayer),
            Keys.VIDEO_WATCH_DURATON.PLAYER_NAME ~>> "Kaltura",
            Keys.VIDEO_WATCH_DURATON.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion,
            Keys.VIDEO_WATCH_DURATON.CDN ~>> "",
@@ -748,6 +750,8 @@ public func VideoViewEvent()
            Keys.VIDEO_WATCH_DURATON.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
            Keys.VIDEO_WATCH_DURATON.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.VIDEO_WATCH_DURATON.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+           Keys.VIDEO_WATCH_DURATON.VERTICAL_INDEX ~>> vertical_index,
+           Keys.VIDEO_WATCH_DURATON.HORIZONTAL_INDEX ~>> horizontal_index,
 
            ]
            analytics.track(Events.VIDEO_WATCH_DURATON, trackedProperties: parameter)
@@ -783,7 +787,7 @@ public func VideoViewEvent()
            Keys.CASTING_STARTED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.CASTING_STARTED.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.CASTING_STARTED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.CASTING_STARTED.PREVIEW_STATUS ~>> "",
+           Keys.CASTING_STARTED.PREVIEW_STATUS ~>> preview_status,
            Keys.CASTING_STARTED.PAGE_NAME ~>> currently_tab,
            Keys.CASTING_STARTED.DRM_VIDEO ~>> DrmVideo,
            Keys.CASTING_STARTED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -795,7 +799,7 @@ public func VideoViewEvent()
            Keys.CASTING_STARTED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.CASTING_STARTED.PROVIDER_ID ~>> notAppplicable,
            Keys.CASTING_STARTED.PROVIDER_NAME ~>> notAppplicable,
-           Keys.CASTING_STARTED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.CASTING_STARTED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
            Keys.CASTING_STARTED.PLAYER_NAME ~>> "Kaltura",
            Keys.CASTING_STARTED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion,
            Keys.CASTING_STARTED.CDN ~>> "",
@@ -824,7 +828,7 @@ public func VideoViewEvent()
            Keys.CASTING_ENDED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
            Keys.CASTING_ENDED.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.CASTING_ENDED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-           Keys.CASTING_ENDED.PREVIEW_STATUS ~>> "",
+           Keys.CASTING_ENDED.PREVIEW_STATUS ~>> preview_status,
            Keys.CASTING_ENDED.PAGE_NAME ~>> currently_tab,
            Keys.CASTING_ENDED.DRM_VIDEO ~>> DrmVideo,
            Keys.CASTING_ENDED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -836,7 +840,7 @@ public func VideoViewEvent()
            Keys.CASTING_ENDED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            Keys.CASTING_ENDED.PROVIDER_ID ~>> notAppplicable,
            Keys.CASTING_ENDED.PROVIDER_NAME ~>> notAppplicable,
-           Keys.CASTING_ENDED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+           Keys.CASTING_ENDED.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
            Keys.CASTING_ENDED.PLAYER_NAME ~>> "Kaltura",
            Keys.CASTING_ENDED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion,
            Keys.CASTING_ENDED.CDN ~>> "",
@@ -857,6 +861,7 @@ public func VideoViewEvent()
            
           let parameter : Set = [
            Keys.DOWNLOAD_START.TITLE ~>> contentName == "" ? notAppplicable:contentName ,
+           Keys.DOWNLOAD_START.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
            Keys.DOWNLOAD_START.SOURCE ~>> source,
            Keys.DOWNLOAD_START.ELEMENT ~>> "Download",
            Keys.DOWNLOAD_START.BUTTON_TYPE ~>> "Player Download Button",
@@ -869,7 +874,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_START.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.DOWNLOAD_START.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
            Keys.DOWNLOAD_START.SHARING_PLATFORM ~>> "",
-           Keys.DOWNLOAD_START.PREVIEW_STATUS ~>> "",
+           Keys.DOWNLOAD_START.PREVIEW_STATUS ~>> preview_status,
            Keys.DOWNLOAD_START.PAGE_NAME ~>> currently_tab,
            Keys.DOWNLOAD_START.DRM_VIDEO ~>> DrmVideo,
            Keys.DOWNLOAD_START.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -880,7 +885,6 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_START.CAST_TO ~>> notAppplicable,
            Keys.DOWNLOAD_START.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
            Keys.DOWNLOAD_START.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-           Keys.DOWNLOAD_START.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_START.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_START.PROVIDER_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_START.DOWNLOAD_VIDEOS_QUALITY ~>> Quality == "" ? notAppplicable:Quality,
@@ -898,6 +902,7 @@ public func VideoViewEvent()
        {
           let parameter : Set = [
            Keys.DOWNLOAD_RESULT.TITLE ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
+           Keys.DOWNLOAD_RESULT.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
            Keys.DOWNLOAD_RESULT.SOURCE ~>> source,
            Keys.DOWNLOAD_RESULT.ELEMENT ~>> notAppplicable,
            Keys.DOWNLOAD_RESULT.BUTTON_TYPE ~>> notAppplicable,
@@ -910,7 +915,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_RESULT.SERIES ~>> series == "" ? notAppplicable:series,
            Keys.DOWNLOAD_RESULT.EPISODE_NO ~>> item.episodeNumber ?? 0,
            Keys.DOWNLOAD_RESULT.SHARING_PLATFORM ~>> "",
-           Keys.DOWNLOAD_RESULT.PREVIEW_STATUS ~>> "",
+           Keys.DOWNLOAD_RESULT.PREVIEW_STATUS ~>> preview_status,
            Keys.DOWNLOAD_RESULT.PAGE_NAME ~>> currently_tab,
            Keys.DOWNLOAD_RESULT.DRM_VIDEO ~>> DrmVideo,
            Keys.DOWNLOAD_RESULT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -921,7 +926,6 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_RESULT.CAST_TO ~>> notAppplicable,
            Keys.DOWNLOAD_RESULT.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
            Keys.DOWNLOAD_RESULT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-           Keys.DOWNLOAD_RESULT.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_RESULT.INTERACTION_LABEL ~>> "",
            Keys.DOWNLOAD_RESULT.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_RESULT.PROVIDER_NAME ~>> notAppplicable,
@@ -947,6 +951,7 @@ public func VideoViewEvent()
            
           let parameter : Set = [
            Keys.DOWNLOAD_DELETE.TITLE ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
+           Keys.DOWNLOAD_DELETE.CONTENT_NAME ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
            Keys.DOWNLOAD_DELETE.SOURCE ~>> source,
            Keys.DOWNLOAD_DELETE.ELEMENT ~>> "Download Delete",
            Keys.DOWNLOAD_DELETE.BUTTON_TYPE ~>> "Download Delete Button",
@@ -959,7 +964,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_DELETE.SERIES ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.EPISODE_NO ~>> item.episodeNumber ?? 0,
            Keys.DOWNLOAD_DELETE.SHARING_PLATFORM ~>> "",
-           Keys.DOWNLOAD_DELETE.PREVIEW_STATUS ~>> "",
+           Keys.DOWNLOAD_DELETE.PREVIEW_STATUS ~>> preview_status,
            Keys.DOWNLOAD_DELETE.PAGE_NAME ~>> currently_tab,
            Keys.DOWNLOAD_DELETE.DRM_VIDEO ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.SUBTITLES ~>> notAppplicable,
@@ -970,7 +975,6 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_DELETE.CAST_TO ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.INTRO_PRESENT ~>> skipIntroTime == "" ? false : true,
            Keys.DOWNLOAD_DELETE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-           Keys.DOWNLOAD_DELETE.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_DELETE.INTERACTION_LABEL ~>> "",
            Keys.DOWNLOAD_DELETE.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.PROVIDER_NAME ~>> notAppplicable,
@@ -1003,7 +1007,7 @@ public func VideoViewEvent()
 //              Keys.DOWNLOAD_CLICK.SERIES ~>> notAppplicable ,
 //              Keys.DOWNLOAD_CLICK.EPISODE_NO ~>> item.episodeNumber ?? 0,
 //              Keys.DOWNLOAD_CLICK.SHARING_PLATFORM ~>> notAppplicable,
-//              Keys.DOWNLOAD_CLICK.PREVIEW_STATUS ~>> "",
+//              Keys.DOWNLOAD_CLICK.PREVIEW_STATUS ~>> preview_status,
 //              Keys.DOWNLOAD_CLICK.PAGE_NAME ~>> currently_tab,
 //              Keys.DOWNLOAD_CLICK.DRM_VIDEO ~>> notAppplicable,
 //              Keys.DOWNLOAD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -1061,7 +1065,9 @@ public func VideoViewEvent()
                        Keys.POPUP_LAUNCH.CAROUSAL_ID ~>> carousal_id,
                        Keys.POPUP_LAUNCH.TRACKING_MODE ~>> "Online",
                        Keys.POPUP_LAUNCH.POP_UP_NAME ~>> PopUpName == "" ? notAppplicable:PopUpName,
-                       Keys.POPUP_LAUNCH.POPUP_TYPE ~>> "native"
+                       Keys.POPUP_LAUNCH.POPUP_TYPE ~>> "native",
+                       Keys.POPUP_LAUNCH.HORIZONTAL_INDEXstatic ~>> horizontal_index,
+                       Keys.POPUP_LAUNCH.VERTICAL_INDEX ~>> vertical_index,
                 ]
                 analytics.track(Events.POPUP_LAUNCH, trackedProperties: parameter)
                 
@@ -1098,11 +1104,10 @@ public func VideoViewEvent()
                   Keys.POP_UP_CTAS.CAROUSAL_ID ~>> carousal_id,
                   Keys.POP_UP_CTAS.TRACKING_MODE ~>> "Online",
                   Keys.POP_UP_CTAS.POP_UP_NAME ~>> PopUpName == "" ? notAppplicable:PopUpName,
-                  Keys.POP_UP_CTAS.POP_UP_TYPE ~>> "native"
+                  Keys.POP_UP_CTAS.POP_UP_TYPE ~>> "native",
+                  Keys.POP_UP_CTAS.HORIZONTAL_INDEX ~>> horizontal_index,
+                  Keys.POP_UP_CTAS.VERTICAL_INDEX ~>> vertical_index,
                 ]
             analytics.track(Events.POP_UP_CTAS, trackedProperties: parameter)
-                               
-                  
-                  
       }
 }

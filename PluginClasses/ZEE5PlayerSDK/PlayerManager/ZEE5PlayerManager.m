@@ -1493,8 +1493,9 @@ static ContentBuisnessType buisnessType;
         self.parentalView.hidden =YES;
     }
     
-    NSDictionary *dict = @{@"viewingMode" : @"Landscape"};
-    [[AnalyticEngine shared]PlayerViewChangedWith:@"Portrait" newView:@"Landscape"];
+    [[AnalyticEngine shared] playerOrientationChangedTo: ZeeAnalyticsPlayerOrientationLandscape];
+ 
+    NSDictionary *dict = @{@"viewingMode" : [AnalyticEngine playerOrientationNameFor: ZeeAnalyticsPlayerOrientationLandscape]};
     [self updateConvivaSessionWithMetadata: dict];
     
     [self.panDownGestureHandlerHelper didEnterLandscapeMode];
@@ -1503,7 +1504,6 @@ static ContentBuisnessType buisnessType;
 -(void)hideFullScreen
 {
     self.isFullScreenMode = NO;
-
     if (_customControlView == nil) {
         return;
     }
@@ -1534,7 +1534,9 @@ static ContentBuisnessType buisnessType;
         _customControlView.partnerLblTxt.text = _TelcoMsg;
     }
 
-    NSDictionary *dict = @{@"viewingMode" : @"Portrait"};
+    [[AnalyticEngine shared] playerOrientationChangedTo: ZeeAnalyticsPlayerOrientationPortrait];
+
+    NSDictionary *dict = @{@"viewingMode" : [AnalyticEngine playerOrientationNameFor: ZeeAnalyticsPlayerOrientationPortrait]};
     [self updateConvivaSessionWithMetadata: dict];
     
     if (self.parentalView!=nil)
@@ -1547,8 +1549,6 @@ static ContentBuisnessType buisnessType;
         self.devicePopView.hidden =NO;
     }
 
-    [[AnalyticEngine shared]PlayerViewChangedWith:@"Landscape" newView:@"Portrait"];
-    
     [self.panDownGestureHandlerHelper didEnterPortraitMode];
 }
 
@@ -1688,8 +1688,8 @@ static ContentBuisnessType buisnessType;
         seekValue = [[Zee5PlayerPlugin sharedInstance] getDuration];
     }
     [self setSeekTime:seekValue];
-    AnalyticEngine *engine = [[AnalyticEngine alloc]init];
-    [engine AutoSeekAnalyticsWith:@"Forward" Starttime:currentTime Endtime:seekValue];
+    [[AnalyticEngine shared]AutoSeekAnalyticsWith:@"Forward" Starttime:currentTime Endtime:seekValue];
+
 }
 -(void)rewind:(NSInteger)value
 {
@@ -1701,8 +1701,7 @@ static ContentBuisnessType buisnessType;
         seekValue = 0;
     }
     [self setSeekTime:seekValue];
-    AnalyticEngine *engine = [[AnalyticEngine alloc]init];
-    [engine AutoSeekAnalyticsWith:@"Rewind" Starttime:currentTime Endtime:seekValue];
+    [[AnalyticEngine shared]AutoSeekAnalyticsWith:@"Rewind" Starttime:currentTime Endtime:seekValue];
 }
 
 -(void)setAudioTrack:(NSString *)audioID Title:(NSString *)AudioTitle
