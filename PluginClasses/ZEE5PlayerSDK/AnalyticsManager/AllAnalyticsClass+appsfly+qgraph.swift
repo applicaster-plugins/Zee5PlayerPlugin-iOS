@@ -22,6 +22,25 @@ extension AllAnalyticsClass{
     var carousal_id:String {
         return UserDefaults.standard.string(forKey: "carousal_id") ?? "N/A"
     }
+    var vertical_index:String {
+        return UserDefaults.standard.string(forKey: "vertical_index") ?? "N/A"
+    }
+    var horizontal_index:String {
+        return UserDefaults.standard.string(forKey: "horisontal_index") ?? "N/A"
+    }
+    var preview_status:String {
+        return UserDefaults.standard.string(forKey: "preview_status") ?? "N/A"
+    }
+    var talamoos_click_id:String {
+        return UserDefaults.standard.string(forKey: "talamoos_click_id") ?? "N/A"
+    }
+    var talamoos_origin:String {
+        return UserDefaults.standard.string(forKey: "talamoos_origin") ?? "N/A"
+    }
+    var talamoos_model_name:String {
+        return UserDefaults.standard.string(forKey: "talamoos_model_name") ?? "N/A"
+    }
+    
     
     //MARK:- AppsFlyer Events
     
@@ -56,7 +75,9 @@ extension AllAnalyticsClass{
         Keys.ADD_TO_WATCHLIST.CAROUSAL_ID ~>> carousal_id,
         Keys.ADD_TO_WATCHLIST.USER_LOGIN_STATUS ~>> User.shared.getType().rawValue == "" ?notAppplicable:User.shared.getType().rawValue,
         Keys.ADD_TO_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
-        Keys.ADD_TO_WATCHLIST.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype
+        Keys.ADD_TO_WATCHLIST.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+        Keys.ADD_TO_WATCHLIST.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+        Keys.ADD_TO_WATCHLIST.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
         ]
          analytics.track(Events.ADD_TO_WATCHLIST, trackedProperties: parameter)
     }
@@ -88,7 +109,9 @@ extension AllAnalyticsClass{
         Keys.REMOVE_FROM_WATCHLIST.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.REMOVE_FROM_WATCHLIST.CAROUSAL_NAME ~>> carousal_name,
         Keys.REMOVE_FROM_WATCHLIST.CAROUSAL_ID ~>> carousal_id,
-        Keys.REMOVE_FROM_WATCHLIST.TRACKING_MODE ~>> notAppplicable
+        Keys.REMOVE_FROM_WATCHLIST.TRACKING_MODE ~>> notAppplicable,
+        Keys.REMOVE_FROM_WATCHLIST.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+        Keys.REMOVE_FROM_WATCHLIST.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
         ]
          analytics.track(Events.REMOVE_FROM_WATCHLIST, trackedProperties: parameter)
     }
@@ -115,11 +138,13 @@ extension AllAnalyticsClass{
         Keys.SHARE.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.SHARE.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
         Keys.SHARE.TAB_NAME ~>> currently_tab,
-        Keys.SHARE.TV_CATEGORY ~>> notAppplicable,
+        Keys.SHARE.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
         Keys.SHARE.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.SHARE.CAROUSAL_NAME ~>> carousal_name,
         Keys.SHARE.CAROUSAL_ID ~>> carousal_id,
         Keys.SHARE.TRACKING_MODE ~>> notAppplicable,
+        Keys.SHARE.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+        Keys.SHARE.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
         ]
          analytics.track(Events.SHARE, trackedProperties: parameter)
     }

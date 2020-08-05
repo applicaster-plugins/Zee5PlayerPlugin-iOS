@@ -10,7 +10,6 @@ import Zee5CoreSDK
 import ZappSDK
 
 public class AllAnalyticsClass: NSObject{
-
     let LotameClientid = "13772"      // *** Lotame Client ID****////
 
     public static let shared = AllAnalyticsClass()
@@ -153,7 +152,7 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
             Keys.AD_INITIALIZED.SERIES ~>> series == "" ? notAppplicable:series,
             Keys.AD_INITIALIZED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-            Keys.AD_INITIALIZED.PREVIEW_STATUS ~>> "",                                                         // TT
+            Keys.AD_INITIALIZED.PREVIEW_STATUS ~>> preview_status,
             Keys.AD_INITIALIZED.PAGE_NAME ~>> currently_tab,
             Keys.AD_INITIALIZED.DRM_VIDEO ~>> DrmVideo,
             Keys.AD_INITIALIZED.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -163,7 +162,9 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.TAB_NAME ~>> currently_tab,
             Keys.AD_INITIALIZED.CAST_TO ~>> notAppplicable,
             Keys.AD_INITIALIZED.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? 0:videoStarttime,
+            Keys.AD_INITIALIZED.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+            Keys.AD_INITIALIZED.PLAYER_HEAD_START_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+            Keys.AD_INITIALIZED.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
             Keys.AD_INITIALIZED.PLAYER_NAME ~>> CustomTags.value(forKey: "playerName") as? String ?? "Kaltura Player",
             Keys.AD_INITIALIZED.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
             Keys.AD_INITIALIZED.AD_PROVIDER ~>> "IMA",
@@ -181,6 +182,8 @@ extension AllAnalyticsClass
             Keys.AD_INITIALIZED.CAROUSAL_ID ~>> carousal_id,
             Keys.AD_INITIALIZED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
             Keys.AD_INITIALIZED.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            Keys.AD_INITIALIZED.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+            Keys.AD_INITIALIZED.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
 
         ]
         analytics.track(Events.AD_INITIALIZED, trackedProperties: parameter)
@@ -206,7 +209,7 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_VIEW.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.AD_VIEW.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.AD_VIEW.PREVIEW_STATUS ~>> "",                                                         // TT
+               Keys.AD_VIEW.PREVIEW_STATUS ~>> preview_status,
                Keys.AD_VIEW.PAGE_NAME ~>> currently_tab,
                Keys.AD_VIEW.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_VIEW.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -218,7 +221,7 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.AD_VIEW.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
                Keys.AD_VIEW.PROVIDER_NAME ~>> "IMA",
-               Keys.AD_VIEW.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_VIEW.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                Keys.AD_VIEW.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? "Kaltura Player",
                Keys.AD_VIEW.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_VIEW.AD_PROVIDER ~>> "IMA",
@@ -238,8 +241,9 @@ extension AllAnalyticsClass
                Keys.AD_VIEW.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
                Keys.AD_VIEW.SEASON_ID ~>>  seasonId == "" ? notAppplicable:seasonId ,
                Keys.AD_VIEW.AD_PERCENT_COMPLETE ~>>  "0" ,
-               
-
+               Keys.AD_VIEW.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+               Keys.AD_VIEW.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
+            
            ]
            analytics.track(Events.AD_VIEW, trackedProperties: parameter)
            
@@ -325,7 +329,7 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.AD_DURATION ~>> AdDict.value(forKey: "duration") as? String ?? notAppplicable,
                Keys.AD_SKIP.AD_CATEGORY ~>> AdDict.value(forKey: "streamType") as? String ?? notAppplicable,
                Keys.AD_SKIP.BUTTON_TYPE ~>> "Button",
-               Keys.AD_SKIP.PREVIEW_STATUS ~>> "",
+               Keys.AD_SKIP.PREVIEW_STATUS ~>> preview_status,
                Keys.AD_SKIP.PAGE_NAME ~>> currently_tab,
                Keys.AD_SKIP.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_SKIP.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -337,7 +341,7 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.AD_SKIP.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
                Keys.AD_SKIP.PROVIDER_NAME ~>> "IMA",
-               Keys.AD_SKIP.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_SKIP.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                Keys.AD_SKIP.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_SKIP.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_SKIP.AD_PROVIDER ~>> "IMA",
@@ -354,6 +358,8 @@ extension AllAnalyticsClass
                Keys.AD_SKIP.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
                Keys.AD_SKIP.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                Keys.AD_SKIP.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_SKIP.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+               Keys.AD_SKIP.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
 
            ]
            analytics.track(Events.AD_SKIP, trackedProperties: parameter)
@@ -395,7 +401,7 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                Keys.AD_CLICK.SERIES ~>> series == "" ? notAppplicable:series,
                Keys.AD_CLICK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.AD_CLICK.PREVIEW_STATUS ~>> notAppplicable,
+               Keys.AD_CLICK.PREVIEW_STATUS ~>> preview_status,
                Keys.AD_CLICK.PAGE_NAME ~>> currently_tab,
                Keys.AD_CLICK.DRM_VIDEO ~>> DrmVideo,
                Keys.AD_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -407,7 +413,7 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                Keys.AD_CLICK.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
                Keys.AD_CLICK.PROVIDER_NAME ~>> "IMA",
-               Keys.AD_CLICK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+               Keys.AD_CLICK.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                Keys.AD_CLICK.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                Keys.AD_CLICK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                Keys.AD_CLICK.AD_PROVIDER ~>> "IMA",
@@ -425,6 +431,8 @@ extension AllAnalyticsClass
                Keys.AD_CLICK.CAROUSAL_ID ~>> carousal_id,
                Keys.AD_CLICK.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                Keys.AD_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+               Keys.AD_CLICK.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+               Keys.AD_CLICK.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
 
            ]
          analytics.track(Events.AD_CLICK, trackedProperties: parameter)
@@ -447,7 +455,7 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_WATCH_DURATION.SERIES ~>> series == "" ? notAppplicable:series,
                   Keys.AD_WATCH_DURATION.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-                  Keys.AD_WATCH_DURATION.PREVIEW_STATUS ~>> "",
+                  Keys.AD_WATCH_DURATION.PREVIEW_STATUS ~>> preview_status,
                   Keys.AD_WATCH_DURATION.PAGE_NAME ~>> currently_tab,
                   Keys.AD_WATCH_DURATION.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_WATCH_DURATION.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -459,7 +467,7 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                   Keys.AD_WATCH_DURATION.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.PROVIDER_NAME ~>> "IMA",
-                  Keys.AD_WATCH_DURATION.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+                  Keys.AD_WATCH_DURATION.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                   Keys.AD_WATCH_DURATION.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_WATCH_DURATION.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                   Keys.AD_WATCH_DURATION.BUFFER_DURATION ~>> AdDict.value(forKey: "adPosition") as? String ?? notAppplicable,
@@ -479,6 +487,8 @@ extension AllAnalyticsClass
                   Keys.AD_WATCH_DURATION.CAROUSAL_ID ~>> carousal_id,
                   Keys.AD_WATCH_DURATION.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                   Keys.AD_WATCH_DURATION.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+                  Keys.AD_WATCH_DURATION.HORIZONTAL_INDEX ~>> horizontal_index == "" ? notAppplicable:horizontal_index,
+                  Keys.AD_WATCH_DURATION.VERTICAL_INDEX ~>> vertical_index == "" ? notAppplicable:vertical_index,
 
               ]
             analytics.track(Events.AD_WATCH_DURATION, trackedProperties: parameter)
@@ -502,7 +512,7 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
                   Keys.AD_FORCED_EXIT.SERIES ~>> series == "" ? notAppplicable:series,
                   Keys.AD_FORCED_EXIT.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-                  Keys.AD_FORCED_EXIT.PREVIEW_STATUS ~>> "",
+                  Keys.AD_FORCED_EXIT.PREVIEW_STATUS ~>> preview_status,
                   Keys.AD_FORCED_EXIT.PAGE_NAME ~>> currently_tab,
                   Keys.AD_FORCED_EXIT.DRM_VIDEO ~>> DrmVideo,
                   Keys.AD_FORCED_EXIT.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
@@ -514,7 +524,7 @@ extension AllAnalyticsClass
                   Keys.AD_FORCED_EXIT.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
                   Keys.AD_FORCED_EXIT.PROVIDER_ID ~>> AdDict.value(forKey: "adId") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.PROVIDER_NAME ~>> "IMA",
-                  Keys.AD_FORCED_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? 0:currentDuration,
+                  Keys.AD_FORCED_EXIT.PLAYER_HEAD_POSITION ~>> currentDuration == 0 ? "0":String(currentDuration),
                   Keys.AD_FORCED_EXIT.PLAYER_NAME ~>> AdTag.value(forKey: "playerName") as? String ?? notAppplicable,
                   Keys.AD_FORCED_EXIT.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
                   Keys.AD_FORCED_EXIT.AD_PROVIDER ~>> "IMA",
