@@ -448,10 +448,18 @@ public class Zee5DownloadManager {
                 ZeeUtility.utility.console("Can't get local url")
                 return
             }
-            if let mEntry = item.contentEntry,
-                let mSource = self.localAsset.getPreferredDownloadableMediaSource(for: mEntry) {
-                    
-                self.localAsset.renewDownloadedAsset(location: url, mediaSource: mSource) { (error) in
+            if let mEntry = item.contentEntry{
+            let fairParam = FairPlayDRMParams(licenseUri: item.licenseUrl, base64EncodedCertificate: item.base64encodedcertificate)
+            let source = PKMediaSource(item.contentId, contentUrl: URL(string: item.contentUrl), mimeType: nil, drmData: [fairParam], mediaFormat: .hls)
+            let entry = PKMediaEntry(item.contentId, sources: [source], duration: 1000)
+            let fairPlay = FormFairPlayLicenseProvider()
+            fairPlay.customData = item.customData
+                
+            guard let mSource = self.localAsset.getPreferredDownloadableMediaSource(for: entry) else {
+                ZeeUtility.utility.console("No valid source")
+                 return
+                     }
+            self.localAsset.renewDownloadedAsset(location: url, mediaSource: mSource) { (error) in
                     let msg = error == nil ? "Renew Updated" : "Renew Update Error: \(error?.localizedDescription ?? "")"
                     ZeeUtility.utility.console("Error msg: \(msg)")
                     ZeeUtility.utility.console("Error: \(String(describing: error))")
