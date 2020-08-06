@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ReportingManager : NSObject
 + (ReportingManager *)sharedInstance;
 - (void)getWatchHistory;
-- (void)startReportingWatchHistory;
+- (void)deleteWatchHIstory;
+- (void)startReportingWatchHistory:(NSInteger)duration;
 - (void)reportWatchHistory;
+- (void)resetValues;
 
 - (void)gaEventManager:(NSDictionary *)dict;
 @property (readwrite, nonatomic) BOOL isCountinueWatching;
