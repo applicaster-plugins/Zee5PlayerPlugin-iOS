@@ -73,7 +73,21 @@ extension DownloadQualityMenu: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoQualityCell.identifer) as? VideoQualityCell else { return UITableViewCell() }
         cell.selectedOption = self.downloadOption[indexPath.row]
         cell.setSelected(false, animated: true)
+        cell.btnRadio.tag = indexPath.row
+        cell.btnRadio.addTarget(self, action: #selector(listSelect(sender:)), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func listSelect(sender: UIButton){
+        var superView = sender.superview
+        while !(superView is UITableViewCell) {
+            superView = superView?.superview
+        }
+        let cell = superView as! UITableViewCell
+        if let indexpath = tableView.indexPath(for: cell){
+            print("selected Row \(indexpath.row)")
+            self.tableView.selectRow(at: indexpath, animated: false, scrollPosition: .none)
+        }
     }
 }
 
