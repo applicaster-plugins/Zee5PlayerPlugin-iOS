@@ -85,7 +85,6 @@ extension DownloadQualityMenu: UITableViewDataSource, UITableViewDelegate {
         }
         let cell = superView as! UITableViewCell
         if let indexpath = tableView.indexPath(for: cell){
-            print("selected Row \(indexpath.row)")
             self.tableView.selectRow(at: indexpath, animated: false, scrollPosition: .none)
         }
     }
