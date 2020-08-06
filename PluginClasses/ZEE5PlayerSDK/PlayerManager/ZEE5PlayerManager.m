@@ -320,6 +320,7 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)postReloadCurrentContentIdNotification {
+    _isNeedToSubscribe = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadCurrentContentIdNotification" object:nil userInfo:nil];
 }
 
@@ -1083,7 +1084,6 @@ static ContentBuisnessType buisnessType;
     
      singleton.isAdStarted = NO;
      singleton.isAdPause = NO;
-    _isNeedToSubscribe = NO;
     _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
@@ -1319,8 +1319,7 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnMinimizeButton
 {
-   // [[ReportingManager sharedInstance] startReportingWatchHistory];
-    
+    [[AnalyticEngine shared]cleanupVideoSesssion];
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];
     }
@@ -2765,7 +2764,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)CreateConvivaSession{
        [[AnalyticEngine shared] cleanupVideoSesssion];
-       //[[AnalyticEngine shared] cleanupAdSession];
        [self createConvivaSeesionWithMetadata];
 }
 // MARK:- Set Current Item For Live Data(url,drmToken,Title)
@@ -3113,8 +3111,6 @@ static ContentBuisnessType buisnessType;
     if (ZEE5PlayerSDK.getUserTypeEnum == Premium) {
         _isRsVodUser = YES;
     }
-    
-    
     if (!_isLive && self.ModelValues.trailerIdentifier != nil) {
         [self postContentIdShouldUpdateNotification: self.ModelValues.trailerIdentifier];
     }
