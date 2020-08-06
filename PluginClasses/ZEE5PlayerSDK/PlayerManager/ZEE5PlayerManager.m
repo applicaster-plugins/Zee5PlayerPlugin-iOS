@@ -452,6 +452,9 @@ static ContentBuisnessType buisnessType;
     if (_customControlView.btnMinimize != nil && [singleton.ViewsArray containsObject:_customControlView.btnMinimize]== false) {
         [singleton.ViewsArray addObject:_customControlView.btnMinimize];
     }
+    if (_customControlView.watchNowTitle != nil && [singleton.ViewsArray containsObject:_customControlView.watchNowTitle]== false) {
+        [singleton.ViewsArray addObject:_customControlView.watchNowTitle];
+    }
 }
 
 -(void)hideUnHideTopView:(BOOL )isHidden
@@ -594,16 +597,18 @@ static ContentBuisnessType buisnessType;
         
       
         //MARK:- WatchHistory Logic
-        if (totalSeconds - _watchHistorySecond >60 || _watchHistorySecond - totalSeconds > 60)
+        if ((totalSeconds - _watchHistorySecond > 60 || _watchHistorySecond - totalSeconds > 60) && totalSeconds != 0)
         {
             _watchHistorySecond = totalSeconds;
-            [[ReportingManager sharedInstance]startReportingWatchHistory];
+            if (totalSeconds < _watchCreditsTime) {
+                  [[ReportingManager sharedInstance]startReportingWatchHistory:_watchHistorySecond];
+            }
         }
        /***********************************************/
         //MARK:- WatchCredit
        /*********************************************/
-        if (totalSeconds>=_watchCreditsTime){
-            
+        if (totalSeconds >=_watchCreditsTime && (totalSeconds !=0 && _watchCreditsTime !=0 ) && _isLoaderShowing == NO){
+            [[ReportingManager sharedInstance]deleteWatchHIstory];
             [self WatchcreditControls:totalSeconds];
         }
       
@@ -665,12 +670,14 @@ static ContentBuisnessType buisnessType;
                      [self handleUpwardsGesture:nil];
                     _customControlView.watchcreditsTimeLbl.hidden = NO;
                     _customControlView.watchcretidStackview.hidden = NO;
-                    _customControlView.watchCreditBtnView.hidden = YES;
+                    _customControlView.watchCreditBtnView.hidden = NO;
                     _customControlView.watchcreditShowView.hidden = YES;
                     _customControlView.watchCreditVodView.hidden =YES;
                 }
             }
         }
+    
+    
 }
 
 -(void)timerFired
@@ -814,13 +821,12 @@ static ContentBuisnessType buisnessType;
 {
     [[NetworkManager sharedInstance]makeHttpGetRequest:BaseUrls.getndToken requestParam:@{} requestHeaders:@{} withCompletionHandler:^(id  _Nullable result) {
         if ([result isKindOfClass:[NSDictionary class]]) {
-        
-        completion(result[@"video_token"]);
+            
+            completion(result[@"video_token"]);
         }
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
         self.allowVideoContent = NO;
     }];
-
 }
 -(void)getBase64StringwithCompletion:(void (^)(NSString *))completion
 {
@@ -1046,7 +1052,6 @@ static ContentBuisnessType buisnessType;
     {
         self.customControlView.buttonPlay.selected = YES;
         [[Zee5PlayerPlugin sharedInstance].player play];
-        [[ReportingManager sharedInstance] startReportingWatchHistory];
     }
 }
 
@@ -1073,11 +1078,13 @@ static ContentBuisnessType buisnessType;
     [self.panDownGestureHandlerHelper endAd];
 
     [[Zee5PlayerPlugin sharedInstance].player destroy];
+    [[ReportingManager sharedInstance]resetValues];
     _currentItem = nil;
     
      singleton.isAdStarted = NO;
      singleton.isAdPause = NO;
     _isNeedToSubscribe = NO;
+    _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
     _audioTracks = nil;
@@ -1154,6 +1161,15 @@ static ContentBuisnessType buisnessType;
     _seekStared = YES;
     [[Zee5PlayerPlugin sharedInstance] setSeekTime:value];
     
+    if (_CreditTimer != nil) {
+          [_CreditTimer invalidate];
+          _CreditTimer = nil;
+          _customControlView.watchcretidStackview.hidden = YES;
+          _customControlView.watchcreditsTimeLbl.hidden = YES;
+           _watchCtreditSeconds = 10;
+          [self handleDownwardsGesture:nil];
+      }
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakSelf.seekStared = false;
     });
@@ -1172,11 +1188,10 @@ static ContentBuisnessType buisnessType;
 -(void)setWatchHistory:(NSInteger)duration
 {
     _PlayerStartTime = duration;    // Duration Get From WatchHistory Api Response.
-    
-    NSString *videoStartPoint = [Utility stringFromTimeInterval:duration];
+    NSString *videoStartPoint = [Utility stringFromTimeInterval:_PlayerStartTime];
     NSString *VideoEndpoint = [Utility stringFromTimeInterval:_currentItem.duration];
     NSDictionary *dict = @{@"videoStartPoint" : videoStartPoint,@"videoEndPoint":VideoEndpoint};
-    [[AnalyticEngine shared]VideoStartTimeWith:duration];
+    [[AnalyticEngine shared]VideoStartTimeWith:_PlayerStartTime];
     [self updateConvivaSessionWithMetadata: dict];
     
 }
@@ -1304,7 +1319,7 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnMinimizeButton
 {
-    [[ReportingManager sharedInstance] startReportingWatchHistory];
+   // [[ReportingManager sharedInstance] startReportingWatchHistory];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTaponMinimizeButton)]) {
         [self.delegate didTaponMinimizeButton];

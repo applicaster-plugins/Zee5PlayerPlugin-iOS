@@ -673,8 +673,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.ended]
                        block:^(PKEvent * _Nonnull event) {
+                           [[ReportingManager sharedInstance]deleteWatchHIstory];
+                           [engine  videoWatchDurationAnalytic];
                            [[ZEE5PlayerManager sharedInstance] onComplete];
-                            [engine  videoWatchDurationAnalytic];
                            [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
                             [engine cleanupVideoSesssion];
                        }];

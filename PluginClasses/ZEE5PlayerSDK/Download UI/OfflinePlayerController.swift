@@ -268,6 +268,11 @@ protocol OfflineVideoDurationDelegate: class {
         if let id = self.selectedVideo?.contentId {
             do {
                 if let playingDuration = try Zee5DownloadManager.shared.getVideoPlayedDuration(contentId: id) {
+                    if playingDuration == selectedVideo?.duration {
+                       self.playerOffline.seek(to: TimeInterval(0))
+                       self.sliderDuration.setValue(Float(0), animated: true)
+                       return
+                    }
                     self.playerOffline.seek(to: TimeInterval(playingDuration))
                     self.sliderDuration.setValue(Float(playingDuration), animated: true)
                 }
@@ -279,11 +284,19 @@ protocol OfflineVideoDurationDelegate: class {
     }
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        if !replayBtnOutlet.isHidden {
+            self.videoPlayingDuration = 0
+        }
+        
         self.updateVideoDurationToServer()
         self.playerOffline.stop()
         self.RemoveNotification()
-        viewPlayer .removeFromSuperview()
+        
+        viewPlayer.removeFromSuperview()
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
     }
@@ -346,8 +359,8 @@ extension OfflinePlayerController {
             self.availableTracks = event.tracks
             self.playerOffline.removeObserver(self, event: PlayerEvent.tracksAvailable)
         }
-          self.playerOffline.addObserver(self, event: PlayerEvent.ended) { [weak self] (event) in
-              guard let self = self else { return }
+        self.playerOffline.addObserver(self, event: PlayerEvent.ended) { [weak self] (event) in
+            guard let self = self else { return }
             self.playerControlsHidden(isHidden: true)
         }
         self.playerOffline.addObserver(self, event: PlayerEvent.playing) {[weak self] (event) in

@@ -59,24 +59,39 @@ static NetworkManager *sharedManager = nil;
 
 }
 
-- (void)makeHttpGetRequest:(NSString *)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure
-{
-    
-    NSArray *allKeys = [param allKeys];
+- (void)makeHttpGetRequest:(NSString *)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure {
+    [[NetworkManager sharedInstance] makeHttpRequest:@"GET" requestUrl:urlString urlParams:param requestParam:nil requestHeaders:headers withCompletionHandler:success failureBlock:failure];
+}
+
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString urlParams:(NSDictionary*)urlParams requestParam:(NSDictionary*)requestParams requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure {
+    NSArray *allKeys = [urlParams allKeys];
     
     NSMutableString *full_Url_String = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@?", urlString]];
     
     for(NSString *key in allKeys)
     {
-        [full_Url_String appendString:[NSString stringWithFormat:@"%@=%@&", key, [param valueForKey:key]]];
+        [full_Url_String appendString:[NSString stringWithFormat:@"%@=%@&", key, [urlParams valueForKey:key]]];
     }
     
     if ([full_Url_String length] > 0)
     {
         full_Url_String = [[full_Url_String substringToIndex:[full_Url_String length] - 1] mutableCopy];
     }
-        
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+
+    if (requestParams != nil) {
+        NSData *dataFromDict  = [NSJSONSerialization dataWithJSONObject:requestParams
+                                                                options:NSJSONWritingPrettyPrinted
+                                                                  error:nil];
+
+        if (dataFromDict != nil) {
+            NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[dataFromDict length]];
+            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPBody:dataFromDict];
+        }
+    }
+    
     NSString *escapedPath = [full_Url_String stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
     [request setURL:[NSURL URLWithString:escapedPath]];
