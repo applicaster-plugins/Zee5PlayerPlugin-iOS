@@ -519,7 +519,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        event:PlayerEvent.loadedMetadata
                        block:^(PKEvent * _Nonnull event) {
                         
-        [[AnalyticEngine shared]VideoPlayAnalytics];
         [[AnalyticEngine shared]ConsumptionAnalyticEvents];
         [[ZEE5PlayerManager sharedInstance]LocalStorageArray];
 
@@ -532,6 +531,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                        event:PlayerEvent.playing
                        block:^(PKEvent * _Nonnull event) {
+                            [[AnalyticEngine shared]VideoPlayAnalytics];
                            [[ZEE5PlayerManager sharedInstance] onPlaying];
                            
                            [engine updatePlayerStateWithState:ConvivaPlayerStatePLAYING];

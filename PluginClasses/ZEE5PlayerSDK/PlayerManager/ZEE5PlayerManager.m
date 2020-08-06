@@ -523,9 +523,8 @@ static ContentBuisnessType buisnessType;
     [self showAllControls];
     [self hideLoaderOnPlayer];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    //if (!_customControlView.topView.hidden) {
-        [self perfomAction];
-    //}
+    [self perfomAction];
+
 }
 
 -(void)onDurationUpdate:(PKEvent *)event
@@ -1109,6 +1108,7 @@ static ContentBuisnessType buisnessType;
 
 - (void)stop
 {
+    [[AnalyticEngine shared]videoWatchDurationAnalytic];
     [[Zee5PlayerPlugin sharedInstance].player stop];
     self.isStop = YES;
     [[Zee5FanAdManager sharedInstance] stopFanAd];
