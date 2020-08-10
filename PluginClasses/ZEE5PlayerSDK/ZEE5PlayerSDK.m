@@ -15,7 +15,6 @@
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
 static AdsEnvironment adsEnvironment = staging;
-static Usertype usertype = Guest;
 static ConsumptionType consumprionType = Movie;
 static ConnectionType Connection = Mobile;
 
