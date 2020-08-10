@@ -349,12 +349,10 @@ static Zee5PlayerPlugin *sharedManager = nil;
      AnalyticEngine *engine = [[AnalyticEngine alloc] init];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
-    {
-       // [engine detachVideoPlayer];
+     {
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         [[ZEE5PlayerManager sharedInstance] startAd];
-        
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
@@ -500,8 +498,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
         if (event.error.code >= 7000)
         {
              weakSelf.SubtitleError = true;
-            [[ZEE5PlayerManager sharedInstance]handleHLSError];
             [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
+            [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
         }];

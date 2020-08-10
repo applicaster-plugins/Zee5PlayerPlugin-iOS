@@ -176,6 +176,7 @@ extension KalturaPlayerController: ZEE5PlayerDelegate {
             ZEE5PlayerManager.sharedInstance().setFullScreen(false)
         }
         else {
+            AnalyticEngine.shared.cleanupVideoSesssion()
             self.delegate?.didFinishPlaying?()
         }
     }

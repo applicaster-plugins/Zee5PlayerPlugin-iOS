@@ -34,11 +34,11 @@ public class ConvivaAnalytics: NSObject {
         do {
             let clientSetting = try CISClientSettingCreator.create(withCustomerKey: customerKey)
             clientSetting.setGatewayUrl("https://\(customerKey).cws.conviva.com")
-            
             if  let gatewayUrl = clientSetting.getGatewayUrl() {
                 let settings = [CIS_SSDK_SETTINGS_GATEWAY_URL:gatewayUrl,CIS_SSDK_SETTINGS_LOG_LEVEL:NSNumber(value: LogLevel.LOGLEVEL_WARNING.rawValue)] as [String : Any];
-                
-                self.Mainanalytics = CISAnalyticsCreator.create(withCustomerKey:customerKey,settings:settings);
+                if self.Mainanalytics == nil {
+                    self.Mainanalytics = CISAnalyticsCreator.create(withCustomerKey:customerKey,settings:settings);
+                }
             }
         }
         catch {
@@ -62,7 +62,9 @@ public class ConvivaAnalytics: NSObject {
             clientSetting.setGatewayUrl(touchStoneUrl)
             
             let settings = [CIS_SSDK_SETTINGS_GATEWAY_URL:touchStoneUrl,CIS_SSDK_SETTINGS_LOG_LEVEL:NSNumber(value: LogLevel.LOGLEVEL_WARNING.rawValue)] as [String : Any];
-            self.Mainanalytics = CISAnalyticsCreator.create(withCustomerKey: testCustomerKey,settings:settings);
+            if self.Mainanalytics == nil {
+                self.Mainanalytics = CISAnalyticsCreator.create(withCustomerKey: testCustomerKey,settings:settings);
+            }
         }
         catch {
             throw ZeeErrorAnalytic.withError(message: "Conviva Analytics: Internal error occured - Error: \(error.localizedDescription)")
@@ -104,9 +106,9 @@ public class ConvivaAnalytics: NSObject {
         contentInfo[CIS_SSDK_METADATA_DURATION] = Duration;
         contentInfo[CIS_SSDK_METADATA_STREAM_URL] = streamUrl;
         contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_NAME] = applicationName;
-        // contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_VERSION] = "frameworkversion";
-        
-        if nil != self.Mainanalytics  {
+       //contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_VERSION] = "frameworkversion";
+        if nil != self.Mainanalytics
+        {
             self.videoAnalytics = self.Mainanalytics?.createVideoAnalytics();
             self.videoAnalytics?.reportPlaybackRequested(contentInfo);
             ZeeUtility.utility.console("|******** Session Created ********|")
@@ -179,7 +181,6 @@ public class ConvivaAnalytics: NSObject {
         if nil != self.videoAnalytics {
             self.videoAnalytics!.reportPlaybackEnded();
             self.videoAnalytics!.cleanup();
-            self.Mainanalytics!.cleanup()
             self.videoAnalytics = nil;
             self.zeePlayer?.stop()
             self.zeePlayer = nil
@@ -222,23 +223,23 @@ public class ConvivaAnalytics: NSObject {
     
     // Bitrate can be reported as following. It must be done when player reports a bitrate change event
     public func reportPlayerBitrate(bitrate: Int64) {
-        //        if (self.videoAnalytics != nil && bitrate > 0) {
-        //            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_BITRATE, value:  NSNumber(integerLiteral:Int(bitrate)))
-        //        }
+//        if (self.videoAnalytics != nil && bitrate > 0) {
+//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_BITRATE, value:NSNumber(value:100))
+//        }
     }
     
     // Seek Start time Of  Player
     public func SeekStarted(SeekStart: Int64) {
-        //        if (self.videoAnalytics != nil && SeekStart > 0) {
-        //            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_STARTED, value: NSNumber(integerLiteral:Int(SeekStart)))
-        //        }
+//        if (self.videoAnalytics != nil && SeekStart > 0) {
+//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_STARTED, value:NSNumber(integerLiteral: Int(SeekStart)))
+//        }
     }
     
     // Seek Start time Of  Player
     public func SeekEnded(SeekEnd: Int64) {
-        //           if (self.videoAnalytics != nil && SeekEnd > 0) {
-        //               self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_ENDED, value: NSNumber(integerLiteral:Int(SeekEnd)))
-        //           }
+//        if (self.videoAnalytics != nil && SeekEnd > 0) {
+//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_ENDED, value:NSNumber(integerLiteral: Int(SeekEnd)))
+//        }
     }
 }
 
