@@ -524,6 +524,8 @@ static ContentBuisnessType buisnessType;
     self.customControlView.buttonPlay.selected = YES;
     _customControlView.sliderLive.userInteractionEnabled = NO;
     _videoCompleted = NO;
+    [self.panDownGestureHandlerHelper endAd];
+    [self updateControlsForCurrentItem];
     [self showAllControls];
     [self hideLoaderOnPlayer];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -1672,15 +1674,11 @@ static ContentBuisnessType buisnessType;
     [self.panDownGestureHandlerHelper startAd];
      singleton.isAdPause = NO;
      singleton.isAdStarted = YES;
-    
     [self updateControlsForCurrentItem];
 }
 
 -(void)endAd {
-    [self.panDownGestureHandlerHelper endAd];
-     singleton.isAdStarted = NO;
-    
-    [self updateControlsForCurrentItem];
+    singleton.isAdStarted = NO;
 }
 
 -(void)pauseAd {
