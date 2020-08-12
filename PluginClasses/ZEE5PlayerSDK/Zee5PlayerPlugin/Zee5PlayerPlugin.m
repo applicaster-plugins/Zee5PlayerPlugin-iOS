@@ -337,7 +337,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
         _adCount++;
         [engine AdViewNumberWithAdNo:_adCount];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
-         // [engine updateAdPlayerStateWithState:CONVIVA_PLAYING];
     }
 }
 
@@ -349,12 +348,10 @@ static Zee5PlayerPlugin *sharedManager = nil;
      AnalyticEngine *engine = [[AnalyticEngine alloc] init];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
-    {
-       // [engine detachVideoPlayer];
-        [weakSelf createConvivaAdSeesionWithAdEvent: event];
+     {
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
-        [[ZEE5PlayerManager sharedInstance] startAd];
-        
+        [weakSelf createConvivaAdSeesionWithAdEvent: event];
+        [[ZEE5PlayerManager sharedInstance] startAd:event];
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
@@ -363,37 +360,29 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [engine AdCompleteAnalytics];
         [engine AdWatchDurationAnalytics];
         [[ZEE5PlayerManager sharedInstance] endAd];
-        //[engine updateAdPlayerStateWithState: CONVIVA_STOPPED];
-        // [engine attachVideoPlayer];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
         [engine EndAdbreak];
         [[ZEE5PlayerManager sharedInstance] endAd];
-        //[engine attachVideoPlayer];
-        //[engine updateAdPlayerStateWithState:CONVIVA_STOPPED];
     }];
     
     [self.player addObserver: self event: AdEvent.adStartedBuffering block:^(PKEvent * _Nonnull event) {
-        //[engine updateAdPlayerStateWithState: CONVIVA_BUFFERING];
     }];
     
     //// Extra Ad events
     
     [self.player addObserver: self event: AdEvent.adBreakReady block:^(PKEvent * _Nonnull event) {
-        // [engine updateAdPlayerStateWithState: CONVIVA_PLAYING];
     }];
     
     [self.player addObserver: self event: AdEvent.allAdsCompleted block:^(PKEvent * _Nonnull event) {
-//             [engine AdCompleteAnalytics];
-//                [engine AdWatchDurationAnalytics]
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
        
     }];
     [self.player addObserver: self event: AdEvent.adClicked block:^(PKEvent * _Nonnull event) {
-              [engine AdClickedAnalytics];
+        [engine AdClickedAnalytics];
     }];
     
     [self.player addObserver: self event: AdEvent.adFirstQuartile block:^(PKEvent * _Nonnull event) {
@@ -409,16 +398,14 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.adPaused block:^(PKEvent * _Nonnull event) {
-        //[engine updateAdPlayerStateWithState: conviva];
         [[ZEE5PlayerManager sharedInstance]pauseAd];
     }];
     
     [self.player addObserver: self event: AdEvent.adResumed block:^(PKEvent * _Nonnull event) {
-           //[engine updateAdPlayerStateWithState: CONVIVA_PLAYING];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-                [engine AdSkipedAnlytics];
+        [engine AdSkipedAnlytics];
     }];
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event) {
@@ -452,9 +439,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 -(void)registerPlayerEvents
 {
-    
     [self handlePlayerError];
-    
     [self registerPlayerMetaData];
     [self registerPlayEvent];
     [self registerDurationChangedEvent];
@@ -462,8 +447,6 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self registerBufferEvent];
     [self registerEndEvent];
     [self registerErrorEvent];
-    
-    //
     
     if (![_currentItem.asset_type isEqualToString:@"9"])
     {
@@ -473,7 +456,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     // Ad Events
     [self registerPlayerForAdEvents];
-
+    
 }
 
 //MARK:- Handle basic event Of Player (Play, Pause, CanPlay ..  Failed)
@@ -490,7 +473,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 - (void)handlePlayerError {
     
-      __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     [self.player addObserver:self
                        event:PlayerEvent.error
@@ -499,14 +482,13 @@ static Zee5PlayerPlugin *sharedManager = nil;
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
         {
-             weakSelf.SubtitleError = true;
-            [[ZEE5PlayerManager sharedInstance]handleHLSError];
+            weakSelf.SubtitleError = true;
             [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
+            [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
-        }];
+    }];
     
-     //[[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
     [self.player addObserver:self
                       events:@[PlayerEvent.errorLog]
                        block:^(PKEvent * _Nonnull event){
@@ -531,33 +513,32 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                        event:PlayerEvent.playing
                        block:^(PKEvent * _Nonnull event) {
-                            [[AnalyticEngine shared]VideoPlayAnalytics];
-                           [[ZEE5PlayerManager sharedInstance] onPlaying];
-                           
-                           [engine updatePlayerStateWithState:ConvivaPlayerStatePLAYING];
-                       }];
+        [[AnalyticEngine shared]VideoPlayAnalytics];
+        [[ZEE5PlayerManager sharedInstance] onPlaying];
+        [engine updatePlayerStateWithState:ConvivaPlayerStatePLAYING];
+    }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.pause]
                        block:^(PKEvent * _Nonnull event){
-                           
-                           [engine updatePlayerStateWithState: ConvivaPlayerStatePAUSED];
-                       }];
+        
+        [engine updatePlayerStateWithState: ConvivaPlayerStatePAUSED];
+    }];
     
     [self.player addObserver:self
-                        events:@[PlayerEvent.play]
-                         block:^(PKEvent * _Nonnull event){
-                             
-                             [engine updatePlayerStateWithState: ConvivaPlayerStatePLAYING];
-                         }];
+                      events:@[PlayerEvent.play]
+                       block:^(PKEvent * _Nonnull event){
+        
+        [engine updatePlayerStateWithState: ConvivaPlayerStatePLAYING];
+    }];
     
     [self.player addObserver:self
-                         events:@[PlayerEvent.stopped]
-                          block:^(PKEvent * _Nonnull event){
-                              
-                              [engine updatePlayerStateWithState:ConvivaPlayerStateSTOPPED];
-                              [engine cleanupVideoSesssion];
-                          }];
+                      events:@[PlayerEvent.stopped]
+                       block:^(PKEvent * _Nonnull event){
+        
+        [engine updatePlayerStateWithState:ConvivaPlayerStateSTOPPED];
+        [engine cleanupVideoSesssion];
+    }];
 }
 
 // Handle Duration Changes
@@ -566,19 +547,19 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.durationChanged]
                        block:^(PKEvent * _Nonnull event) {
-                           if (event.currentTime != NULL)
-                           {
-                               [[ZEE5PlayerManager sharedInstance] onDurationUpdate:event];
-                           }
-                       }];
+        if (event.currentTime != NULL)
+        {
+            [[ZEE5PlayerManager sharedInstance] onDurationUpdate:event];
+        }
+    }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.playheadUpdate]
                        block:^(PKEvent * _Nonnull event) {
-                           if (event.currentTime !=NULL) {
-                               [[ZEE5PlayerManager sharedInstance] onTimeChange:event];
-                           }
-                       }];
+        if (event.currentTime !=NULL) {
+            [[ZEE5PlayerManager sharedInstance] onTimeChange:event];
+        }
+    }];
 }
 
 
@@ -588,17 +569,17 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.stateChanged]
                        block:^(PKEvent * _Nonnull event) {
-                           PlayerState oldState = event.oldState;
-                           PlayerState newState = event.newState;
-                           
-                           
-                           if (newState == PlayerStateBuffering) {
-                               [[AnalyticEngine shared]updatePlayerStateWithState:ConvivaPlayerStateBUFFERING];
-                           }
-                            if (newState == PlayerStateReady) {
-                                   [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
-                                  }
-                       }];
+        PlayerState oldState = event.oldState;
+        PlayerState newState = event.newState;
+        
+        
+        if (newState == PlayerStateBuffering) {
+            [[AnalyticEngine shared]updatePlayerStateWithState:ConvivaPlayerStateBUFFERING];
+        }
+        if (newState == PlayerStateReady) {
+            [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+        }
+    }];
 }
 
 // Get Current Bitrate
@@ -614,35 +595,32 @@ static Zee5PlayerPlugin *sharedManager = nil;
 - (void)handlePlayerSeekEvents {
     
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
-    
     __weak typeof(self) weakSelf = self;
-
+    
     [self.player addObserver:self
                       events:@[PlayerEvent.seeking]
                        block:^(PKEvent * _Nonnull event) {
-                           
-                           NSTimeInterval playerTime = [weakSelf getCurrentTime];
-                           weakSelf.PlayerStartTime = playerTime;
         
-                           
-       [engine setSeekStartTimeWithDuration: weakSelf.PlayerStartTime];
-                       }];
+        NSTimeInterval playerTime = [weakSelf getCurrentTime];
+        weakSelf.PlayerStartTime = playerTime;
+        [engine setSeekStartTimeWithDuration: weakSelf.PlayerStartTime];
+    }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.seeked]
                        block:^(PKEvent * _Nonnull event) {
-                           
-                           NSTimeInterval playerTime = [weakSelf getCurrentTime];
-                           weakSelf.PlayerEndTime = playerTime;
-                          
-                       if(weakSelf.PlayerEndTime < weakSelf.PlayerStartTime){
-                               weakSelf.Direction = @"Reverse";}else{
-                                  weakSelf.Direction = @"Forward";
-                               }
+        
+        NSTimeInterval playerTime = [weakSelf getCurrentTime];
+        weakSelf.PlayerEndTime = playerTime;
+        
+        if(weakSelf.PlayerEndTime < weakSelf.PlayerStartTime){
+            weakSelf.Direction = @"Reverse";}else{
+                weakSelf.Direction = @"Forward";
+            }
         [engine setSeekEndTimeWithDuration: weakSelf.PlayerEndTime];
         [engine VideoWatchPercentCalcWith:weakSelf.Direction];
         [engine seekValueChangeAnalyticsWith:weakSelf.Direction Starttime:weakSelf.PlayerStartTime EndTime:weakSelf.PlayerEndTime];
-                       }];
+    }];
 }
 
 -(void)registerBufferEvent {
@@ -652,18 +630,16 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.playbackStalled]
                        block:^(PKEvent * _Nonnull event) {
-                           [[ZEE5PlayerManager sharedInstance] onBuffring];
-                           [engine updatePlayerStateWithState: ConvivaPlayerStateBUFFERING];
-                           [engine playerbufferStartAnalytics];
-                       }];
-    
+        [[ZEE5PlayerManager sharedInstance] onBuffring];
+        [engine updatePlayerStateWithState: ConvivaPlayerStateBUFFERING];
+        [engine playerbufferStartAnalytics];
+    }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.loadedTimeRanges]
                        block:^(PKEvent * _Nonnull event) {
-                           [[ZEE5PlayerManager sharedInstance] onBuffringValueChange:event];
-                       }];
-    
+        [[ZEE5PlayerManager sharedInstance] onBuffringValueChange:event];
+    }];
 }
 
 -(void)registerEndEvent {
@@ -673,12 +649,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.ended]
                        block:^(PKEvent * _Nonnull event) {
-                           [[ReportingManager sharedInstance]deleteWatchHIstory];
-                           [engine  videoWatchDurationAnalytic];
-                           [[ZEE5PlayerManager sharedInstance] onComplete];
-                           [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
-                            [engine cleanupVideoSesssion];
-                       }];
+        [[ReportingManager sharedInstance]deleteWatchHIstory];
+        [engine  videoWatchDurationAnalytic];
+        [[ZEE5PlayerManager sharedInstance] onComplete];
+        [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
+        [engine cleanupVideoSesssion];
+    }];
 }
 // Handle Player Errors
 - (void)registerErrorEvent {
@@ -730,34 +706,33 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSString *part2 = @"";
     NSString *range =@"";
     if (self.currentItem.googleAds.count >0) {
-    for (ZEE5AdModel *model in self.currentItem.googleAds) {
-        if ([model.time.lowercaseString isEqualToString:@"pre"] && [model.tag_name containsString:@"bumper"]) {
-            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n<vmap:Extensions>\n<vmap:Extension type=\"bumper\" suppress_bumper=\"true\"/>\n</vmap:Extensions>\n</vmap:AdBreak>"];
+        for (ZEE5AdModel *model in self.currentItem.googleAds) {
+            if ([model.time.lowercaseString isEqualToString:@"pre"] && [model.tag_name containsString:@"bumper"]) {
+                part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n<vmap:Extensions>\n<vmap:Extension type=\"bumper\" suppress_bumper=\"true\"/>\n</vmap:Extensions>\n</vmap:AdBreak>"];
+            }
+            else if ([model.time.lowercaseString isEqualToString:@"pre"]){
+                part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+            }
+            else if ([model.time.lowercaseString isEqualToString:@"post"]) {
+                part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"end\" breakType=\"linear\" breakId=\"postroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+            }
+            else
+            {
+                range = [model.tag_name substringWithRange:NSMakeRange(0, 9)];
+                model.time = [Utility getDurationForAd:[(model.time)intValue] total:0];
+                part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"",range,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
+                
+            }
         }
-        else if ([model.time.lowercaseString isEqualToString:@"pre"]){
-               part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"start\" breakType=\"linear\" breakId=\"preroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
-        }
-        else if ([model.time.lowercaseString isEqualToString:@"post"]) {
-            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"end\" breakType=\"linear\" breakId=\"postroll\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
-        }
-        else
-        {
-            range = [model.tag_name substringWithRange:NSMakeRange(0, 9)];
-            model.time = [Utility getDurationForAd:[(model.time)intValue] total:0];
-            part2 = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",part2,@"<vmap:AdBreak timeOffset=\"",model.time,@"\" breakType=\"linear\" breakId=\"",range,@"\">\n<vmap:AdSource id=\"",model.tag_name,@"\" allowMultipleAds=\"false\" followRedirects=\"true\">\n<vmap:AdTagURI templateType=\"vast3\">\n<![CDATA[\n",model.tag,@"]]>\n</vmap:AdTagURI>\n</vmap:AdSource>\n</vmap:AdBreak>"];
-
-        }
-    }
-    
-    totalString = [NSString stringWithFormat:@"%@%@%@",part1,part2,part3];
-        #if DEBUG
-            NSLog(@"**** VAST String **** %@",totalString);
-        #endif
+        
+        totalString = [NSString stringWithFormat:@"%@%@%@",part1,part2,part3];
+    #if DEBUG
+        NSLog(@"**** VAST String **** %@",totalString);
+    #endif
     }else
     {
         totalString = @"";
     }
-
     return totalString;
 }
 
