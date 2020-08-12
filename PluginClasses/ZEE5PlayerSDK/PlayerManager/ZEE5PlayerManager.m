@@ -2266,8 +2266,9 @@ static ContentBuisnessType buisnessType;
     else if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden) {
          _isRsVodUser = NO;
         [self play];
-    }else{
-         [self hideUnHidetrailerEndView: NO];
+    }
+    else {
+        [self hideUnHidetrailerEndView: NO];
     }
 }
 
