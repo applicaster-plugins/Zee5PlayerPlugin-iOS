@@ -2267,6 +2267,9 @@ static ContentBuisnessType buisnessType;
          _isRsVodUser = NO;
         [self play];
     }
+    else {
+        [self hideUnHidetrailerEndView: NO];
+    }
 }
 
 //MARK:- Remove All Present pop Views From Screen
