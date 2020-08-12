@@ -2756,7 +2756,6 @@ static ContentBuisnessType buisnessType;
 
 
 -(void)CreateConvivaSession{
-       [[AnalyticEngine shared] cleanupVideoSesssion];
        [self createConvivaSeesionWithMetadata];
 }
 // MARK:- Set Current Item For Live Data(url,drmToken,Title)
@@ -3130,6 +3129,10 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3803 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup"];
             [self HybridViewOpen];
         }
+        if (_isLive) {
+             [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3803 platformCode:@"007" severityCode:0 andErrorMsg:@"Premium Playback Failure"];
+        }
+        
         [self showLockedContentControls];
     }
 }

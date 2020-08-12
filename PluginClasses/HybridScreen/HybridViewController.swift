@@ -202,7 +202,7 @@ class HybridViewController: UIViewController {
         guard let playerManager = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
             return
         }
-        
+        AnalyticEngine.shared.cleanupVideoSesssion()
         playerManager.stopAndDismiss()
     }
 
