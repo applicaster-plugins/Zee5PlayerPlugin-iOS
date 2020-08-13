@@ -178,6 +178,9 @@ class DownloadOptionCell: UITableViewCell {
         }
         else if item.downloadState == .expired {
             self.setupDownloadMenu(with: [.restoreDownload, .deleteDownload], at: index)
+        }else if item.downloadState == .paused {
+            self.setupDownloadCircularBar(at: index, for: item.contentId ?? "")
+            
         }
         
         if let played = item.videoPlayedDuration, let total = item.duration {
@@ -214,8 +217,11 @@ class DownloadOptionCell: UITableViewCell {
         
         self.circularRing.shouldShowValueText = false
         self.viewProgress.addSubview(self.circularRing)
-        
-        self.setupDownloadMenu(with: [.pause, .cancelDownload], at: index)
+        if self.currentItem?.downloadState == .paused{
+            self.setupDownloadMenu(with: [.resume, .cancelDownload], at: index)
+        }else{
+            self.setupDownloadMenu(with: [.pause, .cancelDownload], at: index)
+        }
         
         // Progress button for events
         let btn = UIButton(frame: CGRect(x: 0, y: 0, width: self.viewProgress.frame.size.width, height: self.viewProgress.frame.size.height))
