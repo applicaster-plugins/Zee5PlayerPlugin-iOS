@@ -2744,6 +2744,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
+    self.currentItem.showName = model.showOriginalTitle;
     
     [self updateControlsForCurrentItem];
     
