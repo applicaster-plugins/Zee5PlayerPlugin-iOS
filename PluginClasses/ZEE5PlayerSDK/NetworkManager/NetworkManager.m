@@ -96,7 +96,7 @@ static NetworkManager *sharedManager = nil;
     
     [request setURL:[NSURL URLWithString:escapedPath]];
 
-    [request setHTTPMethod:@"GET"];
+    [request setHTTPMethod:requestname];
     
     for (NSString *key in headers.keyEnumerator)
     {

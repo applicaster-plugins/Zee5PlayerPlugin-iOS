@@ -276,13 +276,16 @@ static ReportingManager *sharedManager = nil;
     if([ZEE5PlayerManager sharedInstance].currentItem == nil){
         return;
     }
+    if(ZEE5PlayerSDK.getUserTypeEnum == Guest){
+           return;
+    }
     if ([_deleteContentId isEqualToString:[ZEE5PlayerManager sharedInstance].currentItem.content_id]) {
         return;
     }
     _deleteContentId = [ZEE5PlayerManager sharedInstance].currentItem.content_id;
     NSDictionary *requestParams = @{
         @"id":[ZEE5PlayerManager sharedInstance].currentItem.content_id,
-        @"asset_type":[NSNumber numberWithInt:[[ZEE5PlayerManager sharedInstance].currentItem.asset_type intValue]]
+        @"asset_type":[ZEE5PlayerManager sharedInstance].currentItem.asset_type
     };
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
     NSString *requestName = @"DELETE";
@@ -335,6 +338,7 @@ static ReportingManager *sharedManager = nil;
     self.isLotameEventSent = NO;
     self.isDmpSync = NO;
     self.deleteContentId = @"";
+    self.contentId = @"";
 }
 
 @end
