@@ -33,6 +33,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             // WARNING: is the cell still using the same data by this point??
             self.imageView.image = [UIImage imageWithData: data];
+            self.imageView.layer.cornerRadius = 6.0f;
+            [self.imageView.layer setMasksToBounds:YES];
         });
     });
 
