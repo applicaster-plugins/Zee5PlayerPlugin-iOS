@@ -119,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showloaderOnPlayer;
 -(void)hideLoaderOnPlayer;
 -(void)ShowToastMessage:(NSString *)Message;
--(void)startAd;
+-(void)startAd:(PKEvent *)event;
 -(void)endAd;
 -(void)pauseAd;
 -(void)SliderReset;

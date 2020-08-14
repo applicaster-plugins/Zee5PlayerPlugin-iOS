@@ -1076,6 +1076,8 @@ static ContentBuisnessType buisnessType;
     
      singleton.isAdStarted = NO;
      singleton.isAdPause = NO;
+     singleton.isAdIntegrate = NO;
+     singleton.isMidrolldone = NO;
     _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
@@ -1139,7 +1141,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)setSeekTime:(NSInteger)value
 {
-       [self showloaderOnPlayer];
     __weak __typeof(self) weakSelf = self;
     int rounded = roundf([[Zee5PlayerPlugin sharedInstance] getDuration]);
     if(value == 0)
@@ -1154,15 +1155,21 @@ static ContentBuisnessType buisnessType;
     [[Zee5PlayerPlugin sharedInstance] setSeekTime:value];
     
     if (_CreditTimer != nil) {
-          [_CreditTimer invalidate];
-          _CreditTimer = nil;
-          _customControlView.watchcretidStackview.hidden = YES;
-          _customControlView.watchcreditsTimeLbl.hidden = YES;
-           _watchCtreditSeconds = 10;
-          [self handleDownwardsGesture:nil];
-      }
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [_CreditTimer invalidate];
+        _CreditTimer = nil;
+        _customControlView.watchcretidStackview.hidden = YES;
+        _customControlView.watchcreditsTimeLbl.hidden = YES;
+        _watchCtreditSeconds = 10;
+        [self handleDownwardsGesture:nil];
+    }
+    if (singleton.isAdIntegrate) {
+        if (singleton.isMidrolldone) {
+             [self showloaderOnPlayer];
+        }
+    }else{
+        [self showloaderOnPlayer];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakSelf.seekStared = false;
     });
 }
@@ -1651,19 +1658,21 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)hideLoaderOnPlayer{
-    
     self.isLoaderShowing = NO;
-
     if (self.delegate && [self.delegate respondsToSelector:@selector(hidePlayerLoader)]) {
         [self.delegate hidePlayerLoader];
     }
 }
 
--(void)startAd {
+-(void)startAd:(PKEvent *)event {
     [self.panDownGestureHandlerHelper startAd];
-     singleton.isAdPause = NO;
-     singleton.isAdStarted = YES;
+    singleton.isAdPause = NO;
+    singleton.isAdStarted = YES;
+    singleton.isAdIntegrate = YES;
     [self updateControlsForCurrentItem];
+    if (event.adInfo.positionType == AdPositionTypeMidRoll) {
+        singleton.isMidrolldone = YES;
+    }
 }
 
 -(void)endAd {
@@ -2728,6 +2737,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.Showasset_subtype = model.tvShowAssetSubtype;
     self.currentItem.showchannelName = model.tvShowChannelname;
     self.currentItem.vttThumbnailsUrl = model.vttThumbnailsUrl;
+    self.currentItem.showName = model.showOriginalTitle;
     
     [self updateControlsForCurrentItem];
     [[AnalyticEngine shared]CurrentItemDataWith:self.currentItem];

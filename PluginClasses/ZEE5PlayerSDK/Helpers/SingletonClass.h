@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSMutableArray<UIView *> *ViewsArray;
 @property(nonatomic) BOOL isAdPause;
 @property(nonatomic) BOOL isAdStarted;
+@property(nonatomic) BOOL isAdIntegrate;
+@property(nonatomic) BOOL isMidrolldone;
 
 + (id)sharedManager;
 
