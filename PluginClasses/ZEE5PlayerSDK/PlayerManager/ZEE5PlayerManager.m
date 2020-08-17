@@ -47,7 +47,7 @@
 #define PLAYBACKRATE @"Playback Rate"
 #define POSTTIME @"post"
 #define Conviva_Application_Name @"ZEE5-iOS App"
-#define Conviva_Player_name @"ZEE5_iOS_KalturaPlayer"
+#define Conviva_Player_name @"ZEE5kalturaPlayer-iOS"
 
  /****************************************
      On Clck Of Share Button Use this url (For Live and VOD)
@@ -245,7 +245,6 @@ static ContentBuisnessType buisnessType;
         
         [[Zee5PlayerPlugin sharedInstance] initializePlayer:self.kalturaPlayerView andItem:self.currentItem andLicenceURI:BaseUrls.drmLicenceUrl andBase64Cerificate:base64];
         [self handleTracks];
-        [self setupMetadataWithContent: self.currentItem];
         
         if (!isReplay && ZEE5PlayerSDK.getConsumpruionType != Live && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
             [[ReportingManager sharedInstance] getWatchHistory];
@@ -2816,18 +2815,20 @@ static ContentBuisnessType buisnessType;
          if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
              userId = ZEE5UserDefaults.getUserToken;
          }
-    
+    NSString * assetName;
     if (!_isLive) {
         stremType = @"Vod";
         isLive = @"false";
-    }else {
+        assetName = [NSString stringWithFormat:@"[%@] %@",_ModelValues.identifier,_ModelValues.title];
+    }else{
         stremType = @"Live";
         isLive = @"true";
+        assetName = [NSString stringWithFormat:@"[%@] %@",_LiveModelValues.identifier,_LiveModelValues.title];
     }
     
     NSDictionary *dict = [[NSDictionary alloc] init];
     dict = @{
-             @"assetName": _isLive ? _LiveModelValues.title: _ModelValues.title,
+             @"assetName": assetName ?: @"NA",
              @"applicationName": Conviva_Application_Name,
              @"streamType": stremType,
              @"streamUrl": _isLive ? [self getLiveUrl]: [self getVodUrl],
@@ -2839,7 +2840,102 @@ static ContentBuisnessType buisnessType;
              };
  
     [[AnalyticEngine shared] setupConvivaSessionWith:dict];
+    [self setupMetadataWithContent];
 }
+-(void)setupMetadataWithContent
+{
+    NSDictionary *dict;
+    NSString *userId = ZEE5PlayerSDK.getUserId ;
+    
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
+        userId = ZEE5UserDefaults.getUserToken;
+    }
+    NSString *buildNumber = ZEE5PlayerSDK.getPlayerSDKVersion;
+    NSString *genres = _isLive ? [Utility getCommaSaperatedGenreList:_LiveModelValues.geners]:[Utility getCommaSaperatedGenreList:_ModelValues.geners];
+    NSString *releaseDate = _isLive ? @"NA" :[Utility convertDateFormat:_ModelValues.releaseDate toDateFormat:@"MMM d, yyyy"];
+    NSString *networkName = [Utility getCellularNetworkOperator];
+    NSString *connectionType = [Utility getNetworkConnectionType];
+    
+    NSTimeInterval startPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
+    NSString *videoStartPoint = [Utility stringFromTimeInterval: startPoint];
+    NSString *Affiliate = @"Zee Entertainment Enterprises Ltd";
+    if (_isTelco) {
+        if ([_TelcoMsg containsString:@"Vodafone"]) {
+            Affiliate = @"vodafoneappinapp";
+        }else if ([_TelcoMsg containsString:@"Airtel"]){
+              Affiliate = @"airtelappinapp";
+        }else if ([_TelcoMsg containsString:@"Idea"]){
+              Affiliate = @"ideaappinapp";
+        }else{
+              Affiliate = @"NA";
+        }
+    }
+    NSString *AutoPlay = @"False";
+    if (_isAutoplay) {
+        AutoPlay = @"True";
+    }
+    
+    NSString *BeforeTv = @"Y";
+    if (_ModelValues.isBeforeTv || _isLive) {
+        BeforeTv = @"N";
+    }
+    NSMutableArray *LanguageArr = [[NSMutableArray alloc]init];
+    NSArray * contentLanguage = _isLive ? _LiveModelValues.languages:_ModelValues.Languages;
+    NSString *LanguageStr;
+    for (NSString *language in contentLanguage) {
+       NSString *lan = [Utility getLanguageStringFromId:language];
+        [LanguageArr addObject:lan];
+    }
+    if (LanguageArr .count >0) {
+        LanguageStr = [LanguageArr componentsJoinedByString:@"'"];
+    }
+    
+    NSString *NA = @"NA";
+    
+    dict = @{
+             @"viewerId": userId,
+             @"episodeName": _isLive ? _LiveModelValues.title ?:NA:_ModelValues.title ?:NA,
+             @"category": _isLive ? @"Live":_ModelValues.assetSubtype ?:NA,
+             @"channel": _isLive ? _LiveModelValues.title ?:NA:_ModelValues.title ?:NA,
+             
+             @"contentID": _isLive ? _LiveModelValues.identifier ?:NA:_ModelValues.identifier ?:NA,
+             @"ContentType":  _isLive ? @"Live":_ModelValues.assetSubtype ?:NA,
+             @"genre": genres?: NA,
+             @"pubDate": releaseDate?: NA,
+             
+             @"season": _isLive ? NA:_ModelValues.SeasonId ?:NA,
+             @"show": _isLive ? _LiveModelValues.showOriginalTitle ?:NA:_ModelValues.showOriginalTitle ?:NA,
+             @"playerVersion": buildNumber,
+             
+             @"carrier": networkName?: NA,
+             @"connectionType": connectionType?: NA,
+             
+             @"accessType": [ZEE5UserDefaults getUserType]?:NA,
+             @"contentAccessType" : self.buisnessType ?: NA,
+             @"viewerAge" : NA,
+             @"viewerGender": NA,
+             
+             @"autoplay": AutoPlay,  // "False"
+             @"videoStartPoint": videoStartPoint,
+             @"playbackQuality": @"Auto",
+             @"originalLanguage": LanguageStr?:NA,
+             
+             @"isan": NA,
+             @"rootID": _isLive ? _LiveModelValues.identifier : _ModelValues.identifier,
+             @"site": @"zee5.com",
+             @"tmsID": NA,
+             @"adID": [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString],
+             
+             @"affiliate": Affiliate?:NA,
+             @"streamingProtocol": @"HLS",
+             @"platformName":@"iOS App",
+             @"catchUp":BeforeTv
+             };
+    
+    [self updateConvivaSessionWithMetadata: dict];
+    
+}
+
 -(NSString *)getVodUrl
 {
     NSString * contentUrl;
@@ -2893,98 +2989,6 @@ static ContentBuisnessType buisnessType;
              @"viewerId": userId
              };
      [SCORAnalytics notifyViewEventWithLabels:dict];
-}
--(void)setupMetadataWithContent:(CurrentItem *)item
-{
-    NSDictionary *dict;
-
-    NSString *userId = ZEE5PlayerSDK.getUserId ;
-    
-    if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
-        userId = ZEE5UserDefaults.getUserToken;
-    }
-    NSString *buildNumber = ZEE5PlayerSDK.getPlayerSDKVersion;
-    NSString *genres = [Utility getCommaSaperatedGenreList: self.currentItem.geners];
-    NSString *releaseDate = [Utility convertDateFormat: self.currentItem.release_date toDateFormat:@"MMM d, yyyy"];
-    NSString *networkName = [Utility getCellularNetworkOperator];
-    NSString *connectionType = [Utility getNetworkConnectionType];
-    
-    NSTimeInterval startPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
-    NSString *videoStartPoint = [Utility stringFromTimeInterval: startPoint];
-    NSString *Affiliate = @"Zee Entertainment Enterprises Ltd";
-    if (_isTelco) {
-        if ([self.customControlView.partnerLblTxt.text containsString:@"vodafone"]) {
-            Affiliate = @"Vodafone";
-        }else if ([self.customControlView.partnerLblTxt.text containsString:@"airtel"]){
-              Affiliate = @"Airtel";
-        }else if ([self.customControlView.partnerLblTxt.text containsString:@"idea"]){
-              Affiliate = @"Idea";
-        }else{
-              Affiliate = @"NA";
-        }
-    }
-    NSString *AutoPlay = @"False";
-    if (_isAutoplay) {
-        AutoPlay = @"True";
-    }
-    
-    NSString *BeforeTv = @"Y";
-    if (_ModelValues.isBeforeTv || _isLive) {
-        BeforeTv = @"N";
-    }
-    NSMutableArray *LanguageArr = [[NSMutableArray alloc]init];
-    NSString *LanguageStr;
-    for (NSString *language in item.language) {
-       NSString *lan = [Utility getLanguageStringFromId:language];
-        [LanguageArr addObject:lan];
-    }
-    if (LanguageArr .count >0) {
-        LanguageStr = [LanguageArr componentsJoinedByString:@"'"];
-    }
-    
-    NSString *NA = @"NA";
-    
-    dict = @{
-             @"viewerId": userId,
-             @"episodeName": item.channel_Name?: NA,
-             @"category": item.asset_subtype?: NA,
-             @"channel": item.channel_Name?: NA,
-             
-             @"contentID": item.content_id?: NA,
-             @"ContentType": item.asset_subtype?: NA,
-             @"genre": genres?: NA,
-             @"pubDate": releaseDate?: NA,
-             
-             @"season": [NSNumber numberWithInteger:item.episode_number]?: NA,
-             @"show": item.showName?: NA,
-             @"playerVersion": buildNumber,
-             
-             @"carrier": networkName?: NA,
-             @"connectionType": connectionType?: NA,
-             
-             @"accessType": [ZEE5UserDefaults getUserType]?:NA,
-             @"viewerAge": NA,
-             @"viewerGender": NA,
-             
-             @"autoplay": AutoPlay,  // "False"
-             @"videoStartPoint": videoStartPoint,
-             @"playbackQuality": @"Auto",
-             @"originalLanguage": LanguageStr?:NA,
-             
-             @"isan": NA,
-             @"rootID": item.content_id,
-             @"site": @"zee5.com",
-             @"tmsID": NA,
-             @"adID": [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString],
-             
-             @"affiliate": Affiliate?:NA,
-             @"streamingProtocol": @"HLS",
-             @"platformName":@"IOS",
-             @"catchUp":BeforeTv
-             };
-    
-    [self updateConvivaSessionWithMetadata: dict];
-    
 }
 
 -(void)updateConvivaSessionWithMetadata:(NSDictionary *)dict
