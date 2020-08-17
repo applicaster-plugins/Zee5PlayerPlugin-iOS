@@ -482,8 +482,8 @@ static Zee5PlayerPlugin *sharedManager = nil;
         // 7000 when Url takes wrong Url
         if (event.error.code >= 7000)
         {
-            weakSelf.SubtitleError = true;
-            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error -"];
+             weakSelf.SubtitleError = true;
+            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:1 andErrorMsg:@"Kaltura Playback Error -"];
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];

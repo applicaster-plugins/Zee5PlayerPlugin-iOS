@@ -57,9 +57,14 @@ public class AnalyticEngine: NSObject {
     
     @objc public func initializeConvivaAnalytics(customerKey: String, gatewayUrl: String) {
         do {
-            ZeeUtility.utility.console("|*** customerKey: \(customerKey) *** gatewayUrl: \(gatewayUrl) ***|||")
-            try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
-            //try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
+            switch ZEE5PlayerSDK.getConvivaEnvironment() {
+            case Staging:
+                try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
+            case Production:
+                try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
+            default:
+               break
+            }
             ZeeUtility.utility.console("|||*** Conviva Initialized Successfully ***|||")
         }
         catch {

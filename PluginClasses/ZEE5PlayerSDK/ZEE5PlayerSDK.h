@@ -29,6 +29,12 @@ typedef enum adsEnvironment
     staging
 } AdsEnvironment;
 
+typedef enum convivaEnvironment
+{
+    Production,
+    Staging
+} ConvivaEnvironment;
+
 typedef enum playerType
 {
     normalPlayer,
@@ -138,6 +144,9 @@ typedef void(^FailureHandler)(ZEE5SdkError *error);
 ///  Analytics Setup For Comscore And Conviva
 +(void)setupConvivaAnalytics;
 +(void)setupComScoreAnalytics;
+
++ (void)setConvivaEnvirnoment:(ConvivaEnvironment)Servertype;
++ (ConvivaEnvironment)getConvivaEnvironment;
 
 
 @end
