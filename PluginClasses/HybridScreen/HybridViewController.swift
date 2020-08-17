@@ -132,10 +132,12 @@ class HybridViewController: UIViewController {
             self.kalturaPlayerController.showIndicator()
         }
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isBeingDismissed {
-          closePlayer()
+    
+        if self.isBeingDismissed {
+            self.closePlayer()
         }
     }
     
@@ -208,7 +210,7 @@ class HybridViewController: UIViewController {
         guard let playerManager = ZPPlayerManager.sharedInstance.lastActiveInstance as? Zee5PluggablePlayer else {
             return
         }
-        AnalyticEngine.shared.cleanupVideoSesssion()
+        
         playerManager.stopAndDismiss()
     }
 
