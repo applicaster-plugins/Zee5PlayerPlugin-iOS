@@ -122,6 +122,8 @@ extension HybridViewController {
                     return
             }
             
+            PartnerAppHelper.setup(self.partnerAppView)
+            
             viewsViewCollection.forEach { (view) in
                 if let actionBarView = view as? ActionBarView {
                     ActionBarHelper.setup(playable: playable, actionBarView: actionBarView)

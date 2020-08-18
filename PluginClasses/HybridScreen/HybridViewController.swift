@@ -36,7 +36,8 @@ class HybridViewController: UIViewController {
     @IBOutlet var itemDescriptionLabel: UILabel!
     @IBOutlet var infoLabel: UILabel!
     @IBOutlet var streamTranslationsView: StreamTranslationsView!
-    
+    @IBOutlet var partnerAppView: PartnerAppView!
+
     @IBOutlet var backgroundView: UIView!
     @IBOutlet var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
@@ -260,6 +261,7 @@ class HybridViewController: UIViewController {
             }
         }
         
+        self.partnerAppView.reset()
         self.mainCollectionViewContainer.removeAllSubviews()
         
         self.metadataViewContainer.isHidden = true

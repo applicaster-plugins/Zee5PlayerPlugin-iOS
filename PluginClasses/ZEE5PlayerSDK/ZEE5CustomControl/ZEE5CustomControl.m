@@ -302,12 +302,6 @@
     [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
 }
 
-- (IBAction)bactoPartnetAppAction:(id)sender {
-    [[ZEE5PlayerManager sharedInstance]stop];
-    [[ZEE5PlayerManager sharedInstance]DestroyPlayer];
-    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateToPartnerApp];
-}
-
 - (IBAction)upNextAction:(id)sender {
     [[ZEE5PlayerManager sharedInstance]tapOnUpNext];
 }
