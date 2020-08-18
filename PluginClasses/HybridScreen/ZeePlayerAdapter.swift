@@ -164,6 +164,7 @@ fileprivate class BasePlaybackSession: PlaybackSession {
         ZEE5PlayerManager.sharedInstance().stop()
         ZEE5PlayerManager.sharedInstance().destroyPlayer()
         AnalyticEngine.shared.VideoExitAnalytics()
+        AnalyticEngine.shared.cleanupVideoSesssion()
     }
     
     func canResume() -> Bool {

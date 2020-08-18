@@ -60,6 +60,7 @@ public func VideoViewEvent()
         Keys.VIDEO_VIEW.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
         Keys.VIDEO_VIEW.PLAYER_HEAD_START_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
         Keys.VIDEO_VIEW.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
+        Keys.VIDEO_VIEW.CLICKMETRICS ~>> 1,
     ]
       analytics.track(Events.VIDEO_VIEW, trackedProperties: parameter)
       firstFramecontentId = contentId

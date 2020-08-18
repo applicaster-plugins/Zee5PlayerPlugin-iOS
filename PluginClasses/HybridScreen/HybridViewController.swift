@@ -132,10 +132,12 @@ class HybridViewController: UIViewController {
             self.kalturaPlayerController.showIndicator()
         }
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isBeingDismissed {
-          closePlayer()
+    
+        if self.isBeingDismissed {
+            self.closePlayer()
         }
     }
     
