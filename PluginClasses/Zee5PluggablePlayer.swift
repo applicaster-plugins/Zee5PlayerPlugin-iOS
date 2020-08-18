@@ -299,11 +299,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             ZEE5UserDefaults.setCountry(location.country, andState: location.state)
             
-            let (isTelcoUser, telcoUserData) = User.shared.isTelcoUser()
-            if isTelcoUser, let telcoUserData = telcoUserData {
-                self.handleTelcoData(param: telcoUserData)
-            }
-            
             if let userSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
                 let userSettingString = String(data: userSetting, encoding: String.Encoding.utf8)
                 ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
@@ -343,22 +338,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         guard let data = text.data(using: .utf8) else { return [:] }
         let anyResult: Any = try JSONSerialization.jsonObject(with: data, options: [])
         return anyResult as? [String: String] ?? [:]
-    }
-    
-    func handleTelcoData(param:[String: String])  {
-        var message = NSAttributedString(string: "")
-        
-        if (param["partner"] ?? "").lowercased().contains("vodafone") {
-            message = NSAttributedString(string: "BIStrings_CTA_BackToVodafonePlay_Button".localized(hashMap: [:]))
-        }
-        else if (param["partner"] ?? "").lowercased().contains("airtel") {
-            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToAirtelTv_Text".localized(hashMap: [:]))
-        }
-        else if (param["partner"] ?? "").lowercased().contains("idea") {
-            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToIdeaMovies_Text".localized(hashMap: [:]))
-        }
-
-        ZEE5PlayerManager.sharedInstance().telcouser(true, param: message.string)
     }
     
     func addPlayerObservers() {

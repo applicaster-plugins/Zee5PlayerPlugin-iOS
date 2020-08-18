@@ -47,7 +47,8 @@
 #define PLAYBACKRATE @"Playback Rate"
 #define POSTTIME @"post"
 #define Conviva_Application_Name @"ZEE5-iOS App"
-#define Conviva_Player_name @"ZEE5kalturaPlayer-iOS"
+#define Conviva_Player_name @"ZEE5KalturaPlayer"
+
 
  /****************************************
      On Clck Of Share Button Use this url (For Live and VOD)
@@ -770,15 +771,10 @@ static ContentBuisnessType buisnessType;
             return;
         }
         RelatedVideos *nextItem = nil;
-        if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
-            nextItem = self.currentItem.related[0];
-        }
-        else {
-            for (RelatedVideos *relatedVideo in self.currentItem.related) {
-                if (![_PreviousContentArray containsObject:relatedVideo.identifier]) {
-                    nextItem = relatedVideo;
-                    break;
-                }
+        for (RelatedVideos *relatedVideo in self.currentItem.related) {
+            if (![_PreviousContentArray containsObject:relatedVideo.identifier]) {
+                nextItem = relatedVideo;
+                break;
             }
         }
         if (nextItem != nil) {
@@ -1495,7 +1491,6 @@ static ContentBuisnessType buisnessType;
     
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
-    _customControlView.backtoPartnerView.hidden = YES;
 
     
     if (self.devicePopView != nil ||self.parentalView != nil)
@@ -1538,12 +1533,6 @@ static ContentBuisnessType buisnessType;
 
     _customControlView.forwardButton.enabled = !_isLive;
     _customControlView.rewindButton.enabled = !_isLive;
-    
-    if (_isTelco == true)
-    {
-        _customControlView.backtoPartnerView.hidden = false;
-        _customControlView.partnerLblTxt.text = _TelcoMsg;
-    }
 
     [[AnalyticEngine shared] playerOrientationChangedTo: ZeeAnalyticsPlayerOrientationPortrait];
 
@@ -1573,11 +1562,10 @@ static ContentBuisnessType buisnessType;
     _customControlView.topView.hidden = YES;
     _customControlView.playerControlView.hidden = YES;
     _customControlView.collectionView.hidden = YES;
-    _customControlView.backtoPartnerView.hidden = YES;
     
     _customControlView.adultView.hidden = YES;
     _customControlView.parentalDismissView.hidden = YES;
-    _customControlView.btnSkipPrev.hidden = YES;
+    _customControlView.btnSkipPrev.hidden = !_customControlView.btnSkipPrev.selected;
     
     [_customControlView forwardAndRewindActions];
     
@@ -2859,17 +2847,22 @@ static ContentBuisnessType buisnessType;
     NSTimeInterval startPoint = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
     NSString *videoStartPoint = [Utility stringFromTimeInterval: startPoint];
     NSString *Affiliate = @"Zee Entertainment Enterprises Ltd";
+    
     if (_isTelco) {
         if ([_TelcoMsg containsString:@"Vodafone"]) {
             Affiliate = @"vodafoneappinapp";
-        }else if ([_TelcoMsg containsString:@"Airtel"]){
-              Affiliate = @"airtelappinapp";
-        }else if ([_TelcoMsg containsString:@"Idea"]){
-              Affiliate = @"ideaappinapp";
-        }else{
-              Affiliate = @"NA";
+        }
+        else if ([_TelcoMsg containsString:@"Airtel"]) {
+            Affiliate = @"airtelappinapp";
+        }
+        else if ([_TelcoMsg containsString:@"Idea"]) {
+            Affiliate = @"ideaappinapp";
+        }
+        else{
+            Affiliate = @"NA";
         }
     }
+    
     NSString *AutoPlay = @"False";
     if (_isAutoplay) {
         AutoPlay = @"True";

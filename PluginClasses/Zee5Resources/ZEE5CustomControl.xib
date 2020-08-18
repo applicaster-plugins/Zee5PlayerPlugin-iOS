@@ -106,7 +106,7 @@
                     </variation>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="pfO-AE-4HQ">
-                    <rect key="frame" x="627" y="240" width="259" height="159"/>
+                    <rect key="frame" x="627" y="243" width="259" height="159"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LBs-9d-auO">
                             <rect key="frame" x="0.0" y="0.0" width="259" height="33"/>
@@ -209,7 +209,7 @@
                     </subviews>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="32F-Kd-DAn">
-                    <rect key="frame" x="0.0" y="334" width="896" height="65"/>
+                    <rect key="frame" x="0.0" y="367" width="896" height="35"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXD-zP-Fnc">
                             <rect key="frame" x="0.0" y="0.0" width="896" height="35"/>
@@ -272,35 +272,6 @@
                                 <constraint firstItem="Tfo-jy-vTq" firstAttribute="trailing" secondItem="rig-fB-bhM" secondAttribute="trailing" id="dx6-u5-9zu"/>
                                 <constraint firstAttribute="height" constant="35" id="pl9-cQ-ReF"/>
                                 <constraint firstItem="rig-fB-bhM" firstAttribute="centerY" secondItem="oiw-Ws-4As" secondAttribute="centerY" id="ss6-qP-q3O"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KAO-pB-dvA">
-                            <rect key="frame" x="0.0" y="40" width="896" height="25"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSo-wd-ZW7">
-                                    <rect key="frame" x="10" y="5" width="881" height="15"/>
-                                    <fontDescription key="fontDescription" name="NotoSans-Regular" family="Noto Sans" pointSize="11"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="msW-Rc-JYo">
-                                    <rect key="frame" x="1" y="1" width="894" height="23"/>
-                                    <connections>
-                                        <action selector="bactoPartnetAppAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="DlB-7y-9PC"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="25" id="5TY-vk-XS3"/>
-                                <constraint firstItem="lSo-wd-ZW7" firstAttribute="top" secondItem="KAO-pB-dvA" secondAttribute="top" constant="5" id="7cm-I5-U3q"/>
-                                <constraint firstItem="lSo-wd-ZW7" firstAttribute="leading" secondItem="KAO-pB-dvA" secondAttribute="leading" constant="10" id="8DL-b1-vlA"/>
-                                <constraint firstAttribute="bottom" secondItem="lSo-wd-ZW7" secondAttribute="bottom" constant="5" id="Fdk-8r-Agx"/>
-                                <constraint firstItem="msW-Rc-JYo" firstAttribute="leading" secondItem="KAO-pB-dvA" secondAttribute="leading" constant="1" id="LxS-WX-hPc"/>
-                                <constraint firstAttribute="trailing" secondItem="lSo-wd-ZW7" secondAttribute="trailing" constant="5" id="UPz-cN-BuL"/>
-                                <constraint firstAttribute="bottom" secondItem="msW-Rc-JYo" secondAttribute="bottom" constant="1" id="ZaF-ED-0sO"/>
-                                <constraint firstAttribute="trailing" secondItem="msW-Rc-JYo" secondAttribute="trailing" constant="1" id="rCl-PE-n3Q"/>
-                                <constraint firstItem="msW-Rc-JYo" firstAttribute="top" secondItem="KAO-pB-dvA" secondAttribute="top" constant="1" id="w1m-vT-eKz"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -374,7 +345,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4i-9L-w3V">
-                    <rect key="frame" x="811" y="299" width="80" height="30"/>
+                    <rect key="frame" x="811" y="332" width="80" height="30"/>
                     <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="80" id="97n-ea-7MB"/>
@@ -777,7 +748,7 @@ watch this video</string>
                 <constraint firstItem="4sY-9S-Qjc" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8Is-u7-bYr"/>
                 <constraint firstAttribute="trailing" secondItem="orD-Ja-xQR" secondAttribute="trailing" id="9Vd-1O-DsO"/>
                 <constraint firstItem="Zfz-bG-2t7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9Y7-r1-Wce"/>
-                <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="5" id="9sp-0y-Lsl"/>
+                <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="2" id="9sp-0y-Lsl"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="XW3-Dd-FYa" secondAttribute="bottom" constant="5" id="BB1-Rf-ep1"/>
                 <constraint firstItem="4sY-9S-Qjc" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Byq-Dc-UkW"/>
                 <constraint firstItem="0oT-K9-8cH" firstAttribute="trailing" secondItem="32F-Kd-DAn" secondAttribute="trailing" id="GD1-NY-Ifr"/>
@@ -818,14 +789,14 @@ watch this video</string>
                 <constraint firstItem="mBU-r2-NUl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mtE-3z-xUq"/>
                 <constraint firstAttribute="trailing" secondItem="p4i-9L-w3V" secondAttribute="trailing" constant="5" id="p84-sn-kvy"/>
                 <constraint firstAttribute="bottom" secondItem="Zfz-bG-2t7" secondAttribute="bottom" constant="1" id="pZR-1X-cNH"/>
-                <constraint firstAttribute="bottom" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="15" id="pwQ-yp-hJZ"/>
+                <constraint firstAttribute="bottom" secondItem="32F-Kd-DAn" secondAttribute="bottom" constant="12" id="pwQ-yp-hJZ"/>
                 <constraint firstItem="mBU-r2-NUl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="req-lz-Fkp"/>
                 <constraint firstAttribute="bottom" secondItem="orD-Ja-xQR" secondAttribute="bottom" constant="1" id="sEK-E0-56h"/>
                 <constraint firstAttribute="trailing" secondItem="7CG-57-Izx" secondAttribute="trailing" id="ssC-me-myO"/>
                 <constraint firstItem="pve-ci-rSh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="v7L-UC-tMI"/>
                 <constraint firstItem="7CG-57-Izx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="v7w-7w-MC1"/>
                 <constraint firstAttribute="trailing" secondItem="pve-ci-rSh" secondAttribute="trailing" id="vKg-Nb-Fij"/>
-                <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="pfO-AE-4HQ" secondAttribute="bottom" constant="5" id="z0d-V4-ntP"/>
+                <constraint firstItem="0oT-K9-8cH" firstAttribute="top" secondItem="pfO-AE-4HQ" secondAttribute="bottom" constant="2" id="z0d-V4-ntP"/>
                 <constraint firstItem="XIw-nv-gNd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="zpi-yc-GWX"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -848,7 +819,6 @@ watch this video</string>
             <connections>
                 <outlet property="MenuBtn" destination="LmD-UB-YBZ" id="sWt-iz-2i9"/>
                 <outlet property="adultView" destination="orD-Ja-xQR" id="OG0-tW-11g"/>
-                <outlet property="backtoPartnerView" destination="KAO-pB-dvA" id="8sO-bO-MPB"/>
                 <outlet property="btnMinimize" destination="p8M-q7-7S1" id="rbS-tI-8cP"/>
                 <outlet property="btnSkipNext" destination="xuv-L1-UQb" id="x85-26-SXw"/>
                 <outlet property="btnSkipPrev" destination="ysF-op-KUn" id="32h-2y-uE7"/>
@@ -874,7 +844,6 @@ watch this video</string>
                 <outlet property="nextEpisodeImg" destination="Jv0-Zl-75u" id="OcZ-d9-tCr"/>
                 <outlet property="nextEpisodename" destination="qvX-6L-cZA" id="Qqc-wh-vgd"/>
                 <outlet property="parentalDismissView" destination="pve-ci-rSh" id="OOi-D7-bSO"/>
-                <outlet property="partnerLblTxt" destination="lSo-wd-ZW7" id="B7L-Ar-0jP"/>
                 <outlet property="playerControlView" destination="bGG-Kh-eme" id="55k-Mi-XYC"/>
                 <outlet property="rewindButton" destination="mBU-r2-NUl" id="Nht-Qq-TT8"/>
                 <outlet property="showcreditTimelbl" destination="Vcy-gP-1Ex" id="dVO-vM-UEc"/>

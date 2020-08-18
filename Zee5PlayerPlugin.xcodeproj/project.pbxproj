@@ -482,6 +482,7 @@
 		71006176246845F900623D5C /* DownloadActionButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100616F246845F900623D5C /* DownloadActionButtonBuilder.swift */; };
 		71006177246845F900623D5C /* WatchListActionButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71006170246845F900623D5C /* WatchListActionButtonBuilder.swift */; };
 		71006179246857AF00623D5C /* ActionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71006178246857AF00623D5C /* ActionBarView.swift */; };
+		712CC26C24EBD94C00353484 /* PartnerAppHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712CC26B24EBD94C00353484 /* PartnerAppHelper.swift */; };
 		71580A922443222A00A6CF0C /* PremiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A912443222A00A6CF0C /* PremiumHelper.swift */; };
 		71580A972446683D00A6CF0C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71580A962446683D00A6CF0C /* Consts.swift */; };
 		715A762524ACBA92007ADA28 /* ZeePlayerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715A762424ACBA92007ADA28 /* ZeePlayerAdapter.swift */; };
@@ -1025,6 +1026,7 @@
 		7100616F246845F900623D5C /* DownloadActionButtonBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadActionButtonBuilder.swift; sourceTree = "<group>"; };
 		71006170246845F900623D5C /* WatchListActionButtonBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchListActionButtonBuilder.swift; sourceTree = "<group>"; };
 		71006178246857AF00623D5C /* ActionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionBarView.swift; sourceTree = "<group>"; };
+		712CC26B24EBD94C00353484 /* PartnerAppHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAppHelper.swift; sourceTree = "<group>"; };
 		71580A912443222A00A6CF0C /* PremiumHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumHelper.swift; sourceTree = "<group>"; };
 		71580A962446683D00A6CF0C /* Consts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		715A762424ACBA92007ADA28 /* ZeePlayerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeePlayerAdapter.swift; sourceTree = "<group>"; };
@@ -2129,6 +2131,7 @@
 				716ECD1A24409BA000917E13 /* AdHelper.swift */,
 				71580A912443222A00A6CF0C /* PremiumHelper.swift */,
 				71006167246845E500623D5C /* ViewHelper.swift */,
+				712CC26B24EBD94C00353484 /* PartnerAppHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2640,6 +2643,7 @@
 				4D9F31D02436352200C30A5A /* ParentalView.m in Sources */,
 				4D9F31762436352200C30A5A /* UICircularRingValueFormatter.swift in Sources */,
 				71006179246857AF00623D5C /* ActionBarView.swift in Sources */,
+				712CC26C24EBD94C00353484 /* PartnerAppHelper.swift in Sources */,
 				4D9F31662436352200C30A5A /* HybridViewController+Subviews.swift in Sources */,
 				4D9F33352436352200C30A5A /* Zee5ResourceHelper.m in Sources */,
 				4D9F319A2436352200C30A5A /* DownloadTableCell.swift in Sources */,
