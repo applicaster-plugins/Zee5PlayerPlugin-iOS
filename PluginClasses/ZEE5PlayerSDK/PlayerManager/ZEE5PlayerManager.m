@@ -47,7 +47,7 @@
 #define PLAYBACKRATE @"Playback Rate"
 #define POSTTIME @"post"
 #define Conviva_Application_Name @"ZEE5-iOS App"
-#define Conviva_Player_name @"ZEE5KalturaPlayer"
+#define Conviva_Player_name @"ZEE5kalturaPlayer-iOS"
 
 
  /****************************************
