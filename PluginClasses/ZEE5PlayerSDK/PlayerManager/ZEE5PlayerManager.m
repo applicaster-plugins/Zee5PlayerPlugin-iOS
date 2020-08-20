@@ -2553,6 +2553,10 @@ static ContentBuisnessType buisnessType;
     }];
 }
 
+- (void)getShowModel:(tvShowModel *)model{
+    _TvShowModel = model;
+}
+
 - (void)setPlaybackView:(UIView *)playbackView {
     self.parentPlaybackView = playbackView;
     [self addCustomControls];
