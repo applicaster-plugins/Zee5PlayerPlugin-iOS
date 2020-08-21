@@ -40,6 +40,9 @@ extension AllAnalyticsClass{
     var talamoos_model_name:String {
         return UserDefaults.standard.string(forKey: "talamoos_model_name") ?? "N/A"
     }
+    var time_spent:TimeInterval {
+        return Zee5PlayerPlugin.sharedInstance().player.currentTime
+    }
     
     
     //MARK:- AppsFlyer Events
@@ -48,7 +51,7 @@ extension AllAnalyticsClass{
     
     public func addtoWatchlistEvent()
     {
-        
+        videoStarttime = Int(Zee5PlayerPlugin.sharedInstance().player.currentTime)
         let parameter : Set = [
         Keys.ADD_TO_WATCHLIST.SOURCE ~>> source,
         Keys.ADD_TO_WATCHLIST.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -228,7 +231,7 @@ extension AllAnalyticsClass{
                  Keys.LIVE_CHANNEL_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
                  Keys.LIVE_CHANNEL_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
                  Keys.LIVE_CHANNEL_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-                 Keys.LIVE_CHANNEL_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+                 Keys.LIVE_CHANNEL_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
                  Keys.LIVE_CHANNEL_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                  Keys.LIVE_CHANNEL_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                  Keys.LIVE_CHANNEL_PLAYED.SOURCE ~>> source,
@@ -278,7 +281,7 @@ extension AllAnalyticsClass{
             Keys.MOVIESSECTION_PLAYED.MOVIE_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.MOVIESSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
             Keys.MOVIESSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
-            Keys.MOVIESSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+            Keys.MOVIESSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
             Keys.MOVIESSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
             Keys.MOVIESSECTION_PLAYED.SOURCE ~>> source,
                 ]
@@ -311,7 +314,7 @@ extension AllAnalyticsClass{
                Keys.TVSHOWSSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
                Keys.TVSHOWSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
                Keys.TVSHOWSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
-               Keys.TVSHOWSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+               Keys.TVSHOWSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
                Keys.TVSHOWSSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                Keys.TVSHOWSSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
                 Keys.TVSHOWSSECTION_PLAYED.SOURCE ~>> source,
@@ -343,7 +346,7 @@ extension AllAnalyticsClass{
             Keys.VIDEOSECTION_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
             Keys.VIDEOSECTION_PLAYED.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.VIDEOSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-            Keys.VIDEOSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+            Keys.VIDEOSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
             Keys.VIDEOSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
             Keys.VIDEOSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
             Keys.VIDEOSECTION_PLAYED.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
@@ -359,7 +362,7 @@ extension AllAnalyticsClass{
         Keys.ORIGINALSSECTION_PLAYED.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
         Keys.ORIGINALSSECTION_PLAYED.PROGRAM_NAME ~>> contentName == "" ? notAppplicable:contentName,
         Keys.ORIGINALSSECTION_PLAYED.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-        Keys.ORIGINALSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.ORIGINALSSECTION_PLAYED.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.ORIGINALSSECTION_PLAYED.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
         Keys.ORIGINALSSECTION_PLAYED.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
@@ -446,7 +449,7 @@ extension AllAnalyticsClass{
              Keys.DD1ST_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
              Keys.DD1ST_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
              Keys.DD1ST_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-             Keys.DD1ST_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+             Keys.DD1ST_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
              Keys.DD1ST_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD1ST_VIDEO_CLICK, trackedProperties: parameter)
@@ -464,7 +467,7 @@ extension AllAnalyticsClass{
            Keys.DD3RD_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
            Keys.DD3RD_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
            Keys.DD3RD_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-           Keys.DD3RD_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+           Keys.DD3RD_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
            Keys.DD3RD_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
                 ]
                  analytics.track(Events.DD3RD_VIDEO_CLICK, trackedProperties: parameter)
@@ -483,7 +486,7 @@ extension AllAnalyticsClass{
         Keys.DD5TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD5TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD5TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD5TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.DD5TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.DD3RD_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD5TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -502,7 +505,7 @@ extension AllAnalyticsClass{
         Keys.DD7TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD7TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD7TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD7TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.DD7TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.DD7TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD7TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -521,7 +524,7 @@ extension AllAnalyticsClass{
         Keys.DD10TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD10TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD10TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD10TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.DD10TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.DD10TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD10TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -540,7 +543,7 @@ extension AllAnalyticsClass{
         Keys.DD15TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD15TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD15TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD15TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.DD15TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.DD15TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD15TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -559,7 +562,7 @@ extension AllAnalyticsClass{
         Keys.DD20TH_VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD20TH_VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
         Keys.DD20TH_VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
-        Keys.DD20TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+        Keys.DD20TH_VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
         Keys.DD20TH_VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              ]
               analytics.track(Events.DD20TH_VIDEO_CLICK, trackedProperties: parameter)
@@ -581,11 +584,12 @@ extension AllAnalyticsClass{
     //MARK:- Video Section Add To WatchList
     public func VideoAddToWatch()
        {
+        videoStarttime = Int(Zee5PlayerPlugin.sharedInstance().player.currentTime)
         let parameter : Set = [
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+           Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
            Keys.VIDEOSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
            ]
@@ -594,11 +598,12 @@ extension AllAnalyticsClass{
     //MARK:- original Section Watch later
     public func originalAddToWatch()
           {
+            videoStarttime = Int(Zee5PlayerPlugin.sharedInstance().player.currentTime)
            let parameter : Set = [
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
               Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
              Keys.ORIGINALSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -612,11 +617,12 @@ extension AllAnalyticsClass{
     //MARK:- TV Show Section Add To WatchList
       public func TVShowAddToWatch()
          {
+           videoStarttime = Int(Zee5PlayerPlugin.sharedInstance().player.currentTime)
           let parameter : Set = [
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+             Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
              Keys.TVSHOWSSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
@@ -629,12 +635,13 @@ extension AllAnalyticsClass{
     
     public func MovieAddToWatch()
           {
+            videoStarttime = Int(Zee5PlayerPlugin.sharedInstance().player.currentTime)
            let parameter : Set = [
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
-              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+              Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.TIME_SPENT ~>> videoStarttime == 0 ? Int(time_spent):videoStarttime,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.EPISODE_NAME ~>> contentName == "" ? notAppplicable:contentName,
               Keys.MOVIESSECTION_ADDED_TO_WATCH_LATER.SOURCE ~>> source,
