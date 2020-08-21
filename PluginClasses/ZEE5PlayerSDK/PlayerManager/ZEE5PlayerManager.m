@@ -2579,8 +2579,14 @@ static ContentBuisnessType buisnessType;
 -(void)downLoadAddConfig:(SuccessHandler)success failureBlock:(FailureHandler)failure
 {
     NSString * Bundleversion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
-    NSDictionary *param = @{@"content_id":_currentItem.content_id ,@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
+    NSDictionary *param = @{@"platform_name":@"apple_app",@"user_type":[ZEE5UserDefaults getUserType],@"country":ZEE5UserDefaults.getCountry,@"state":ZEE5UserDefaults.getState,@"app_version":Bundleversion,@"audio_language":ZEE5UserDefaults.gettranslation};
+    
     NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:param];
+    if (_currentItem.streamType == CONVIVA_STREAM_LIVE){
+    [params setValue:_currentItem.content_id forKey:@"channel_id"];
+    }else{
+        [params setValue:_currentItem.content_id forKey:@"content_id"];
+    }
    
     if (_oneTrustDict != nil) {
         
