@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -50,10 +50,22 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="233"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstAttribute="width" secondItem="YWE-fi-K7N" secondAttribute="height" multiplier="4:3" id="l58-P0-YoE"/>
                         <constraint firstAttribute="height" secondItem="YWE-fi-K7N" secondAttribute="width" multiplier="9:16" id="nBs-Dh-7Ra"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="l58-P0-YoE"/>
+                        </mask>
+                    </variation>
                     <variation key="heightClass=compact">
                         <mask key="constraints">
+                            <exclude reference="nBs-Dh-7Ra"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <mask key="constraints">
+                            <include reference="l58-P0-YoE"/>
                             <exclude reference="nBs-Dh-7Ra"/>
                         </mask>
                     </variation>
@@ -104,7 +116,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="111" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UW1-bz-alX">
-                                    <rect key="frame" x="294" y="12.5" width="120" height="35"/>
+                                    <rect key="frame" x="294" y="12.333333333333314" width="120" height="35"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="120" id="uKI-AE-yFj"/>
                                         <constraint firstAttribute="height" constant="35" id="yI8-kJ-XZh"/>
