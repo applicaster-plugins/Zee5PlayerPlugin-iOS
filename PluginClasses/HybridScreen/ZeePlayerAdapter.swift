@@ -299,6 +299,9 @@ fileprivate class TvShowPlaybackSession: BasePlaybackSession, BasePlaybackSessio
     
     func sessionParseResponse(_ response: ItemResponse) {
         self.tvShowItem = tvShowModel.initFromJSONDictionary(response)
+        if let tvshowModel = self.tvShowItem {
+            ZEE5PlayerManager.sharedInstance().getShowModel(tvshowModel)
+        }
     }
     
     func sessionContentUrl() -> String {

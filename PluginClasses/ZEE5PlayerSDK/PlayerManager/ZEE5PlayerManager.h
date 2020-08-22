@@ -14,6 +14,8 @@
 #import <PlayKit/PlayKit-Swift.h>
 #import <ComScore/ComScore.h>
 #import "VODContentDetailsDataModel.h"
+#import "tvShowModel.h"
+
 
 
 typedef void(^DRMSuccessHandler)(NSString* _Nullable licenceURL, NSString* _Nullable customData);
@@ -60,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)downloadVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
 - (void)playLiveContentWithModel:(LiveContentDetails *)model;
+- (void)getShowModel:(tvShowModel *)model;
 - (void)postContentIdShouldUpdateNotification:(NSString *)contentId;
 - (void)postReloadCurrentContentIdNotification;
 
