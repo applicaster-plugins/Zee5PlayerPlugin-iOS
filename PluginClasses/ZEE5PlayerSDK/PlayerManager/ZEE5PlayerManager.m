@@ -2693,7 +2693,9 @@ static ContentBuisnessType buisnessType;
     if (model.isDRM)
     {
         self.currentItem.hls_Url = [self.KcdnUrl stringByAppendingString:model.hlsUrl];
-        self.currentItem.hls_Url = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
+        if (![_c3Ri isKindOfClass:[NSNull class]] || _c3Ri != nil) {
+             self.currentItem.hls_Url = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
+        }
     }else{
         self.currentItem.hls_Url = [model.hlsUrl stringByAppendingString:token];
     }
