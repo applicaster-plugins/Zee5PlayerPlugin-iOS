@@ -68,14 +68,13 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         if let configuration = configurationJSON {
 //            let errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
-
-            if let isProdAdsEnvirnoment = configuration["is_ads_production"] as? Int {
-                ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
-            }
             
-            if let isConvivaEnvirnoment = configuration["is_conviva_production"] as? Int {
-                ZEE5PlayerSDK.setConvivaEnvirnoment(isConvivaEnvirnoment == 1 ? Production : Staging)
-            }
+            let isProdAdsEnvirnoment = Zee5Utility().getConfigIntValue(configJSON: configuration, configKey:"is_ads_production", defaultValue: 0)
+            ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
+            
+            
+            let isConvivaEnvirnoment = Zee5Utility().getConfigIntValue(configJSON: configuration, configKey:"is_conviva_production", defaultValue: 0)
+            ZEE5PlayerSDK.setConvivaEnvirnoment(isConvivaEnvirnoment == 1 ? Production : Staging)
             
             if let overrideChromecastAppId = configuration["chromecast_app_id"] as? String, overrideChromecastAppId.count > 0 {
                 ChromeCastManager.shared.appId = overrideChromecastAppId
