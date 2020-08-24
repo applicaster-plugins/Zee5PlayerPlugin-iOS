@@ -2480,6 +2480,7 @@ static ContentBuisnessType buisnessType;
     if (self.ModelValues.isDRM) {
         [[CdnHandler sharedInstance] getKCDNUrl:self.ModelValues.identifier withCompletion:^(id  _Nullable result, NSString * _Nonnull CDN) {
             self.KcdnUrl = CDN;
+            self.c3Ri = [result ValueForKeyWithNullChecking:@"c3.ri"];
             
             [self getDRMToken:self.ModelValues.identifier andDrmKey:self.ModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
                 _videoToken = [result valueForKey:@"drm"];
@@ -2692,6 +2693,7 @@ static ContentBuisnessType buisnessType;
     if (model.isDRM)
     {
         self.currentItem.hls_Url = [self.KcdnUrl stringByAppendingString:model.hlsUrl];
+        self.currentItem.hls_Url = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
     }else{
         self.currentItem.hls_Url = [model.hlsUrl stringByAppendingString:token];
     }

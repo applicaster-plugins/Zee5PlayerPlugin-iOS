@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property(nonatomic) NSString *KcdnUrl;   /////////************ CDN URL String*************//////
+@property(nonatomic) NSString *c3Ri;   /////////************ Value From cdn Api*************//////
 
 
 
