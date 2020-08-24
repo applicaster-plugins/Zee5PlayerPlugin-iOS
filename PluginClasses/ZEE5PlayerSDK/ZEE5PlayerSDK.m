@@ -40,7 +40,6 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
     [[AppConfigManager sharedInstance] setConfig:[ZEE5ConfigDataModel initFromJSONDictionary:Dict]];
     
     [self setupConvivaAnalytics];
-    [self setupComScoreAnalytics];
     
 }
 
