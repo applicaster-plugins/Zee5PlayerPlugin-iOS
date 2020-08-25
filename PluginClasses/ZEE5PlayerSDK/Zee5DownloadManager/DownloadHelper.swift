@@ -31,6 +31,11 @@ public class DownloadHelper: NSObject {
     
     fileprivate func createVodData(with item: CurrentItem) -> (VODContentDetailsDataModel, String) {
         let data = VODContentDetailsDataModel()
+        if let index = item.hls_Url.range(of: "?")?.lowerBound {
+            let substring = item.hls_Url[..<index]
+            item.hls_Url = String(substring)
+            print(item.hls_Url)
+        }
         data.hlsUrl = item.hls_Url
         data.drmKeyID = item.drm_key
         data.subtitleLanguages = item.subTitles
@@ -78,7 +83,7 @@ public class DownloadHelper: NSObject {
         }
         catch {
             ZeeUtility.utility.console("Add item to download Error: \(error)")
-            self.showToast("Add Item Error: \(error)")
+            self.showToast("Add Item Error: \(error.localizedDescription)")
         }
     }
     
@@ -90,7 +95,7 @@ public class DownloadHelper: NSObject {
         }
         catch {
             ZeeUtility.utility.console("Download video Error: \(error.localizedDescription)")
-            self.showToast("Download video Error: \(error)")
+            self.showToast("Download video Error: \(error.localizedDescription)")
 
         }
     }
@@ -134,7 +139,7 @@ public class DownloadHelper: NSObject {
                            catch {
                                ZeeUtility.utility.console("Restore download Error: \(error.localizedDescription)")
                                isExpired(false, error.localizedDescription)
-                               self.showToast("Restore download Error: \(error)")
+                            self.showToast("Restore download Error: \(error.localizedDescription)")
                                
                            }
             }
@@ -215,6 +220,8 @@ extension DownloadHelper: Zee5DownloaderDelegate {
 extension DownloadHelper {
     
     @objc public func showToast(_ message: String) {
-        UIApplication.shared.keyWindow?.rootViewController?.view.makeToast(message, duration: 3.0, position: .bottom)
+       DispatchQueue.main.async {
+         Zee5ToastView.showToast(withMessage: message)
+        }
     }
 }
