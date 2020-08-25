@@ -35,8 +35,7 @@ static DevicemanageState DeviceState;
      
         NSInteger stateCode;
         stateCode = [[result valueForKey:@"code"]integerValue];
-  
-        
+
         if (stateCode == 3600)
         {
             DeviceState =DeviceAllreadyadded ;

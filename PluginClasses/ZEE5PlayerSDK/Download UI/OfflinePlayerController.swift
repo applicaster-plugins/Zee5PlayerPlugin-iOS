@@ -22,6 +22,7 @@ protocol OfflineVideoDurationDelegate: class {
     
      weak var delegate: OfflineVideoDurationDelegate?
     
+    @IBOutlet weak var replayBtnOutlet: UIButton!
     @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var viewSlider: UIView!
     @IBOutlet weak var btnPlay: UIButton!
@@ -79,10 +80,23 @@ protocol OfflineVideoDurationDelegate: class {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.NotificationObserver()
         self.checkParentalSet()
-        //
+        self.replayBtnOutlet.isHidden = true;
+        
+        let value = UIInterfaceOrientation.landscapeRight.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        
+       UIFont .jbs_registerFont(withFilenameString: "ZEE5_Player.ttf", bundle: bundle)
         self.configurePlayer(with: self.selectedUrl)
     }
     
+    override public var shouldAutorotate: Bool {
+        return true
+    }
+    
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscape
+    }
+
     @IBAction func playerViewTapped(_ sender: UITapGestureRecognizer) {
         self.isControlsVisible.toggle()
         self.hideUnHindeTopView(isHidden: self.isControlsVisible)
@@ -91,24 +105,41 @@ protocol OfflineVideoDurationDelegate: class {
     @IBAction func actionBack(_ sender: Any) {
         playerOffline.stop()
         playerOffline.destroy()
+        ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
         self.dismissViewController(withAnimation: true)
     }
+    @IBAction func replayAction(_ sender: Any) {
+        playerOffline.seek(to: 0)
+        playerOffline.play()
+        playerControlsHidden(isHidden: false)
+       }
     
-    func hideUnHindeTopView(isHidden: Bool) {
+    @objc func hideUnHindeTopView(isHidden: Bool) {
+        if replayBtnOutlet.isHidden == false {
+            return;
+        }
         self.btnPlay.isHidden = isHidden
         self.btnBack.isHidden = isHidden
         self.viewSlider.isHidden = isHidden
         self.lblContentTitle.isHidden = isHidden
+        self.btnMenu.isHidden = isHidden
         self.checkMenuOptionState()
+        if isHidden == false {
+             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                if self?.viewPlayer != nil{
+                self?.hideUnHindeTopView(isHidden: true)
+            }
+        }
     }
-    
+}
     func checkMenuOptionState() {
-        if self.availableTracks?.audioTracks?.count ?? 0 > 1 || self.availableTracks?.textTracks?.count ?? 0 > 1 {
-            self.btnMenu.isHidden = false
-        }
-        else {
-            self.btnMenu.isHidden = true
-        }
+//        if self.availableTracks?.audioTracks?.count ?? 0 > 1 || self.availableTracks?.textTracks?.count ?? 0 > 1 {
+//            self.btnMenu.isHidden = false
+//        }
+//        else {
+//            self.btnMenu.isHidden = true
+//        }
+        // self.btnMenu.isHidden = false
     }
     
     func NotificationObserver() {
@@ -150,8 +181,6 @@ protocol OfflineVideoDurationDelegate: class {
     let userPIn = notification.object as! String
         if parentalView != nil {
             if userPIn == ParentalPin {
-            let value = UIInterfaceOrientation.landscapeRight.rawValue
-            UIDevice.current.setValue(value, forKey: "orientation")
                  isparentalPin = false
                 self.btnPlay.isSelected = true;
                  playerOffline.play()
@@ -221,7 +250,7 @@ protocol OfflineVideoDurationDelegate: class {
         parentalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         parentalView.frame = UIScreen.main.bounds
     }
-    
+  
     func updateVideoDurationToServer() {
         if let id = self.selectedVideo?.contentId {
             do {
@@ -239,6 +268,11 @@ protocol OfflineVideoDurationDelegate: class {
         if let id = self.selectedVideo?.contentId {
             do {
                 if let playingDuration = try Zee5DownloadManager.shared.getVideoPlayedDuration(contentId: id) {
+                    if playingDuration == selectedVideo?.duration {
+                       self.playerOffline.seek(to: TimeInterval(0))
+                       self.sliderDuration.setValue(Float(0), animated: true)
+                       return
+                    }
                     self.playerOffline.seek(to: TimeInterval(playingDuration))
                     self.sliderDuration.setValue(Float(playingDuration), animated: true)
                 }
@@ -250,16 +284,22 @@ protocol OfflineVideoDurationDelegate: class {
     }
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        if !replayBtnOutlet.isHidden {
+            self.videoPlayingDuration = 0
+        }
+        
         self.updateVideoDurationToServer()
         self.playerOffline.stop()
         self.RemoveNotification()
-        viewPlayer .removeFromSuperview()
+        
+        viewPlayer.removeFromSuperview()
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
     }
-    
-    @objc public func canRotate() -> Void {}
     
     deinit {
         self.playerOffline.destroy()
@@ -295,8 +335,6 @@ extension OfflinePlayerController {
                 self.parentalControlshow()
             }else{
                 self.btnPlay.isSelected = true
-                let value = UIInterfaceOrientation.landscapeRight.rawValue
-                UIDevice.current.setValue(value, forKey: "orientation")
             }
         }
         self.playerOffline.addObserver(self, event: PlayerEvent.playheadUpdate) { [weak self] (event) in
@@ -321,6 +359,17 @@ extension OfflinePlayerController {
             self.availableTracks = event.tracks
             self.playerOffline.removeObserver(self, event: PlayerEvent.tracksAvailable)
         }
+        self.playerOffline.addObserver(self, event: PlayerEvent.ended) { [weak self] (event) in
+            guard let self = self else { return }
+            self.playerControlsHidden(isHidden: true)
+        }
+        self.playerOffline.addObserver(self, event: PlayerEvent.playing) {[weak self] (event) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                if self?.viewPlayer != nil{
+                self?.hideUnHindeTopView(isHidden: true)
+            }
+        }
+    }
         
         self.playerOffline.addObserver(self, event: PlayerEvent.textTrackChanged) { (event) in
             if let title = event.selectedTrack?.title {
@@ -333,8 +382,16 @@ extension OfflinePlayerController {
                 ZEE5PlayerManager.sharedInstance().selectedLangauge = title
             }
         }
+        
+        self.playerOffline.addObserver(self, event: PlayerEvent.error) { (event) in
+
+        }
     }
     
+    func playerControlsHidden(isHidden: Bool) {
+        self.btnPlay.isHidden = isHidden
+        self.replayBtnOutlet.isHidden = !isHidden
+    }
     func getDuration(currentDuraton: Int, total totalDuraton: Int) -> String? {
         let seconds = currentDuraton % 60
         let minutes = (currentDuraton / 60) % 60
@@ -403,6 +460,7 @@ extension OfflinePlayerController {
         self.viewPlayer.bringSubviewToFront(self.btnMenu)
         self.viewPlayer.bringSubviewToFront(self.viewSlider)
         self.viewPlayer.bringSubviewToFront(self.btnPlay)
+        self.viewPlayer.bringSubviewToFront(self.replayBtnOutlet)
     }
 }
 
@@ -430,8 +488,6 @@ extension OfflinePlayerController {
                     self.parentalControlshow()
                     return
                 }else{
-                    let value = UIInterfaceOrientation.landscapeRight.rawValue
-                    UIDevice.current.setValue(value, forKey: "orientation")
                 }
             }
             btnPlay.isSelected = true
@@ -440,10 +496,13 @@ extension OfflinePlayerController {
     }
     
     @IBAction func actionMoreClicked(_ sender: UIButton) {
+        
         if let audioTracks = self.availableTracks?.audioTracks,
             let textTracks = self.availableTracks?.textTracks {
-            
             ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio: audioTracks, text: textTracks, with: self.playerOffline)
+        }else{
+            ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio:[Track](), text: [Track](), with: self.playerOffline)
         }
+    
     }
 }

@@ -15,6 +15,21 @@ public protocol ChromeCastDelegate {
 }
 
 @objcMembers public class ChromeCastManager: NSObject {
+    fileprivate struct ZeeReceiverAppIDs {
+        static let production = "E05C51D0"
+        static let debug = "C76FC96C"
+    }
+    
+    fileprivate struct LicenseServers {
+        static let widevine = "https://wv-keyos-aps1.licensekeyserver.com"
+        static let playReady = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
+    }
+    
+    fileprivate struct ContentType {
+        static let drm = "application/x-mpegURL"
+        static let hls = "mp4"
+    }
+    
     public static let shared = ChromeCastManager()
     
     public var isCasting: Bool {
@@ -32,7 +47,7 @@ public protocol ChromeCastDelegate {
     }
     
     public var delegate: ChromeCastDelegate?
-    public var appId = "E05C51D0"
+    public var appId = ZeeReceiverAppIDs.production
     var CastDeviceName = ""
     private var addQueue: ChromeAddQueue!
     private var miniControllerView :ChromeMiniControllerView!
@@ -109,11 +124,9 @@ public protocol ChromeCastDelegate {
         let mediaInfo: GCKMediaInformation!
         
         let customData: NSMutableDictionary = [:]
-        customData["licenseCustomData"] = ZEE5PlayerManager.sharedInstance().currentItem.drm_token
-        customData["licenseUrl"] = "https://pr-keyos-aps1.licensekeyserver.com/core/rightsmanager.asmx"
+
         mediaInfo = self.getMediaInformation(for: currentItem, with: customData)
     
-
         let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
         mediaQueueItemBuilder.mediaInformation = mediaInfo
         mediaQueueItemBuilder.autoplay = true
@@ -137,25 +150,33 @@ public protocol ChromeCastDelegate {
         mediaClient.add(self)
     }
     
-    func getMediaInformation(for currentItem: CurrentItem, with customData: NSMutableDictionary) -> GCKMediaInformation? {
+    fileprivate func addDRM(for currentItem: CurrentItem, to customData: NSMutableDictionary) {
+        customData["licenseCustomData"] = currentItem.drm_token
+        customData["licenseUrl"] = LicenseServers.widevine
+    }
+    
+    fileprivate func getMediaInformation(for currentItem: CurrentItem, with customData: NSMutableDictionary) -> GCKMediaInformation? {
         let builder = GCKMediaInformationBuilder()
 
         let contentUrlValue: String?
         
         if currentItem.asset_type == "9" {
             contentUrlValue = currentItem.hls_Url
+            
             builder.streamType = .live
-            builder.contentType = "application/x-mpegURL"
+            builder.contentType = ContentType.drm
         }
         else if !currentItem.isDRM {
             contentUrlValue = currentItem.hls_Url
-            builder.contentType = "mp4"
+            builder.contentType = ContentType.hls
         }
         else {
             contentUrlValue = currentItem.mpd_Url
-            builder.contentType = "application/x-mpegURL"
+            builder.contentType = ContentType.drm
         }
         
+        addDRM(for: currentItem, to: customData)
+
         var metadataType: GCKMediaMetadataType = .generic
         metadataType = currentItem.asset_type.lowercased() == "movie" ? .movie : .tvShow
         
@@ -237,7 +258,7 @@ extension ChromeCastManager: GCKSessionManagerListener
         ZEE5PlayerManager.sharedInstance().castCurrentItem()
     }
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
-        ZEE5PlayerManager.sharedInstance().playWithCurrentItem()
+        ZEE5PlayerManager.sharedInstance().handleCastingStopped()
     }
     
     public func sessionManager(_ sessionManager: GCKSessionManager, session: GCKSession, didUpdate device: GCKDevice) {

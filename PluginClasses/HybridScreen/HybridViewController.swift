@@ -36,7 +36,8 @@ class HybridViewController: UIViewController {
     @IBOutlet var itemDescriptionLabel: UILabel!
     @IBOutlet var infoLabel: UILabel!
     @IBOutlet var streamTranslationsView: StreamTranslationsView!
-    
+    @IBOutlet var partnerAppView: PartnerAppView!
+
     @IBOutlet var backgroundView: UIView!
     @IBOutlet var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
@@ -71,6 +72,12 @@ class HybridViewController: UIViewController {
     }
     
     // MARK: Orientation
+    
+    // Apple documentation: The system takes your preference into account,
+    // but returning true is NO guarantee that the indicator will be hidden.
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
         
     override open var prefersStatusBarHidden: Bool {
         return false
@@ -124,6 +131,14 @@ class HybridViewController: UIViewController {
         
         if self.playable == nil {
             self.kalturaPlayerController.showIndicator()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    
+        if self.isBeingDismissed {
+            self.closePlayer()
         }
     }
     
@@ -246,6 +261,7 @@ class HybridViewController: UIViewController {
             }
         }
         
+        self.partnerAppView.reset()
         self.mainCollectionViewContainer.removeAllSubviews()
         
         self.metadataViewContainer.isHidden = true

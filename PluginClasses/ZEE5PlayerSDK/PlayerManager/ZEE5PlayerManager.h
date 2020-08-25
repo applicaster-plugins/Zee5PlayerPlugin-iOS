@@ -14,6 +14,8 @@
 #import <PlayKit/PlayKit-Swift.h>
 #import <ComScore/ComScore.h>
 #import "VODContentDetailsDataModel.h"
+#import "tvShowModel.h"
+
 
 
 typedef void(^DRMSuccessHandler)(NSString* _Nullable licenceURL, NSString* _Nullable customData);
@@ -52,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property(nonatomic) NSString *KcdnUrl;   /////////************ CDN URL String*************//////
+@property(nonatomic) NSString *c3Ri;   /////////************ Value From cdn Api*************//////
 
 
 
@@ -60,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)downloadVODContent:(NSString*)content_id country:(NSString*)country translation:(NSString*)laguage withCompletionHandler: (VODDataHandler)completionBlock;
 - (void)playVODContentWithModel:(VODContentDetailsDataModel *)model;
 - (void)playLiveContentWithModel:(LiveContentDetails *)model;
+- (void)getShowModel:(tvShowModel *)model;
 - (void)postContentIdShouldUpdateNotification:(NSString *)contentId;
 - (void)postReloadCurrentContentIdNotification;
 
@@ -93,6 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setFullScreen:(BOOL)isFull;
 -(void)showFullScreen;
 -(void)hideFullScreen;
+-(void)LocalStorageArray;
 
 -(void)forward:(NSInteger)value;
 -(void)rewind:(NSInteger)value;
@@ -118,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showloaderOnPlayer;
 -(void)hideLoaderOnPlayer;
 -(void)ShowToastMessage:(NSString *)Message;
--(void)startAd;
+-(void)startAd:(PKEvent *)event;
 -(void)endAd;
 -(void)pauseAd;
 -(void)SliderReset;
@@ -162,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tapOnSubscribeButton;
 -(void)tapOnLoginButton;
 
-- (void)playWithCurrentItem;
+- (void)handleCastingStopped;
 - (void)castCurrentItem;
 
 -(void)showLangaugeActionSheet;
@@ -174,6 +179,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isOfflineContent;
 @property NSArray<Track*>* offlineTextTracks;
 @property NSArray<Track*>* offlineLanguageTracks;
+@property(nonatomic) NSString *selectedplaybackRateOffline;
 @property (strong, nonatomic) id<Player> offlinePlayer;
 
 @end

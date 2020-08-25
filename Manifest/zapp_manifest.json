@@ -6,18 +6,18 @@
     ],
     "require_startup_execution": false
   },
-  "author_email": "s.borkin@applicaster.com",
-  "author_name": "sborkin",
+  "author_email": "tejas.todkar@ltts.com",
+  "author_name": "Tejas Todkar",
   "dependency_name": "Zee5PlayerPlugin",
   "dependency_repository_url": [
     "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
   ],
-  "dependency_version": "1.1.72",
+  "dependency_version": "1.1.93",
   "deprecated_since_zapp_sdk": "",
   "description": "Zee5 Player Plugin",
   "extra_dependencies": [],
   "identifier": "zee_player",
-  "manifest_version": "1.1.72",
+  "manifest_version": "1.1.93",
   "min_zapp_sdk": "14.1.8-RC",
   "name": "Zee5 Player Plugin",
   "npm_dependencies": [],
@@ -43,6 +43,12 @@
     },
     {
       "key": "is_ads_production",
+      "tooltip_text": "should use production env",
+      "type": "checkbox",
+      "default": 0
+    },
+    {
+      "key": "is_conviva_production",
       "tooltip_text": "should use production env",
       "type": "checkbox",
       "default": 0

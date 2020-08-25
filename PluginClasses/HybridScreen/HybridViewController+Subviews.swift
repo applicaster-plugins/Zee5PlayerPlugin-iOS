@@ -122,6 +122,8 @@ extension HybridViewController {
                     return
             }
             
+            PartnerAppHelper.setup(self.partnerAppView)
+            
             viewsViewCollection.forEach { (view) in
                 if let actionBarView = view as? ActionBarView {
                     ActionBarHelper.setup(playable: playable, actionBarView: actionBarView)
@@ -209,7 +211,6 @@ extension HybridViewController {
             if self.metadataViewContainer.superview != self.mainCollectionViewContainer {
                 self.mainCollectionViewContainer.addSubview(self.metadataViewContainer)
                 
-                self.metadataViewContainer.removeConstraints(self.metadataViewContainer.constraints)
                 self.metadataViewContainer.anchorToTop()
             }
         }
@@ -220,7 +221,7 @@ extension HybridViewController {
                 resetMetadataContainer()
                 return
         }
-                
+        
         let queryItems = [
             URLQueryItem(name: "type", value: "RelatedContent"),
             URLQueryItem(name: "id", value: contentId),

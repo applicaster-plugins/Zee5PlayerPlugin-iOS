@@ -15,10 +15,30 @@ import LotameDMP
 var VideWatchInt = 0
 
 public class AnalyticEngine: NSObject {
+    @objc public static let shared = AnalyticEngine()
+
+    var lastPlayerOrientation: ZeeAnalyticsPlayerOrientation?
+
+    @objc public enum ZeeAnalyticsPlayerOrientation: Int  {
+        case portrait
+        case landscape
+        
+        func name() -> String {
+            switch self {
+            case .portrait:
+                return "Portrait"
+            case .landscape:
+                return "Landscape"
+            default:
+                return ""
+            }
+        }
+    }
     
- @objc public static let shared = AnalyticEngine()
-   
-   
+    @objc public static func playerOrientationName(for value: ZeeAnalyticsPlayerOrientation) -> String {
+        return value.name()
+    }
+    
     @objc public func startLotameAnalytics(with duration: String, quartileValue: String)
     {
         AllAnalyticsClass.shared.LotameAnalyticsData(with: duration, Quartilevalue: quartileValue)
@@ -37,9 +57,14 @@ public class AnalyticEngine: NSObject {
     
     @objc public func initializeConvivaAnalytics(customerKey: String, gatewayUrl: String) {
         do {
-            ZeeUtility.utility.console("|*** customerKey: \(customerKey) *** gatewayUrl: \(gatewayUrl) ***|||")
-            try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
-            //try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
+            switch ZEE5PlayerSDK.getConvivaEnvironment() {
+            case Staging:
+                try ConvivaAnalytics.shared.inititializeConvivaForTesting(testCustomerKey: customerKey, touchStoneUrl: gatewayUrl)
+            case Production:
+                try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
+            default:
+               break
+            }
             ZeeUtility.utility.console("|||*** Conviva Initialized Successfully ***|||")
         }
         catch {
@@ -173,10 +198,15 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.BufferENDEvent(with: BufferEnd)
      }
     
-    @objc public func PlayerViewChanged (with oldView: String, newView: String)
-        {
-            AllAnalyticsClass.shared.PlayerViewChanged(with: oldView, New: newView)
+    @objc public func playerOrientationChanged(to orientation: ZeeAnalyticsPlayerOrientation) {
+        guard let lastPlayerOrientation = self.lastPlayerOrientation, lastPlayerOrientation != orientation else {
+            self.lastPlayerOrientation = orientation
+            return
         }
+        
+        AllAnalyticsClass.shared.playerOrientationChanged(from: lastPlayerOrientation.name(), to: orientation.name())
+        self.lastPlayerOrientation = orientation
+    }
     
     @objc public func VideoExitAnalytics()
      {
@@ -223,6 +253,11 @@ public class AnalyticEngine: NSObject {
     @objc public func playerCTA (with Element: String)
        {
         AllAnalyticsClass.shared.PlayerBtnPressed(with: Element)
+       }
+    
+    @objc public func screenViewEvent()
+       {
+           AllAnalyticsClass.shared.ScreenViewEvent()
        }
        
      // MARK:- For Downlaod Anlytics Events

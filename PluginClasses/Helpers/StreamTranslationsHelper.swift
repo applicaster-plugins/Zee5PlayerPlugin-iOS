@@ -52,7 +52,7 @@ fileprivate class StreamTranslationsHelper {
         }
         
         let available: String?
-        if let audioTracks = audioTracks, audioTracks.count == 1 || audioTracks.count == 0  {
+        if let audioTracks = audioTracks, audioTracks.count == 1 {
             available = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
                 "count": "\(audioTracks.count)"
             ])
@@ -84,14 +84,22 @@ fileprivate class StreamTranslationsHelper {
         }
         
         let available: String?
-        if let textTracks = textTracks, textTracks.count == 1 || textTracks.count == 0  {
-            available = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
-                "count": "\(textTracks.count)"
-            ])
-        }
-        else {
-            available = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
-                "count": "\(textTracks?.count ?? 0)"])
+        if let textTracks = textTracks, textTracks.count > 0 {
+            
+            if textTracks.count == 1 {
+                available = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
+                    "count": "\(textTracks.count)"
+                ])
+            } else {
+                available = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
+                    "count": "\(textTracks.count)"
+                ])
+            }
+            textSelectionView.selectedTrackLabel.isHidden = false
+        
+        } else {
+            available = StylesHelper.localizedText(for: "Consumption_Subtitles_NoSubtitles_Text")
+            textSelectionView.selectedTrackLabel.isHidden = true
         }
         
         let info = StreamTranslationInfo(title, selected, available)

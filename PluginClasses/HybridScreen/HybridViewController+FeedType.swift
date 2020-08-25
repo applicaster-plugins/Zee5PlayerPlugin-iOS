@@ -64,14 +64,10 @@ class InfoTextBuilder {
             add(playable.genre)
             add(playable.age)
 
-        case .live:
-            add("Episode")
+        case .live, .channel:
+            add("Live TV")
+            add(playable.owner)
             
-            if let seasonDetails = playable.parentSeasonDetails {
-                add(seasonDetails.episodeNumber)
-            }
-            
-        case .channel:
             break
             
         default:
@@ -98,7 +94,7 @@ class InfoTextBuilder {
         }
         
         let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute]
+        formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
         formatter.maximumUnitCount = 1
         
@@ -127,7 +123,7 @@ class InfoTextBuilder {
         }
         
         let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "dd MMM, HH:mm z"
+        outputDateFormatter.dateFormat = "yyyy-MM-dd"
         
         return outputDateFormatter.string(from: date)
     }

@@ -15,9 +15,9 @@
 static NSString *user_id = @"";
 static DevelopmentEnvironment dev_environment = development;
 static AdsEnvironment adsEnvironment = staging;
-static Usertype usertype = Guest;
 static ConsumptionType consumprionType = Movie;
 static ConnectionType Connection = Mobile;
+static ConvivaEnvironment convivaEnviroment = Staging;
 
 static comScoreAnalytics *comAnalytics;
 
@@ -40,7 +40,6 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
     [[AppConfigManager sharedInstance] setConfig:[ZEE5ConfigDataModel initFromJSONDictionary:Dict]];
     
     [self setupConvivaAnalytics];
-    [self setupComScoreAnalytics];
     
 }
 
@@ -48,7 +47,17 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 +(void)setupConvivaAnalytics
 {
     EventManager *eventManager = [[EventManager alloc] init];
-    [eventManager setConvivaConfigurationWithCustomerKey: touchConvivaCustomerKey gatewayUrl: touchConvivaGatewayUrl];
+    switch (convivaEnviroment) {
+        case Staging:
+             [eventManager setConvivaConfigurationWithCustomerKey: touchConvivaCustomerKey gatewayUrl: touchConvivaGatewayUrl];
+            break;
+        case Production:
+            [eventManager setConvivaConfigurationWithCustomerKey: convivaCustomerKey gatewayUrl: convivaGatewayUrl];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 // MARK:- ComScoreAnalytics Setup
@@ -84,6 +93,12 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 }
 + (AdsEnvironment)getAdsEnvironment {
     return adsEnvironment;
+}
++ (void)setConvivaEnvirnoment:(ConvivaEnvironment)Servertype{
+    convivaEnviroment = Servertype;
+}
++ (ConvivaEnvironment)getConvivaEnvironment{
+    return convivaEnviroment;
 }
 
 +(void)setConnection:(ConnectionType)Type{
@@ -175,17 +190,16 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 {
     NSDictionary *infoDictionary = [[NSBundle bundleForClass:self] infoDictionary];
     NSString *majorVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    NSString *minorVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
-    
-    return [NSString stringWithFormat:@"ZEE5 Player SDK Version %@ (%@)", majorVersion, minorVersion];
+    return [NSString stringWithFormat:@"%@", majorVersion];
 }
 
 + (NSString *)getPlayerSDKVersion {
-    NSDictionary *infoDictionary = [[NSBundle bundleForClass:self] infoDictionary];
-    NSString *majorVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    NSString *minorVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
     
-    return [NSString stringWithFormat:@"%@ (%@)", majorVersion, minorVersion];
+    if (![PlayKitManager.versionString isKindOfClass:[NSNull class]]) {
+        return PlayKitManager.versionString;
+    }else{
+        return [self getSDKVersion];
+    }
 }
 
 

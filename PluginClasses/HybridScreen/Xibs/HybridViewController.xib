@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="NotoSans-SemiBold.ttf">
+            <string>NotoSans-SemiBold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HybridViewController" customModule="Zee5PlayerPlugin" customModuleProvider="target">
             <connections>
@@ -16,6 +21,7 @@
                 <outlet property="itemNameLabel" destination="wjd-rP-I2u" id="YDC-qK-rjF"/>
                 <outlet property="mainCollectionViewContainer" destination="svd-1z-rSB" id="jrl-3k-y1o"/>
                 <outlet property="metadataViewContainer" destination="0eM-EZ-T0J" id="D2X-SI-bqV"/>
+                <outlet property="partnerAppView" destination="bhm-dx-Ib3" id="fz1-Q2-LFa"/>
                 <outlet property="playerView" destination="YWE-fi-K7N" id="7tk-hi-ban"/>
                 <outlet property="streamTranslationsView" destination="97X-cI-tGl" id="xfk-bM-iix"/>
                 <outlet property="view" destination="iN0-l3-epB" id="o1d-Gp-gHL"/>
@@ -44,16 +50,61 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="233"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstAttribute="width" secondItem="YWE-fi-K7N" secondAttribute="height" multiplier="4:3" id="l58-P0-YoE"/>
                         <constraint firstAttribute="height" secondItem="YWE-fi-K7N" secondAttribute="width" multiplier="9:16" id="nBs-Dh-7Ra"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="l58-P0-YoE"/>
+                        </mask>
+                    </variation>
                     <variation key="heightClass=compact">
                         <mask key="constraints">
                             <exclude reference="nBs-Dh-7Ra"/>
                         </mask>
                     </variation>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <mask key="constraints">
+                            <include reference="l58-P0-YoE"/>
+                            <exclude reference="nBs-Dh-7Ra"/>
+                        </mask>
+                    </variation>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bhm-dx-Ib3" userLabel="Partner View" customClass="PartnerAppView" customModule="Zee5PlayerPlugin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="277" width="414" height="30"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4Z-s3-fqN">
+                            <rect key="frame" x="10" y="5" width="399" height="20"/>
+                            <fontDescription key="fontDescription" name="NotoSans-SemiBold" family="Noto Sans" pointSize="11"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7v2-nO-wWu">
+                            <rect key="frame" x="1" y="1" width="412" height="28"/>
+                            <connections>
+                                <action selector="handleTap" destination="bhm-dx-Ib3" eventType="touchUpInside" id="nex-L3-9e7"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="7v2-nO-wWu" secondAttribute="bottom" constant="1" id="JuC-ta-1NR"/>
+                        <constraint firstAttribute="trailing" secondItem="V4Z-s3-fqN" secondAttribute="trailing" constant="5" id="Yaz-ue-inJ"/>
+                        <constraint firstItem="7v2-nO-wWu" firstAttribute="leading" secondItem="bhm-dx-Ib3" secondAttribute="leading" constant="1" id="eP4-YK-63h"/>
+                        <constraint firstItem="V4Z-s3-fqN" firstAttribute="leading" secondItem="bhm-dx-Ib3" secondAttribute="leading" constant="10" id="gZC-2e-rWk"/>
+                        <constraint firstItem="7v2-nO-wWu" firstAttribute="top" secondItem="bhm-dx-Ib3" secondAttribute="top" constant="1" id="hv3-VC-j17"/>
+                        <constraint firstAttribute="bottom" secondItem="V4Z-s3-fqN" secondAttribute="bottom" constant="5" id="peP-q7-kjE"/>
+                        <constraint firstAttribute="trailing" secondItem="7v2-nO-wWu" secondAttribute="trailing" constant="1" id="xPP-Dm-o5h"/>
+                        <constraint firstItem="V4Z-s3-fqN" firstAttribute="top" secondItem="bhm-dx-Ib3" secondAttribute="top" constant="5" id="xVd-uc-go0"/>
+                        <constraint firstAttribute="height" constant="30" id="xwn-lM-GHK"/>
+                    </constraints>
+                    <connections>
+                        <outlet property="heightConstraint" destination="xwn-lM-GHK" id="ZoO-Dp-LMz"/>
+                        <outlet property="titleLabel" destination="V4Z-s3-fqN" id="I2I-nY-vcO"/>
+                    </connections>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QWn-vu-CZh" userLabel="Banners Stack View">
-                    <rect key="frame" x="0.0" y="277" width="414" height="0.0"/>
+                    <rect key="frame" x="0.0" y="307" width="414" height="0.0"/>
                     <subviews>
                         <view hidden="YES" tag="881" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgH-rX-aeW" userLabel="Premium View" customClass="PremiumBanner" customModule="Zee5PlayerPlugin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
@@ -65,7 +116,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="111" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UW1-bz-alX">
-                                    <rect key="frame" x="294" y="12.5" width="120" height="35"/>
+                                    <rect key="frame" x="294" y="12.333333333333314" width="120" height="35"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="120" id="uKI-AE-yFj"/>
                                         <constraint firstAttribute="height" constant="35" id="yI8-kJ-XZh"/>
@@ -100,12 +151,12 @@
                     <variation key="heightClass=compact" hidden="YES"/>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9J-hD-RRU">
-                    <rect key="frame" x="0.0" y="277" width="414" height="619"/>
+                    <rect key="frame" x="0.0" y="307" width="414" height="589"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <variation key="heightClass=compact" hidden="YES"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svd-1z-rSB" userLabel="Main Collection View Container">
-                    <rect key="frame" x="0.0" y="277" width="414" height="619"/>
+                    <rect key="frame" x="0.0" y="307" width="414" height="589"/>
                     <subviews>
                         <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0eM-EZ-T0J" userLabel="Metadata Stack View">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="410"/>
@@ -114,22 +165,22 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="800" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wjd-rP-I2u">
-                                            <rect key="frame" x="10" y="0.0" width="50" height="5"/>
+                                            <rect key="frame" x="10" y="0.0" width="50" height="38"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" tag="2" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="pau-kc-MOj">
-                                            <rect key="frame" x="10" y="10" width="308" height="50"/>
+                                            <rect key="frame" x="10" y="43" width="308" height="17"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6b6-h1-Zud">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.52156862749999999" green="0.49019607840000001" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="802" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nh3-lZ-otx">
-                                                    <rect key="frame" x="55" y="0.0" width="25" height="50"/>
+                                                    <rect key="frame" x="55" y="0.0" width="25" height="17"/>
                                                     <color key="backgroundColor" red="0.47058823529999999" green="0.6588235294" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="25" id="UVW-TP-Eux"/>
@@ -145,7 +196,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOT-OY-czY" userLabel="space">
-                                                    <rect key="frame" x="60" y="0.0" width="248" height="50"/>
+                                                    <rect key="frame" x="60" y="0.0" width="248" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -305,6 +356,7 @@
                 <constraint firstItem="QWn-vu-CZh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="KZW-as-vd3"/>
                 <constraint firstItem="f9J-hD-RRU" firstAttribute="trailing" secondItem="svd-1z-rSB" secondAttribute="trailing" id="P5e-FW-KUa"/>
                 <constraint firstItem="YWE-fi-K7N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="RFd-PN-cir"/>
+                <constraint firstItem="bhm-dx-Ib3" firstAttribute="top" secondItem="YWE-fi-K7N" secondAttribute="bottom" id="TeG-Co-uxx"/>
                 <constraint firstAttribute="trailing" secondItem="svd-1z-rSB" secondAttribute="trailing" id="UbL-II-70p"/>
                 <constraint firstAttribute="bottom" secondItem="YWE-fi-K7N" secondAttribute="bottom" constant="642" id="WNK-ef-Y8t">
                     <variation key="heightClass=compact" constant="0.0"/>
@@ -314,7 +366,6 @@
                 <constraint firstAttribute="trailing" secondItem="YWE-fi-K7N" secondAttribute="trailing" id="eKA-VG-7Qq">
                     <variation key="heightClass=compact" constant="0.0"/>
                 </constraint>
-                <constraint firstItem="QWn-vu-CZh" firstAttribute="top" secondItem="YWE-fi-K7N" secondAttribute="bottom" id="ek7-YF-rdm"/>
                 <constraint firstAttribute="leading" secondItem="YWE-fi-K7N" secondAttribute="leading" id="fs0-f1-ohI">
                     <variation key="heightClass=compact" constant="0.0"/>
                 </constraint>
@@ -322,6 +373,7 @@
                     <variation key="heightClass=compact" constant="0.0"/>
                 </constraint>
                 <constraint firstItem="YWE-fi-K7N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mbu-ki-w4a"/>
+                <constraint firstItem="bhm-dx-Ib3" firstAttribute="bottom" secondItem="QWn-vu-CZh" secondAttribute="top" id="off-eg-nf6"/>
                 <constraint firstAttribute="bottom" secondItem="svd-1z-rSB" secondAttribute="bottom" id="p8a-dp-XVl"/>
                 <constraint firstAttribute="leading" secondItem="YWE-fi-K7N" secondAttribute="leading" constant="44" id="qRX-AB-xqe">
                     <variation key="heightClass=compact" constant="0.0"/>
@@ -329,7 +381,9 @@
                 <constraint firstAttribute="bottom" secondItem="YWE-fi-K7N" secondAttribute="bottom" id="rUS-SY-WhI">
                     <variation key="heightClass=compact" constant="0.0"/>
                 </constraint>
+                <constraint firstItem="bhm-dx-Ib3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vYJ-xd-yLs"/>
                 <constraint firstAttribute="trailing" secondItem="YWE-fi-K7N" secondAttribute="trailing" id="vy3-60-tds"/>
+                <constraint firstAttribute="trailing" secondItem="bhm-dx-Ib3" secondAttribute="trailing" id="xMM-R7-nQk"/>
                 <constraint firstItem="YWE-fi-K7N" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="yXh-bU-6oE"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -363,7 +417,6 @@
                     <exclude reference="vy3-60-tds"/>
                     <include reference="yXh-bU-6oE"/>
                     <include reference="9pf-fb-93R"/>
-                    <exclude reference="ek7-YF-rdm"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="-1109" y="351"/>

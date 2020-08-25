@@ -15,19 +15,28 @@ extension AnalyticEngine
     {
         AllAnalyticsClass.shared.addtoWatchlistEvent()
         
-        if ZEE5PlayerSDK.getConsumpruionType() == Movie{
+        if ZEE5PlayerSDK.getConsumpruionType() == Movie || ZEE5PlayerSDK.getConsumpruionType() == Trailer{
             AllAnalyticsClass.shared.MovieAddToWatch()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
-               AllAnalyticsClass.shared.TVShowAddToWatch()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Original{
-            AllAnalyticsClass.shared.originalAddToWatch()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Video{
-             AllAnalyticsClass.shared.VideoAddToWatch()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
-            
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Music{
-            
         }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
+               AllAnalyticsClass.shared.TVShowAddToWatch()
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Original{
+            AllAnalyticsClass.shared.originalAddToWatch()
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Video || ZEE5PlayerSDK.getConsumpruionType() == Music {
+             AllAnalyticsClass.shared.VideoAddToWatch()
+        }
+    }
+    
+    @objc public func RemoveFromWatchlistAnlytics()
+    {
+        AllAnalyticsClass.shared.removeFromWatchlistEvent()
+    }
+    
+    @objc public func ShareAnlytics()
+    {
+        AllAnalyticsClass.shared.shareClickEvent()
     }
     
     @objc public func SubscribeCTAClicked()
@@ -87,22 +96,24 @@ extension AnalyticEngine
         }
         else if ZEE5PlayerSDK.getConsumpruionType() == Music{
              AllAnalyticsClass.shared.Musicplayed()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Movie{
-            AllAnalyticsClass.shared.MoviesPlayed()
+             AllAnalyticsClass.shared.videoContentSectionplayed()
+             AllAnalyticsClass.shared.videoContentplayed()
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Movie || ZEE5PlayerSDK.getConsumpruionType() == Trailer{
+             AllAnalyticsClass.shared.MoviesPlayed()
              AllAnalyticsClass.shared.MovieSectionplayed()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Episode{
              AllAnalyticsClass.shared.TvShowplayed()
             AllAnalyticsClass.shared.TvShowSectionplayed()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Original{
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Original{
             AllAnalyticsClass.shared.OriginalSectionplayed()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Video{
+        }
+        else if ZEE5PlayerSDK.getConsumpruionType() == Video{
             AllAnalyticsClass.shared.videoContentSectionplayed()
             AllAnalyticsClass.shared.videoContentplayed()
-        }else if ZEE5PlayerSDK.getConsumpruionType() == Trailer{
-            
         }
-        
-        
     }
     
     

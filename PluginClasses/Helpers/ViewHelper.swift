@@ -46,6 +46,21 @@ import Foundation
         self.centerXAnchor.constraint(equalTo: parent.centerXAnchor).isActive = true
     }
     
+    public func fillCenteredInParent(height: CGFloat) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        if height > 0 {
+            self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        self.centerYAnchor.constraint(equalTo: parent.centerYAnchor).isActive = true
+    }
+    
     public func anchorToTop() {
         guard let parent = self.superview else {
             return
@@ -96,6 +111,19 @@ import Foundation
         self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
         self.topAnchor.constraint(equalTo: parent.topAnchor, constant: inset).isActive = true
         self.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: inset).isActive = true
+    }
+    
+    public func anchorBelowOf(view: UIView) {
+        guard let parent = self.superview else {
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.topAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        self.bottomAnchor.constraint(lessThanOrEqualTo: parent.bottomAnchor).isActive = true
     }
     
     public func centerInParent(size: CGSize) {

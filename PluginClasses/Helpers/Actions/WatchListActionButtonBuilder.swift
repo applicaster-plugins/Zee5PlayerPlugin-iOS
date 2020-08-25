@@ -106,6 +106,8 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             ZEE5PlayerDeeplinkManager.sharedMethod.NavigatetoLoginpage(Param: "Watclist") { (isSucceess) -> (Void) in
                 if isSucceess {
                     ZEE5PlayerDeeplinkManager.sharedMethod.fetchUserdata()
+                    ZEE5PlayerManager.sharedInstance().postReloadCurrentContentIdNotification()
+                    return
                 }
             }
             ZEE5PlayerManager.sharedInstance().pause()
@@ -154,6 +156,7 @@ class WatchListActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder
             params: nil) { (response) in
                 self.setItemInWatchList(itemIn: false,
                                   toastMessage: self.localizedText(for: "Consumption_ToastMessage_RemovedFromWatchlist_Text"))
+                AnalyticEngine.shared.RemoveFromWatchlistAnlytics()
         }
     }
 

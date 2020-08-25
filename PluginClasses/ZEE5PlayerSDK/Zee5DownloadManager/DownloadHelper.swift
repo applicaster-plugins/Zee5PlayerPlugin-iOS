@@ -9,6 +9,7 @@
 import Foundation
 import Toast_Swift
 import ZappPlugins
+import Zee5CoreSDK
 
 public class DownloadHelper: NSObject {
     
@@ -119,7 +120,9 @@ public class DownloadHelper: NSObject {
     
     //
     @objc public func restoreExpiredContent(id: String, isExpired: @escaping ((Bool, String?) -> Void)) {
-        ZEE5PlayerManager.sharedInstance().downloadVODContent(id, country: "IN", translation: "en") {
+        let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
+        let translation =  Zee5UserDefaultsManager.shared.getSelectedDisplayLanguage() ?? "en"
+        ZEE5PlayerManager.sharedInstance().downloadVODContent(id, country: location.country, translation: translation) {
             (data, customData) in
             
             if let Voddata = data , let CustomeString = customData{

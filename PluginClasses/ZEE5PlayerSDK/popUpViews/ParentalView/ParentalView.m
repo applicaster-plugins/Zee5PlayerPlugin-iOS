@@ -68,55 +68,49 @@
     [super touchesBegan:touches withEvent:event];
 }
 
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-  
-        [textField resignFirstResponder];
+    [textField resignFirstResponder];
     return YES;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    
-    if ((textField.text.length <=1) && (string.length > 0))
-    {
-        NSInteger nextTag = textField.tag + 1;
-        // Try to find next responder
-        UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
-        if (! nextResponder)
-            _confirmOutlet.enabled =YES;
-        [self buttonApearance];
-            [textField resignFirstResponder];
-        
-
-        if (nextResponder)
-            // Found next responder, so set it.
-            [nextResponder becomeFirstResponder];
-        
-        textField.text = string;
-
-        return NO;
-    }
-    else if ((textField.text.length >= 1) && (string.length == 0))
-    {
+    if (string.length == 0) {
         NSInteger previousTag = textField.tag - 1;
         // Try to find next responder
         UIResponder* nextResponder = [textField.superview viewWithTag:previousTag];
         if (previousTag == 0)
-           [textField resignFirstResponder];
-
+            _textPin.text = @"";
+        textField.text = @"";
+        [textField resignFirstResponder];
         if (nextResponder)
             // Found next responder, so set it.
             [nextResponder becomeFirstResponder];
         _confirmOutlet.enabled =NO;
         [self buttonApearance];
-        
-        
         textField.text = @"";
-        
-         return NO;
-
+        return NO;
     }
+    if (_textPin.text.length == 1 && string.length > 0) {
+        [_textPin2 becomeFirstResponder];
+        if (_textPin2.text.length == 1){
+            [_textPin3 becomeFirstResponder];
+            if (_textPin3.text.length == 1){
+                [_textPin4 becomeFirstResponder];
+                if (_textPin4.text.length == 1){
+                    _confirmOutlet.enabled =YES;
+                    [self buttonApearance];
+                    [textField resignFirstResponder];
+                }else{
+                    _textPin4.text = string;
+                    _confirmOutlet.enabled =YES;
+                    [self buttonApearance];
+                    [self textFieldShouldReturn:_textPin4];
+                }
+            }else{_textPin3.text = string;}
+        }else{_textPin2.text = string;}
+    }else{[_textPin becomeFirstResponder];}
+    
     return YES;
 }
 
@@ -156,9 +150,6 @@
    
     
 }
-- (IBAction)CancelAction:(id)sender {
-}
-
 - (IBAction)showHideAction:(id)sender
 {
     if ([_showhideOutlet.currentTitle isEqualToString:@"Show PIN"])

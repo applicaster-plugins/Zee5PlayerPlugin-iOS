@@ -20,10 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)authenticateWithServer:(NSString *)app_id userId:(NSString *)user_id andSDK_key:(NSString *)key withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
-- (void)makeHttpGetRequest:(NSString *)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpGetRequest:(NSString *)urlString requestParam:(nullable NSDictionary*)param requestHeaders:(nullable NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
-- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
-- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary*)param requestHeaders:(NSDictionary*)headers shouldCancel:(BOOL)shouldCancel withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(nullable NSDictionary*)param requestHeaders:(nullable NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(nullable NSDictionary*)param requestHeaders:(nullable NSDictionary*)headers shouldCancel:(BOOL)shouldCancel withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
+- (void)makeHttpRequest:(NSString *)requestname requestUrl:(NSString*)urlString urlParams:(nullable NSDictionary*)urlParams requestParam:(nullable NSDictionary*)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 
 - (void)makeHttpRawPostRequest:(NSString *)requestname requestUrl:(NSString*)urlString requestParam:(NSDictionary *)param requestHeaders:(NSDictionary*)headers withCompletionHandler:(SuccessHandler)success failureBlock:(FailureHandler)failure;
 

@@ -164,6 +164,7 @@ fileprivate class BasePlaybackSession: PlaybackSession {
         ZEE5PlayerManager.sharedInstance().stop()
         ZEE5PlayerManager.sharedInstance().destroyPlayer()
         AnalyticEngine.shared.VideoExitAnalytics()
+        AnalyticEngine.shared.cleanupVideoSesssion()
     }
     
     func canResume() -> Bool {
@@ -298,6 +299,9 @@ fileprivate class TvShowPlaybackSession: BasePlaybackSession, BasePlaybackSessio
     
     func sessionParseResponse(_ response: ItemResponse) {
         self.tvShowItem = tvShowModel.initFromJSONDictionary(response)
+        if let tvshowModel = self.tvShowItem {
+            ZEE5PlayerManager.sharedInstance().getShowModel(tvshowModel)
+        }
     }
     
     func sessionContentUrl() -> String {

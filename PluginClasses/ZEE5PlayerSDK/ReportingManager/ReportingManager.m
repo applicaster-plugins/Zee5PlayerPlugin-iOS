@@ -14,12 +14,14 @@
 @interface ReportingManager()
 
 @property(strong, nonatomic) NSString *contentId;
+@property(strong, nonatomic) NSString *deleteContentId;
 @property(strong, nonatomic) NSString *QuardileValue;
 @property(strong, nonatomic) NSString *currentDate;
 @property (readwrite, nonatomic) BOOL isAlreadyExist;
 @property (readwrite, nonatomic) BOOL isAlreadyPost;
 @property (readwrite, nonatomic) BOOL isDmpSync;   // For Lotame Analytics Check if value is true
 @property (readwrite, nonatomic) BOOL isLotameEventSent;
+@property (readwrite, nonatomic) NSInteger watchDuration;
 
 @end
 
@@ -44,9 +46,9 @@ static ReportingManager *sharedManager = nil;
 
 //MARK:- Start Reporting Watch History to Server with Time Interval of  60 second.
 
-- (void)startReportingWatchHistory
+- (void)startReportingWatchHistory:(NSInteger)duration
 {
-    
+    _watchDuration = duration;
     NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];  /// or @"yyyy-MM-dd hh:mm:ss a" if you prefer the time with AM/PM
     _currentDate = [dateFormatter stringFromDate:[NSDate date]];
@@ -54,12 +56,14 @@ static ReportingManager *sharedManager = nil;
     if ([self.contentId isEqualToString:[ZEE5PlayerManager sharedInstance].currentItem.content_id])
     {
         self.isAlreadyExist = true;
+        self.isAlreadyPost = true;
     }
     else
     {
          self.isAlreadyExist = false;
         _contentId = [ZEE5PlayerManager sharedInstance].currentItem.content_id;
         self.isLotameEventSent = false;
+        self.isAlreadyPost = false;
     }
     
     [self reportWatchHistory]; //// userApi.com use in this method (only used for register & subscribe user)
@@ -88,7 +92,7 @@ static ReportingManager *sharedManager = nil;
     NSDictionary *requestParams = @{
         @"id": [ZEE5PlayerManager sharedInstance].currentItem.content_id,
         @"asset_type": [ZEE5PlayerManager sharedInstance].currentItem.asset_type,
-        @"duration": [NSString stringWithFormat:@"%.f",[[ZEE5PlayerManager sharedInstance] getCurrentDuration]],
+        @"duration": [NSString stringWithFormat:@"%ld",(long)_watchDuration],
     };
     
 
@@ -134,16 +138,12 @@ static ReportingManager *sharedManager = nil;
     }
     
     self.QuardileValue = [self QuartiletimeCalculate:[[ZEE5PlayerManager sharedInstance] getCurrentDuration]];
-    
-    NSString * Duration = [NSString stringWithFormat:@"%.f",[[ZEE5PlayerManager sharedInstance] getCurrentDuration]];
-    
     NSString * DurationRange = [self Durationrange:[[ZEE5PlayerManager sharedInstance] getTotalDuration]];
-    
     
     NSDictionary *requestParams = @{
         @"id": [ZEE5PlayerManager sharedInstance].currentItem.content_id,
         @"asset_type": [NSNumber numberWithInt:[[ZEE5PlayerManager sharedInstance].currentItem.asset_type intValue]],
-        @"duration": Duration
+        @"duration": [NSString stringWithFormat:@"%ld",(long)_watchDuration]
     };
     
 
@@ -172,8 +172,6 @@ static ReportingManager *sharedManager = nil;
 
             }
         }
-        
-        
     }
     failureBlock:^(ZEE5SdkError * _Nullable error)
      {
@@ -236,14 +234,10 @@ static ReportingManager *sharedManager = nil;
 - (void)getWatchHistory
 {
     self.isCountinueWatching =NO;
-   
-    if([ZEE5PlayerManager sharedInstance].currentItem == nil)
-    {
+    if([ZEE5PlayerManager sharedInstance].currentItem == nil){
         return;
     }
-  
     NSDictionary *requestParams = @{};
-    
     NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
 
     NSDictionary *requestheaders;
@@ -258,24 +252,57 @@ static ReportingManager *sharedManager = nil;
 
     [[NetworkManager sharedInstance] makeHttpGetRequest:BaseUrls.watchHistory requestParam:requestParams requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result) {
         NSMutableArray *array = [[NSMutableArray alloc] initWithArray:result];
-           
-            if ([array count] > 0)
-            {
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.id contains[cd] %@",[ZEE5PlayerManager sharedInstance].currentItem.content_id];
-                
-                NSArray *filterArray = [array filteredArrayUsingPredicate:predicate];
+        if ([array count] > 0)
+        {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.id contains[cd] %@",[ZEE5PlayerManager sharedInstance].currentItem.content_id];
             
-                if ([filterArray count]>0)
-                {
-                    self.isCountinueWatching =YES;
-                    NSInteger Duration =[[[filterArray objectAtIndex:0]objectForKey:@"duration"]integerValue];
-                    [[ZEE5PlayerManager sharedInstance]setWatchHistory:Duration];
-        
-                }
+            NSArray *filterArray = [array filteredArrayUsingPredicate:predicate];
+            
+            if ([filterArray count]>0)
+            {
+                self.isCountinueWatching =YES;
+                NSInteger Duration =[[[filterArray objectAtIndex:0]objectForKey:@"duration"]integerValue];
+                [[ZEE5PlayerManager sharedInstance]setWatchHistory:Duration];
             }
+        }
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
+        
     }];
     
+}
+//MARK:- Delete Watch History
+- (void)deleteWatchHIstory
+{
+    if([ZEE5PlayerManager sharedInstance].currentItem == nil){
+        return;
+    }
+    if(ZEE5PlayerSDK.getUserTypeEnum == Guest){
+           return;
+    }
+    if ([_deleteContentId isEqualToString:[ZEE5PlayerManager sharedInstance].currentItem.content_id]) {
+        return;
+    }
+    _deleteContentId = [ZEE5PlayerManager sharedInstance].currentItem.content_id;
+    NSDictionary *requestParams = @{
+        @"id":[ZEE5PlayerManager sharedInstance].currentItem.content_id,
+        @"asset_type":[ZEE5PlayerManager sharedInstance].currentItem.asset_type
+    };
+    NSString *userToken = [NSString stringWithFormat:@"%@", ZEE5UserDefaults.getUserToken];
+    NSString *requestName = @"DELETE";
+
+    NSDictionary *requestheaders;
+    if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
+    {
+        requestheaders = @{@"Content-Type":@"application/json",@"X-Z5-Guest-Token": userToken,@"Accept":@"application/json"};
+    }
+    else
+    {
+        requestheaders = @{@"Content-Type":@"application/json", @"Authorization": userToken,@"Accept":@"application/json"};
+    }
+
+    [[NetworkManager sharedInstance] makeHttpRequest:requestName requestUrl:BaseUrls.watchHistory urlParams:requestParams requestParam:[NSDictionary dictionary] requestHeaders:requestheaders withCompletionHandler:^(id  _Nullable result) {
+    } failureBlock:^(ZEE5SdkError * _Nullable error) {
+    }];
 }
 
 
@@ -292,7 +319,7 @@ static ReportingManager *sharedManager = nil;
                                     @"aid":  [AppConfigManager sharedInstance].config.authKey,
                                     @"t": @"event"
                                     };
-    NSMutableDictionary *dictParams = [[NSMutableDictionary alloc]init];
+    NSMutableDictionary *dictParams = [[NSMutableDictionary alloc] init];
     [dictParams addEntriesFromDictionary:dict];
     [dictParams addEntriesFromDictionary:requestParams];
 
@@ -305,6 +332,13 @@ static ReportingManager *sharedManager = nil;
     
     
 }
-
+- (void)resetValues{
+    self.isAlreadyPost = NO;
+    self.isAlreadyExist = NO;
+    self.isLotameEventSent = NO;
+    self.isDmpSync = NO;
+    self.deleteContentId = @"";
+    self.contentId = @"";
+}
 
 @end

@@ -68,10 +68,13 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         
         if let configuration = configurationJSON {
 //            let errorViewConfig = ErrorViewConfiguration(fromDictionary: configuration)
-
-            if let isProdAdsEnvirnoment = configuration["is_ads_production"] as? Int {
-                ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
-            }
+            
+            let isProdAdsEnvirnoment = Zee5Utility().getConfigIntValue(configJSON: configuration, configKey:"is_ads_production", defaultValue: 0)
+            ZEE5PlayerSDK.setAdsEnvirnoment(isProdAdsEnvirnoment == 1 ? prod : staging)
+            
+            
+            let isConvivaEnvirnoment = Zee5Utility().getConfigIntValue(configJSON: configuration, configKey:"is_conviva_production", defaultValue: 0)
+            ZEE5PlayerSDK.setConvivaEnvirnoment(isConvivaEnvirnoment == 1 ? Production : Staging)
             
             if let overrideChromecastAppId = configuration["chromecast_app_id"] as? String, overrideChromecastAppId.count > 0 {
                 ChromeCastManager.shared.appId = overrideChromecastAppId
@@ -188,7 +191,23 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
                 return
         }
         
-        guard let contentId = queryItems.first(where: {$0.name == "id"})?.value else {
+        var _contentId = queryItems.first(where: {$0.name == "id"})?.value
+        if _contentId == nil {
+            guard
+                let subUrlParam = queryItems.first(where: {$0.name == "url"})?.value,
+                let subUrlData = Data(base64Encoded: subUrlParam),
+                let subUrlValue = String(data: subUrlData, encoding: .utf8),
+                let subUrl = URL(string: subUrlValue),
+                let subComponents = URLComponents(url: subUrl, resolvingAgainstBaseURL: false),
+                let subQueryItems = subComponents.queryItems,
+                let idParam = subQueryItems.first(where: {$0.name == "id"})?.value else {
+                    return
+            }
+            
+            _contentId = idParam
+        }
+        
+        guard let contentId = _contentId else {
             return
         }
         
@@ -279,11 +298,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
             ZEE5UserDefaults.setCountry(location.country, andState: location.state)
             
-            let (isTelcoUser, telcoUserData) = User.shared.isTelcoUser()
-            if isTelcoUser, let telcoUserData = telcoUserData {
-                self.handleTelcoData(param: telcoUserData)
-            }
-            
             if let userSetting = Zee5UserDefaultsManager.shared.getUsersSettings() {
                 let userSettingString = String(data: userSetting, encoding: String.Encoding.utf8)
                 ZEE5UserDefaults.setUserSettingData(userSettingString ?? "")
@@ -323,22 +337,6 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
         guard let data = text.data(using: .utf8) else { return [:] }
         let anyResult: Any = try JSONSerialization.jsonObject(with: data, options: [])
         return anyResult as? [String: String] ?? [:]
-    }
-    
-    func handleTelcoData(param:[String: String])  {
-        var message = NSAttributedString(string: "")
-        
-        if (param["partner"] ?? "").lowercased().contains("vodafone") {
-            message = NSAttributedString(string: "BIStrings_CTA_BackToVodafonePlay_Button".localized(hashMap: [:]))
-        }
-        else if (param["partner"] ?? "").lowercased().contains("airtel") {
-            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToAirtelTv_Text".localized(hashMap: [:]))
-        }
-        else if (param["partner"] ?? "").lowercased().contains("idea") {
-            message = NSAttributedString(string: "Consumption_PlayerStrip_BackToIdeaMovies_Text".localized(hashMap: [:]))
-        }
-
-        ZEE5PlayerManager.sharedInstance().telcouser(true, param: message.string)
     }
     
     func addPlayerObservers() {

@@ -185,12 +185,12 @@ Do you wish to renew your subscription?</string>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="l03-jS-lDo">
-                                                    <rect key="frame" x="10" y="86" width="138" height="2"/>
+                                                    <rect key="frame" x="12" y="87" width="134" height="2"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.56862745098039214" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="2" id="09W-2l-7FM"/>
-                                                        <constraint firstAttribute="width" constant="138" id="OH9-bY-NgQ"/>
+                                                        <constraint firstAttribute="width" constant="134" id="OH9-bY-NgQ"/>
                                                     </constraints>
                                                 </progressView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KJN-Ax-u41">
@@ -251,7 +251,7 @@ Do you wish to renew your subscription?</string>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="l03-jS-lDo" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="86" id="60P-ae-TVr"/>
+                                                <constraint firstItem="l03-jS-lDo" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="87" id="60P-ae-TVr"/>
                                                 <constraint firstAttribute="trailing" secondItem="KJN-Ax-u41" secondAttribute="trailing" id="Fd0-AP-iyz"/>
                                                 <constraint firstItem="W1T-2q-dKj" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="22" id="Gvz-4c-axY"/>
                                                 <constraint firstAttribute="trailing" secondItem="hHr-LV-iQb" secondAttribute="trailing" constant="11" id="HTR-ct-wwJ"/>
@@ -259,7 +259,7 @@ Do you wish to renew your subscription?</string>
                                                 <constraint firstItem="REX-vh-C1b" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="11" id="Lhi-7q-fWC"/>
                                                 <constraint firstItem="KJN-Ax-u41" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="22" id="MTd-5b-WNt"/>
                                                 <constraint firstItem="REX-vh-C1b" firstAttribute="leading" secondItem="oRH-nh-7Ob" secondAttribute="trailing" constant="11" id="Rr3-iY-fdd"/>
-                                                <constraint firstItem="l03-jS-lDo" firstAttribute="leading" secondItem="tgj-KQ-snw" secondAttribute="leading" constant="10" id="UbC-50-Sxj"/>
+                                                <constraint firstItem="l03-jS-lDo" firstAttribute="leading" secondItem="tgj-KQ-snw" secondAttribute="leading" constant="12" id="UbC-50-Sxj"/>
                                                 <constraint firstItem="oRH-nh-7Ob" firstAttribute="top" secondItem="tgj-KQ-snw" secondAttribute="top" constant="9" id="ZaQ-9U-aUK"/>
                                                 <constraint firstAttribute="trailing" secondItem="REX-vh-C1b" secondAttribute="trailing" constant="11" id="a3m-QA-gCz"/>
                                                 <constraint firstItem="80S-18-Ggv" firstAttribute="top" secondItem="REX-vh-C1b" secondAttribute="bottom" constant="2" id="buM-oG-6J9"/>
@@ -337,11 +337,11 @@ Do you wish to renew your subscription?</string>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="efM-uC-a2l">
-                                                    <rect key="frame" x="10" y="86" width="138" height="2"/>
+                                                    <rect key="frame" x="12" y="87" width="134" height="2"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.56862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="138" id="FOs-TX-P8a"/>
+                                                        <constraint firstAttribute="width" constant="134" id="FOs-TX-P8a"/>
                                                         <constraint firstAttribute="height" constant="2" id="p7x-Dg-9wK"/>
                                                     </constraints>
                                                 </progressView>
@@ -407,7 +407,7 @@ Do you wish to renew your subscription?</string>
                                                 <constraint firstItem="BpM-D5-m6X" firstAttribute="leading" secondItem="igf-yF-M99" secondAttribute="trailing" constant="11" id="76d-QH-TBE"/>
                                                 <constraint firstItem="XTS-rC-XTc" firstAttribute="leading" secondItem="igf-yF-M99" secondAttribute="trailing" constant="11" id="AKI-M9-fZJ"/>
                                                 <constraint firstItem="1fN-1I-8Vk" firstAttribute="leading" secondItem="igf-yF-M99" secondAttribute="trailing" constant="11" id="J1H-tR-R2y"/>
-                                                <constraint firstItem="efM-uC-a2l" firstAttribute="leading" secondItem="Lzx-KG-leA" secondAttribute="leading" constant="10" id="K5D-9R-7vn"/>
+                                                <constraint firstItem="efM-uC-a2l" firstAttribute="leading" secondItem="Lzx-KG-leA" secondAttribute="leading" constant="12" id="K5D-9R-7vn"/>
                                                 <constraint firstItem="1fN-1I-8Vk" firstAttribute="top" secondItem="BpM-D5-m6X" secondAttribute="bottom" constant="15" id="NPG-Ym-7jB"/>
                                                 <constraint firstItem="XTS-rC-XTc" firstAttribute="top" secondItem="Lzx-KG-leA" secondAttribute="top" constant="11" id="NsT-MP-jnO"/>
                                                 <constraint firstItem="7P8-W1-Od3" firstAttribute="top" secondItem="Lzx-KG-leA" secondAttribute="top" constant="22" id="WEg-4s-1S3"/>
@@ -416,7 +416,7 @@ Do you wish to renew your subscription?</string>
                                                 <constraint firstAttribute="trailing" secondItem="nR6-KG-HlE" secondAttribute="trailing" id="cMf-JL-eUU"/>
                                                 <constraint firstAttribute="trailing" secondItem="BpM-D5-m6X" secondAttribute="trailing" constant="11" id="d5p-QA-3Kz"/>
                                                 <constraint firstItem="nR6-KG-HlE" firstAttribute="top" secondItem="Lzx-KG-leA" secondAttribute="top" constant="22" id="eh4-e5-u8v"/>
-                                                <constraint firstItem="efM-uC-a2l" firstAttribute="top" secondItem="Lzx-KG-leA" secondAttribute="top" constant="86" id="evX-fM-KQI"/>
+                                                <constraint firstItem="efM-uC-a2l" firstAttribute="top" secondItem="Lzx-KG-leA" secondAttribute="top" constant="87" id="evX-fM-KQI"/>
                                                 <constraint firstItem="BpM-D5-m6X" firstAttribute="top" secondItem="XTS-rC-XTc" secondAttribute="bottom" constant="2" id="myN-Ub-ooc"/>
                                                 <constraint firstItem="igf-yF-M99" firstAttribute="leading" secondItem="Lzx-KG-leA" secondAttribute="leading" constant="10" id="w0u-CO-JmN"/>
                                                 <constraint firstAttribute="trailing" secondItem="7P8-W1-Od3" secondAttribute="trailing" id="w4R-R7-E3L"/>
@@ -616,12 +616,12 @@ Do you wish to renew your subscription?</string>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="4BV-4C-MPJ">
-                                                    <rect key="frame" x="10" y="86" width="138" height="2"/>
+                                                    <rect key="frame" x="12" y="87" width="134" height="2"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.56862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="2" id="CLN-YH-Wcz"/>
-                                                        <constraint firstAttribute="width" constant="138" id="fL7-DB-ROj"/>
+                                                        <constraint firstAttribute="width" constant="134" id="fL7-DB-ROj"/>
                                                     </constraints>
                                                 </progressView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zs8-L2-S38">
@@ -687,8 +687,8 @@ Do you wish to renew your subscription?</string>
                                                 <constraint firstAttribute="trailing" secondItem="u0e-I0-RYR" secondAttribute="trailing" constant="11" id="8ux-9P-FqS"/>
                                                 <constraint firstItem="Lh2-cL-17K" firstAttribute="top" secondItem="u0e-I0-RYR" secondAttribute="bottom" constant="12" id="9ij-zx-Oyi"/>
                                                 <constraint firstItem="Zs8-L2-S38" firstAttribute="top" secondItem="sWk-U4-1mB" secondAttribute="top" constant="22" id="By1-eX-iUn"/>
-                                                <constraint firstItem="4BV-4C-MPJ" firstAttribute="leading" secondItem="sWk-U4-1mB" secondAttribute="leading" constant="10" id="E3S-Ym-nMg"/>
-                                                <constraint firstItem="4BV-4C-MPJ" firstAttribute="top" secondItem="sWk-U4-1mB" secondAttribute="top" constant="86" id="EIh-bu-kSR"/>
+                                                <constraint firstItem="4BV-4C-MPJ" firstAttribute="leading" secondItem="sWk-U4-1mB" secondAttribute="leading" constant="12" id="E3S-Ym-nMg"/>
+                                                <constraint firstItem="4BV-4C-MPJ" firstAttribute="top" secondItem="sWk-U4-1mB" secondAttribute="top" constant="87" id="EIh-bu-kSR"/>
                                                 <constraint firstItem="qGy-BY-fCk" firstAttribute="leading" secondItem="5fF-5l-FjJ" secondAttribute="trailing" constant="11" id="FAC-Co-cnn"/>
                                                 <constraint firstItem="Lh2-cL-17K" firstAttribute="leading" secondItem="5fF-5l-FjJ" secondAttribute="trailing" constant="11" id="Fwb-ut-2Qu"/>
                                                 <constraint firstItem="qGy-BY-fCk" firstAttribute="top" secondItem="sWk-U4-1mB" secondAttribute="top" constant="11" id="Omh-Ie-ABZ"/>

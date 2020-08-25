@@ -134,8 +134,26 @@
 {
     self.related = [ZEE5PlayerManager sharedInstance].currentItem.related;
     [self.collectionView reloadData];
+    [self setWatchNowLable];
 }
 
+-(void)setWatchNowLable{
+    NSString *Title;
+    NSUInteger length;
+    if (ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) {
+        Title = [NSString stringWithFormat:@"Now Playing: %@:%@",ZEE5PlayerManager.sharedInstance.currentItem.showName,ZEE5PlayerManager.sharedInstance.currentItem.channel_Name];
+        length = ZEE5PlayerManager.sharedInstance.currentItem.showName.length +ZEE5PlayerManager.sharedInstance.currentItem.channel_Name.length;
+        
+    }else{
+        Title = [NSString stringWithFormat:@"Now Playing: %@",ZEE5PlayerManager.sharedInstance.currentItem.channel_Name];
+        length = ZEE5PlayerManager.sharedInstance.currentItem.channel_Name.length;
+    }
+    
+    NSMutableAttributedString * tempString = [[NSMutableAttributedString alloc]initWithString:Title];
+    [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:255.0f green:0.0f blue:145.0f alpha:1] range:NSMakeRange(0,12)];
+    [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(12,length+1)];
+    self.watchNowTitle.attributedText = tempString;
+}
 - (IBAction)buttonPlayClicked:(UIButton *)sender {
     sender.selected = !sender.selected;
     AnalyticEngine *engine =[[AnalyticEngine alloc]init];
@@ -282,12 +300,6 @@
 
 - (IBAction)loginNow:(UIButton *)sender {
     [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
-}
-
-- (IBAction)bactoPartnetAppAction:(id)sender {
-    [[ZEE5PlayerManager sharedInstance]stop];
-    [[ZEE5PlayerManager sharedInstance]DestroyPlayer];
-    [[ZEE5PlayerDeeplinkManager sharedMethod]NavigateToPartnerApp];
 }
 
 - (IBAction)upNextAction:(id)sender {
