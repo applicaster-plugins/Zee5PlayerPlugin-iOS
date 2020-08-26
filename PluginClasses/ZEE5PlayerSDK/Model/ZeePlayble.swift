@@ -277,25 +277,6 @@ class ZeePlayable {
         return nil
     }
     
-//    public var trailerContentId: String? {
-//        guard let relatedItems = self.extensions[ExtensionsKey.related] as? [DefaultDict] else {
-//            return nil
-//        }
-//
-//        for item in relatedItems {
-//            guard
-//                let assetSubtype = item["asset_subtype"] as? String,
-//                assetSubtype == "trailer",
-//                let contentId = item["id"] as? String else {
-//                    continue
-//            }
-//
-//            return contentId
-//        }
-//
-//        return nil
-//    }
-    
     public var businessType: PlayableBusinessType {
         guard let value = self.extensions["business_type"] as? String else {
             return .freeDownloadable
