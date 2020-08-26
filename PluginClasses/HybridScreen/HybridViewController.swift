@@ -183,6 +183,7 @@ class HybridViewController: UIViewController {
             
             self.castDataSource = castDataSource
         }
+        setupCast()
         
         func setupCreators() {
             guard self.creatorsDataSource == nil, let creators = playable.creators else {
@@ -196,6 +197,7 @@ class HybridViewController: UIViewController {
             
             self.creatorsDataSource = creatorsDataSource
         }
+        setupCreators()
     }
         
     func stylesConfiguration() {
