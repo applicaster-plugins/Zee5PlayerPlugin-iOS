@@ -65,9 +65,13 @@ fileprivate class StreamTranslationsHelper {
         let info = StreamTranslationInfo(title, selected, available)
         fill(view: audioSelectionView, info)
         
-        audioSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
-            ZEE5PlayerManager.sharedInstance().getAudioLanguage()
-        }))
+        if let audioTracks = audioTracks, audioTracks.count > 0 {
+            audioSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
+                ZEE5PlayerManager.sharedInstance().getAudioLanguage()
+            }))
+        } else {
+            audioSelectionView.gestureRecognizers?.forEach{ audioSelectionView.removeGestureRecognizer($0) }
+        }
     }
     
     func handleTextTracks(textSelectionView: TranslationTrackSelectionView) {
@@ -105,9 +109,16 @@ fileprivate class StreamTranslationsHelper {
         let info = StreamTranslationInfo(title, selected, available)
         fill(view: textSelectionView, info)
         
-        textSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
-            ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
-        }))
+        
+        if let textTracks = textTracks, textTracks.count > 0 {
+            textSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
+                ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
+            }))
+        } else {
+            textSelectionView.gestureRecognizers?.forEach{ textSelectionView.removeGestureRecognizer($0) }
+        }
+        
+        
     }
     
     func fill(view: TranslationTrackSelectionView, _ info: StreamTranslationInfo) {
