@@ -258,11 +258,20 @@ class ZeePlayable {
     }
     
     public var trailerContentId: String? {
-        guard let relatedItems = self.extensions[ExtensionsKey.related] as? [DefaultDict] else {
+        var items: [DefaultDict]?
+        
+        if let tvshowDetails = self.extensions[ExtensionsKey.tvShowDetails] as? DefaultDict,
+            let trailerItems = tvshowDetails[ExtensionsKey.trailers] as? [DefaultDict] {
+            items = trailerItems
+        } else if let relatedItems = self.extensions[ExtensionsKey.related] as? [DefaultDict] {
+            items = relatedItems
+        }
+        
+        guard let unwrappedItems = items else {
             return nil
         }
         
-        for item in relatedItems {
+        for item in unwrappedItems {
             guard
                 let assetSubtype = item["asset_subtype"] as? String,
                 assetSubtype == "trailer",
