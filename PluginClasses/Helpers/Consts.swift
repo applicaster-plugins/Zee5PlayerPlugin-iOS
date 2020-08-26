@@ -70,6 +70,8 @@ public struct ExtensionsKey {
     static let title = "title"
     static let description = "description"
     static let contentId = "id"
+    static let tvShowDetails = "tvshow_details"
+    static let trailers = "trailers"
 }
 
 public struct ItemTag {
