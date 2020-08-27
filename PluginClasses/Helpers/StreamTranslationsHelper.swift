@@ -65,9 +65,14 @@ fileprivate class StreamTranslationsHelper {
         let info = StreamTranslationInfo(title, selected, available)
         fill(view: audioSelectionView, info)
         
-        audioSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
-            ZEE5PlayerManager.sharedInstance().getAudioLanguage()
-        }))
+        if let audioTracks = audioTracks, audioTracks.count > 0 {
+            audioSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
+                ZEE5PlayerManager.sharedInstance().getAudioLanguage()
+            }))
+        }
+        else {
+            audioSelectionView.gestureRecognizers?.forEach{ audioSelectionView.removeGestureRecognizer($0) }
+        }
     }
     
     func handleTextTracks(textSelectionView: TranslationTrackSelectionView) {
@@ -90,14 +95,17 @@ fileprivate class StreamTranslationsHelper {
                 available = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
                     "count": "\(textTracks.count)"
                 ])
-            } else {
+            }
+            else {
                 available = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
                     "count": "\(textTracks.count)"
                 ])
             }
+            
             textSelectionView.selectedTrackLabel.isHidden = false
         
-        } else {
+        }
+        else {
             available = StylesHelper.localizedText(for: "Consumption_Subtitles_NoSubtitles_Text")
             textSelectionView.selectedTrackLabel.isHidden = true
         }
@@ -105,9 +113,15 @@ fileprivate class StreamTranslationsHelper {
         let info = StreamTranslationInfo(title, selected, available)
         fill(view: textSelectionView, info)
         
-        textSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
-            ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
-        }))
+        
+        if let textTracks = textTracks, textTracks.count > 0 {
+            textSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
+                ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
+            }))
+        }
+        else {
+            textSelectionView.gestureRecognizers?.forEach{ textSelectionView.removeGestureRecognizer($0) }
+        }
     }
     
     func fill(view: TranslationTrackSelectionView, _ info: StreamTranslationInfo) {
