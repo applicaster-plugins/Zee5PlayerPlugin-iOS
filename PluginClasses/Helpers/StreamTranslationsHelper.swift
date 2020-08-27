@@ -69,7 +69,8 @@ fileprivate class StreamTranslationsHelper {
             audioSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
                 ZEE5PlayerManager.sharedInstance().getAudioLanguage()
             }))
-        } else {
+        }
+        else {
             audioSelectionView.gestureRecognizers?.forEach{ audioSelectionView.removeGestureRecognizer($0) }
         }
     }
@@ -94,14 +95,17 @@ fileprivate class StreamTranslationsHelper {
                 available = "MoviesConsumption_MovieDetails_AvailableInOneLanguage_Text".localized(hashMap: [
                     "count": "\(textTracks.count)"
                 ])
-            } else {
+            }
+            else {
                 available = "MoviesConsumption_MovieDetails_AvailableInMultipleLanguages_Text".localized(hashMap: [
                     "count": "\(textTracks.count)"
                 ])
             }
+            
             textSelectionView.selectedTrackLabel.isHidden = false
         
-        } else {
+        }
+        else {
             available = StylesHelper.localizedText(for: "Consumption_Subtitles_NoSubtitles_Text")
             textSelectionView.selectedTrackLabel.isHidden = true
         }
@@ -114,11 +118,10 @@ fileprivate class StreamTranslationsHelper {
             textSelectionView.addGestureRecognizer(UITapGestureRecognizer(closure: { (gesture) in
                 ZEE5PlayerManager.sharedInstance().showSubtitleActionSheet()
             }))
-        } else {
+        }
+        else {
             textSelectionView.gestureRecognizers?.forEach{ textSelectionView.removeGestureRecognizer($0) }
         }
-        
-        
     }
     
     func fill(view: TranslationTrackSelectionView, _ info: StreamTranslationInfo) {
