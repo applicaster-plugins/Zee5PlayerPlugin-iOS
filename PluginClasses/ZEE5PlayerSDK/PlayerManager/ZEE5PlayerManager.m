@@ -3154,7 +3154,7 @@ static ContentBuisnessType buisnessType;
         [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3803 platformCode:@"006" severityCode:0 andErrorMsg:@"Before TV Popup"];
             [self HybridViewOpen];
         }
-        if (_isLive) {
+        else{
              [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3803 platformCode:@"007" severityCode:0 andErrorMsg:@"Premium Playback Failure"];
         }
         
