@@ -376,6 +376,11 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.allAdsCompleted block:^(PKEvent * _Nonnull event) {
+        if ([[SingletonClass sharedManager]isAdIntegrate] == YES) {
+            [[ZEE5PlayerManager sharedInstance] onComplete];
+            [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
+            [engine cleanupVideoSesssion];
+        }
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
@@ -645,15 +650,16 @@ static Zee5PlayerPlugin *sharedManager = nil;
 -(void)registerEndEvent {
     
     AnalyticEngine *engine = [[AnalyticEngine alloc] init];
-    
     [self.player addObserver:self
                       events:@[PlayerEvent.ended]
                        block:^(PKEvent * _Nonnull event) {
         [[ReportingManager sharedInstance]deleteWatchHIstory];
         [engine  videoWatchDurationAnalytic];
-        [[ZEE5PlayerManager sharedInstance] onComplete];
-        [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
-        [engine cleanupVideoSesssion];
+        if (ZEE5PlayerSDK.getUserTypeEnum == Premium || [[SingletonClass sharedManager]isAdIntegrate] == NO) {
+            [[ZEE5PlayerManager sharedInstance] onComplete];
+            [engine updatePlayerStateWithState: ConvivaPlayerStateSTOPPED];
+            [engine cleanupVideoSesssion];
+        }
     }];
 }
 // Handle Player Errors

@@ -310,7 +310,7 @@ static ContentBuisnessType buisnessType;
 }
 
 -(void)LogoutDone{
-    //Here If any Method Called After Logout Then Use this Function
+    _isNeedToSubscribe = NO;
 }
 
 -(void)postContentIdShouldUpdateNotification:(NSString *)ContentId {
@@ -488,7 +488,6 @@ static ContentBuisnessType buisnessType;
     if (isHidden) {
         _customControlView.con_top_collectionView.constant = 5;
     }
-
 }
 
 -(void)hideCustomControls
@@ -651,33 +650,32 @@ static ContentBuisnessType buisnessType;
 
 -(void)WatchcreditControls:(NSInteger)CreditTime
 {
-    if ([self.ModelValues.watchCreditTime isEqualToString:@"NULL"]==false && self.currentItem.WatchCredit == NO && _CreditTimer == nil )
+    if ([self.ModelValues.watchCreditTime isEqualToString:@"NULL"]==false && self.currentItem.WatchCredit == NO && _CreditTimer == nil  && _isAutoplay == YES)
+    {
+        if ((ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _customControlView.watchcretidStackview.hidden == true)
         {
-        
-            if ((ZEE5PlayerSDK.getConsumpruionType == Episode || ZEE5PlayerSDK.getConsumpruionType == Original) && _customControlView.watchcretidStackview.hidden == true)
+            self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
+            
+            _customControlView.watchcretidStackview.hidden = NO;
+            _customControlView.watchcreditShowView.hidden = NO;
+            _customControlView.watchCreditVodView.hidden =NO;
+            _customControlView.collectionView.hidden =YES;
+        }
+        else
+        {
+            if ( _customControlView.watchcreditsTimeLbl.hidden==YES && self.customControlView.buttonFullScreen.selected == YES )
             {
-                 self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];   ///********* Timer Fired******
-        
+                self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];///********* Timer Fired******
+                
+                [self handleUpwardsGesture:nil];
+                _customControlView.watchcreditsTimeLbl.hidden = NO;
                 _customControlView.watchcretidStackview.hidden = NO;
-                _customControlView.watchcreditShowView.hidden = NO;
-                _customControlView.watchCreditVodView.hidden =NO;
-                _customControlView.collectionView.hidden =YES;
-            }
-            else
-            {
-                if ( _customControlView.watchcreditsTimeLbl.hidden==YES && self.customControlView.buttonFullScreen.selected == YES )
-                {
-                     self.CreditTimer=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];///********* Timer Fired******
-                    
-                     [self handleUpwardsGesture:nil];
-                    _customControlView.watchcreditsTimeLbl.hidden = NO;
-                    _customControlView.watchcretidStackview.hidden = NO;
-                    _customControlView.watchCreditBtnView.hidden = NO;
-                    _customControlView.watchcreditShowView.hidden = YES;
-                    _customControlView.watchCreditVodView.hidden =YES;
-                }
+                _customControlView.watchCreditBtnView.hidden = NO;
+                _customControlView.watchcreditShowView.hidden = YES;
+                _customControlView.watchCreditVodView.hidden =YES;
             }
         }
+    }
     
     
 }
@@ -760,6 +758,7 @@ static ContentBuisnessType buisnessType;
     }
     if (!_isAutoplay && !_customControlView.btnSkipNext.selected) {
         _videoCompleted = YES;
+        _customControlView.hidden = NO;
         _customControlView.buttonPlay.hidden = YES;
         _customControlView.buttonReplay.hidden = NO;
         [self hideUnHideTopView:NO];
@@ -1070,6 +1069,7 @@ static ContentBuisnessType buisnessType;
     _currentItem = nil;
     
      singleton.isAdStarted = NO;
+     _isAutoplay = NO;
      singleton.isAdPause = NO;
      singleton.isAdIntegrate = NO;
      singleton.isMidrolldone = NO;
@@ -1093,12 +1093,9 @@ static ContentBuisnessType buisnessType;
 -(void)replay
 {
     [[NetworkManager sharedInstance] cancelAllRequests];
-
     [self resetControls];
     [self showloaderOnPlayer];
-    
     [[AnalyticEngine shared] ReplayVideo];
-    
     [self playWithCurrentItem];
 }
 
@@ -1456,7 +1453,6 @@ static ContentBuisnessType buisnessType;
 -(void)showAllControls
 {
     _customControlView.buttonReplay.hidden = YES;
-    
     [self hideUnHideTopView:NO];
 }
 
@@ -3083,6 +3079,10 @@ static ContentBuisnessType buisnessType;
 - (ZeeUserPlaybackAction)playbackActionForCurrentUser {
     ContentBuisnessType businessType = buisnessType;
     BOOL isPremiumItem = businessType == premium || businessType == premium_downloadable;
+    if (!isPremiumItem && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
+         self.isNeedToSubscribe = NO;
+         return ZeeUserPlaybackActionPlay;
+    }
     
     if (ZEE5PlayerSDK.getUserTypeEnum == Premium || self.isLive || !isPremiumItem) {
         return ZeeUserPlaybackActionPlay;
