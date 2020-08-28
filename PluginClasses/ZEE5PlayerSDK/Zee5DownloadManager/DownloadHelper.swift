@@ -34,7 +34,6 @@ public class DownloadHelper: NSObject {
         if let index = item.hls_Url.range(of: "?")?.lowerBound {
             let substring = item.hls_Url[..<index]
             item.hls_Url = String(substring)
-            print(item.hls_Url)
         }
         data.hlsUrl = item.hls_Url
         data.drmKeyID = item.drm_key

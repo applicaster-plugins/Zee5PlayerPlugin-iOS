@@ -66,6 +66,7 @@ protocol OfflineVideoDurationDelegate: class {
     private let reachability = NetworkReachabilityManager()
     private let bundle = Bundle(for: OfflinePlayerController.self)
     public var ParentalPin = ""
+    public var playbackRate = "1X"
     public var Agerating = ""
     public var isparentalPin:Bool?
     
@@ -106,11 +107,12 @@ protocol OfflineVideoDurationDelegate: class {
         playerOffline.stop()
         playerOffline.destroy()
         ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
+        ZEE5PlayerManager.sharedInstance().isOfflineContent = false
         self.dismissViewController(withAnimation: true)
     }
     @IBAction func replayAction(_ sender: Any) {
         playerOffline.seek(to: 0)
-        playerOffline.play()
+        self.play()
         playerControlsHidden(isHidden: false)
        }
     
@@ -178,23 +180,22 @@ protocol OfflineVideoDurationDelegate: class {
         }
     }
     @objc func RemoveView(_ notification:NSNotification) {
-    let userPIn = notification.object as! String
+        let userPIn = notification.object as! String
         if parentalView != nil {
             if userPIn == ParentalPin {
-                 isparentalPin = false
+                isparentalPin = false
                 self.btnPlay.isSelected = true;
-                 playerOffline.play()
-                 parentalView.removeFromSuperview()
-               
+                self.play()
+                parentalView.removeFromSuperview()
             }else if userPIn == "ForgotPIN"{
                 NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidShowNotification, object: nil)
-                 parentalView.removeFromSuperview()
+                parentalView.removeFromSuperview()
             }
             else{
                 Zee5ToastView .showToastAboveKeyboard(withMessage: "Please Enter Correct Pin!")
             }
         }
-   
+        
     }
     func checkParentalSet() {
             if let data = Zee5UserSettingsManager.shared.getUserSettingsModal(){
@@ -315,7 +316,7 @@ extension OfflinePlayerController {
             self.playerOffline?.view = self.viewPlayer
             let mediaEntry = LocalAssetsManager.managerWithDefaultDataStore().createLocalMediaEntry(for: "OfflinePlayerId", localURL: url)
             self.playerOffline.prepare(MediaConfig(mediaEntry: mediaEntry))
-            self.playerOffline.play()
+            self.play()
             
             self.addPlayerObserver()
             
@@ -327,11 +328,11 @@ extension OfflinePlayerController {
         
         self.playerOffline.addObserver(self, event: PlayerEvent.canPlay) { [weak self] (event) in
             guard let self = self else { return }
-            self.playerOffline.play()
+            self.play()
             
             self.getOfflineVideoPlayedDuration()
             if self.isparentalPin  == true {
-                self.playerOffline.pause()
+                self.pause()
                 self.parentalControlshow()
             }else{
                 self.btnPlay.isSelected = true
@@ -350,8 +351,11 @@ extension OfflinePlayerController {
             self.sliderDuration.maximumValue = Float(self.playerOffline.duration)
             self.lblCurrentTime.text = self.getDuration(currentDuraton: Int(seconds), total: totalTime)
             self.lblTotalDuration.text = self.getDuration(currentDuraton: totalTime, total: totalTime)
-            
             self.videoPlayingDuration = Int(seconds)
+            if (ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline != "1X" && ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline != "" && self.playbackRate == "1X") {
+                self.playbackRate = ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline
+                self.btnPlay.isSelected = true
+            }
         }
         
         self.playerOffline.addObserver(self, event: PlayerEvent.tracksAvailable) { [weak self] (event) in
@@ -479,11 +483,11 @@ extension OfflinePlayerController {
     @IBAction func actionPlayPause(_ sender: UIButton) {
         if btnPlay.isSelected == true {
             btnPlay.isSelected = false
-            self.playerOffline.pause()
+            self.pause()
         }
         else {
             if isparentalPin == true {
-                 checkParentalSet()
+                checkParentalSet()
                 if isparentalPin == true {
                     self.parentalControlshow()
                     return
@@ -491,10 +495,20 @@ extension OfflinePlayerController {
                 }
             }
             btnPlay.isSelected = true
-            self.playerOffline.play()
+            self .play()
         }
     }
     
+    func play()  {
+        self.playbackRate = "1X"
+        ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
+        self.playerOffline.play()
+    }
+    func pause() {
+        self.playbackRate = "1X"
+        ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
+        self.playerOffline.pause()
+    }
     @IBAction func actionMoreClicked(_ sender: UIButton) {
         
         if let audioTracks = self.availableTracks?.audioTracks,

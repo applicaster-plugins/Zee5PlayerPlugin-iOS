@@ -1719,10 +1719,11 @@ static ContentBuisnessType buisnessType;
     
     if (self.isOfflineContent == true) {
         [self.offlinePlayer setRate:Value];
-           }
-        else {
-           [[Zee5PlayerPlugin sharedInstance].player setRate:Value];
-           }
+    }
+    else {
+        [[Zee5PlayerPlugin sharedInstance].player setRate:Value];
+         [self play];
+    }
     
 }
 
