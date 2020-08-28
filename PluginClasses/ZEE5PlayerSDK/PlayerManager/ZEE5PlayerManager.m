@@ -1365,15 +1365,18 @@ static ContentBuisnessType buisnessType;
         
         if (_LiveModelValues.title && _LiveModelValues.identifier != nil ){
             NSString *Title = [_LiveModelValues.title stringByReplacingOccurrencesOfString:@" " withString:@"-"].lowercaseString;
+            NSData *temp = [Title dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            Title = [[NSString alloc] initWithData:temp encoding:NSASCIIStringEncoding];
             zeeShareUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@",LiveShareUrl,Title,_LiveModelValues.identifier]];
         }
     } else
     {
         zeeShareUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",VodShareUrl,_ModelValues.web_Url]];
     }
-    
-    objectsToShare = @[zeeShareUrl];
-
+    if (zeeShareUrl == nil) {
+        return;
+    }
+     objectsToShare = @[zeeShareUrl];
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
     activityVC.popoverPresentationController.sourceView = self.parentPlaybackView;
