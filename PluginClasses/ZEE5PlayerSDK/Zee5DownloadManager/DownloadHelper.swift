@@ -31,7 +31,8 @@ public class DownloadHelper: NSObject {
     
     fileprivate func createVodData(with item: CurrentItem) -> (VODContentDetailsDataModel, String) {
         let data = VODContentDetailsDataModel()
-        if let index = item.hls_Url.range(of: "?")?.lowerBound {
+        let isDrm = item.isDRM
+        if let index = item.hls_Url.range(of: "?")?.lowerBound , isDrm{
             let substring = item.hls_Url[..<index]
             item.hls_Url = String(substring)
         }
@@ -131,16 +132,16 @@ public class DownloadHelper: NSObject {
             
             if let Voddata = data , let CustomeString = customData{
                 let zItem = self.setupContentForDownload(with: Voddata, customData:CustomeString)
-                           do {
-                               try Zee5DownloadManager.shared.renewExpiredContent(with: zItem)
-                               isExpired(true, nil)
-                           }
-                           catch {
-                               ZeeUtility.utility.console("Restore download Error: \(error.localizedDescription)")
-                               isExpired(false, error.localizedDescription)
-                            self.showToast("Restore download Error: \(error.localizedDescription)")
-                               
-                           }
+                do {
+                    try Zee5DownloadManager.shared.renewExpiredContent(with: zItem)
+                    isExpired(true, nil)
+                }
+                catch {
+                    ZeeUtility.utility.console("Restore download Error: \(error.localizedDescription)")
+                    isExpired(false, error.localizedDescription)
+                    self.showToast("Restore download Error: \(error.localizedDescription)")
+                    
+                }
             }
         }
     }

@@ -2411,12 +2411,11 @@ static ContentBuisnessType buisnessType;
             }];
         }
         else {
-            completionBlock(nil, nil);
+            [self getVodToken:^(NSString *vodToken) {
+                 completionBlock(vodModel, vodToken);
+            }];
         }
     } failureBlock:^(ZEE5SdkError *error) {
-//        if (error.zeeErrorCode == 101) {
-//            [self setContentUnavailable];
-//        }
         completionBlock(nil, nil);
     }];
 }
@@ -2483,7 +2482,7 @@ static ContentBuisnessType buisnessType;
             self.c3Ri = [result ValueForKeyWithNullChecking:@"c3.ri"];
             
             [self getDRMToken:self.ModelValues.identifier andDrmKey:self.ModelValues.drmKeyID withCompletionHandler:^(id  _Nullable result) {
-                _videoToken = [result valueForKey:@"drm"];
+                self.videoToken = [result valueForKey:@"drm"];
                 [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:[result valueForKey:@"drm"]];
                 
                 // Update video end point
@@ -3407,16 +3406,10 @@ static ContentBuisnessType buisnessType;
     if (self.currentItem == nil ) {
         return;
     }
-    
-//    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum == Premium == false) {
-//        [self pause];
-//        [self HybridViewOpen];
-//        return;
-//    }
     if (_isNeedToSubscribe && ZEE5PlayerSDK.getConsumpruionType != Trailer ) {
-         [self pause];
-         [self HybridViewOpen];
-          return;
+        [self pause];
+        [self HybridViewOpen];
+        return;
     }
     
     if (_isdownloadOverWifi == true && ZEE5PlayerSDK.Getconnectiontype == Mobile) {
@@ -3426,14 +3419,14 @@ static ContentBuisnessType buisnessType;
     
     if (self.isParentalControlOffline ==YES)
     {
-         [self pause];
-      [self parentalControlshow];
+        [self pause];
+        [self parentalControlshow];
         self.parentalControl = NO;
-      return;
+        return;
     }
     
-   [[AnalyticEngine shared]DownloadCTAClicked];
-   [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
+    [[AnalyticEngine shared]DownloadCTAClicked];
+    [[DownloadHelper shared] startDownloadItemWith:self.currentItem];
 }
 
 //MARK:- Telco User checked;
