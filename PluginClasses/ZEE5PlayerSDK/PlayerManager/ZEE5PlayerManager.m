@@ -1921,7 +1921,7 @@ static ContentBuisnessType buisnessType;
     [self hideLoaderOnPlayer];
     [self preparePopView];
     [[[UIApplication sharedApplication] keyWindow] addSubview:_devicePopView];
-    [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3602 platformCode:@"004" severityCode:1 andErrorMsg:@"Entitlement API Error -"];
+    [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:3602 platformCode:@"004" severityCode:1 andErrorMsg:@"Entitlement API Error"];
 }
 
 -(void)preparePopView
@@ -2008,7 +2008,7 @@ static ContentBuisnessType buisnessType;
         }else
         {
             [self ShowToastMessage:@"Incorrect PIN please try again"];
-               [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:@"008" severityCode:1 andErrorMsg:@"Parental Control Message -"];
+               [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:1001 platformCode:@"008" severityCode:1 andErrorMsg:@"Parental Control Message"];
         }
     }
     else
@@ -2654,6 +2654,7 @@ static ContentBuisnessType buisnessType;
     } failureBlock:^(ZEE5SdkError * _Nullable error)
      {
         failure(error);
+        [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:error.zeeErrorCode platformCode:@"002" severityCode:1 andErrorMsg:@"Ads API Failure"];
     }];
 }
 
@@ -2930,6 +2931,7 @@ static ContentBuisnessType buisnessType;
              @"contentAccessType" : self.buisnessType ?: NA,
              @"viewerAge" : NA,
              @"viewerGender": NA,
+             @"infoMessage": NA,
              
              @"autoplay": AutoPlay,  // "False"
              @"videoStartPoint": videoStartPoint,
