@@ -469,7 +469,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 -(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSString *)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg{
     
-    NSString *ErrorMSG = [NSString stringWithFormat:@"%@%ld",ErrorMsg,Code];
+    NSString *ErrorMSG = [NSString stringWithFormat:@"%@ - %ld",ErrorMsg,Code];
     NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%@",Platform];
     NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
     NSString *Message = [NSString stringWithFormat:@"%@",dict];
