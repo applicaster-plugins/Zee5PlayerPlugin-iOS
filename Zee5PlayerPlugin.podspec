@@ -15,36 +15,46 @@ Pod::Spec.new do |s|
   s.swift_version       = '5.1'
   s.libraries = 'z'
 
-  s.frameworks = 'UIKit','AVFoundation'
-  s.source_files  = 'PluginClasses/**/*.{h,m,swift,pch}'
-  s.resources = [ 'PluginClasses/**/*.{xib,storyboard,png,ttf,xcassets,json}']
+
+
+ s.subspec 'Core' do |c|
+       c.source_files  = 'PluginClasses/**/*.{h,m,swift,pch}'
+       c.resources = [ 'PluginClasses/**/*.{xib,storyboard,png,ttf,xcassets,json}']
+       c.frameworks = 'UIKit','AVFoundation'
+       c.dependency 'ZappPlugins'
+       c.dependency 'ApplicasterSDK'
+       c.dependency 'ZappSDK'
+       c.dependency 'PlayKit_IMA', '~> 1.8.0'
+       c.dependency 'Protobuf'
+       c.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.7'
+       c.dependency 'ConvivaSDK'
+       c.dependency 'ComScore'
+       c.dependency 'LotameDMP', '~> 5.0'
+       c.dependency 'Zee5CoreSDK'
+       c.dependency 'CarbonKit'
+       c.dependency 'DropDown'
+       c.dependency 'UICircularProgressRing'
+       c.dependency 'SDWebImage'
+       c.dependency 'DownloadToGo'
+       c.dependency 'SQLite.swift'
+       c.dependency 'ZeeHomeScreen'
+       c.dependency 'Zee5Advertisement'
+       c.vendored_frameworks = 'ConvivaSDK.framework'
+       c.static_framework = true
+
+
+  end
 
   s.xcconfig =  {
       'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES',
       'ENABLE_BITCODE' => 'YES',
       'SWIFT_VERSION' => '5.1',
       'OTHER_CFLAGS'  => '-fembed-bitcode',
-      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast"',
+      'OTHER_LDFLAGS' => '-objc -ObjC -lc++ -framework "GoogleCast" -framework "ConvivaSDK"',
+      'FRAMEWORK_SEARCH_PATHS' =>'$(inherited) "${PODS_ROOT}/ConvivaSDK/Frameworks"'
       'GCC_SYMBOLS_PRIVATE_EXTERN' => 'YES'
   }
 
-  s.dependency 'ZappPlugins'
-  s.dependency 'ApplicasterSDK'
-  s.dependency 'ZappSDK'
-  s.dependency 'PlayKit_IMA', '~> 1.8.0'
-  s.dependency 'Protobuf'
-  s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.7'
-  s.dependency 'ConvivaSDK'
-  s.dependency 'ComScore'
-  s.dependency 'LotameDMP', '~> 5.0'
-  s.dependency 'Zee5CoreSDK'
-  s.dependency 'CarbonKit'
-  s.dependency 'DropDown'
-  s.dependency 'UICircularProgressRing'
-  s.dependency 'SDWebImage'
-  s.dependency 'DownloadToGo'
-  s.dependency 'SQLite.swift'
-  s.dependency 'ZeeHomeScreen'
-  s.dependency 'Zee5Advertisement'
+  s.default_subspec = 'Core'
 
 end
