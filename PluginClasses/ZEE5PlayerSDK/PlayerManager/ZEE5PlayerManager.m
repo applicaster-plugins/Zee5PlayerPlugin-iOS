@@ -1776,6 +1776,11 @@ static ContentBuisnessType buisnessType;
 }
 -(void)GetAudioLanguage
 {
+    if (self.audioTracks == nil)
+    {
+        return;
+    }
+    
     self.selectedString = LANGUAGE;
 
     [self prepareCustomMenu];
@@ -1814,6 +1819,11 @@ static ContentBuisnessType buisnessType;
 
 -(void)showSubtitleActionSheet
 {
+    if (self.textTracks == nil)
+    {
+        return;
+    }
+    
     self.selectedString = SUBTITLES;
     [self prepareCustomMenu];
 
