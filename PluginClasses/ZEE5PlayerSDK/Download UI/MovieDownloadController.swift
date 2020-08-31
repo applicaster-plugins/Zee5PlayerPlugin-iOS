@@ -140,7 +140,6 @@ class MovieDownloadController: UIViewController {
                         }
                     }
                     catch {
-                        tmp.downloadState = .expired
                         ZeeUtility.utility.console("Error Video expiration: \(error.localizedDescription)")
                     }
                 }
