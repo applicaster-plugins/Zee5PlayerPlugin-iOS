@@ -352,6 +352,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
         [[ZEE5PlayerManager sharedInstance] startAd:event];
+        [weakSelf ConvivaErrorCode:event.error.code platformCode:@"010" severityCode:1 andErrorMsg:@"Ad Started"];
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
@@ -438,7 +439,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     }];
     
     [self.player addObserver: self event: AdEvent.error block:^(PKEvent * _Nonnull event) {
-        [self ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error - "];
+        [weakSelf ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error"];
     }];
 }
 
@@ -468,11 +469,16 @@ static Zee5PlayerPlugin *sharedManager = nil;
 
 
 -(void)ConvivaErrorCode:(NSInteger)Code platformCode:(NSString *)Platform severityCode:(NSInteger)Severity andErrorMsg:(NSString *)ErrorMsg{
-    
     NSString *ErrorMSG = [NSString stringWithFormat:@"%@ - %ld",ErrorMsg,Code];
+    if (Code == 0) {ErrorMSG = [NSString stringWithFormat:@"%@",ErrorMsg];}
     NSString *ErrorCode = [NSString stringWithFormat:@"CE_IOS_%@",Platform];
     NSDictionary *dict = @{@"errorCode":ErrorCode,@"errorMessage":ErrorMSG};
     NSString *Message = [NSString stringWithFormat:@"%@",dict];
+    NSDictionary *infodict = @{@"infoMessage" : Message};
+    [[AnalyticEngine shared]updateMetadataWith:infodict];
+    if ([Platform isEqualToString:@"010"]) {
+        return;
+    }
     [[AnalyticEngine shared]setupConvivvaErrorMsgWith:Message COSeverity:Severity];
 }
 
@@ -488,7 +494,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         if (event.error.code >= 7000)
         {
              weakSelf.SubtitleError = true;
-            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:1 andErrorMsg:@"Kaltura Playback Error -"];
+            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:1 andErrorMsg:@"Kaltura Playback Error"];
             [[ZEE5PlayerManager sharedInstance]handleHLSError];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
