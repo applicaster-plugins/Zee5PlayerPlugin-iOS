@@ -21,6 +21,8 @@ public class TouchableButton: UIButton {
     @objc public var valueChanged: ((_ value:Int, _ counter:Int) -> Void)? // set this to handle press of button
     @objc public var pressed: ((_ value:Bool) -> Void)?
     @objc public var singleTouch: ((_ value:Bool) -> Void)?
+    public var  singelton : SingletonClass?
+    
 
     fileprivate lazy var arrowLabel : UILabel = {
         let label = UILabel()
@@ -60,6 +62,7 @@ public class TouchableButton: UIButton {
         super.awakeFromNib()
         
         setTarget()
+        singelton = SingletonClass .sharedManager() as? SingletonClass
         
         self.containerView.addSubview(self.arrowLabel)
         self.arrowLabel.anchorToTop()
@@ -73,8 +76,9 @@ public class TouchableButton: UIButton {
     }
     
     @objc private func buttonTouched() {
-        let position = Int(Zee5PlayerPlugin.sharedInstance().getCurrentTime())
-        let duration = Int(Zee5PlayerPlugin.sharedInstance().getDuration())
+  
+        let position = singelton!.isofflinePlayer ? Int(singelton!.offlinePlayerCurrentTime) : Int(Zee5PlayerPlugin.sharedInstance().getCurrentTime())
+        let duration = singelton!.isofflinePlayer ? Int(singelton!.offlinePlayerDuration) :Int(Zee5PlayerPlugin.sharedInstance().getDuration())
         
         if touches != 1, self.checkTouch(duration: duration, position: position) {
             counter += TouchableButton.skipDuration
