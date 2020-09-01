@@ -2295,6 +2295,7 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnSubscribeButton                  /// Navigate To Subscription Page
 {
      [self stop];    ///*** Player Stop First Here***//
+     [[AnalyticEngine shared]CTAsWith:@"Player" ctaname:@"Subscribe CTA"];
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
@@ -2327,12 +2328,11 @@ static ContentBuisnessType buisnessType;
 {
      [self stop];    ///*** Player Stop First Here***//
     [self removeSubview];
+    [[AnalyticEngine shared]CTAsWith:@"Player" ctaname:@"Login CTA"];
     [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
             [self postReloadCurrentContentIdNotification];
-            //[self showLockedContentControls];
-            
         }
     }];
     

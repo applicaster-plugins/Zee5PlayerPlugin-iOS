@@ -36,6 +36,7 @@ class MovieDownloadController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.getDownloadedItems()
+         AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Movies")
     }
     @objc func updateDownloadState(_ notification: Notification) {
         if let data = notification.object as? [String: Any] {

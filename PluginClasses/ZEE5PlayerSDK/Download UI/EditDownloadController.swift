@@ -37,11 +37,13 @@ class EditDownloadController: UIViewController {
         self.btnSelectAll .setTitle(PlayerConstants.localizedKeys.Downloads_SubHeader_SelectAll_Link.rawValue.localized(), for: UIControl.State.normal)
 
         self.setupEditContentData()
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Edit CTA")
     }
     
     @IBAction func actionBack(_ sender: UIButton) {
         // Reset selected state
         for tmp in self.editItems { tmp.isSelected = false }
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Back CTA")
         self.navigationController?.popViewController(animated: false)
     }
     
@@ -49,10 +51,12 @@ class EditDownloadController: UIViewController {
         if self.btnSelectAll.isSelected == true {
             let ab = self.editItems.filter({ $0.isSelected == true })
             self.deleteItems(with: ab)
+            AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Delete")
         }
         else {
             for tmp in self.editItems { tmp.isSelected = true }
             self.tableView.reloadData()
+            AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Select All")
             self.btnSelectAll.isSelected.toggle()
         }
     }

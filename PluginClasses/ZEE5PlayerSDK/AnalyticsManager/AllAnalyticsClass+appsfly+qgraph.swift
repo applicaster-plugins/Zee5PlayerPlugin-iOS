@@ -380,7 +380,7 @@ extension AllAnalyticsClass{
       let parameter : Set = [
             Keys.PLAYER_CTAS.SOURCE ~>> source,
             Keys.PLAYER_CTAS.ELEMENT ~>> Element  == "" ? notAppplicable : Element,
-            Keys.PLAYER_CTAS.BUTTON_TYPE ~>> Element  == "" ? notAppplicable : Element,
+            Keys.PLAYER_CTAS.BUTTON_TYPE ~>> "Player",
                 ]
         analytics.track(Events.PLAYER_CTAS, trackedProperties: parameter)
     

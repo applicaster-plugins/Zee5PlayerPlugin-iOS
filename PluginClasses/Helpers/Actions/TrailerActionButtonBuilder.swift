@@ -40,7 +40,7 @@ class TrailerActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
         guard let player = Zee5PluggablePlayer.lastActiveInstance() else {
             return
         }
-        
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Watch Trailer")
         player.updateContent(self.trailerContentId)
     }
 }

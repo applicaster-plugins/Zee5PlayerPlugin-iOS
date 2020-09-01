@@ -37,6 +37,7 @@ class ShowsDownloadController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.getDownloadedItems()
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Shows")
     }
     
     @objc func refreshDownloadData() {

@@ -7,6 +7,7 @@
 
 import Foundation
 import Zee5CoreSDK
+import Alamofire
 
 extension AllAnalyticsClass
 {
@@ -1116,4 +1117,27 @@ public func VideoViewEvent()
                 ]
             analytics.track(Events.POP_UP_CTAS, trackedProperties: parameter)
       }
+    
+    
+    //MARK:- CTA's
+            
+    public func CTAs(with CTAType:String, CTaName:String)
+    {
+        let parameter : Set = [
+            Keys.CTAS.SOURCE ~>> source,
+            Keys.CTAS.ELEMENT ~>> CTaName,
+            Keys.CTAS.PAGE_NAME ~>> currently_tab,
+            Keys.CTAS.TAB_NAME ~>> currently_tab,
+            Keys.CTAS.CAROUSAL_NAME ~>> carousal_name,
+            Keys.CTAS.CAROUSAL_ID ~>> carousal_id,
+            Keys.CTAS.TRACKING_MODE ~>> Reachability.isConnectedToNetwork() ? "Online" : "Offline",
+            Keys.CTAS.POP_UP_TYPE ~>> "Native",
+            Keys.CTAS.HORIZONTAL_INDEX ~>> horizontal_index,
+            Keys.CTAS.VERTICAL_INDEX ~>> vertical_index,
+            Keys.CTAS.BUTTON_TYPE ~>> CTAType,
+            Keys.CTAS.POP_UP_NAME ~>> "",
+            Keys.CTAS.POP_UP_TYPE ~>> "",
+        ]
+        analytics.track(Events.CTAS, trackedProperties: parameter)
+    }
 }
