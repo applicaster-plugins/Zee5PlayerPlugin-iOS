@@ -65,19 +65,15 @@ fileprivate class PremiumHelper {
         self.playable = playable
         
         banner.imageView?.image = UIImage.init(named: "item_locked_image_view")
-
         if let bannerStyle = StylesHelper.style(for: "consumption_text_description") {
             banner.titleLabel?.textColor = bannerStyle.color
-            banner.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+            banner.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         }
-        
-        banner.titleLabel?.text = "Subscribe to premium today! Starting At RS 49"
-        
+        banner.titleLabel?.text = PlayerConstants.localizedKeys.MoviesConsumption_UpgradeMessageStrip_SubscribeToPremium_INTL_Text.rawValue.localized()
         banner.backgroundColor = UIColor(red: 0.14, green: 0.04, blue: 0.13, alpha: 1.0)
         
         banner.isHidden = false
         banner.heightConstraint.constant = banner.originalHeightValue
-
     }
     
     func updatePremiumBanner(_ banner: PremiumBanner) {
