@@ -198,6 +198,8 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
+    [self.customControlView refresh];
+    
     if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
         [self showLockedContentControls];
 

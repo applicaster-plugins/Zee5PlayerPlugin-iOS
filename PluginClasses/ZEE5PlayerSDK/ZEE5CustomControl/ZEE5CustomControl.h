@@ -97,6 +97,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)upNextAction:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *adultView;
 @property (weak, nonatomic) IBOutlet UIView *watchCreditVodView;
+
+- (void)refresh;
+
 @end
 
 NS_ASSUME_NONNULL_END

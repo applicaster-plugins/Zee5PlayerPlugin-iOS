@@ -137,6 +137,14 @@
     [self setWatchNowLable];
 }
 
+
+- (void)refresh
+{
+    if (self.related == nil) {
+        [self refreshRelatedList];
+    }
+}
+
 -(void)setWatchNowLable{
     NSString *Title;
     NSUInteger length;
