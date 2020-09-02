@@ -70,9 +70,13 @@ fileprivate class PremiumHelper {
             banner.titleLabel?.textColor = bannerStyle.color
             banner.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         }
-        
-        banner.titleLabel?.text = "Subscribe to premium today! Starting At RS 49"
-        
+        let location =  Zee5UserDefaultsManager.shared.getCountryDetailsFromCountryResponse()
+        if location.country == "IN" || location.country == "In"{
+              banner.titleLabel?.text = "Subscribe to premium today! Starting At RS 49"
+        }else{
+           banner.titleLabel?.text = PlayerConstants.localizedKeys.MoviesConsumption_UpgradeMessageStrip_SubscribeToPremium_INTL_Text.rawValue.localized()
+            banner.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        }
         banner.backgroundColor = UIColor(red: 0.14, green: 0.04, blue: 0.13, alpha: 1.0)
         
         banner.isHidden = false
