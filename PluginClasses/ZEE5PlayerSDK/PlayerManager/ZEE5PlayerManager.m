@@ -1075,6 +1075,9 @@ static ContentBuisnessType buisnessType;
      singleton.isAdPause = NO;
      singleton.isAdIntegrate = NO;
      singleton.isMidrolldone = NO;
+     singleton.isofflinePlayer = NO;
+     singleton.offlinePlayerCurrentTime = 0;
+     singleton.offlinePlayerDuration = 0;
     _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
@@ -1678,7 +1681,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)forward:(NSInteger)value
 {
-    NSLog(@" Seeked %ld",(long)value);
     NSInteger currentTime = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
     NSInteger seekValue = currentTime + value;
     if(seekValue > [[Zee5PlayerPlugin sharedInstance] getDuration])
