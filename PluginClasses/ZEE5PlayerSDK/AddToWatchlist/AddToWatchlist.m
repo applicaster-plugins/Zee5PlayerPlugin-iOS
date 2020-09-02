@@ -78,15 +78,9 @@ static AddToWatchlist *SharedInstance = nil;
 {
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest)
     {
-        [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"You must be logged in to perform this action."];
-        [[ZEE5PlayerDeeplinkManager new]NavigatetoLoginpageWithParam:@"Watclist" completion:^(BOOL IsSucceess) {
-            if (IsSucceess) {
-                [[ZEE5PlayerDeeplinkManager new]fetchUserdata];
-                [[ZEE5PlayerManager sharedInstance]postReloadCurrentContentIdNotification];
-                return ;
-            }
-        }];
         [[ZEE5PlayerManager sharedInstance]pause];
+        [[ZEE5PlayerManager sharedInstance]ShowToastMessage:@"You must be logged in to perform this action."];
+        [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
         return;
         // Send Guest User to Login Screen Here
     }
