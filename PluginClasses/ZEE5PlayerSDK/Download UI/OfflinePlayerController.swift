@@ -431,6 +431,10 @@ extension OfflinePlayerController {
         
         self.forwardOutlet.valueChanged = { (totaltouch, counter) in
             if totaltouch > 1 {
+                if self.isparentalPin == true {
+                    self.parentalControlshow()
+                    return
+                }
                 self.seekCounter = counter
                 if counter == 0 {
                     self.seekCounter = 10
@@ -446,6 +450,10 @@ extension OfflinePlayerController {
         
         self.rewindOutlet.valueChanged = { (totaltouch, counter) in
             if totaltouch > 1 {
+                if self.isparentalPin == true {
+                    self.parentalControlshow()
+                    return
+                }
                 self.seekCounter = counter
                 if counter == 0 {
                     self.seekCounter = 10
@@ -484,6 +492,11 @@ extension OfflinePlayerController {
 extension OfflinePlayerController {
 
     @IBAction func actionSlider(_ sender: UISlider) {
+        if isparentalPin == true{
+            self.sliderDuration.setValue(Float(videoPlayingDuration), animated: true)
+            self.parentalControlshow()
+            return
+        }
         self.isSeekStarted = true
         self.playerOffline.seek(to: TimeInterval(sender.value))
         
@@ -529,7 +542,10 @@ extension OfflinePlayerController {
     }
     
     @IBAction func actionMoreClicked(_ sender: UIButton) {
-        
+        if isparentalPin == true{
+            self.parentalControlshow()
+            return
+        }
         if let audioTracks = self.availableTracks?.audioTracks,
             let textTracks = self.availableTracks?.textTracks {
             ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio: audioTracks, text: textTracks, with: self.playerOffline)
