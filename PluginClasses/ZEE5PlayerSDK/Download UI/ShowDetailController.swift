@@ -54,6 +54,7 @@ class ShowDetailController: UIViewController {
         self.isAddNewEpisodeView(false)
         
         self.getAllEpisodes(for: self.selectedShow)
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Show Detail")
     }
     
     @objc func updateDownloadState(_ notification: Notification) {
@@ -147,6 +148,7 @@ class ShowDetailController: UIViewController {
     
     @objc func actionBack() {
         self.navigationController?.popViewController(animated: true)
+         AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Back CTA")
     }
     
     @IBAction func actionEdit(_ sender: UIButton) {

@@ -33,6 +33,7 @@ class VideoDownloadController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
            self.getDownloadedItems()
+         AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Videos")
        }
     
     @objc func updateDownloadState(_ notification: Notification) {

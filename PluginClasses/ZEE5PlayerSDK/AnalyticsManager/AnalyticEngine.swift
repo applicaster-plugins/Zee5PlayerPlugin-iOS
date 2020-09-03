@@ -254,6 +254,10 @@ public class AnalyticEngine: NSObject {
        {
         AllAnalyticsClass.shared.PlayerBtnPressed(with: Element)
        }
+    @objc public func CTAs (with Ctatype: String , ctaname:String)
+    {
+        AllAnalyticsClass.shared.CTAs(with: Ctatype, CTaName: ctaname)
+    }
     
     @objc public func screenViewEvent()
        {

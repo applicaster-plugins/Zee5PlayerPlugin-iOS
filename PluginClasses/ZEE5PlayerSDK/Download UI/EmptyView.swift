@@ -25,6 +25,7 @@ class EmptyView: UIView {
     
     @IBAction func actionBrowseDownload(_ sender: Any) {
         
+        AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Browse to download")
         ZEE5PlayerDeeplinkManager.sharedMethod.NavigatetoHomeScreen()
     }
 }

@@ -2304,6 +2304,7 @@ static ContentBuisnessType buisnessType;
 -(void)tapOnSubscribeButton                  /// Navigate To Subscription Page
 {
      [self stop];    ///*** Player Stop First Here***//
+     [[AnalyticEngine shared]CTAsWith:@"Player" ctaname:@"Subscribe CTA"];
     
     if (_isLive==false){
         if (_ModelValues.isBeforeTv == true) {
