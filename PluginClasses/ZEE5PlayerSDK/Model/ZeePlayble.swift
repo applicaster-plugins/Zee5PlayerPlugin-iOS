@@ -43,6 +43,9 @@ class ZeePlayable {
     public var assetSubtype: String? {
         return self.extensions[ExtensionsKey.assetSubtype] as? String
     }
+    public var isDrm: Int? {
+        return self.extensions[ExtensionsKey.isDrm] as? Int
+    }
     
     public var consumptionType: ConsumptionFeedType {
         guard let type = self.assetType else {

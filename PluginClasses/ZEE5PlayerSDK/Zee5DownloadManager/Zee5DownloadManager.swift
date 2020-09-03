@@ -667,7 +667,7 @@ public class Zee5DownloadManager {
      - Returns: The video configuration item `Z5VideoConfig`.
      */
     public func getVideoBitrates(contentId: String, contentUrl: String, completion: @escaping (Z5VideoConfig?) -> Void) {
-        let url = "https://d8dhyl5mma.execute-api.ap-south-1.amazonaws.com/Staging/workflow"
+        let url = "https://contentbitrates.zee5.com/v1/workflow"
         guard let serverUrl = URL(string: url) else { return }
         let paramDict = [
             "manifestUrl": contentUrl,

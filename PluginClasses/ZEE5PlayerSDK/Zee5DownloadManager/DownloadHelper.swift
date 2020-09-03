@@ -31,11 +31,6 @@ public class DownloadHelper: NSObject {
     
     fileprivate func createVodData(with item: CurrentItem) -> (VODContentDetailsDataModel, String) {
         let data = VODContentDetailsDataModel()
-        let isDrm = item.isDRM
-        if let index = item.hls_Url.range(of: "?")?.lowerBound , isDrm{
-            let substring = item.hls_Url[..<index]
-            item.hls_Url = String(substring)
-        }
         data.hlsUrl = item.hls_Url
         data.drmKeyID = item.drm_key
         data.subtitleLanguages = item.subTitles
