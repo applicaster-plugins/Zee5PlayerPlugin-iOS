@@ -183,6 +183,8 @@ fileprivate class BasePlaybackSession: PlaybackSession {
         ZEE5PlayerSDK.initialize(with: User.shared.getUserId())
         
         self.baseDelegate.sessionPlay()
+        
+        AnalyticEngine.shared.screenViewEvent()
     }
     
     func playable() -> ZeePlayable? {
