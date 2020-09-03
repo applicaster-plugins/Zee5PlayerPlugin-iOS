@@ -188,8 +188,7 @@ static NSString *touchConvivaGatewayUrl = @"https://zee.testonly.conviva.com";
 
 + (NSString *)getSDKVersion
 {
-    NSDictionary *infoDictionary = [[NSBundle bundleForClass:self] infoDictionary];
-    NSString *majorVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    NSString *majorVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     return [NSString stringWithFormat:@"%@", majorVersion];
 }
 

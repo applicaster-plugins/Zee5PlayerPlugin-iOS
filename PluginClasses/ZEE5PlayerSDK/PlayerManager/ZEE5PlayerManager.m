@@ -2519,6 +2519,7 @@ static ContentBuisnessType buisnessType;
     }
     else {
         [self getVodToken:^(NSString *vodToken) {
+            self.videoToken = vodToken;
             [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
         }];
     }
@@ -2931,6 +2932,7 @@ static ContentBuisnessType buisnessType;
              @"season": _isLive ? NA:_ModelValues.SeasonId ?:NA,
              @"show": _isLive ? _LiveModelValues.showOriginalTitle ?:NA:_ModelValues.showOriginalTitle ?:NA,
              @"playerVersion": buildNumber,
+             @"appVersion": ZEE5PlayerSDK.getSDKVersion,
              
              @"carrier": networkName?: NA,
              @"connectionType": connectionType?: NA,
@@ -2967,6 +2969,9 @@ static ContentBuisnessType buisnessType;
     NSString * contentUrl;
     if (_ModelValues.isDRM){
         contentUrl = [self.KcdnUrl stringByAppendingString:_ModelValues.hlsUrl];
+        if (![_c3Ri isKindOfClass:[NSNull class]] || _c3Ri != nil || ![_c3Ri  isEqual: @""]) {
+            contentUrl  = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
+        }
     }else{
         contentUrl = [_ModelValues.hlsUrl stringByAppendingString:_videoToken];
     }
