@@ -26,7 +26,7 @@ class ActionBarHelper {
         
         builders.append(CastActionButtonBuilder.self)
 
-        if ExtensionsHelper.isDownloadable(consumptionFeedType, buisnessType) {
+        if ExtensionsHelper.isDownloadable(consumptionFeedType, buisnessType) && (playable.isDrm == 1) {
             builders.append(DownloadActionButtonBuilder.self)
         }
         

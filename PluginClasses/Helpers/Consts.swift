@@ -72,6 +72,7 @@ public struct ExtensionsKey {
     static let contentId = "id"
     static let tvShowDetails = "tvshow_details"
     static let trailers = "trailers"
+    static let isDrm = "is_drm"
 }
 
 public struct ItemTag {
