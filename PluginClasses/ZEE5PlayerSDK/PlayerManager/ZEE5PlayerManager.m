@@ -2262,7 +2262,12 @@ static ContentBuisnessType buisnessType;
         }
     }
     else if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden) {
-         _isRsVodUser = NO;
+        _isRsVodUser = NO;
+        _isNeedToSubscribe = [self cheackSubscription];
+        if (_customControlView.adultView.hidden == NO) {
+            _customControlView.adultView.hidden = YES;
+            [self playWithCurrentItem];
+        }
         [self play];
     }
     else {
@@ -2329,14 +2334,13 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnLoginButton                      /// Navigate To Login Screen
 {
-     [self stop];    ///*** Player Stop First Here***//
+    [self pause];    ///*** Player Stop First Here***//
     [self removeSubview];
+    self.isNeedToSubscribe = YES;
+    [self addHybridViewNotificationObservers];
     [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-            [self postReloadCurrentContentIdNotification];
-            //[self showLockedContentControls];
-            
         }
     }];
     
@@ -3131,6 +3135,14 @@ static ContentBuisnessType buisnessType;
     
     return ZeeUserPlaybackActionIgnore;
 }
+-(BOOL)cheackSubscription{
+    ContentBuisnessType businessType = buisnessType;
+    BOOL isPremiumItem = businessType == premium || businessType == premium_downloadable;
+    if (!isPremiumItem && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
+      return NO;
+    }
+    return YES;
+}
 
 - (void)perfromPlaybackActionForCurrentUserSubscription {
     switch ([self playbackActionForCurrentUser]) {
@@ -3410,12 +3422,7 @@ static ContentBuisnessType buisnessType;
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         
         [self pause];
-        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
-            if (isSuccess) {
-                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-                [self postReloadCurrentContentIdNotification];
-            }
-        }];
+        [self tapOnLoginButton];
         return;
     }
     
