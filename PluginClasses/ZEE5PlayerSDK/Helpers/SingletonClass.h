@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isAdStarted;
 @property(nonatomic) BOOL isAdIntegrate;
 @property(nonatomic) BOOL isMidrolldone;
+@property(nonatomic) BOOL isofflinePlayer;
+@property(nonatomic) NSTimeInterval offlinePlayerDuration;
+@property(nonatomic) NSTimeInterval offlinePlayerCurrentTime;
 
 + (id)sharedManager;
 

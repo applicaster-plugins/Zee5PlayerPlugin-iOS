@@ -54,6 +54,7 @@ import Zee5CoreSDK
         case Downloads_SubHeader_SelectedItemToDelete_Text = "Downloads_SubHeader_SelectedItemToDelete_Text"
         case Downloads_CTA_DownloadMoreEpisodes_Button = "Downloads_CTA_DownloadMoreEpisodes_Button"
         case Downloads_ListItemDetails_Paused_Text = "Downloads_ListItemDetails_Paused_Text"
+        case MoviesConsumption_UpgradeMessageStrip_SubscribeToPremium_INTL_Text = "MoviesConsumption_UpgradeMessageStrip_SubscribeToPremium_INTL_Text"
 
     }
     

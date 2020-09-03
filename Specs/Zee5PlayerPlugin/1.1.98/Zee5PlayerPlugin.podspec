@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Zee5PlayerPlugin"
-  s.version          = '1.1.100'
+  s.version          = '1.1.98'
   s.summary          = "Zee5PlayerPlugin"
   s.description      = <<-DESC
                         Zee5PlayerPlugin.

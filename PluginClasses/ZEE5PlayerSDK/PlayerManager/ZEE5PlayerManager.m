@@ -198,6 +198,8 @@ static ContentBuisnessType buisnessType;
         return;
     }
     
+    [self.customControlView refresh];
+    
     if ([self.ModelValues.ageRating isEqualToString:@"A"] && ZEE5PlayerSDK.getUserTypeEnum == Guest  && ZEE5PlayerSDK.getConsumpruionType == Trailer == false) {
         [self showLockedContentControls];
 
@@ -1073,6 +1075,9 @@ static ContentBuisnessType buisnessType;
      singleton.isAdPause = NO;
      singleton.isAdIntegrate = NO;
      singleton.isMidrolldone = NO;
+     singleton.isofflinePlayer = NO;
+     singleton.offlinePlayerCurrentTime = 0;
+     singleton.offlinePlayerDuration = 0;
     _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
@@ -1676,7 +1681,6 @@ static ContentBuisnessType buisnessType;
 
 -(void)forward:(NSInteger)value
 {
-    NSLog(@" Seeked %ld",(long)value);
     NSInteger currentTime = [[Zee5PlayerPlugin sharedInstance] getCurrentTime];
     NSInteger seekValue = currentTime + value;
     if(seekValue > [[Zee5PlayerPlugin sharedInstance] getDuration])
@@ -2258,7 +2262,12 @@ static ContentBuisnessType buisnessType;
         }
     }
     else if ([Zee5PlayerPlugin sharedInstance].player.currentState != PlayerStateEnded && _customControlView.trailerEndView.hidden) {
-         _isRsVodUser = NO;
+        _isRsVodUser = NO;
+        _isNeedToSubscribe = [self cheackSubscription];
+        if (_customControlView.adultView.hidden == NO) {
+            _customControlView.adultView.hidden = YES;
+            [self playWithCurrentItem];
+        }
         [self play];
     }
     else {
@@ -2326,13 +2335,13 @@ static ContentBuisnessType buisnessType;
 }
 -(void)tapOnLoginButton                      /// Navigate To Login Screen
 {
-     [self stop];    ///*** Player Stop First Here***//
+    [self pause];    ///*** Player Stop First Here***//
     [self removeSubview];
-    [[AnalyticEngine shared]CTAsWith:@"Player" ctaname:@"Login CTA"];
+    self.isNeedToSubscribe = YES;
+    [self addHybridViewNotificationObservers];
     [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-            [self postReloadCurrentContentIdNotification];
         }
     }];
     
@@ -2511,6 +2520,7 @@ static ContentBuisnessType buisnessType;
     }
     else {
         [self getVodToken:^(NSString *vodToken) {
+            self.videoToken = vodToken;
             [self initilizePlayerWithVODContent:self.ModelValues andDRMToken:vodToken];
         }];
     }
@@ -2923,6 +2933,7 @@ static ContentBuisnessType buisnessType;
              @"season": _isLive ? NA:_ModelValues.SeasonId ?:NA,
              @"show": _isLive ? _LiveModelValues.showOriginalTitle ?:NA:_ModelValues.showOriginalTitle ?:NA,
              @"playerVersion": buildNumber,
+             @"appVersion": ZEE5PlayerSDK.getSDKVersion,
              
              @"carrier": networkName?: NA,
              @"connectionType": connectionType?: NA,
@@ -2959,6 +2970,9 @@ static ContentBuisnessType buisnessType;
     NSString * contentUrl;
     if (_ModelValues.isDRM){
         contentUrl = [self.KcdnUrl stringByAppendingString:_ModelValues.hlsUrl];
+        if (![_c3Ri isKindOfClass:[NSNull class]] || _c3Ri != nil || ![_c3Ri  isEqual: @""]) {
+            contentUrl  = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
+        }
     }else{
         contentUrl = [_ModelValues.hlsUrl stringByAppendingString:_videoToken];
     }
@@ -3126,6 +3140,14 @@ static ContentBuisnessType buisnessType;
     }
     
     return ZeeUserPlaybackActionIgnore;
+}
+-(BOOL)cheackSubscription{
+    ContentBuisnessType businessType = buisnessType;
+    BOOL isPremiumItem = businessType == premium || businessType == premium_downloadable;
+    if (!isPremiumItem && ZEE5PlayerSDK.getConsumpruionType != Trailer) {
+      return NO;
+    }
+    return YES;
 }
 
 - (void)perfromPlaybackActionForCurrentUserSubscription {
@@ -3406,12 +3428,7 @@ static ContentBuisnessType buisnessType;
     if (ZEE5PlayerSDK.getUserTypeEnum == Guest) {
         
         [self pause];
-        [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Download" completion:^(BOOL isSuccess) {
-            if (isSuccess) {
-                [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
-                [self postReloadCurrentContentIdNotification];
-            }
-        }];
+        [self tapOnLoginButton];
         return;
     }
     

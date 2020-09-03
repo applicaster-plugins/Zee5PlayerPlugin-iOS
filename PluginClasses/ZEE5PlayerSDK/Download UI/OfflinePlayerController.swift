@@ -32,6 +32,8 @@ protocol OfflineVideoDurationDelegate: class {
     @IBOutlet weak var viewPlayer: PlayerView!
     @IBOutlet weak var parentalView: ParentalView!
     
+    @IBOutlet weak var rewindOutlet: RewindButton!
+    @IBOutlet weak var forwardOutlet: ForwardButton!
     @IBOutlet weak var lblContentTitle: UILabel! {
         didSet {
             self.lblContentTitle.text = self.selectedVideo?.title
@@ -57,18 +59,19 @@ protocol OfflineVideoDurationDelegate: class {
     
     public var selectedUrl: URL?
     public var selectedVideo: DownloadItem?
-    private var playerOffline: Player!
+    public var playerOffline: Player!
     private var isControlsVisible = false
     private var isSeekStarted = false
-    private var forwardButton: TouchableButton!
-    private var rewindButton: TouchableButton!
     private var videoPlayingDuration = 0
     private let reachability = NetworkReachabilityManager()
     private let bundle = Bundle(for: OfflinePlayerController.self)
     public var ParentalPin = ""
     public var playbackRate = "1X"
     public var Agerating = ""
+    public var seekCounter = 0
     public var isparentalPin:Bool?
+    public var singleton : SingletonClass?
+    
     
     private var availableTracks: PKTracks? {
         didSet {
@@ -79,14 +82,14 @@ protocol OfflineVideoDurationDelegate: class {
     override public func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        singleton = SingletonClass .sharedManager() as? SingletonClass
+        UIFont .jbs_registerFont(withFilenameString: "ZEE5_Player", bundle: bundle)
         self.NotificationObserver()
         self.checkParentalSet()
         self.replayBtnOutlet.isHidden = true;
         
         let value = UIInterfaceOrientation.landscapeRight.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
-        
-       UIFont .jbs_registerFont(withFilenameString: "ZEE5_Player.ttf", bundle: bundle)
         self.configurePlayer(with: self.selectedUrl)
     }
     
@@ -106,9 +109,12 @@ protocol OfflineVideoDurationDelegate: class {
     @IBAction func actionBack(_ sender: Any) {
         playerOffline.stop()
         playerOffline.destroy()
+        self.singleton?.isofflinePlayer = false
         ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
         ZEE5PlayerManager.sharedInstance().isOfflineContent = false
         self.dismissViewController(withAnimation: true)
+        self.singleton?.offlinePlayerCurrentTime = 0
+        self.singleton?.offlinePlayerDuration = 0
     }
     @IBAction func replayAction(_ sender: Any) {
         playerOffline.seek(to: 0)
@@ -352,6 +358,8 @@ extension OfflinePlayerController {
             self.lblCurrentTime.text = self.getDuration(currentDuraton: Int(seconds), total: totalTime)
             self.lblTotalDuration.text = self.getDuration(currentDuraton: totalTime, total: totalTime)
             self.videoPlayingDuration = Int(seconds)
+            self.singleton?.offlinePlayerCurrentTime = self.getCurrentTime()
+            self.singleton?.offlinePlayerDuration = self.getDuration()
             if (ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline != "1X" && ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline != "" && self.playbackRate == "1X") {
                 self.playbackRate = ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline
                 self.btnPlay.isSelected = true
@@ -368,6 +376,7 @@ extension OfflinePlayerController {
             self.playerControlsHidden(isHidden: true)
         }
         self.playerOffline.addObserver(self, event: PlayerEvent.playing) {[weak self] (event) in
+            self?.singleton?.isofflinePlayer = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
                 if self?.viewPlayer != nil{
                 self?.hideUnHindeTopView(isHidden: true)
@@ -413,42 +422,52 @@ extension OfflinePlayerController {
 extension OfflinePlayerController {
     
     func forwardAndRewindActions() {
-        let value: TimeInterval = 10
         weak var weakSelf = self
-        let frame = UIScreen .main.bounds
-    
-//        self.rewindButton .resetViews()
-//        self.forwardButton.frame = .init(x: frame.size.height - 200, y: 0, width: 200, height: frame.size.width)
-//        self.viewPlayer.addSubview(self.forwardButton)
-//
-//        self.forwardButton.singleTouch = { touch in
-//            weakSelf?.forwardButton.resetViews()
-//            weakSelf?.playerViewTapped(UITapGestureRecognizer())
-//        }
-//
-//        self.forwardButton.pressed = {pressed in
-//            weakSelf?.forwardContent(with: value)
-//        }
-//        self.rewindButton.frame = .init(x: 0, y: 0, width: 200, height: self.viewPlayer.frame.height)
-//        self.viewPlayer.addSubview(self.rewindButton)
-//
-//        self.rewindButton.singleTouch = { touch in
-//            weakSelf?.rewindButton.resetViews()
-//            weakSelf?.playerViewTapped(UITapGestureRecognizer())
-//        }
-//
-//        self.rewindButton.pressed = {pressed in
-//            weakSelf?.rewindContent(with: value)
-//        }
-
-        ///
-        self.bringControlsToTop()
+        
+        self.forwardOutlet.singleTouch = { touch in
+            weakSelf?.forwardOutlet.resetViews()
+            weakSelf?.playerViewTapped(UITapGestureRecognizer())
+        }
+        
+        self.forwardOutlet.valueChanged = { (totaltouch, counter) in
+            if totaltouch > 1 {
+                if self.isparentalPin == true {
+                    self.parentalControlshow()
+                    return
+                }
+                self.seekCounter = counter
+                if counter == 0 {
+                    self.seekCounter = 10
+                }
+                weakSelf?.forwardContent(with: TimeInterval(self.seekCounter))
+            }
+        }
+        
+        self.rewindOutlet.singleTouch = { touch in
+            weakSelf?.rewindOutlet.resetViews()
+            weakSelf?.playerViewTapped(UITapGestureRecognizer())
+        }
+        
+        self.rewindOutlet.valueChanged = { (totaltouch, counter) in
+            if totaltouch > 1 {
+                if self.isparentalPin == true {
+                    self.parentalControlshow()
+                    return
+                }
+                self.seekCounter = counter
+                if counter == 0 {
+                    self.seekCounter = 10
+                }
+                weakSelf?.rewindContent(with: TimeInterval(self.seekCounter))
+            }
+        }
     }
     
     func forwardContent(with value: TimeInterval) {
         let currentTime = self.playerOffline.currentTime
         var seekValue = currentTime + value
         seekValue = seekValue > self.playerOffline.duration ? self.playerOffline.duration : seekValue
+        self.seekCounter = 0
         self.playerOffline.seek(to: seekValue)
     }
     
@@ -456,6 +475,7 @@ extension OfflinePlayerController {
         let currentTime = self.playerOffline.currentTime
         var seekValue = currentTime - value
         seekValue = seekValue < 0 ? 0 : seekValue
+        self.seekCounter = 0
         self.playerOffline.seek(to: seekValue)
     }
     
@@ -472,6 +492,11 @@ extension OfflinePlayerController {
 extension OfflinePlayerController {
 
     @IBAction func actionSlider(_ sender: UISlider) {
+        if isparentalPin == true{
+            self.sliderDuration.setValue(Float(videoPlayingDuration), animated: true)
+            self.parentalControlshow()
+            return
+        }
         self.isSeekStarted = true
         self.playerOffline.seek(to: TimeInterval(sender.value))
         
@@ -509,8 +534,18 @@ extension OfflinePlayerController {
         ZEE5PlayerManager.sharedInstance().selectedplaybackRateOffline = "1X"
         self.playerOffline.pause()
     }
+   public  func getDuration() -> TimeInterval {
+        return self.playerOffline.duration
+    }
+   public  func getCurrentTime() -> TimeInterval {
+    return self.playerOffline.currentTime
+    }
+    
     @IBAction func actionMoreClicked(_ sender: UIButton) {
-        
+        if isparentalPin == true{
+            self.parentalControlshow()
+            return
+        }
         if let audioTracks = self.availableTracks?.audioTracks,
             let textTracks = self.availableTracks?.textTracks {
             ZEE5PlayerManager.sharedInstance().moreOption(forOfflineContentAudio: audioTracks, text: textTracks, with: self.playerOffline)

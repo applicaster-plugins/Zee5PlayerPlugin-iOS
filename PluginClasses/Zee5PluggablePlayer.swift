@@ -149,6 +149,8 @@ public class Zee5PluggablePlayer: APPlugablePlayerBase, ZPAdapterProtocol {
             let topmostViewController = rootViewController.topmostModal() else {
                 return
         }
+        
+        AnalyticEngine.shared.screenViewEvent()
 
         let animated = configuration?.animated ?? true
         
