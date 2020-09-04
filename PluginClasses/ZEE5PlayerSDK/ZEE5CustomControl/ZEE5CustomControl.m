@@ -307,6 +307,7 @@
 }
 
 - (IBAction)loginNow:(UIButton *)sender {
+    [[AnalyticEngine shared]CTAsWith:@"Player" ctaname:@"Login CTA"];
     [[ZEE5PlayerManager sharedInstance]tapOnLoginButton];
 }
 
