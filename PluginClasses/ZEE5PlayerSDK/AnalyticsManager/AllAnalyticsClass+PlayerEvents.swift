@@ -895,7 +895,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_START.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_START.PROVIDER_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_START.DOWNLOAD_VIDEOS_QUALITY ~>> Quality == "" ? notAppplicable:Quality,
-           Keys.DOWNLOAD_START.CONTENT_SPECIFICATION ~>> "",
+           Keys.DOWNLOAD_START.CONTENT_SPECIFICATION ~>> notAppplicable,
            Keys.DOWNLOAD_START.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_START.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            ]
@@ -986,7 +986,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_DELETE.PROVIDER_ID ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.PROVIDER_NAME ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.DOWNLOAD_VIDEOS_QUALITY ~>> "",
-           Keys.DOWNLOAD_DELETE.CONTENT_SPECIFICATION ~>> "",
+           Keys.DOWNLOAD_DELETE.CONTENT_SPECIFICATION ~>> notAppplicable,
            Keys.DOWNLOAD_DELETE.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_DELETE.TOP_CATEGORY ~>> AssestSubtytpe == "" ? notAppplicable:AssestSubtytpe,
            ]
