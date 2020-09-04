@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isAdIntegrate;
 @property(nonatomic) BOOL isMidrolldone;
 @property(nonatomic) BOOL isofflinePlayer;
+@property(nonatomic) NSInteger hlsErrorCount;
 @property(nonatomic) NSTimeInterval offlinePlayerDuration;
 @property(nonatomic) NSTimeInterval offlinePlayerCurrentTime;
 

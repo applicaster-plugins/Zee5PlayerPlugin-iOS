@@ -12,7 +12,7 @@
 #import <Zee5PlayerPlugin/Zee5PlayerPlugin-Swift.h>
 
 @implementation SingletonClass
-@synthesize ViewsArray,isAdPause,isAdStarted,isAdIntegrate,isofflinePlayer,isMidrolldone,offlinePlayerDuration,offlinePlayerCurrentTime;
+@synthesize ViewsArray,isAdPause,isAdStarted,isAdIntegrate,isofflinePlayer,isMidrolldone,offlinePlayerDuration,offlinePlayerCurrentTime,hlsErrorCount;
 
 + (id)sharedManager {
 
@@ -33,6 +33,7 @@
       isofflinePlayer = NO;
       offlinePlayerCurrentTime = 0;
       offlinePlayerDuration = 0;
+      hlsErrorCount = 0;
   }
   return self;
 }

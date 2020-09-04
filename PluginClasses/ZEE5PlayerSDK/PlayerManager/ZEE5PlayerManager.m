@@ -789,9 +789,15 @@ static ContentBuisnessType buisnessType;
 
 -(void)handleHLSError
 {
-    
     [self getTokenND:^(NSString *token)
     {
+        singleton.hlsErrorCount = singleton.hlsErrorCount + 1;
+        [[Zee5PlayerPlugin sharedInstance].player destroy];
+        if (singleton.hlsErrorCount == 2) {
+            [self DestroyPlayer];
+            [[ZEE5PlayerManager sharedInstance]ShowToastMessage:[NSString stringWithFormat:@"%@",[[PlayerConstants shared] detailApiFailed]]];
+            return;
+        }
         NSArray *aryStrings = [self.currentItem.hls_Url componentsSeparatedByString:@".m3u8"];
         if ([aryStrings count] > 1)
         {
@@ -1058,7 +1064,6 @@ static ContentBuisnessType buisnessType;
     self.customControlView.buttonPlay.selected = NO;
     [[Zee5PlayerPlugin sharedInstance].player pause];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-
 }
 
 -(void)DestroyPlayer{
@@ -1078,6 +1083,7 @@ static ContentBuisnessType buisnessType;
      singleton.isofflinePlayer = NO;
      singleton.offlinePlayerCurrentTime = 0;
      singleton.offlinePlayerDuration = 0;
+     singleton.hlsErrorCount = 0 ;
     _watchCreditsTime = 0 ;
     _textTracks = nil;
     _offlineTextTracks = nil;
@@ -2853,7 +2859,7 @@ static ContentBuisnessType buisnessType;
              @"assetName": assetName ?: @"NA",
              @"applicationName": Conviva_Application_Name,
              @"streamType": stremType,
-             @"streamUrl": _isLive ? [self getLiveUrl]: [self getVodUrl],
+             @"streamUrl": _isLive ? [self getLiveUrl] ?: @"NA": [self getVodUrl] ?:@"NA",
              
              @"isLive": isLive,
              @"playerName": Conviva_Player_name,
@@ -2971,7 +2977,7 @@ static ContentBuisnessType buisnessType;
     if (_ModelValues.isDRM){
         contentUrl = [self.KcdnUrl stringByAppendingString:_ModelValues.hlsUrl];
         if (![_c3Ri isKindOfClass:[NSNull class]] || _c3Ri != nil || ![_c3Ri  isEqual: @""]) {
-            contentUrl  = [self.currentItem.hls_Url stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
+            contentUrl  = [contentUrl stringByAppendingString:[NSString stringWithFormat:@"?c3.ri=%@",_c3Ri]];
         }
     }else{
         contentUrl = [_ModelValues.hlsUrl stringByAppendingString:_videoToken];

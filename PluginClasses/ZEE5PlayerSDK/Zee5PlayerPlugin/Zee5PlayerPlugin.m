@@ -146,7 +146,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     NSMutableDictionary *pluginConfigDict = [NSMutableDictionary new];
     IMAConfig *imaConfig = [IMAConfig new];
     NSString *vmapString = [self vmapTagBuilder];
-    if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]]) {
+    if (vmapString.length == 0 || vmapString == nil ||[vmapString isKindOfClass:[NSNull class]] || [[SingletonClass sharedManager]hlsErrorCount] == 1) {
 
         imaConfig.adTagUrl = @"";
         imaConfig.adsResponse = @"";
