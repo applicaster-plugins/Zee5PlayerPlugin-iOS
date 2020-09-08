@@ -134,6 +134,11 @@ static Zee5PlayerPlugin *sharedManager = nil;
     // create media config
     MediaConfig *mediaConfig = [[MediaConfig alloc] initWithMediaEntry:mediaEntry startTime:0];
     _SubtitleError = false;
+    if (ZEE5PlayerSDK.getDevEnvironment == development ) {
+        self.requestAdapter = [[FormRequestParamsAdapter alloc] init];
+        self.player.settings.contentRequestAdapter = self.requestAdapter;
+        self.requestAdapter.header = @{@"z5globe": @"true"};
+    }
     [self.player prepare:mediaConfig];
     [self.player play];
 
@@ -491,6 +496,9 @@ static Zee5PlayerPlugin *sharedManager = nil;
                        block:^(PKEvent * _Nonnull event) {
         // 7002 when i pass certificate Nil value
         // 7000 when Url takes wrong Url
+        #if DEBUG
+        NSLog(@"**** error discriPtion **** %@",event.error.localizedDescription);
+          #endif
         if (event.error.code >= 7000)
         {
              weakSelf.SubtitleError = true;

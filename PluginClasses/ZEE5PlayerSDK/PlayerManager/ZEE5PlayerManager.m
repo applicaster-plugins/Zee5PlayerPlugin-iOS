@@ -2630,9 +2630,9 @@ static ContentBuisnessType buisnessType;
         NSMutableArray <ZEE5AdModel*>*fanAdModelArray = [[NSMutableArray alloc] init];
         NSMutableArray <ZEE5AdModel*>*googleAdModelArray = [[NSMutableArray alloc] init];
         
-        NSArray *videoAds = [result ValueForKeyWithNullChecking:@"video_ads"];
-        NSArray *coAds = [result ValueForKeyWithNullChecking:@"companion_ads"];
-        if (coAds.count > 0) {
+        NSArray *videoAds = [result valueForKey:@"video_ads"];
+        NSArray *coAds = [result valueForKey:@"companion_ads"];
+        if ([coAds count] > 0) {
             self.companionAds = coAds;
             [[NSNotificationCenter defaultCenter]removeObserver:self name:@"CompanionAds" object:nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"CompanionAds" object:nil];
