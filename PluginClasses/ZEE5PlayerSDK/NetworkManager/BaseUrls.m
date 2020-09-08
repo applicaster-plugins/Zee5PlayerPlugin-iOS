@@ -178,7 +178,11 @@
         return @"https://stagingb2bapi.zee5.com/adtags/adds_v3.php";
         break;
         case prod:
-        return @"https://b2bapi.zee5.com/adtags/adds_v3.php";
+            if ([ZEE5UserDefaults.getCountry isEqualToString:@"IN"]) {
+                 return @"https://b2bapi.zee5.com/adtags/adds_v3.php";
+            }else{
+                 return @"https://b2bapi.zee5.com/adtags/adds.php";
+            }
         break;
     }
 }
