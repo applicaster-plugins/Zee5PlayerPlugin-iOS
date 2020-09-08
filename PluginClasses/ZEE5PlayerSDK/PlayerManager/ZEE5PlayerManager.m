@@ -111,6 +111,7 @@ typedef NS_ENUM(NSUInteger, ZeeUserPlaybackAction) {
 @property(nonatomic) BOOL isHybridViewOpen;
 @property(nonatomic) BOOL isNeedToSubscribe;
 @property(nonatomic) BOOL isRsVodUser;
+@property(nonatomic) BOOL isDownloadedClicked;
 
 @property(nonatomic) CGFloat previousDuration;
 
@@ -224,6 +225,11 @@ static ContentBuisnessType buisnessType;
     if (self.kalturaPlayerView != nil) {
         [self.kalturaPlayerView removeFromSuperview];
     }
+    if (_isDownloadedClicked) {
+        [self StartDownload];
+        self.isDownloadedClicked = false;
+    }
+
     
     self.kalturaPlayerView = [[PlayerView alloc] init];
     [self.parentPlaybackView insertSubview:self.kalturaPlayerView belowSubview:self.customControlView];
@@ -2347,6 +2353,7 @@ static ContentBuisnessType buisnessType;
     [self addHybridViewNotificationObservers];
     [[ZEE5PlayerDeeplinkManager sharedMethod]NavigatetoLoginpageWithParam:@"Login" completion:^(BOOL isSuccees) {
         if (isSuccees) {
+            self.isDownloadedClicked = true;
             [[ZEE5PlayerDeeplinkManager sharedMethod]fetchUserdata];
         }
     }];
