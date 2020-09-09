@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) BOOL isStreamoverWifi;
 @property(nonatomic) BOOL isdownloadOverWifi;
 @property(nonatomic) BOOL isContentAvailable;
+@property(nonatomic) BOOL isHybridViewOpen;
 @property(nonatomic) NSString *selectedSubtitle;
 @property(nonatomic) NSString *selectedLangauge;
 @property(nonatomic) NSString *selectedplaybackRate;

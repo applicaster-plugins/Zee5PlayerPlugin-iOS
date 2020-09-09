@@ -92,7 +92,9 @@ class KalturaPlayerController: UIViewController {
     
     @objc private func wentForeground() {
         if self.view.window != nil {
-            Zee5PlayerPlugin.sharedInstance().player.play()
+            if ZEE5PlayerManager.sharedInstance().isHybridViewOpen == false {
+                Zee5PlayerPlugin.sharedInstance().player.play()
+            }
         }
     }
     
