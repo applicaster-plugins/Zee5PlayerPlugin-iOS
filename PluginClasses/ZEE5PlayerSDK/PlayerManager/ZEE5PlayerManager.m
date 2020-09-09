@@ -2449,6 +2449,7 @@ static ContentBuisnessType buisnessType;
     
     self.isContentAvailable = NO;
     _customControlView.unavailableContentView.hidden = NO;
+    _customControlView.btnMinimize.hidden = NO;
     
     [self hideUnHidetrailerEndView: YES];
 }

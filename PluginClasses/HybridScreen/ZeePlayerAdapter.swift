@@ -189,7 +189,7 @@ fileprivate class BasePlaybackSession: PlaybackSession {
         return self.baseDelegate.sessionPlayable()
     }
     
-    private func handleUnavailableContent() {
+    public func handleUnavailableContent() {
         ZEE5PlayerManager.sharedInstance().hideLoaderOnPlayer()
         ZEE5PlayerManager.sharedInstance().setContentUnavailable()
     }
@@ -285,6 +285,7 @@ fileprivate class TvShowPlaybackSession: BasePlaybackSession, BasePlaybackSessio
             guard
                 let latestEpisode = showPlayable.latestEpisode,
                 let episodeContentId = latestEpisode.contentId else {
+                    self.handleUnavailableContent()
                     return
             }
             
