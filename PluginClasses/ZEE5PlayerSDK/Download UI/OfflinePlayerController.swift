@@ -158,6 +158,9 @@ protocol OfflineVideoDurationDelegate: class {
      NotificationCenter.default.addObserver(self, selector: #selector(KeypadHide), name:UIResponder.keyboardDidHideNotification, object: nil)
         
     NotificationCenter.default.addObserver(self, selector: #selector(RemoveSubView), name:NSNotification.Name(rawValue: "RemoveSubView"), object: nil)
+        
+    NotificationCenter.default.addObserver(self, selector: #selector(wentBackground), name: UIApplication.willResignActiveNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(wentForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     func RemoveNotification() {
@@ -165,6 +168,8 @@ protocol OfflineVideoDurationDelegate: class {
          NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidShowNotification, object: nil)
          NotificationCenter.default .removeObserver(self, name:UIResponder.keyboardDidHideNotification, object: nil)
         NotificationCenter.default .removeObserver(self, name: NSNotification.Name(rawValue: "RemoveSubView"), object: nil)
+        NotificationCenter.default .removeObserver(self, name:UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default .removeObserver(self, name:UIApplication.willResignActiveNotification, object: nil)
        }
     
     @objc func RemoveSubView() {
@@ -185,6 +190,17 @@ protocol OfflineVideoDurationDelegate: class {
                           })
         }
     }
+    @objc private func wentBackground() {
+          if self.view.window != nil {
+            self.pause()
+          }
+      }
+      
+      @objc private func wentForeground() {
+          if self.view.window != nil {
+            self .play()
+          }
+      }
     @objc func RemoveView(_ notification:NSNotification) {
         let userPIn = notification.object as! String
         if parentalView != nil {
