@@ -108,7 +108,6 @@ typedef NS_ENUM(NSUInteger, ZeeUserPlaybackAction) {
 @property(nonatomic) BOOL isAllreadyAdded;
 @property(nonatomic) BOOL isWatchlistAdded;
 @property(nonatomic) BOOL isParentalControlOffline;
-@property(nonatomic) BOOL isHybridViewOpen;
 @property(nonatomic) BOOL isNeedToSubscribe;
 @property(nonatomic) BOOL isRsVodUser;
 
