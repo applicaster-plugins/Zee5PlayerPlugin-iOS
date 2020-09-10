@@ -12,12 +12,12 @@
   "dependency_repository_url": [
     "git@github.com:applicaster-plugins/Zee5PlayerPlugin-iOS.git"
   ],
-  "dependency_version": "1.1.103",
+  "dependency_version": "1.1.104",
   "deprecated_since_zapp_sdk": "",
   "description": "Zee5 Player Plugin",
   "extra_dependencies": [],
   "identifier": "zee_player",
-  "manifest_version": "1.1.103",
+  "manifest_version": "1.1.104",
   "min_zapp_sdk": "14.1.8-RC",
   "name": "Zee5 Player Plugin",
   "npm_dependencies": [],

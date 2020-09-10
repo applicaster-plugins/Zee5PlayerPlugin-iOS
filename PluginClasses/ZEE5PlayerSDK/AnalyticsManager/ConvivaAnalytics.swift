@@ -223,23 +223,23 @@ public class ConvivaAnalytics: NSObject {
     
     // Bitrate can be reported as following. It must be done when player reports a bitrate change event
     public func reportPlayerBitrate(bitrate: Int64) {
-//        if (self.videoAnalytics != nil && bitrate > 0) {
-//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_BITRATE, value:NSNumber(value:100))
-//        }
+        if (self.videoAnalytics != nil && bitrate > 0) {
+            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_BITRATE, value:NSNumber(value:bitrate))
+        }
     }
     
     // Seek Start time Of  Player
     public func SeekStarted(SeekStart: Int64) {
-//        if (self.videoAnalytics != nil && SeekStart > 0) {
-//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_STARTED, value:NSNumber(integerLiteral: Int(SeekStart)))
-//        }
+        if (self.videoAnalytics != nil && SeekStart > 0) {
+            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_STARTED, value:NSNumber(integerLiteral: Int(SeekStart)))
+        }
     }
     
     // Seek Start time Of  Player
     public func SeekEnded(SeekEnd: Int64) {
-//        if (self.videoAnalytics != nil && SeekEnd > 0) {
-//            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_ENDED, value:NSNumber(integerLiteral: Int(SeekEnd)))
-//        }
+        if (self.videoAnalytics != nil && SeekEnd > 0) {
+            self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_ENDED, value:NSNumber(integerLiteral: Int(SeekEnd)))
+        }
     }
 }
 
