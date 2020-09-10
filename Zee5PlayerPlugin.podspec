@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Zee5PlayerPlugin"
-  s.version          = '1.1.103'
+  s.version          = '1.1.104'
   s.summary          = "Zee5PlayerPlugin"
   s.description      = <<-DESC
                         Zee5PlayerPlugin.
@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.dependency 'PlayKit_IMA', '~> 1.8.0'
   s.dependency 'Protobuf'
   s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.7'
-  s.dependency 'ConvivaSDK'
+ # s.dependency 'ConvivaSDK'
   s.dependency 'ComScore'
   s.dependency 'LotameDMP', '~> 5.0'
   s.dependency 'Zee5CoreSDK'
