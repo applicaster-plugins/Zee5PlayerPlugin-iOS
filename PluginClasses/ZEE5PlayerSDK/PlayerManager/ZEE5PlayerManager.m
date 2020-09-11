@@ -2768,6 +2768,7 @@ static ContentBuisnessType buisnessType;
     
     [self updateControlsForCurrentItem];
     [[AnalyticEngine shared]CurrentItemDataWith:self.currentItem];
+    [[AnalyticEngine shared]VideoClickAnalytics];
     [self CreateConvivaSession];
     
     [self downLoadAddConfig:^(id result) {
@@ -2822,6 +2823,7 @@ static ContentBuisnessType buisnessType;
     
     [self updateControlsForCurrentItem];
     [[AnalyticEngine shared] CurrentItemDataWith:self.currentItem];
+    [[AnalyticEngine shared]VideoClickAnalytics];
     [self CreateConvivaSession];
 
     [self downLoadAddConfig:^(id result) {

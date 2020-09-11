@@ -63,7 +63,7 @@ public class AnalyticEngine: NSObject {
             case Production:
                 try ConvivaAnalytics.shared.initializeConviva(customerKey: customerKey)
             default:
-               break
+                break
             }
             ZeeUtility.utility.console("|||*** Conviva Initialized Successfully ***|||")
         }
@@ -117,11 +117,11 @@ public class AnalyticEngine: NSObject {
     @objc public func setupConvivaAdSession(with data: NSDictionary, customTags: NSDictionary)
     {
         ConvivaAnalytics.shared.createConvivaAdSession(with: data, tags: customTags)
-       // ConvivaAnalytics.shared.setupAdPlayerInterface()
+        // ConvivaAnalytics.shared.setupAdPlayerInterface()
     }
     @objc public func EndAdbreak()
     {
-         ConvivaAnalytics.shared.EndAdSession()
+        ConvivaAnalytics.shared.EndAdSession()
     }
     @objc public func updateAdPlayerState(state: ZEEConvivaPlayerState.RawValue)
     {
@@ -138,9 +138,9 @@ public class AnalyticEngine: NSObject {
     }
     
     @objc public func cleanupAdSession() {
-       // ConvivaAnalytics.shared.cleanupAdSession()
+        // ConvivaAnalytics.shared.cleanupAdSession()
     }
-
+    
     // MARK:- Mixpanel Player Events
     
     @objc public func CurrentItemData(with data: CurrentItem)
@@ -148,55 +148,58 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.DataModelContent(with: data)
     }
     @objc public func VideoPlayAnalytics()
-       {
+    {
         AllAnalyticsClass.shared.VideoViewEvent()
-      
-       }
+    }
+    @objc public func VideoClickAnalytics()
+    {
+        AllAnalyticsClass.shared.VideoClickevent()
+    }
     @objc public func AutoSeekAnalytics(with Direction: NSString, Starttime :NSInteger, Endtime :NSInteger)
-      {
+    {
         AllAnalyticsClass.shared.AutoseekChanged(with: Direction, EndValue: Endtime, startvalue: Starttime)
-      }
+    }
     
     @objc public func ReplayVideo()
-      {
-            AllAnalyticsClass.shared.ReplayVideoEvent()
-      }
+    {
+        AllAnalyticsClass.shared.ReplayVideoEvent()
+    }
     
     @objc public func skipIntroAnalytics(with skipstartTime: NSString, SkipendTime: NSString)
-      {
+    {
         AllAnalyticsClass.shared.SkipIntoVideo(with: skipstartTime, SkipendTime: SkipendTime)
-      }
+    }
     
     @objc public func skipRecapAnalytics(with skipstartTime: NSString, SkipendTime: NSString)
-      {
-           AllAnalyticsClass.shared.SkipRecapVideo(with: skipstartTime, SkipendTime: SkipendTime)
-      }
+    {
+        AllAnalyticsClass.shared.SkipRecapVideo(with: skipstartTime, SkipendTime: SkipendTime)
+    }
     
     @objc public func watchCreditsAnalytics(with StartTime: NSString)
-      {
+    {
         AllAnalyticsClass.shared.watchCredit(with: StartTime)
-      }
+    }
     
     @objc public func playerPauseAnalytics()
-     {
-         AllAnalyticsClass.shared.PauseEvent()
-     }
+    {
+        AllAnalyticsClass.shared.PauseEvent()
+    }
     @objc public func playerResumeAnalytics()
-     {
+    {
         AllAnalyticsClass.shared.PlayResumeEvent()
-     }
+    }
     @objc public func seekValueChangeAnalytics(with Direction: NSString, Starttime :NSInteger, EndTime :NSInteger)
-     {
-         AllAnalyticsClass.shared.Seekbar_ChangeEvent(with: Direction, StartTime: Starttime, EndTime: EndTime)
-     }
+    {
+        AllAnalyticsClass.shared.Seekbar_ChangeEvent(with: Direction, StartTime: Starttime, EndTime: EndTime)
+    }
     @objc public func playerbufferStartAnalytics()
-     {
-         AllAnalyticsClass.shared.BufferStartEvent()
-     }
+    {
+        AllAnalyticsClass.shared.BufferStartEvent()
+    }
     @objc public func playerbufferEndAnalytics(with BufferEnd: Int)
-     {
+    {
         AllAnalyticsClass.shared.BufferENDEvent(with: BufferEnd)
-     }
+    }
     
     @objc public func playerOrientationChanged(to orientation: ZeeAnalyticsPlayerOrientation) {
         guard let lastPlayerOrientation = self.lastPlayerOrientation, lastPlayerOrientation != orientation else {
@@ -209,39 +212,39 @@ public class AnalyticEngine: NSObject {
     }
     
     @objc public func VideoExitAnalytics()
-     {
-         AllAnalyticsClass.shared.VideoExit()
-     }
+    {
+        AllAnalyticsClass.shared.VideoExit()
+    }
     @objc public func PopUpLaunch(with PopUpName:String){
         AllAnalyticsClass.shared.PopUpLaunch(with: PopUpName)
     }
     @objc public func PopUpCTAPressed(with PopUpName:String , POpUpCTAName:String){
         AllAnalyticsClass.shared.PopUpCTApressed(with: POpUpCTAName, PopUpName: PopUpName)
-      }
+    }
     
     @objc public func PlayBackError (with ErrorMessage:String)
     {
         AllAnalyticsClass.shared.PlayBackError(with: ErrorMessage)
     }
-
+    
     @objc public func audiolangChangeAnalytics (with oldAudio: String, newAudio: String ,Mode:String )
-     {
+    {
         AllAnalyticsClass.shared.AudiochangeEvent(with: oldAudio, New: newAudio, TrackingMode: Mode)
-     }
+    }
     
     @objc public func subtitlelangChangeAnalytics (with oldSubtitle: String, newSubtitle: String ,Mode:String)
-     {
-          AllAnalyticsClass.shared.SubtitleLangChangeEvent(with: oldSubtitle, New: newSubtitle, TrackingMode: Mode)
-     }
+    {
+        AllAnalyticsClass.shared.SubtitleLangChangeEvent(with: oldSubtitle, New: newSubtitle, TrackingMode: Mode)
+    }
     
     @objc public func castingStartedAnalytics (with CastTo:String)
     {
         AllAnalyticsClass.shared.CastingStartEvent(with: CastTo)
     }
-
+    
     @objc public func castingEndAnalytics (with CastTo:String)
     {
-         AllAnalyticsClass.shared.CastingEndEvent(with: CastTo)
+        AllAnalyticsClass.shared.CastingEndEvent(with: CastTo)
     }
     
     @objc public func videoWatchDurationAnalytic ()
@@ -251,20 +254,20 @@ public class AnalyticEngine: NSObject {
     
     
     @objc public func playerCTA (with Element: String)
-       {
+    {
         AllAnalyticsClass.shared.PlayerBtnPressed(with: Element)
-       }
+    }
     @objc public func CTAs (with Ctatype: String , ctaname:String)
     {
         AllAnalyticsClass.shared.CTAs(with: Ctatype, CTaName: ctaname)
     }
     
     @objc public func screenViewEvent()
-       {
-           AllAnalyticsClass.shared.ScreenViewEvent()
-       }
-       
-     // MARK:- For Downlaod Anlytics Events
+    {
+        AllAnalyticsClass.shared.ScreenViewEvent()
+    }
+    
+    // MARK:- For Downlaod Anlytics Events
     
     @objc public func downloadStart (with Quality:String)
     {
@@ -277,9 +280,9 @@ public class AnalyticEngine: NSObject {
     }
     
     public func downloadDelete (with item: DownloadItem)
-       {
-           AllAnalyticsClass.shared.DownloadDelete(with: item)
-       }
+    {
+        AllAnalyticsClass.shared.DownloadDelete(with: item)
+    }
     
     public func downloadPlayClick (with item:DownloadItem)
     {
@@ -289,10 +292,10 @@ public class AnalyticEngine: NSObject {
     {
         AllAnalyticsClass.shared.DownloadCTAclicked()
     }
-
     
     
-     // MARK:- Mixpanel Ad Events
+    
+    // MARK:- Mixpanel Ad Events
     
     @objc public func SetupMixpanelAnalytics(with data: NSDictionary, tags: NSDictionary)
     {
@@ -322,16 +325,16 @@ public class AnalyticEngine: NSObject {
         AllAnalyticsClass.shared.ADView()
     }
     @objc public func AdViewNumber(AdNo : NSInteger)
-       {
+    {
         if AdNo == 3 {
             AllAnalyticsClass .shared .ADView3()
         }else if AdNo == 5{
-             AllAnalyticsClass .shared .ADView5()
+            AllAnalyticsClass .shared .ADView5()
         }else if AdNo == 10{
-             AllAnalyticsClass .shared .ADView10()
+            AllAnalyticsClass .shared .ADView10()
         }else{
         }
-       }
-   
+    }
+    
     
 }
