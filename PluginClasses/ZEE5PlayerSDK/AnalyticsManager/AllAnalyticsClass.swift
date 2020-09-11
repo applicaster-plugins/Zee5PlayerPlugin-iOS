@@ -117,7 +117,8 @@ public class AllAnalyticsClass: NSObject{
         
                if DataModel.audioLanguages.count>0{
                 for Audio in DataModel.audioLanguages {
-                    let AudioStr = Utility .getLanguageString(fromId: Audio as! String)
+                    var AudioStr = String(Audio as? String ?? "NA")
+                    AudioStr = String(AudioStr.prefix(2))
                   audiolanguage .append(AudioStr)
                    }
                }
