@@ -156,7 +156,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)selectedMenuItem:(id)model;
 -(void)tapOnPlayer;
 -(void)onComplete;
--(void)handleHLSError;
+-(void)handleHLSError:(NSInteger)errorCode;
 
 -(void)checkParentalPin:(NSString *)Pin;
 -(void)ParentalViewPlay;
