@@ -35,6 +35,12 @@ typedef enum convivaEnvironment
     Staging
 } ConvivaEnvironment;
 
+typedef enum convivaUserWait
+{
+    userWaitStarted,
+    userWaitEnded
+} ConvivaUserWait;
+
 typedef enum playerType
 {
     normalPlayer,

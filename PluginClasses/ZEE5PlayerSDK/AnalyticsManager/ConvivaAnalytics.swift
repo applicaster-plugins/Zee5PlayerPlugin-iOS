@@ -19,6 +19,8 @@ public class ConvivaAnalytics: NSObject {
     var Mainanalytics:CISAnalytics?
     var videoAnalytics:CISVideoAnalytics?
     var adAnalytics:CISAdAnalytics?
+    var adSession = false
+    
     var backgroundUpdateTask = UIBackgroundTaskIdentifier(rawValue: 0)
     
     /**
@@ -94,6 +96,7 @@ public class ConvivaAnalytics: NSObject {
         let streamUrl = data.value(forKey: "streamUrl") as? String
         let duration = data.value(forKey: "duration") as! String
         let viewerId = data.value(forKey: "viewerId") as? String
+        let frameworkVersion = data.value(forKey: "playerSdkVersion") as? String
         
         let Duration = Int(duration)
         var contentInfo = [AnyHashable : Any]();
@@ -106,7 +109,7 @@ public class ConvivaAnalytics: NSObject {
         contentInfo[CIS_SSDK_METADATA_DURATION] = Duration;
         contentInfo[CIS_SSDK_METADATA_STREAM_URL] = streamUrl;
         contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_NAME] = applicationName;
-       //contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_VERSION] = "frameworkversion";
+        contentInfo[CIS_SSDK_PLAYER_FRAMEWORK_VERSION] = frameworkVersion;
         if nil != self.Mainanalytics
         {
             self.videoAnalytics = self.Mainanalytics?.createVideoAnalytics();
@@ -182,6 +185,7 @@ public class ConvivaAnalytics: NSObject {
             self.videoAnalytics!.reportPlaybackEnded();
             self.videoAnalytics!.cleanup();
             self.videoAnalytics = nil;
+            adSession = false;
             self.zeePlayer?.stop()
             self.zeePlayer = nil
         }
@@ -241,6 +245,22 @@ public class ConvivaAnalytics: NSObject {
             self.videoAnalytics?.reportPlaybackMetric(CIS_SSDK_PLAYBACK_METRIC_SEEK_ENDED, value:NSNumber(integerLiteral: Int(SeekEnd)))
         }
     }
+    // User Wait for PlayBack
+    public func userWaitPlayback(Event: convivaUserWait) {
+        if (self.videoAnalytics != nil) {
+            switch Event {
+            case userWaitStarted:
+                let event = CISConstants.getEventsStringValue(.USER_WAIT_STARTED)!;
+                self.videoAnalytics?.reportPlaybackEvent(event, withAttributes: nil)
+            case userWaitEnded:
+                let event = CISConstants.getEventsStringValue(.USER_WAIT_ENDED)!;
+                self.videoAnalytics?.reportPlaybackEvent(event, withAttributes: nil)
+            default:
+               break
+            }
+          
+        }
+    }
 }
 
 // MARK:- For Ad Events
@@ -258,14 +278,17 @@ extension ConvivaAnalytics {
             var adAttributes = [AnyHashable:Any]();
             adAttributes["podDuration"] = data.value(forKey: "duration") as? Int;
             adAttributes["podPosition"] = CISConstants.getAdPositionStringValue(adPosition);
-            
-            self.videoAnalytics?.reportAdBreakStarted(.ADPLAYER_CONTENT, adType: .CLIENT_SIDE, adBreakInfo: adAttributes)
-            ZeeUtility.utility.console("|******** Ad Session Created********|")
+            if adSession == false {
+                adSession = true
+                self.videoAnalytics?.reportAdBreakStarted(.ADPLAYER_CONTENT, adType: .CLIENT_SIDE, adBreakInfo: adAttributes)
+                ZeeUtility.utility.console("|******** Ad Session Created********|")
+            }
         }
     }
     
     public func EndAdSession() {
         if nil != videoAnalytics {
+            adSession = false
             self.videoAnalytics!.reportAdBreakEnded();
             ZeeUtility.utility.console("|******** Cleanup Ad Session ********|")
         }
