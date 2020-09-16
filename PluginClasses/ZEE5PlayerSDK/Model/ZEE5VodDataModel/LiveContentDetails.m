@@ -24,7 +24,7 @@
         self.identifier = [dict ValueForKeyWithNullChecking:@"id"];
         self.assetType = [NSString stringWithFormat:@"%d", [[dict ValueForKeyWithNullChecking:@"asset_type"]intValue]];
         self.title = [dict ValueForKeyWithNullChecking:@"title"];
-        self.showOriginalTitle = [dict ValueForKeyWithNullChecking:@"original_title"];
+        self.ContentOriginaltitle = [dict ValueForKeyWithNullChecking:@"original_title"];
         self.descriptionContent = [dict ValueForKeyWithNullChecking:@"description"];
         self.StreamhlsUrl = [dict ValueForKeyWithNullChecking:@"stream_url_hls"];
         self.StreamUrl = [dict ValueForKeyWithNullChecking:@"stream_url"];

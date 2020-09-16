@@ -957,6 +957,9 @@ public func VideoViewEvent()
     
     public func DownloadCompleteOrFail(with item:DownloadItem)
        {
+          if DownloadedcontentId == item.contentId {
+                return
+            }
           let parameter : Set = [
            Keys.DOWNLOAD_RESULT.TITLE ~>> item.title == "" ? notAppplicable:item.title ?? notAppplicable ,
            Keys.DOWNLOAD_RESULT.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName ,
@@ -990,6 +993,7 @@ public func VideoViewEvent()
            Keys.DOWNLOAD_RESULT.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
            Keys.DOWNLOAD_RESULT.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
            ]
+           DownloadedcontentId = item.contentId ?? ""
            analytics.track(Events.DOWNLOAD_RESULT, trackedProperties: parameter)
            
        }

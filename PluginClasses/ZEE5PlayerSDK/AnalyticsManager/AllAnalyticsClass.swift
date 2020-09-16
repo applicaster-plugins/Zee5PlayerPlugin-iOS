@@ -45,6 +45,7 @@ public class AllAnalyticsClass: NSObject{
     var AdTag = NSDictionary()
     var firstFramecontentId = ""
     var firstClickcontentId = ""
+    var DownloadedcontentId = ""
 
     
     let Gender = analytics.getGender()   /// From Core SDK
@@ -90,12 +91,12 @@ public class AllAnalyticsClass: NSObject{
     
     public func DataModelContent(with DataModel:CurrentItem)
     {
-                   contentName = DataModel.channel_Name
+                   contentName = DataModel.originalTitle
                    contentId = DataModel.content_id
                    genre = DataModel.geners
                    duration = DataModel.duration
                    currentDuration = Zee5PlayerPlugin.sharedInstance().getCurrentTime()
-                   series = DataModel.channel_Name  
+                   series = DataModel.originalTitle
                    episodeNumber = DataModel.episode_number
                    DrmVideo = DataModel.isDRM
                    Subtitles = DataModel.subTitles as! [String]
@@ -113,7 +114,7 @@ public class AllAnalyticsClass: NSObject{
                    if DataModel.charecters.count>0{
                     Charecters  = DataModel.charecters as! [String]
                     }
-                  let value = genre.map{$0.value}
+                  let value = genre.map{$0.identifier}
                   genereString = value.joined(separator: ",")
         
                if DataModel.audioLanguages.count>0{

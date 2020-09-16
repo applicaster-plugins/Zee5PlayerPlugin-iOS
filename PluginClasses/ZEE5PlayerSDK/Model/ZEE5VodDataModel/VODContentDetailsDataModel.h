@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *identifier;
 @property (nonatomic, copy)   NSString *trailerIdentifier;
 @property (nonatomic, copy)   NSString *title;
+@property (nonatomic, copy)   NSString *ContentOriginaltitle;
 @property (nonatomic, copy)   NSString *drmKeyID;
 @property (nonatomic, copy)   NSArray *subtitleLanguages;
 @property (nonatomic, copy)   NSArray *audioLanguages;

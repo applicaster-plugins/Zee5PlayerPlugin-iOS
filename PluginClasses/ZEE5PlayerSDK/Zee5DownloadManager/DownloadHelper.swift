@@ -40,7 +40,7 @@ public class DownloadHelper: NSObject {
         data.assetSubtype = item.asset_subtype
         data.releaseDate = item.release_date
         data.episodeNumber = item.episode_number
-        data.showOriginalTitle = item.originalTitle
+        data.showOriginalTitle = item.showName
         data.duration = item.duration
         data.imageUrl = item.imageUrl
         data.tvShowimgurl = item.tvShowImgurl
