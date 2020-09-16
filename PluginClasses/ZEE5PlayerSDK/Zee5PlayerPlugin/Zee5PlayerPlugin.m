@@ -338,7 +338,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
     {
         [engine setupConvivaAdSessionWith:dict customTags:tags];
         [engine SetupMixpanelAnalyticsWith:dict tags:tags];
-         [engine AdViewAnalytics];
+        [engine AdViewAnalytics];
         _adCount++;
         [engine AdViewNumberWithAdNo:_adCount];
         [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
@@ -354,22 +354,19 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adStarted block:^(PKEvent * _Nonnull event)
      {
-        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
         [weakSelf createConvivaAdSeesionWithAdEvent: event];
-        [[ZEE5PlayerManager sharedInstance] startAd:event];
         [weakSelf ConvivaErrorCode:event.error.code platformCode:@"010" severityCode:1 andErrorMsg:@"Ad Started"];
+        [[ZEE5PlayerManager sharedInstance]hideLoaderOnPlayer];
+        [[ZEE5PlayerManager sharedInstance] startAd:event];
     }];
     
     [self.player addObserver: self event: AdEvent.adComplete block:^(PKEvent * _Nonnull event) {
-    
-        [engine EndAdbreak];
         [engine AdCompleteAnalytics];
         [engine AdWatchDurationAnalytics];
         [[ZEE5PlayerManager sharedInstance] endAd];
     }];
     
     [self.player addObserver: self event: AdEvent.adSkipped block:^(PKEvent * _Nonnull event) {
-        [engine EndAdbreak];
         [[ZEE5PlayerManager sharedInstance] endAd];
     }];
     
@@ -442,6 +439,12 @@ static Zee5PlayerPlugin *sharedManager = nil;
     
     [self.player addObserver: self event: AdEvent.adsRequested block:^(PKEvent * _Nonnull event) {
     }];
+    [self.player addObserver: self event: AdEvent.adDidRequestContentResume block:^(PKEvent * _Nonnull event) {
+        [engine EndAdbreak];
+    }];
+    [self.player addObserver: self event: AdEvent.adDidRequestContentPause block:^(PKEvent * _Nonnull event) {
+    
+    }];
     
     [self.player addObserver: self event: AdEvent.error block:^(PKEvent * _Nonnull event) {
         [weakSelf ConvivaErrorCode:event.error.code platformCode:@"003" severityCode:1 andErrorMsg:@"Ad Playback Error"];
@@ -502,8 +505,7 @@ static Zee5PlayerPlugin *sharedManager = nil;
         if (event.error.code >= 7000)
         {
              weakSelf.SubtitleError = true;
-            [weakSelf ConvivaErrorCode:event.error.code platformCode:@"005" severityCode:1 andErrorMsg:@"Kaltura Playback Error"];
-            [[ZEE5PlayerManager sharedInstance]handleHLSError];
+            [[ZEE5PlayerManager sharedInstance]handleHLSError:event.error.code];
         }
         [[AnalyticEngine new]PlayBackErrorWith:event.error.localizedFailureReason];
     }];
@@ -540,21 +542,20 @@ static Zee5PlayerPlugin *sharedManager = nil;
     [self.player addObserver:self
                       events:@[PlayerEvent.pause]
                        block:^(PKEvent * _Nonnull event){
-        
-        [engine updatePlayerStateWithState: ConvivaPlayerStatePAUSED];
     }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.play]
                        block:^(PKEvent * _Nonnull event){
-        
-        [engine updatePlayerStateWithState: ConvivaPlayerStatePLAYING];
+        [engine updatePlayerStateWithState:ConvivaPlayerStatePLAYING];
     }];
     
     [self.player addObserver:self
                       events:@[PlayerEvent.stopped]
                        block:^(PKEvent * _Nonnull event){
-        
+        if ( [[SingletonClass sharedManager]hlsErrorCount] == 1) {
+            return;
+        }
         [engine updatePlayerStateWithState:ConvivaPlayerStateSTOPPED];
         [engine cleanupVideoSesssion];
     }];
