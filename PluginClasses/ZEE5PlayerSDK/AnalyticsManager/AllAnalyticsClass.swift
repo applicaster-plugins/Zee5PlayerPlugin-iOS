@@ -44,6 +44,7 @@ public class AllAnalyticsClass: NSObject{
     var AdDict = NSDictionary()
     var AdTag = NSDictionary()
     var firstFramecontentId = ""
+    var firstClickcontentId = ""
 
     
     let Gender = analytics.getGender()   /// From Core SDK

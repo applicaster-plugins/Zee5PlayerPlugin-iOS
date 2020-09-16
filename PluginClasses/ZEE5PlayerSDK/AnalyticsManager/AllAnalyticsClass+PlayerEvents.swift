@@ -73,6 +73,56 @@ public func VideoViewEvent()
     }
            
     }
+    // MARK:- Video_Click
+    public func VideoClickevent()
+    {
+        if firstClickcontentId == contentId {
+               return
+           }
+        let parameter : Set = [
+            Keys.VIDEO_CLICK.SOURCE ~>> source,
+            Keys.VIDEO_CLICK.IMAGE_URL ~>> Imageurl == "" ? notAppplicable:Imageurl,
+            Keys.VIDEO_CLICK.TIME_SPENT ~>> videoStarttime == 0 ? 0:videoStarttime,
+            Keys.VIDEO_CLICK.VIDEO_INITIATION_METHOD ~>> notAppplicable,
+            Keys.VIDEO_CLICK.CONTENT_ID ~>> contentId == "" ? notAppplicable:contentId ,
+            Keys.VIDEO_CLICK.SEASON_ID ~>> seasonId == "" ? notAppplicable:seasonId ,
+            Keys.VIDEO_CLICK.SHOW_ID ~>> TvShowId == "" ? notAppplicable:TvShowId ,
+            Keys.VIDEO_CLICK.GENRE ~>> genereString  == "" ? notAppplicable : genereString,
+            Keys.VIDEO_CLICK.CHARACTERS ~>> Charecters.count > 0 ? Charecters.joined(separator: ","):notAppplicable,
+            Keys.VIDEO_CLICK.PREVIEW_STATUS ~>> preview_status,
+            Keys.VIDEO_CLICK.PAGE_NAME ~>> currently_tab,
+            Keys.VIDEO_CLICK.DRM_VIDEO ~>> DrmVideo,
+            Keys.VIDEO_CLICK.SUBTITLES ~>> Subtitles.count > 0 ? true : false,
+            Keys.VIDEO_CLICK.CONTENT_ORIGINAL_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+            Keys.VIDEO_CLICK.AUDIO_LANGUAGE ~>> audiolanguage.count > 0 ? audiolanguage.joined(separator: ","):notAppplicable,
+            Keys.VIDEO_CLICK.SUBTITLE_LANGUAGE ~>> Subtitles.count > 0 ? Subtitles.joined(separator: ",") : notAppplicable,
+            Keys.VIDEO_CLICK.TAB_NAME ~>> currently_tab,
+            Keys.VIDEO_CLICK.CAST_TO ~>> notAppplicable,
+            Keys.VIDEO_CLICK.TV_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            Keys.VIDEO_CLICK.CHANNEL_NAME ~>> TvshowChannelName == "" ? notAppplicable:TvshowChannelName,
+            Keys.VIDEO_CLICK.CONTENT_DURATION ~>> duration == 0 ? 0:duration,
+            Keys.VIDEO_CLICK.CONTENT_TYPE ~>> Buisnesstype == "" ? notAppplicable:Buisnesstype,
+            Keys.VIDEO_CLICK.PUBLISHING_DATE ~>> realeseDate == "" ? notAppplicable:realeseDate,
+            Keys.VIDEO_CLICK.SERIES ~>> series == "" ? notAppplicable:series,
+            Keys.VIDEO_CLICK.TITLE ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.VIDEO_CLICK.EPISODE_NO ~>> episodeNumber == 0 ? 0:episodeNumber,
+            Keys.VIDEO_CLICK.PLAYER_HEAD ~>> currentDuration == 0 ? 0:currentDuration,
+            Keys.VIDEO_CLICK.PLAYER_NAME ~>> "Kaltura",
+            Keys.VIDEO_CLICK.PLAYER_VERSION ~>> PlayerVersion == "" ? notAppplicable:PlayerVersion ,
+            Keys.VIDEO_CLICK.CONTENT_NAME ~>> contentName == "" ? notAppplicable:contentName,
+            Keys.VIDEO_CLICK.CDN ~>> notAppplicable,
+            Keys.VIDEO_CLICK.DNS ~>> notAppplicable,
+            Keys.VIDEO_CLICK.CAROUSAL_NAME ~>> carousal_name,
+            Keys.VIDEO_CLICK.CAROUSAL_ID ~>> carousal_id,
+            Keys.VIDEO_CLICK.TOP_CATEGORY ~>> assetSubtype == "" ? notAppplicable:assetSubtype,
+            Keys.VIDEO_CLICK.PLAYER_HEAD_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+            Keys.VIDEO_CLICK.PLAYER_HEAD_START_POSITION ~>> videoStarttime == 0 ? "0":String(videoStarttime),
+            Keys.VIDEO_CLICK.PLAYER_HEAD_END_POSITION ~>> duration == 0 ? "0":String(duration),
+            Keys.VIDEO_CLICK.CLICKMETRICS ~>> 1,
+        ]
+        firstClickcontentId = contentId
+        analytics.track(Events.VIDEO_CLICK, trackedProperties: parameter)
+    }
     
     // MARK:- Auto-Seek
     
