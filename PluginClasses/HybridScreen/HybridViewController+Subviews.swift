@@ -135,7 +135,9 @@ extension HybridViewController {
                     guard let bannerView = view as? PremiumBanner else {
                         return
                     }
-                    
+                    if Singleton.isPremiumBanner == false {
+                        return
+                    }
                     bannerView.backgroundColor = .clear
                     bannerView.setupBanner(playable: playable)
 

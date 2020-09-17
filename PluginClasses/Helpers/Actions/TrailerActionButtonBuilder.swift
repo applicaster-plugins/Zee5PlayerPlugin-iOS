@@ -40,6 +40,10 @@ class TrailerActionButtonBuilder: BaseActionButtonBuilder, ActionButtonBuilder {
         guard let player = Zee5PluggablePlayer.lastActiveInstance() else {
             return
         }
+        let buisnessType = playable.businessType
+        if buisnessType != .premium && buisnessType != .premiumDownloadable {
+            singleton.isPremiumBanner = false
+        }
         AnalyticEngine.shared.CTAs(with: "CTA", ctaname: "Watch Trailer")
         player.updateContent(self.trailerContentId)
     }

@@ -20,10 +20,12 @@ class BaseActionButtonBuilder {
     public let playable: ZeePlayable
     public let consumptionFeedType: ConsumptionFeedType
     public var actionBarUpdateHandler: ActionBarUpdateHandler!
+    public var singleton: SingletonClass
 
     required public init(_ playable: ZeePlayable) {
         self.playable = playable
         self.consumptionFeedType = playable.consumptionType
+        singleton = SingletonClass.sharedManager() as! SingletonClass
     }
     
     public func setActionBarUpdateHandler(_ handler: ActionBarUpdateHandler) {

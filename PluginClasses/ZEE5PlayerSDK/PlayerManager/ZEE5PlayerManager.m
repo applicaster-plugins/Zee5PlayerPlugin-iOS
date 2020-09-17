@@ -745,7 +745,7 @@ static ContentBuisnessType buisnessType;
     _isTelco = NO;
     [self hideLoaderOnPlayer];
     
-    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum != Premium && !_customControlView.btnSkipNext.selected) {
+    if (ZEE5PlayerSDK.getConsumpruionType == Trailer && ZEE5PlayerSDK.getUserTypeEnum != Premium && !_customControlView.btnSkipNext.selected && singleton.isPremiumBanner == YES) {
         _videoCompleted = YES;
         [self HybridViewOpen];
         [self hideUnHidetrailerEndView:NO];
@@ -770,6 +770,7 @@ static ContentBuisnessType buisnessType;
         if (_CreditTimer != nil) {
             return;
         }
+        singleton.isPremiumBanner = YES;
         RelatedVideos *nextItem = nil;
         for (RelatedVideos *relatedVideo in self.currentItem.related) {
             if (![_PreviousContentArray containsObject:relatedVideo.identifier]) {
@@ -793,16 +794,12 @@ static ContentBuisnessType buisnessType;
         singleton.hlsErrorCount = singleton.hlsErrorCount + 1;
         [[Zee5PlayerPlugin sharedInstance].player destroy];
         if (self.ModelValues.isBeforeTv) {
-            [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:errorCode platformCode:@"005" severityCode:0 andErrorMsg:[NSString stringWithFormat:@"Cannot play drm content - %@",self.ModelValues.identifier]];
-            [[AnalyticEngine shared]cleanupVideoSesssion];
-            [[ZEE5PlayerManager sharedInstance]ShowToastMessage:[NSString stringWithFormat:@"%@",[[PlayerConstants shared] detailApiFailed]]];
+            [self drmPlayBackFailure:errorCode];
             return;
         }
         else if  (singleton.hlsErrorCount == 2 && self.currentItem.isDRM) {
-            [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:errorCode platformCode:@"005" severityCode:0 andErrorMsg:[NSString stringWithFormat:@"Cannot play drm content - %@",self.ModelValues.identifier]];
+            [self drmPlayBackFailure:errorCode];
             [self DestroyPlayer];
-            [[AnalyticEngine shared]cleanupVideoSesssion];
-            [[ZEE5PlayerManager sharedInstance]ShowToastMessage:[NSString stringWithFormat:@"%@",[[PlayerConstants shared] detailApiFailed]]];
             return;
         }else if (!self.currentItem.isDRM){
             [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:errorCode platformCode:@"005" severityCode:0 andErrorMsg:@"Kaltura Playback Error"];
@@ -817,10 +814,16 @@ static ContentBuisnessType buisnessType;
             newURL = [newURL stringByReplacingOccurrencesOfString:@"drm" withString:@"hls"];
             newURL = [newURL stringByReplacingOccurrencesOfString:@"zee5vod" withString:@"zee5vodnd"];
             self.currentItem.hls_Url = newURL;
+            [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:errorCode platformCode:@"005" severityCode:1 andErrorMsg:@"Kaltura Playback Error"];
             [self playWithCurrentItem];
         }
         
     }];
+}
+-(void)drmPlayBackFailure:(NSInteger)Error{
+    [[Zee5PlayerPlugin sharedInstance]ConvivaErrorCode:Error platformCode:@"013" severityCode:0 andErrorMsg:[NSString stringWithFormat:@"Cannot play drm content - %@",self.ModelValues.identifier]];
+    [[AnalyticEngine shared]cleanupVideoSesssion];
+    [[ZEE5PlayerManager sharedInstance]ShowToastMessage:[NSString stringWithFormat:@"%@",[[PlayerConstants shared] detailApiFailed]]];
 }
 
 -(void)getTokenND:(void (^)(NSString *))completion
@@ -831,6 +834,7 @@ static ContentBuisnessType buisnessType;
             completion(result[@"video_token"]);
         }
     } failureBlock:^(ZEE5SdkError * _Nullable error) {
+        [self drmPlayBackFailure:error.zeeErrorCode];
         self.allowVideoContent = NO;
     }];
 }
