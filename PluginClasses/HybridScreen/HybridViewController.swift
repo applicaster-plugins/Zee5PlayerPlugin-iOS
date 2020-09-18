@@ -42,6 +42,7 @@ class HybridViewController: UIViewController {
     @IBOutlet var mainCollectionViewContainer: UIView!
     @IBOutlet var metadataViewContainer: UIView!
     var mainCollectionViewController: StaticViewCollectionViewController?
+    var Singleton:SingletonClass
     
     typealias CellItem = (title: String?, subtitle: String?, description: String?)
     var castDataSource: [CellItem]?
@@ -103,6 +104,7 @@ class HybridViewController: UIViewController {
     // MARK:
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.Singleton = SingletonClass.sharedManager() as! SingletonClass
         super.init(nibName: nibNameOrNil, bundle: Bundle(for: type(of: self)))
     }
     
