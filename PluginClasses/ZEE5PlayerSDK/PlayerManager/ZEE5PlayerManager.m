@@ -2771,7 +2771,7 @@ static ContentBuisnessType buisnessType;
     self.currentItem.asset_subtype = model.assetSubtype;
     self.currentItem.release_date = model.releaseDate;
     self.currentItem.episode_number = model.episodeNumber;
-    self.currentItem.originalTitle = model.showOriginalTitle;
+    self.currentItem.originalTitle = model.ContentOriginaltitle;
     self.currentItem.duration = model.duration;
     self.currentItem.imageUrl = model.imageUrl;
     self.currentItem.TvShowImgurl = model.tvShowimgurl;
@@ -2828,21 +2828,21 @@ static ContentBuisnessType buisnessType;
     self.currentItem = [[CurrentItem alloc] init];
     self.currentItem.hls_Url = [Livemodel.StreamhlsUrl stringByAppendingString:Vidtoken];
 
-    self.currentItem.originalTitle =Livemodel.showOriginalTitle;
+    self.currentItem.originalTitle =Livemodel.ContentOriginaltitle;
     self.currentItem.drm_token = token;
     self.currentItem.drm_key = Livemodel.drmKeyID;
     self.currentItem.subTitles = Livemodel.subtitleLanguages;
     self.currentItem.streamType = CONVIVA_STREAM_LIVE;
     self.currentItem.content_id = Livemodel.identifier;
     self.currentItem.channel_Name = Livemodel.title;
-    self.currentItem.showName =Livemodel.showOriginalTitle;
+    self.currentItem.showName =Livemodel.ContentOriginaltitle;
     self.currentItem.asset_type = Livemodel.assetType;
     self.currentItem.geners = Livemodel.geners;
     self.currentItem.isDRM = Livemodel.isDRM;
     self.currentItem.audioLanguages = Livemodel.languages;
     self.currentItem.business_type = Livemodel.buisnessType;
     self.currentItem.language = Livemodel.languages;
-    self.currentItem.showchannelName = Livemodel.showOriginalTitle;
+    self.currentItem.showchannelName = Livemodel.ContentOriginaltitle;
     self.currentItem.geners = Livemodel.geners;
     self.currentItem.imageUrl = [NSString stringWithFormat:@"https://akamaividz.zee5.com/resources/%@/list/270x152/%@",Livemodel.identifier,Livemodel.Image];
     
@@ -2961,7 +2961,7 @@ static ContentBuisnessType buisnessType;
     
     dict = @{
              @"viewerId": userId,
-             @"episodeName": _isLive ? _LiveModelValues.title ?:NA:_ModelValues.title ?:NA,
+             @"episodeName": _isLive ? _LiveModelValues.ContentOriginaltitle ?:NA:_ModelValues.ContentOriginaltitle ?:NA,
              @"category": _isLive ? @"Live":_ModelValues.assetSubtype ?:NA,
              @"channel": _isLive ? _LiveModelValues.title ?:NA:_ModelValues.title ?:NA,
              @"episodeNumber": _isLive ? NA :[NSString stringWithFormat:@"%ld",(long)_ModelValues.episodeNumber] ?:NA,
@@ -2972,7 +2972,7 @@ static ContentBuisnessType buisnessType;
              @"pubDate": releaseDate?: NA,
              
              @"season": _isLive ? NA:_ModelValues.SeasonId ?:NA,
-             @"show": _isLive ? _LiveModelValues.showOriginalTitle ?:NA:_ModelValues.showOriginalTitle ?:NA,
+             @"show": _isLive ? _LiveModelValues.ContentOriginaltitle ?:NA:_ModelValues.showOriginalTitle ?:NA,
              @"playerVersion": buildNumber,
              @"appVersion": ZEE5PlayerSDK.getSDKVersion,
              

@@ -25,6 +25,7 @@
     if (self && [dict isKindOfClass:NSDictionary.class]) {
         self.identifier = [dict ValueForKeyWithNullChecking:@"id"];
         self.title = [dict ValueForKeyWithNullChecking:@"title"];
+        self.ContentOriginaltitle = [dict ValueForKeyWithNullChecking:@"original_title"];
         self.drmKeyID = [dict ValueForKeyWithNullChecking:@"drm_key_id"];
         self.subtitleLanguages = [dict ValueForKeyWithNullChecking:@"subtitle_languages"];
         self.audioLanguages = [dict ValueForKeyWithNullChecking:@"audio_languages"];
